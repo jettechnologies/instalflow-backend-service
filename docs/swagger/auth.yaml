@@ -1,0 +1,232 @@
+paths:
+  /auth/register:
+    post:
+      summary: Register New Customer
+      description: Registers a customer account. Supports optional affiliate attribution via referredByMarketerId.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+                referredByMarketerId:
+                  type: string
+                  format: uuid
+                  description: Optional ID of the marketer who referred the customer.
+      responses:
+        201:
+          description: User registered successfully
+        400:
+          description: Invalid referral ID
+        409:
+          description: Email already in use
+
+  /auth/onboard-company:
+    post:
+      summary: Onboard New Company
+      description: Creates a new company tenant and its primary administrator account. Usually triggered after a subscription payment.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - companyName
+                - adminName
+                - email
+                - password
+              properties:
+                companyName:
+                  type: string
+                adminName:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        201:
+          description: Company and Admin created successfully
+        409:
+          description: Admin email already in use
+
+  /auth/login:
+    post:
+      summary: Authenticate User
+      description: Exchanges credentials for a short-lived access token and stores a refresh token in an HTTP-only cookie. Returns forcePasswordChange flag for marketers.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful — returns accessToken, sessionId, and user info.
+        401:
+          description: Invalid credentials
+
+  /auth/refresh:
+    post:
+      summary: Rotate Access Token
+      description: Validates the refresh token from the HTTP-only cookie or Authorization header and issues a new access token.
+      tags: [Auth]
+      responses:
+        200:
+          description: New access token issued
+        401:
+          description: Refresh token revoked, expired, or invalid
+
+  /auth/logout:
+    post:
+      summary: Terminate Session
+      description: Revokes the user's session in the database and clears the refresh cookie.
+      tags: [Auth]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+                  description: Optional — if omitted, all active sessions are revoked.
+      responses:
+        200:
+          description: Logged out successfully
+
+  /auth/forgot-password:
+    post:
+      summary: Request Password Reset
+      description: Generates a time-limited reset token. In development, the raw token is returned in the response for testing.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        200:
+          description: Reset link sent (if email exists)
+
+  /auth/reset-password:
+    post:
+      summary: Reset Password
+      description: Validates the reset token and sets a new password. Revokes all existing sessions.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - newPassword
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 6
+      responses:
+        200:
+          description: Password reset successfully
+        400:
+          description: Invalid or expired reset token
+
+  /auth/change-password:
+    post:
+      summary: Change Password (Authenticated)
+      description: Allows an authenticated user to change their password by providing their current password. Revokes all other sessions. Resets forcePasswordChange flag.
+      tags: [Auth]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - currentPassword
+                - newPassword
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 6
+      responses:
+        200:
+          description: Password changed successfully
+        401:
+          description: Current password is incorrect
+
+  /auth/marketers:
+    post:
+      summary: Create New Marketer
+      description: Allows Company administrators to create marketer accounts with an auto-generated temporary password.
+      tags: [Auth]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+      responses:
+        201:
+          description: Marketer created successfully. Returns the temporary password.
+        403:
+          description: "Forbidden: Only company admins can create marketers."
+        409:
+          description: Marketer email already in use.

@@ -1,0 +1,233 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  COMPANY
+  MARKETER
+  CUSTOMER
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum InstallmentStatus {
+  PENDING
+  DUE
+  OVERDUE
+  DEFAULTED
+  PAID
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum CommissionStatus {
+  PENDING
+  APPROVED
+  PAID
+  FROZEN
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
+
+model Company {
+  id        BigInt   @id @default(autoincrement())
+  companyId String   @unique @default(uuid())
+  name      String
+  plan      String   @default("FREE")
+  logoUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users    User[]
+  products Product[]
+}
+
+model User {
+  id                   BigInt    @id @default(autoincrement())
+  userId               String    @unique @default(uuid())
+  email                String    @unique
+  password             String
+  name                 String?
+  role                 Role      @default(CUSTOMER)
+  resetToken           String?
+  resetTokenExpiresAt  DateTime?
+  forcePasswordChange  Boolean   @default(false)
+  companyId            String?
+  company              Company?  @relation(fields: [companyId], references: [companyId])
+  referredByMarketerId String?
+  referredByMarketer   User?     @relation("MarketerReferrals", fields: [referredByMarketerId], references: [userId])
+  referredUsers        User[]    @relation("MarketerReferrals")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  sessions     UserSession[]
+  applications Application[]
+  installments Installment[]
+
+  referralCode String?             @unique
+  referrals    Referral[]
+  commissions  Commission[]
+  transactions LedgerTransaction[]
+}
+
+model UserSession {
+  id        BigInt   @id @default(autoincrement())
+  sessionId String   @unique @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  token     String   @unique
+  revoked   Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id
+  data      Json
+  expiresAt DateTime
+}
+
+model Category {
+  id          BigInt    @id @default(autoincrement())
+  categoryId  String    @unique @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id             BigInt   @id @default(autoincrement())
+  productId      String   @unique @default(uuid())
+  companyId      String?
+  company        Company? @relation(fields: [companyId], references: [companyId])
+  name           String
+  slug           String   @unique
+  description    String?
+  minPrice       Decimal  @default(0)
+  maxPrice       Decimal  @default(0)
+  stockQuantity  Int      @default(0)
+  price          Decimal  @default(0)
+  commissionRate Decimal  @default(0)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [categoryId])
+
+  variants     ProductVariant[]
+  referrals    Referral[]
+  installments Installment[]
+}
+
+model ProductVariant {
+  id            BigInt   @id @default(autoincrement())
+  variantId     String   @unique @default(uuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [productId])
+  sku           String   @unique
+  size          String?
+  color         String[] // PostgreSQL string array
+  images        String[] // PostgreSQL string array
+  stockQuantity Int      @default(0)
+  price         Decimal  @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Application {
+  id            BigInt            @id @default(autoincrement())
+  applicationId String            @unique @default(uuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [userId])
+  status        ApplicationStatus @default(PENDING)
+  documentData  Json?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model Installment {
+  id            BigInt            @id @default(autoincrement())
+  installmentId String            @unique @default(uuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [userId])
+  productId     String
+  product       Product           @relation(fields: [productId], references: [productId])
+  amount        Decimal
+  dueDate       DateTime
+  status        InstallmentStatus @default(PENDING)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  payments Payment[]
+}
+
+model Payment {
+  id             BigInt        @id @default(autoincrement())
+  paymentId      String        @unique @default(uuid())
+  installmentId  String
+  installment    Installment   @relation(fields: [installmentId], references: [installmentId])
+  amount         Decimal
+  status         PaymentStatus @default(PENDING)
+  gatewayRef     String?       @unique
+  idempotencyKey String?       @unique
+  webhookPayload Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Commission {
+  id           BigInt           @id @default(autoincrement())
+  commissionId String           @unique @default(uuid())
+  userId       String // Marketer
+  user         User             @relation(fields: [userId], references: [userId])
+  paymentId    String? // Associated payment
+  amount       Decimal
+  status       CommissionStatus @default(PENDING)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model LedgerTransaction {
+  id            BigInt          @id @default(autoincrement())
+  transactionId String          @unique @default(uuid())
+  userId        String
+  user          User            @relation(fields: [userId], references: [userId])
+  type          TransactionType
+  amount        Decimal
+  referenceId   String? // Tied to paymentId, commissionId, etc.
+  description   String?
+  createdAt     DateTime        @default(now()) // Append only, no update!
+}
+
+model Referral {
+  id           BigInt   @id @default(autoincrement())
+  referralId   String   @unique @default(uuid())
+  marketerId   String
+  marketer     User     @relation(fields: [marketerId], references: [userId])
+  productId    String?
+  product      Product? @relation(fields: [productId], references: [productId])
+  referralCode String   @unique
+  createdAt    DateTime @default(now())
+}

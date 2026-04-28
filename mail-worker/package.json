@@ -1,0 +1,21 @@
+{
+	"name": "mail-worker",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"cf-typegen": "wrangler types",
+		"mail-template:precompile": "npx handlebars ../mail-templates -e html -f src/templates.js",
+		"mail:precompile": "node script/precompile-templates.js"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.12.4",
+		"handlebars": "^4.7.9",
+		"typescript": "^5.5.2",
+		"vitest": "~3.2.0",
+		"wrangler": "^4.86.0"
+	}
+}

@@ -1,0 +1,23 @@
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import router from "./routes";
+import { errorHandler } from "./middlewares/errorHandler";
+import { configureExpress } from "./config/express";
+import { setupSwagger } from "./config/swagger";
+
+const app = express();
+
+configureExpress(app);
+setupSwagger(app);
+app.use(cors());
+
+// Mount primary domain routers
+app.use("/api/v1", router);
+
+// Catch all errors propagating out of routes natively
+app.use(errorHandler as any);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server Live on port ${PORT} 🚀`));
