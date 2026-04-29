@@ -13,9 +13,12 @@
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.12.4",
-		"handlebars": "^4.7.9",
+		"@cloudflare/workers-types": "^4.20260426.1",
 		"typescript": "^5.5.2",
 		"vitest": "~3.2.0",
 		"wrangler": "^4.86.0"
+	},
+	"dependencies": {
+		"handlebars": "^4.7.9"
 	}
 }

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Order Confirmation</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; color: #2d3748; padding: 20px; }
+        .card { max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 30px; }
+        .status { color: #38a169; font-weight: 700; text-transform: uppercase; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="status">Payment Confirmed</div>
+        <h1>Order #{{orderId}}</h1>
+        <p>Thank you for your purchase. Your payment for the installment has been successfully processed.</p>
+        <div style="background: #f7fafc; padding: 15px; border-radius: 4px;">
+            <strong>Amount Paid:</strong> {{amount}}<br>
+            <strong>Date:</strong> {{date}}
+        </div>
+        <p>You can view your installment schedule in the <a href="{{dashboard_url}}">dashboard</a>.</p>
+    </div>
+</body>
+</html>

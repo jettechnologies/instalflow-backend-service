@@ -1,0 +1,16 @@
+name = "mail-worker"
+main = "src/index.ts"
+compatibility_date = "2026-04-28"
+observability = { enabled = true }
+upload_source_maps = true
+compatibility_flags = ["nodejs_compat"]
+
+[[queues.producers]]
+binding = "mail_queue"
+queue = "mail-queue"
+
+[[queues.consumers]]
+queue = "mail-queue"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 5

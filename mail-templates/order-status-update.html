@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Status Update</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; color: #2d3748; padding: 20px; }
+        .card { max-width: 600px; margin: auto; border: 1px solid #ebf8ff; border-radius: 8px; padding: 30px; }
+        .badge { display: inline-block; padding: 4px 12px; background: #bee3f8; color: #2b6cb0; border-radius: 99px; font-size: 12px; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Update on Order #{{orderId}}</h1>
+        <p>The status of your installment plan has changed:</p>
+        <div style="margin: 20px 0;">
+            <span class="badge">{{newStatus}}</span>
+        </div>
+        <p>Log in to your dashboard to see the latest details and upcoming due dates.</p>
+    </div>
+</body>
+</html>
