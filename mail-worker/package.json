@@ -8,7 +8,6 @@
 		"start": "wrangler dev",
 		"test": "vitest",
 		"cf-typegen": "wrangler types",
-		"mail-template:precompile": "npx handlebars ../mail-templates -e html -f src/templates.js",
 		"mail:precompile": "node script/precompile-templates.js"
 	},
 	"devDependencies": {

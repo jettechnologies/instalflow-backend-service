@@ -12,8 +12,10 @@ const TEMPLATES_DIR = path.resolve(__dirname, "../../mail-templates");
 
 export enum EmailTemplate {
   WELCOME = "welcome",
+  MARKETER_WELCOME = "marketer-welcome",
   OTP_VERIFICATION = "otp-verification",
   PASSWORD_RESET = "password-reset",
+  FORGOT_PASSWORD_OTP = "forgot-password-otp",
   ORDER_CONFIRMATION = "order-confirmation",
   ORDER_CANCELLED = "order-cancelled",
   ORDER_STATUS_UPDATE = "order-status-update",
@@ -59,18 +61,40 @@ export class EmailService {
       throw new Error("EMAIL_WORKER_URL not configured for worker mode");
     }
 
-    const response = await fetch(workerUrl, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "X-Worker-Secret": process.env.EMAIL_WORKER_SECRET || "" 
-      },
-      body: JSON.stringify(props),
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Email worker responded with error: ${errorText}`);
+    // const response = await fetch(workerUrl, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "X-Worker-Secret": process.env.EMAIL_WORKER_SECRET || "",
+    //   },
+    //   body: JSON.stringify(props),
+    // });
+
+    // if (!response.ok) {
+    //   const errorText = await response.text();
+    // throw new Error(`Email worker responded with error: ${errorText}`);
+    // }
+
+    try {
+      const response = await fetch(workerUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Worker-Secret": process.env.EMAIL_WORKER_SECRET || "",
+        },
+        body: JSON.stringify(props),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Email worker responded with error: ${errorText}`);
+      }
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
@@ -85,9 +109,9 @@ export class EmailService {
     const htmlContent = this.getTemplate(props.template, props.context);
 
     const sendRequest: Brevo.SendTransacEmailRequest = {
-      sender: { 
-        name: "Instalflow", 
-        email: process.env.SMTP_FROM || "no-reply@instalflow.com" 
+      sender: {
+        name: "Instalflow",
+        email: process.env.SMTP_FROM || "no-reply@instalflow.com",
       },
       to: [{ email: props.to }],
       subject: props.subject,
@@ -105,10 +129,14 @@ export class EmailService {
       const provider = process.env.EMAIL_PROVIDER || "brevo";
 
       if (provider === "worker") {
-        console.log(`[EmailService] Sending via worker: ${props.template} -> ${props.to}`);
+        console.log(
+          `[EmailService] Sending via worker: ${props.template} -> ${props.to}`,
+        );
         await this.sendViaWorker(props);
       } else {
-        console.log(`[EmailService] Sending via Brevo: ${props.template} -> ${props.to}`);
+        console.log(
+          `[EmailService] Sending via Brevo: ${props.template} -> ${props.to}`,
+        );
         await this.sendViaBrevo(props);
       }
 

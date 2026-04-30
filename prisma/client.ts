@@ -18,5 +18,7 @@ export const prisma = new PrismaClient({ adapter }).$extends({
     ledgerTransaction: { id: { needs: {}, compute: () => undefined } },
     referral: { id: { needs: {}, compute: () => undefined } },
     userSession: { id: { needs: {}, compute: () => undefined } },
+    subscriptionPlan: { id: { needs: {}, compute: () => undefined } },
+    companySubscription: { id: { needs: {}, compute: () => undefined } },
   },
 });

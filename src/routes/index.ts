@@ -1,5 +1,7 @@
 import { Router } from "express";
-import authRoutes from "./auth.routes";
+import authRoutes from "./auth.routes.js";
+import subscriptionRoutes from "./subscription.routes.js";
+import superadminRoutes from "./superadmin.routes.js";
 
 const router = Router();
 
@@ -8,5 +10,7 @@ router.get("/health", (req, res) => {
 });
 
 router.use("/auth", authRoutes);
+router.use("/subscriptions", subscriptionRoutes);
+router.use("/superadmin", superadminRoutes);
 
 export default router;

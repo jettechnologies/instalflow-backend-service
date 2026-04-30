@@ -1,6 +1,7 @@
-# 🧠 Instalflow: Project Workflow & Architectural Guardrails
+# 🧠 Instalflow: Ledger-First Fintech PRD
 
-> This document is the **Source of Truth** for the Instalflow Backend Service. It combines the Technical PRD with the Architectural Scaffolding Guide to ensure a consistent, secure, and scalable development flow.
+> This document is the **Source of Truth** and **Execution Blueprint** for the Instalflow Backend. 
+> **Architectural Motto**: The Ledger is the ultimate source of truth. Paystack is a payment rail; the database is the financial truth.
 
 ---
 
@@ -17,21 +18,44 @@
 ### Standardized Directory Structure
 ```text
 src/
-├── config/         # App initializers (express, prisma, cloudinary, swagger)
+├── config/         # App initializers (BullMQ, Redis, Prisma, Swagger)
 ├── controllers/    # Request handlers (Payload parsing -> Service call)
-├── libs/           # Shared utilities (AppError, ApiResponse, Logger)
+├── libs/           # Shared utilities (AppError, ApiResponse, LedgerLogic)
 ├── middlewares/    # Security, Auth Guards, Global Error Handler
 ├── routes/         # Endpoint definitions
 ├── schema/         # Zod validation schemas
-├── services/       # Core business logic & DB transactions
-├── utils/          # Pure helper functions
+├── services/       # Core business logic & Atomic Transactions
+├── workers/        # BullMQ / Queue Job Consumers
+├── queue/          # Job producers & Queue definitions
 ├── docs/           # Swagger YAML definitions
 └── index.ts        # Bootstrap
 ```
 
 ---
 
-## 2. 🛡️ THE "GOLDEN RULES" (ARCHITECTURAL GUARDRAILS)
+## 2. 🏗️ HIGH-LEVEL ARCHITECTURE
+
+```txt
+[ Client / Dashboard / API ]
+            ↓
+        API Layer
+            ↓
+      Domain Services
+            ↓
+     Event Dispatcher (Internal)
+            ↓
+        Queue Layer (BullMQ / Redis)
+            ↓
+         Workers
+            ↓
+     Ledger + Database (PostgreSQL)
+            ↓
+ External Systems (Paystack, Twilio, Resend)
+```
+
+---
+
+## 3. 🛡️ THE "GOLDEN RULES" (ARCHITECTURAL GUARDRAILS)
 
 ### 2.1 The Dual-ID Pattern
 - **Internal**: `BigInt` auto-increment for database performance (Clustering).
@@ -57,7 +81,7 @@ src/
 
 ---
 
-## 3. 🧩 CORE DOMAIN MODULES
+## 4. 🧩 CORE DOMAIN MODULES
 
 | Module | Responsibility |
 | :--- | :--- |
@@ -76,41 +100,84 @@ src/
 
 ---
 
-## 4. 🔄 EVENT-DRIVEN & ASYNC SYSTEM
+## 5. 🧮 FINANCIAL CORE (THE LEDGER SYSTEM)
 
-### Internal Event Bus
-Events are the glue between modules.
-- **MVP**: Node EventEmitter.
-- **Scale**: BullMQ + Redis.
+Every financial event must be verified, recorded atomically, and be replayable.
 
-### Core Flows
-- `payment.success` → Update installment → Emit `commission.created` → Update Ledger → Trigger Notification.
-- `installment.overdue` → Notify Marketer → (if 5 days) Notify Admin → (if 7 days) Mark Defaulted & Freeze Commission.
+### 4.1 Ledger Account Model (Company Level)
+| Account Name        | Type      | Purpose                        |
+| ------------------- | --------- | ------------------------------ |
+| Paystack_Clearing   | ASSET     | Money received but not settled |
+| Bank_Settled        | ASSET     | Actual settled funds           |
+| Customer_Receivable | ASSET     | What customers owe             |
+| Commission_Payable  | LIABILITY | What you owe marketers         |
+| Payouts_In_Transit  | ASSET     | Pending transfers              |
+| Revenue             | REVENUE   | Company earnings               |
+| Platform_Revenue    | REVENUE   | Your SaaS (Instalflow) earnings|
 
----
-
-## 5. 🧮 FINANCIAL INTEGRITY (LEDGER)
-
-The Ledger is immutable. Never update financial balances; only append credit/debit entries.
-- **Transactions Table**: `type (debit/credit)`, `amount`, `referenceId`.
-- **Mappings**: Customer Account, Company Revenue, Marketer Commission.
-
----
-
-## 6. 🚀 DEVELOPMENT ROADMAP (PRIORITY ORDER)
-
-1.  **Foundation**: Auth + User Management (Completed ✅)
-2.  **Infrastructure**: Cloudinary, Swagger, CI Workflow (Completed ✅)
-3.  **Commerce**: Products + Installment Schedule Logic
-4.  **Transaction**: Payments + Gateway Webhooks
-5.  **Economics**: Commission Calculation + Payouts
-6.  **Accounting**: Ledger System Integration
-7.  **Automation**: Reminders & Escalation Engine
-8.  **Communication**: Notification Templates & SMS
+### 4.2 Data Integrity Rules
+- **Derivation**: Never store "balance" columns as the source of truth. Derive balances by summing the Ledger.
+- **Webhook Idempotency**: Store all incoming Paystack webhooks in a `WebhookEvent` table. Process once via `idempotencyKey`.
+- **Immutability**: Ledger entries are append-only. To correct an error, create a reversing entry (Debit/Credit).
 
 ---
 
-## 7. 🔒 SECURITY CHECKLIST
+## 6. 🔁 EVENT-DRIVEN QUEUE SYSTEM
+
+Everything that involves money or slow IO moves through **BullMQ**.
+
+### 5.1 The Core Event Loop
+1.  **Webhook Trigger**: `payment.received` event emitted.
+2.  **Worker Payment Verification**: 
+    -   Verify via Paystack API (Amount, Currency, Status).
+    -   Atomic Ledger Move: `DEBIT Paystack_Clearing` / `CREDIT Customer_Receivable`.
+3.  **Downstream Triggers**:
+    -   `commission.accrued` -> Calculate rate -> Update Ledger (`CREDIT Commission_Payable`).
+    -   `installment.updated` -> Move installment state to PAID.
+    -   `notification.triggered` -> Send Email/SMS.
+
+### 5.2 Retry & Failure Strategy
+- **Max Retries**: 5 (Exponential backoff 2^n * 1 min).
+- **Terminal States**: LOG failure but never leave the Ledger in an unbalanced state.
+
+---
+
+## 7. 💰 COMMISSION & PAYOUT SYSTEM
+
+### 6.1 Lifecycle
+1.  **Request**: `POST /payouts` -> Check `Commission_Payable` balance.
+2.  **Ledger Move**: `DEBIT Commission_Payable` / `CREDIT Payouts_In_Transit`.
+3.  **Execution**: `payout.initiated` job -> Call Paystack `/transfer` -> Store `transfer_code`.
+4.  **Completion**: `transfer.success` -> Clear `Payouts_In_Transit`.
+
+---
+
+## 8. 🔍 RECONCILIATION ENGINE (Daily CRON)
+1.  **Paystack Sync**: Fetch daily settlements.
+2.  **Validation**: `Paystack_Clearing` vs `Bank_Settled`.
+3.  **Journal Finish**: `DEBIT Bank_Settled` / `CREDIT Paystack_Clearing`.
+
+---
+
+## 9. 🔥 FINAL ENGINEERING RULES (PRINCIPLES)
+
+1.  **Never Trust Client**: Only webhooks and server-to-server verification trigger money moves.
+2.  **Ledger-First**: No financial action without a double-entry journal record.
+3.  **Atomic Persistence**: Use Prisma `$transaction` for every ledger mutation.
+4.  **Async Priority**: Controllers return `Accepted (202)` fast; workers do the heavy lifting.
+
+---
+
+## 10. 🚀 ROADMAP & PHASED IMPLEMENTATION
+
+1.  **Phase 1 (Active)**: Auth, Infrastructure, Company/User Context.
+2.  **Phase 2 (Next)**: Product Catalog + Installment Generation Logic.
+3.  **Phase 3 (Fintech Core)**: Webhooks + Ledger Module + BullMQ Setup.
+4.  **Phase 4 (Economics)**: Commission Engine + Payout Retention logic.
+5.  **Phase 5 (Ops)**: Reconciliation Engine + Daily Audits.
+---
+
+## 11. 🔒 SECURITY CHECKLIST
 - [ ] Webhook signature verification implemented.
 - [ ] Role-based access control (RBAC) enforced on every route.
 - [ ] All inputs validated via Zod.

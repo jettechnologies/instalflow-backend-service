@@ -106,3 +106,13 @@ export type LedgerTransaction = Prisma.LedgerTransactionModel
  * 
  */
 export type Referral = Prisma.ReferralModel
+/**
+ * Model SubscriptionPlan
+ * 
+ */
+export type SubscriptionPlan = Prisma.SubscriptionPlanModel
+/**
+ * Model CompanySubscription
+ * 
+ */
+export type CompanySubscription = Prisma.CompanySubscriptionModel

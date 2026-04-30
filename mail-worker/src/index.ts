@@ -1,14 +1,9 @@
-// import templates from "./templates.js";
 import templates from './templates';
-
-// export interface Env {
-// 	BREVO_API_KEY: string;
-// 	SMTP_FROM: string;
-// }
 
 export interface Env {
 	BREVO_API_KEY: string;
 	SMTP_FROM: string;
+	WORKER_SECRET: string;
 	mail_queue: Queue<EmailRequest>;
 }
 
@@ -25,6 +20,12 @@ export default {
 	async fetch(request: Request, env: Env) {
 		if (request.method !== 'POST') {
 			return new Response('Method Not Allowed', { status: 405 });
+		}
+
+		const secret = request.headers.get('X-Worker-Secret');
+
+		if (!secret || secret !== env.WORKER_SECRET) {
+			return new Response('Unauthorized', { status: 401 });
 		}
 
 		try {

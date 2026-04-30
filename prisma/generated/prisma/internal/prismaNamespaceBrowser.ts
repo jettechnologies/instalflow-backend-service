@@ -63,7 +63,9 @@ export const ModelName = {
   Payment: 'Payment',
   Commission: 'Commission',
   LedgerTransaction: 'LedgerTransaction',
-  Referral: 'Referral'
+  Referral: 'Referral',
+  SubscriptionPlan: 'SubscriptionPlan',
+  CompanySubscription: 'CompanySubscription'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -270,6 +272,38 @@ export const ReferralScalarFieldEnum = {
 } as const
 
 export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
+
+
+export const SubscriptionPlanScalarFieldEnum = {
+  id: 'id',
+  planId: 'planId',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  discountPrice: 'discountPrice',
+  discountPercentage: 'discountPercentage',
+  interval: 'interval',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionPlanScalarFieldEnum = (typeof SubscriptionPlanScalarFieldEnum)[keyof typeof SubscriptionPlanScalarFieldEnum]
+
+
+export const CompanySubscriptionScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  companyId: 'companyId',
+  planId: 'planId',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanySubscriptionScalarFieldEnum = (typeof CompanySubscriptionScalarFieldEnum)[keyof typeof CompanySubscriptionScalarFieldEnum]
 
 
 export const SortOrder = {
