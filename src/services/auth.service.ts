@@ -470,7 +470,7 @@ export class AuthService {
 
     if (!resetEntry) throw new BadRequestError("Invalid or expired reset OTP");
 
-    const validOtp = await bcryptCompare(data.otp, resetEntry.otpHash);
+    const validOtp = await bcryptCompare(data.token, resetEntry.otpHash);
     if (!validOtp) {
       await prisma.passwordReset.update({
         where: { id: resetEntry.id },
@@ -479,7 +479,7 @@ export class AuthService {
       throw new BadRequestError("Invalid or expired reset OTP");
     }
 
-    const hashedPassword = await bcryptHash(data.newPassword);
+    const hashedPassword = await bcryptHash(data.password);
 
     await prisma.$transaction(async (tx) => {
       await tx.user.update({
