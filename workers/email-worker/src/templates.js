@@ -2,6 +2,23 @@ import Handlebars from "handlebars/runtime";
 
 const templates = {};
 
+templates["company-onboarding"] = Handlebars.template({"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
+        if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
+          return parent[propertyName];
+        }
+        return undefined
+    };
+
+  return "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Welcome to Instalflow - Company Onboarded</title>\n    <style>\n        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; color: #1a202c; background-color: #f7fafc; margin: 0; padding: 0; }\n        .container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }\n        .header { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 40px 20px; text-align: center; }\n        .header h1 { color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }\n        .content { padding: 40px; }\n        .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 14px; color: #718096; }\n        .button { display: inline-block; padding: 14px 28px; background-color: #38a169; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 24px; transition: background 0.2s; }\n        .highlight { color: #38a169; font-weight: 600; }\n        .info-box { background-color: #f0fff4; border-left: 4px solid #38a169; padding: 16px; margin: 24px 0; border-radius: 4px; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1>Welcome to Instalflow</h1>\n        </div>\n        <div class=\"content\">\n            <p>Hi <span class=\"highlight\">"
+    + alias4(((helper = (helper = lookupProperty(helpers,"adminName") || (depth0 != null ? lookupProperty(depth0,"adminName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"adminName","hash":{},"data":data,"loc":{"start":{"line":25,"column":42},"end":{"line":25,"column":55}}}) : helper)))
+    + "</span>,</p>\n            <p>Congratulations! <span class=\"highlight\">"
+    + alias4(((helper = (helper = lookupProperty(helpers,"companyName") || (depth0 != null ? lookupProperty(depth0,"companyName") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"companyName","hash":{},"data":data,"loc":{"start":{"line":26,"column":56},"end":{"line":26,"column":71}}}) : helper)))
+    + "</span> has been successfully onboarded to the Instalflow platform.</p>\n            <p>Your administrator account is ready. You can now start managing your products, setting up installment plans, and overseeing your marketers.</p>\n            \n            <div class=\"info-box\">\n                <strong>Next Steps:</strong>\n                <ul>\n                    <li>Log in to your admin dashboard</li>\n                    <li>Complete your company profile</li>\n                    <li>Add your first product catalog</li>\n                </ul>\n            </div>\n\n            <a href=\""
+    + alias4(((helper = (helper = lookupProperty(helpers,"dashboard_url") || (depth0 != null ? lookupProperty(depth0,"dashboard_url") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"dashboard_url","hash":{},"data":data,"loc":{"start":{"line":38,"column":21},"end":{"line":38,"column":38}}}) : helper)))
+    + "\" class=\"button\">Go to Dashboard</a>\n            \n            <p style=\"margin-top: 32px;\">We're excited to help you grow your business with flexible payment options.</p>\n            <p>Best regards,<br>The Instalflow Team</p>\n        </div>\n        <div class=\"footer\">\n            &copy; 2026 Instalflow Platform. All rights reserved.\n        </div>\n    </div>\n</body>\n</html>\n";
+},"useData":true});
+
 templates["forgot-password-otp"] = Handlebars.template({"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
         if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {

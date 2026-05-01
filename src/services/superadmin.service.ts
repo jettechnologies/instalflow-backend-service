@@ -1,4 +1,4 @@
-import { prisma } from "../../prisma/client.js";
+import { prisma, SubscriptionInterval } from "../../prisma/client.js";
 import AppError, {
   BadRequestError,
   ConflictError,
@@ -11,7 +11,8 @@ interface CreatePlanData {
   price: number;
   discountPrice?: number;
   discountPercentage?: number;
-  interval: "WEEKLY" | "MONTHLY" | "YEARLY";
+  interval: SubscriptionInterval;
+  active?: boolean;
 }
 
 export class SuperAdminService {

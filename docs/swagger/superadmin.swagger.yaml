@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  title: SuperAdmin API
+  version: 1.0.0
+  description: API for platform management and configuration.
+
+paths:
+  /superadmin/plans:
+    get:
+      summary: List all subscription plans (Internal)
+      tags: [SuperAdmin]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of all plans
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SubscriptionPlan'
+
+    post:
+      summary: Create a new subscription plan
+      tags: [SuperAdmin]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlanRequest'
+      responses:
+        '201':
+          description: Plan created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/SubscriptionPlan'
+
+  /superadmin/plans/{planId}:
+    patch:
+      summary: Update an existing plan
+      tags: [SuperAdmin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePlanRequest'
+      responses:
+        '200':
+          description: Plan updated
+
+    delete:
+      summary: Delete a plan
+      tags: [SuperAdmin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Plan deleted
+
+  /superadmin/plans/{planId}/toggle:
+    patch:
+      summary: Toggle plan status (active/inactive)
+      tags: [SuperAdmin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - active
+              properties:
+                active:
+                  type: boolean
+      responses:
+        '200':
+          description: Status toggled
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    SubscriptionPlan:
+      type: object
+      properties:
+        planId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPrice:
+          type: number
+        interval:
+          type: string
+          enum: [WEEKLY, MONTHLY, YEARLY]
+        active:
+          type: boolean
+
+    CreatePlanRequest:
+      type: object
+      required:
+        - name
+        - price
+        - interval
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPrice:
+          type: number
+        discountPercentage:
+          type: number
+        interval:
+          type: string
+          enum: [WEEKLY, MONTHLY, YEARLY]
+        active:
+          type: boolean
+
+    UpdatePlanRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPrice:
+          type: number
+        discountPercentage:
+          type: number
+        interval:
+          type: string
+          enum: [WEEKLY, MONTHLY, YEARLY]
+        active:
+          type: boolean

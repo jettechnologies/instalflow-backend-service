@@ -39,7 +39,7 @@ export type CompanySubscriptionMinAggregateOutputType = {
   subscriptionId: string | null
   companyId: string | null
   planId: string | null
-  status: string | null
+  status: $Enums.SubscriptionStatus | null
   startDate: Date | null
   endDate: Date | null
   createdAt: Date | null
@@ -51,7 +51,7 @@ export type CompanySubscriptionMaxAggregateOutputType = {
   subscriptionId: string | null
   companyId: string | null
   planId: string | null
-  status: string | null
+  status: $Enums.SubscriptionStatus | null
   startDate: Date | null
   endDate: Date | null
   createdAt: Date | null
@@ -208,7 +208,7 @@ export type CompanySubscriptionGroupByOutputType = {
   subscriptionId: string
   companyId: string
   planId: string
-  status: string
+  status: $Enums.SubscriptionStatus
   startDate: Date | null
   endDate: Date | null
   createdAt: Date
@@ -243,7 +243,7 @@ export type CompanySubscriptionWhereInput = {
   subscriptionId?: Prisma.StringFilter<"CompanySubscription"> | string
   companyId?: Prisma.StringFilter<"CompanySubscription"> | string
   planId?: Prisma.StringFilter<"CompanySubscription"> | string
-  status?: Prisma.StringFilter<"CompanySubscription"> | string
+  status?: Prisma.EnumSubscriptionStatusFilter<"CompanySubscription"> | $Enums.SubscriptionStatus
   startDate?: Prisma.DateTimeNullableFilter<"CompanySubscription"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"CompanySubscription"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CompanySubscription"> | Date | string
@@ -274,7 +274,7 @@ export type CompanySubscriptionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CompanySubscriptionWhereInput | Prisma.CompanySubscriptionWhereInput[]
   companyId?: Prisma.StringFilter<"CompanySubscription"> | string
   planId?: Prisma.StringFilter<"CompanySubscription"> | string
-  status?: Prisma.StringFilter<"CompanySubscription"> | string
+  status?: Prisma.EnumSubscriptionStatusFilter<"CompanySubscription"> | $Enums.SubscriptionStatus
   startDate?: Prisma.DateTimeNullableFilter<"CompanySubscription"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"CompanySubscription"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CompanySubscription"> | Date | string
@@ -308,7 +308,7 @@ export type CompanySubscriptionScalarWhereWithAggregatesInput = {
   subscriptionId?: Prisma.StringWithAggregatesFilter<"CompanySubscription"> | string
   companyId?: Prisma.StringWithAggregatesFilter<"CompanySubscription"> | string
   planId?: Prisma.StringWithAggregatesFilter<"CompanySubscription"> | string
-  status?: Prisma.StringWithAggregatesFilter<"CompanySubscription"> | string
+  status?: Prisma.EnumSubscriptionStatusWithAggregatesFilter<"CompanySubscription"> | $Enums.SubscriptionStatus
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"CompanySubscription"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"CompanySubscription"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CompanySubscription"> | Date | string
@@ -318,7 +318,7 @@ export type CompanySubscriptionScalarWhereWithAggregatesInput = {
 export type CompanySubscriptionCreateInput = {
   id?: bigint | number
   subscriptionId?: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -332,7 +332,7 @@ export type CompanySubscriptionUncheckedCreateInput = {
   subscriptionId?: string
   companyId: string
   planId: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -342,7 +342,7 @@ export type CompanySubscriptionUncheckedCreateInput = {
 export type CompanySubscriptionUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -356,7 +356,7 @@ export type CompanySubscriptionUncheckedUpdateInput = {
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -368,7 +368,7 @@ export type CompanySubscriptionCreateManyInput = {
   subscriptionId?: string
   companyId: string
   planId: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -378,7 +378,7 @@ export type CompanySubscriptionCreateManyInput = {
 export type CompanySubscriptionUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -390,7 +390,7 @@ export type CompanySubscriptionUncheckedUpdateManyInput = {
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -535,10 +535,18 @@ export type CompanySubscriptionUncheckedUpdateManyWithoutPlanNestedInput = {
   deleteMany?: Prisma.CompanySubscriptionScalarWhereInput | Prisma.CompanySubscriptionScalarWhereInput[]
 }
 
+export type EnumSubscriptionStatusFieldUpdateOperationsInput = {
+  set?: $Enums.SubscriptionStatus
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type CompanySubscriptionCreateWithoutCompanyInput = {
   id?: bigint | number
   subscriptionId?: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -550,7 +558,7 @@ export type CompanySubscriptionUncheckedCreateWithoutCompanyInput = {
   id?: bigint | number
   subscriptionId?: string
   planId: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -591,7 +599,7 @@ export type CompanySubscriptionScalarWhereInput = {
   subscriptionId?: Prisma.StringFilter<"CompanySubscription"> | string
   companyId?: Prisma.StringFilter<"CompanySubscription"> | string
   planId?: Prisma.StringFilter<"CompanySubscription"> | string
-  status?: Prisma.StringFilter<"CompanySubscription"> | string
+  status?: Prisma.EnumSubscriptionStatusFilter<"CompanySubscription"> | $Enums.SubscriptionStatus
   startDate?: Prisma.DateTimeNullableFilter<"CompanySubscription"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"CompanySubscription"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CompanySubscription"> | Date | string
@@ -601,7 +609,7 @@ export type CompanySubscriptionScalarWhereInput = {
 export type CompanySubscriptionCreateWithoutPlanInput = {
   id?: bigint | number
   subscriptionId?: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -613,7 +621,7 @@ export type CompanySubscriptionUncheckedCreateWithoutPlanInput = {
   id?: bigint | number
   subscriptionId?: string
   companyId: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -650,7 +658,7 @@ export type CompanySubscriptionCreateManyCompanyInput = {
   id?: bigint | number
   subscriptionId?: string
   planId: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -660,7 +668,7 @@ export type CompanySubscriptionCreateManyCompanyInput = {
 export type CompanySubscriptionUpdateWithoutCompanyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -672,7 +680,7 @@ export type CompanySubscriptionUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -683,7 +691,7 @@ export type CompanySubscriptionUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -694,7 +702,7 @@ export type CompanySubscriptionCreateManyPlanInput = {
   id?: bigint | number
   subscriptionId?: string
   companyId: string
-  status?: string
+  status?: $Enums.SubscriptionStatus
   startDate?: Date | string | null
   endDate?: Date | string | null
   createdAt?: Date | string
@@ -704,7 +712,7 @@ export type CompanySubscriptionCreateManyPlanInput = {
 export type CompanySubscriptionUpdateWithoutPlanInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -716,7 +724,7 @@ export type CompanySubscriptionUncheckedUpdateWithoutPlanInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -727,7 +735,7 @@ export type CompanySubscriptionUncheckedUpdateManyWithoutPlanInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -815,7 +823,7 @@ export type $CompanySubscriptionPayload<ExtArgs extends runtime.Types.Extensions
     subscriptionId: string
     companyId: string
     planId: string
-    status: string
+    status: $Enums.SubscriptionStatus
     startDate: Date | null
     endDate: Date | null
     createdAt: Date
@@ -1249,7 +1257,7 @@ export interface CompanySubscriptionFieldRefs {
   readonly subscriptionId: Prisma.FieldRef<"CompanySubscription", 'String'>
   readonly companyId: Prisma.FieldRef<"CompanySubscription", 'String'>
   readonly planId: Prisma.FieldRef<"CompanySubscription", 'String'>
-  readonly status: Prisma.FieldRef<"CompanySubscription", 'String'>
+  readonly status: Prisma.FieldRef<"CompanySubscription", 'SubscriptionStatus'>
   readonly startDate: Prisma.FieldRef<"CompanySubscription", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"CompanySubscription", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"CompanySubscription", 'DateTime'>

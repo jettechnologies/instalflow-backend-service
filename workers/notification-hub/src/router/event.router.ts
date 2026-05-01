@@ -94,6 +94,19 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		},
 	],
 
+	[DomainEvent.COMPANY_ONBOARDED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			template: 'company-onboarding',
+			subject: 'Welcome to Instalflow! Your Company is Ready 🚀',
+			context: (p) => ({
+				adminName: p.adminName,
+				companyName: p.companyName,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
 	// ─── Orders ─────────────────────────────────────────────────────────────────
 
 	[DomainEvent.ORDER_CREATED]: [

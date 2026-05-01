@@ -12,6 +12,9 @@ export enum DomainEvent {
   ORDER_CREATED = "order.created",
   ORDER_CANCELLED = "order.cancelled",
   ORDER_STATUS_UPDATED = "order.status.updated",
+
+  // Company
+  COMPANY_ONBOARDED = "company.onboarded",
 }
 
 export enum EventStatus {

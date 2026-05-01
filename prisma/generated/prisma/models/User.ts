@@ -41,8 +41,6 @@ export type UserMinAggregateOutputType = {
   password: string | null
   name: string | null
   role: $Enums.Role | null
-  resetToken: string | null
-  resetTokenExpiresAt: Date | null
   forcePasswordChange: boolean | null
   companyId: string | null
   referredByMarketerId: string | null
@@ -58,8 +56,6 @@ export type UserMaxAggregateOutputType = {
   password: string | null
   name: string | null
   role: $Enums.Role | null
-  resetToken: string | null
-  resetTokenExpiresAt: Date | null
   forcePasswordChange: boolean | null
   companyId: string | null
   referredByMarketerId: string | null
@@ -75,8 +71,6 @@ export type UserCountAggregateOutputType = {
   password: number
   name: number
   role: number
-  resetToken: number
-  resetTokenExpiresAt: number
   forcePasswordChange: number
   companyId: number
   referredByMarketerId: number
@@ -102,8 +96,6 @@ export type UserMinAggregateInputType = {
   password?: true
   name?: true
   role?: true
-  resetToken?: true
-  resetTokenExpiresAt?: true
   forcePasswordChange?: true
   companyId?: true
   referredByMarketerId?: true
@@ -119,8 +111,6 @@ export type UserMaxAggregateInputType = {
   password?: true
   name?: true
   role?: true
-  resetToken?: true
-  resetTokenExpiresAt?: true
   forcePasswordChange?: true
   companyId?: true
   referredByMarketerId?: true
@@ -136,8 +126,6 @@ export type UserCountAggregateInputType = {
   password?: true
   name?: true
   role?: true
-  resetToken?: true
-  resetTokenExpiresAt?: true
   forcePasswordChange?: true
   companyId?: true
   referredByMarketerId?: true
@@ -240,8 +228,6 @@ export type UserGroupByOutputType = {
   password: string
   name: string | null
   role: $Enums.Role
-  resetToken: string | null
-  resetTokenExpiresAt: Date | null
   forcePasswordChange: boolean
   companyId: string | null
   referredByMarketerId: string | null
@@ -280,8 +266,6 @@ export type UserWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  resetToken?: Prisma.StringNullableFilter<"User"> | string | null
-  resetTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   forcePasswordChange?: Prisma.BoolFilter<"User"> | boolean
   companyId?: Prisma.StringNullableFilter<"User"> | string | null
   referredByMarketerId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -297,6 +281,7 @@ export type UserWhereInput = {
   referrals?: Prisma.ReferralListRelationFilter
   commissions?: Prisma.CommissionListRelationFilter
   transactions?: Prisma.LedgerTransactionListRelationFilter
+  passwordResets?: Prisma.PasswordResetListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -306,8 +291,6 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  resetTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   forcePasswordChange?: Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   referredByMarketerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -323,6 +306,7 @@ export type UserOrderByWithRelationInput = {
   referrals?: Prisma.ReferralOrderByRelationAggregateInput
   commissions?: Prisma.CommissionOrderByRelationAggregateInput
   transactions?: Prisma.LedgerTransactionOrderByRelationAggregateInput
+  passwordResets?: Prisma.PasswordResetOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -336,8 +320,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  resetToken?: Prisma.StringNullableFilter<"User"> | string | null
-  resetTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   forcePasswordChange?: Prisma.BoolFilter<"User"> | boolean
   companyId?: Prisma.StringNullableFilter<"User"> | string | null
   referredByMarketerId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -352,6 +334,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   referrals?: Prisma.ReferralListRelationFilter
   commissions?: Prisma.CommissionListRelationFilter
   transactions?: Prisma.LedgerTransactionListRelationFilter
+  passwordResets?: Prisma.PasswordResetListRelationFilter
 }, "id" | "userId" | "email" | "referralCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -361,8 +344,6 @@ export type UserOrderByWithAggregationInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  resetTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   forcePasswordChange?: Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   referredByMarketerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -386,8 +367,6 @@ export type UserScalarWhereWithAggregatesInput = {
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
-  resetToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  resetTokenExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   forcePasswordChange?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   companyId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   referredByMarketerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -403,8 +382,6 @@ export type UserCreateInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -418,6 +395,7 @@ export type UserCreateInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -427,8 +405,6 @@ export type UserUncheckedCreateInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -442,6 +418,7 @@ export type UserUncheckedCreateInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -451,8 +428,6 @@ export type UserUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -466,6 +441,7 @@ export type UserUpdateInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -475,8 +451,6 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -490,6 +464,7 @@ export type UserUncheckedUpdateInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -499,8 +474,6 @@ export type UserCreateManyInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -516,8 +489,6 @@ export type UserUpdateManyMutationInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -531,8 +502,6 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -563,8 +532,6 @@ export type UserCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  resetToken?: Prisma.SortOrder
-  resetTokenExpiresAt?: Prisma.SortOrder
   forcePasswordChange?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   referredByMarketerId?: Prisma.SortOrder
@@ -584,8 +551,6 @@ export type UserMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  resetToken?: Prisma.SortOrder
-  resetTokenExpiresAt?: Prisma.SortOrder
   forcePasswordChange?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   referredByMarketerId?: Prisma.SortOrder
@@ -601,8 +566,6 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  resetToken?: Prisma.SortOrder
-  resetTokenExpiresAt?: Prisma.SortOrder
   forcePasswordChange?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   referredByMarketerId?: Prisma.SortOrder
@@ -686,10 +649,6 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
@@ -744,6 +703,20 @@ export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutSessionsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+}
+
+export type UserCreateNestedOneWithoutPasswordResetsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetsInput, Prisma.UserUncheckedCreateWithoutPasswordResetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPasswordResetsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetsInput, Prisma.UserUncheckedCreateWithoutPasswordResetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetsInput
+  upsert?: Prisma.UserUpsertWithoutPasswordResetsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPasswordResetsInput, Prisma.UserUpdateWithoutPasswordResetsInput>, Prisma.UserUncheckedUpdateWithoutPasswordResetsInput>
 }
 
 export type UserCreateNestedOneWithoutApplicationsInput = {
@@ -823,8 +796,6 @@ export type UserCreateWithoutCompanyInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -837,6 +808,7 @@ export type UserCreateWithoutCompanyInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -846,8 +818,6 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   referredByMarketerId?: string | null
   createdAt?: Date | string
@@ -860,6 +830,7 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -898,8 +869,6 @@ export type UserScalarWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  resetToken?: Prisma.StringNullableFilter<"User"> | string | null
-  resetTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   forcePasswordChange?: Prisma.BoolFilter<"User"> | boolean
   companyId?: Prisma.StringNullableFilter<"User"> | string | null
   referredByMarketerId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -915,8 +884,6 @@ export type UserCreateWithoutReferredUsersInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -929,6 +896,7 @@ export type UserCreateWithoutReferredUsersInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -938,8 +906,6 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -952,6 +918,7 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -966,8 +933,6 @@ export type UserCreateWithoutReferredByMarketerInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -980,6 +945,7 @@ export type UserCreateWithoutReferredByMarketerInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredByMarketerInput = {
@@ -989,8 +955,6 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   createdAt?: Date | string
@@ -1003,6 +967,7 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredByMarketerInput = {
@@ -1033,8 +998,6 @@ export type UserUpdateWithoutReferredUsersInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1047,6 +1010,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -1056,8 +1020,6 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1070,6 +1032,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutReferredByMarketerInput = {
@@ -1095,8 +1058,6 @@ export type UserCreateWithoutSessionsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1109,6 +1070,7 @@ export type UserCreateWithoutSessionsInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1118,8 +1080,6 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -1132,6 +1092,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1157,8 +1118,6 @@ export type UserUpdateWithoutSessionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1171,6 +1130,7 @@ export type UserUpdateWithoutSessionsInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1180,8 +1140,6 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1189,6 +1147,111 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPasswordResetsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPasswordResetsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPasswordResetsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetsInput, Prisma.UserUncheckedCreateWithoutPasswordResetsInput>
+}
+
+export type UserUpsertWithoutPasswordResetsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetsInput, Prisma.UserUncheckedUpdateWithoutPasswordResetsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetsInput, Prisma.UserUncheckedCreateWithoutPasswordResetsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPasswordResetsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetsInput, Prisma.UserUncheckedUpdateWithoutPasswordResetsInput>
+}
+
+export type UserUpdateWithoutPasswordResetsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPasswordResetsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
@@ -1203,8 +1266,6 @@ export type UserCreateWithoutApplicationsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1217,6 +1278,7 @@ export type UserCreateWithoutApplicationsInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
@@ -1226,8 +1288,6 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -1240,6 +1300,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -1265,8 +1326,6 @@ export type UserUpdateWithoutApplicationsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1279,6 +1338,7 @@ export type UserUpdateWithoutApplicationsInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
@@ -1288,8 +1348,6 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1302,6 +1360,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInstallmentsInput = {
@@ -1311,8 +1370,6 @@ export type UserCreateWithoutInstallmentsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1325,6 +1382,7 @@ export type UserCreateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInstallmentsInput = {
@@ -1334,8 +1392,6 @@ export type UserUncheckedCreateWithoutInstallmentsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -1348,6 +1404,7 @@ export type UserUncheckedCreateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInstallmentsInput = {
@@ -1373,8 +1430,6 @@ export type UserUpdateWithoutInstallmentsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1387,6 +1442,7 @@ export type UserUpdateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInstallmentsInput = {
@@ -1396,8 +1452,6 @@ export type UserUncheckedUpdateWithoutInstallmentsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1410,6 +1464,7 @@ export type UserUncheckedUpdateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommissionsInput = {
@@ -1419,8 +1474,6 @@ export type UserCreateWithoutCommissionsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1433,6 +1486,7 @@ export type UserCreateWithoutCommissionsInput = {
   installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommissionsInput = {
@@ -1442,8 +1496,6 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -1456,6 +1508,7 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommissionsInput = {
@@ -1481,8 +1534,6 @@ export type UserUpdateWithoutCommissionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1495,6 +1546,7 @@ export type UserUpdateWithoutCommissionsInput = {
   installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommissionsInput = {
@@ -1504,8 +1556,6 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1518,6 +1568,7 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -1527,8 +1578,6 @@ export type UserCreateWithoutTransactionsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1541,6 +1590,7 @@ export type UserCreateWithoutTransactionsInput = {
   installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -1550,8 +1600,6 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -1564,6 +1612,7 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -1589,8 +1638,6 @@ export type UserUpdateWithoutTransactionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1603,6 +1650,7 @@ export type UserUpdateWithoutTransactionsInput = {
   installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -1612,8 +1660,6 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1626,6 +1672,7 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferralsInput = {
@@ -1635,8 +1682,6 @@ export type UserCreateWithoutReferralsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1649,6 +1694,7 @@ export type UserCreateWithoutReferralsInput = {
   installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralsInput = {
@@ -1658,8 +1704,6 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   referredByMarketerId?: string | null
@@ -1672,6 +1716,7 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralsInput = {
@@ -1697,8 +1742,6 @@ export type UserUpdateWithoutReferralsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1711,6 +1754,7 @@ export type UserUpdateWithoutReferralsInput = {
   installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralsInput = {
@@ -1720,8 +1764,6 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1734,6 +1776,7 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -1743,8 +1786,6 @@ export type UserCreateManyCompanyInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   referredByMarketerId?: string | null
   createdAt?: Date | string
@@ -1759,8 +1800,6 @@ export type UserUpdateWithoutCompanyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1773,6 +1812,7 @@ export type UserUpdateWithoutCompanyInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -1782,8 +1822,6 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1796,6 +1834,7 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -1805,8 +1844,6 @@ export type UserUncheckedUpdateManyWithoutCompanyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1821,8 +1858,6 @@ export type UserCreateManyReferredByMarketerInput = {
   password: string
   name?: string | null
   role?: $Enums.Role
-  resetToken?: string | null
-  resetTokenExpiresAt?: Date | string | null
   forcePasswordChange?: boolean
   companyId?: string | null
   createdAt?: Date | string
@@ -1837,8 +1872,6 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1851,6 +1884,7 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
@@ -1860,8 +1894,6 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1874,6 +1906,7 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutReferredByMarketerInput = {
@@ -1883,8 +1916,6 @@ export type UserUncheckedUpdateManyWithoutReferredByMarketerInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1905,6 +1936,7 @@ export type UserCountOutputType = {
   referrals: number
   commissions: number
   transactions: number
+  passwordResets: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1915,6 +1947,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   referrals?: boolean | UserCountOutputTypeCountReferralsArgs
   commissions?: boolean | UserCountOutputTypeCountCommissionsArgs
   transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
+  passwordResets?: boolean | UserCountOutputTypeCountPasswordResetsArgs
 }
 
 /**
@@ -1976,6 +2009,13 @@ export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.LedgerTransactionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPasswordResetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PasswordResetWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1984,8 +2024,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   name?: boolean
   role?: boolean
-  resetToken?: boolean
-  resetTokenExpiresAt?: boolean
   forcePasswordChange?: boolean
   companyId?: boolean
   referredByMarketerId?: boolean
@@ -2001,6 +2039,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   referrals?: boolean | Prisma.User$referralsArgs<ExtArgs>
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
+  passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2011,8 +2050,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   name?: boolean
   role?: boolean
-  resetToken?: boolean
-  resetTokenExpiresAt?: boolean
   forcePasswordChange?: boolean
   companyId?: boolean
   referredByMarketerId?: boolean
@@ -2030,8 +2067,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   name?: boolean
   role?: boolean
-  resetToken?: boolean
-  resetTokenExpiresAt?: boolean
   forcePasswordChange?: boolean
   companyId?: boolean
   referredByMarketerId?: boolean
@@ -2049,8 +2084,6 @@ export type UserSelectScalar = {
   password?: boolean
   name?: boolean
   role?: boolean
-  resetToken?: boolean
-  resetTokenExpiresAt?: boolean
   forcePasswordChange?: boolean
   companyId?: boolean
   referredByMarketerId?: boolean
@@ -2059,7 +2092,7 @@ export type UserSelectScalar = {
   referralCode?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "email" | "password" | "name" | "role" | "resetToken" | "resetTokenExpiresAt" | "forcePasswordChange" | "companyId" | "referredByMarketerId" | "createdAt" | "updatedAt" | "referralCode", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "email" | "password" | "name" | "role" | "forcePasswordChange" | "companyId" | "referredByMarketerId" | "createdAt" | "updatedAt" | "referralCode", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   referredByMarketer?: boolean | Prisma.User$referredByMarketerArgs<ExtArgs>
@@ -2070,6 +2103,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   referrals?: boolean | Prisma.User$referralsArgs<ExtArgs>
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
+  passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2093,6 +2127,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     referrals: Prisma.$ReferralPayload<ExtArgs>[]
     commissions: Prisma.$CommissionPayload<ExtArgs>[]
     transactions: Prisma.$LedgerTransactionPayload<ExtArgs>[]
+    passwordResets: Prisma.$PasswordResetPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -2101,8 +2136,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string
     name: string | null
     role: $Enums.Role
-    resetToken: string | null
-    resetTokenExpiresAt: Date | null
     forcePasswordChange: boolean
     companyId: string | null
     referredByMarketerId: string | null
@@ -2512,6 +2545,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   referrals<T extends Prisma.User$referralsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   commissions<T extends Prisma.User$commissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transactions<T extends Prisma.User$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  passwordResets<T extends Prisma.User$passwordResetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2547,8 +2581,6 @@ export interface UserFieldRefs {
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
-  readonly resetToken: Prisma.FieldRef<"User", 'String'>
-  readonly resetTokenExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly forcePasswordChange: Prisma.FieldRef<"User", 'Boolean'>
   readonly companyId: Prisma.FieldRef<"User", 'String'>
   readonly referredByMarketerId: Prisma.FieldRef<"User", 'String'>
@@ -3159,6 +3191,30 @@ export type User$transactionsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.LedgerTransactionScalarFieldEnum | Prisma.LedgerTransactionScalarFieldEnum[]
+}
+
+/**
+ * User.passwordResets
+ */
+export type User$passwordResetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PasswordReset
+   */
+  select?: Prisma.PasswordResetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PasswordReset
+   */
+  omit?: Prisma.PasswordResetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PasswordResetInclude<ExtArgs> | null
+  where?: Prisma.PasswordResetWhereInput
+  orderBy?: Prisma.PasswordResetOrderByWithRelationInput | Prisma.PasswordResetOrderByWithRelationInput[]
+  cursor?: Prisma.PasswordResetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PasswordResetScalarFieldEnum | Prisma.PasswordResetScalarFieldEnum[]
 }
 
 /**

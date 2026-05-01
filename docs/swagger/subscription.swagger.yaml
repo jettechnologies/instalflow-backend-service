@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Subscription API
+  version: 1.0.0
+  description: API for managing customer subscriptions and payments.
+
+paths:
+  /subscriptions/plans:
+    get:
+      summary: List all active subscription plans
+      tags: [Subscription]
+      responses:
+        '200':
+          description: List of active plans
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SubscriptionPlan'
+
+  /subscriptions/initialize:
+    post:
+      summary: Initialize a subscription payment
+      tags: [Subscription]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - planId
+              properties:
+                planId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Payment initialization data (Paystack)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      authorization_url:
+                        type: string
+                      access_code:
+                        type: string
+                      reference:
+                        type: string
+
+  /subscriptions/verify:
+    get:
+      summary: Verify a subscription payment
+      tags: [Subscription]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: reference
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscription activated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        example: ACTIVE
+                      plan:
+                        type: string
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    SubscriptionPlan:
+      type: object
+      properties:
+        planId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPrice:
+          type: number
+        interval:
+          type: string
+          enum: [WEEKLY, MONTHLY, YEARLY]
+        active:
+          type: boolean

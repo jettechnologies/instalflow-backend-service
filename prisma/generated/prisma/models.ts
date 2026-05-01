@@ -11,6 +11,7 @@
 export type * from './models/Company'
 export type * from './models/User'
 export type * from './models/UserSession'
+export type * from './models/PasswordReset'
 export type * from './models/Session'
 export type * from './models/Category'
 export type * from './models/Product'

@@ -74,3 +74,13 @@ export const SubscriptionInterval = {
 } as const
 
 export type SubscriptionInterval = (typeof SubscriptionInterval)[keyof typeof SubscriptionInterval]
+
+
+export const SubscriptionStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]

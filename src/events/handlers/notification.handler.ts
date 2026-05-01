@@ -135,6 +135,23 @@ onEvent(DomainEvent.ORDER_STATUS_UPDATED, async (payload) => {
   });
 });
 
+/**
+ * COMPANY ONBOARDED
+ */
+onEvent(DomainEvent.COMPANY_ONBOARDED, async (payload) => {
+  await NotificationService.send({
+    to: payload.email,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.COMPANY_ONBOARDING,
+    subject: "Welcome to Instalflow! Your Company is Ready 🚀",
+    context: {
+      adminName: payload.adminName,
+      companyName: payload.companyName,
+      dashboard_url: process.env.FRONTEND_URL,
+    },
+  });
+});
+
 // // src/events/handlers/notification.handler.ts
 // import { onEvent } from "../emitter";
 // import { DomainEvent } from "../event.types";

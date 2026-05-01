@@ -10,6 +10,7 @@ router.use(requireAuth, requireRole(["SUPER_ADMIN"]));
 router.get("/plans", SuperAdminController.getPlans);
 router.post("/plans", SuperAdminController.createPlan);
 router.patch("/plans/:planId", SuperAdminController.updatePlan);
+router.patch("/plans/:planId/toggle", SuperAdminController.toggleStatus);
 router.delete("/plans/:planId", SuperAdminController.deletePlan);
 
 export default router;

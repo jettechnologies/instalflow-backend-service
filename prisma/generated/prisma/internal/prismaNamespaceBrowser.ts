@@ -54,6 +54,7 @@ export const ModelName = {
   Company: 'Company',
   User: 'User',
   UserSession: 'UserSession',
+  PasswordReset: 'PasswordReset',
   Session: 'Session',
   Category: 'Category',
   Product: 'Product',
@@ -104,8 +105,6 @@ export const UserScalarFieldEnum = {
   password: 'password',
   name: 'name',
   role: 'role',
-  resetToken: 'resetToken',
-  resetTokenExpiresAt: 'resetTokenExpiresAt',
   forcePasswordChange: 'forcePasswordChange',
   companyId: 'companyId',
   referredByMarketerId: 'referredByMarketerId',
@@ -121,13 +120,26 @@ export const UserSessionScalarFieldEnum = {
   id: 'id',
   sessionId: 'sessionId',
   userId: 'userId',
-  token: 'token',
-  revoked: 'revoked',
+  tokenHash: 'tokenHash',
+  createdAt: 'createdAt',
   expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
+  revoked: 'revoked'
 } as const
 
 export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
+
+
+export const PasswordResetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  otpHash: 'otpHash',
+  expiresAt: 'expiresAt',
+  attempts: 'attempts',
+  used: 'used',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetScalarFieldEnum = (typeof PasswordResetScalarFieldEnum)[keyof typeof PasswordResetScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {

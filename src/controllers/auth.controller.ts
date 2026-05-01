@@ -13,12 +13,23 @@ import ApiResponse from "../libs/ApiResponse";
 import { ForbiddenError } from "../libs/AppError";
 
 export class AuthController {
-  
   static async register(req: Request, res: Response) {
     const payload = RegisterSchema.parse(req.body);
     const user = await AuthService.register(payload);
 
-    return ApiResponse.success(res, 201, "Customer registered successfully", user);
+    res.cookie("refresh_token", user.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return ApiResponse.success(
+      res,
+      201,
+      "Customer registered successfully",
+      user,
+    );
   }
 
   /**
@@ -28,7 +39,19 @@ export class AuthController {
     const payload = CompanyRegisterSchema.parse(req.body);
     const result = await AuthService.onboardCompany(payload);
 
-    return ApiResponse.success(res, 201, "Company and Admin created successfully", result);
+    res.cookie("refresh_token", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return ApiResponse.success(
+      res,
+      201,
+      "Company and Admin created successfully",
+      result,
+    );
   }
 
   /**
@@ -40,25 +63,33 @@ export class AuthController {
 
     // Security: Only COMPANY or ADMIN/SUPER_ADMIN can create marketers
     if (!["COMPANY", "ADMIN", "SUPER_ADMIN"].includes(admin.role)) {
-      throw new ForbiddenError("Only company administrators can create marketers");
+      throw new ForbiddenError(
+        "Only company administrators can create marketers",
+      );
     }
 
     if (!admin.companyId && admin.role === "COMPANY") {
-       throw new ForbiddenError("Administrator must be associated with a company");
+      throw new ForbiddenError(
+        "Administrator must be associated with a company",
+      );
     }
 
-    const { user, tempPassword } = await AuthService.createMarketer(admin.companyId!, payload);
+    const { user, tempPassword } = await AuthService.createMarketer(
+      admin.companyId!,
+      payload,
+    );
 
-    return ApiResponse.success(res, 201, "Marketer created successfully", { 
-      user, 
+    return ApiResponse.success(res, 201, "Marketer created successfully", {
+      user,
       tempPassword,
-      instructions: "Please provide the temporary password to the marketer. They will be prompted to change it upon first login."
+      instructions:
+        "Please provide the temporary password to the marketer. They will be prompted to change it upon first login.",
     });
   }
 
   static async login(req: Request, res: Response) {
     const payload = LoginSchema.parse(req.body);
-    const { user, accessToken, refreshToken, sessionId } =
+    const { user, accessToken, refreshToken } =
       await AuthService.login(payload);
 
     res.cookie("refresh_token", refreshToken, {
@@ -71,15 +102,15 @@ export class AuthController {
     return ApiResponse.success(res, 200, "Login successful", {
       user,
       accessToken,
-      sessionId,
-      message: user.forcePasswordChange ? "CONSENT_REQUIRED: You must change your password before proceeding." : undefined
+      message: user.forcePasswordChange
+        ? "CONSENT_REQUIRED: You must change your password before proceeding."
+        : undefined,
     });
   }
 
   static async refresh(req: Request, res: Response) {
     const refreshToken =
-      req.cookies?.refresh_token ||
-      req.headers.authorization?.split(" ")[1];
+      req.cookies?.refresh_token || req.headers.authorization?.split(" ")[1];
 
     if (!refreshToken) {
       return ApiResponse.unauthorized(res, "Refresh token required");
@@ -90,7 +121,7 @@ export class AuthController {
   }
 
   static async logout(req: Request, res: Response) {
-    const sessionId = req.body.sessionId;
+    const sessionId = req.body.sessionId || req.user?.sessionId;
     const userId = req.user!.userId;
 
     await AuthService.logout(sessionId, userId);
@@ -107,8 +138,8 @@ export class AuthController {
   }
 
   static async resetPassword(req: Request, res: Response) {
-    const { token, newPassword } = ResetPasswordSchema.parse(req.body);
-    const result = await AuthService.resetPassword(token, newPassword);
+    const payload = ResetPasswordSchema.parse(req.body);
+    const result = await AuthService.resetPassword(payload);
 
     return ApiResponse.success(res, 200, result.message);
   }
