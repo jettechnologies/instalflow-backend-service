@@ -1,0 +1,37 @@
+paths:
+  /csrf-token:
+    get:
+      tags:
+        - CSRF
+      summary: Generate CSRF Token
+      description: |
+        Retrieves a fresh CSRF token and sets the necessary cookies.
+        - **csrf_hash**: HttpOnly cookie used for verification.
+        - **csrf_token**: Non-HttpOnly cookie that can be read by JS.
+        - **x-csrf-token**: Response header containing the raw token.
+        
+        The client must send the raw token back in the `x-csrf-token` header for all state-changing requests (POST, PUT, PATCH, DELETE).
+      responses:
+        '200':
+          description: Token generated successfully
+          headers:
+            x-csrf-token:
+              schema:
+                type: string
+              description: The raw CSRF token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  csrfToken:
+                    type: string
+                    example: 5f9d7a...
+                  message:
+                    type: string
+                    example: CSRF token generated successfully.
+        '500':
+          description: Internal Server Error

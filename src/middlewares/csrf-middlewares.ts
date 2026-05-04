@@ -29,48 +29,54 @@ declare global {
 const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const isAuthRoute = req.path.startsWith("/api/v1/auth/");
   const isBearerAuth = req.headers.authorization?.startsWith("Bearer ");
+  const isCsrfEndpoint = req.path === "/api/v1/csrf-token";
 
-  if (isAuthRoute || isBearerAuth) {
+  // Skip CSRF for auth routes, bearer token authenticated requests, or the CSRF endpoint itself
+  if (isAuthRoute || isBearerAuth || isCsrfEndpoint) {
     return next();
   }
 
+  // Auto-generate/refresh tokens on standard GET requests to ensure cookies are always present
   if (req.method === "GET") {
-    const rawToken = createCsrfToken();
+    const rawToken = req.cookies?.["csrf_token"] || createCsrfToken();
     const hashed = hashToken(rawToken);
 
-    // Store the HASH in a HttpOnly cookie so it can't be read by JS
-    res.cookie("csrf_hash", hashed, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
+    if (!req.cookies?.["csrf_hash"]) {
+      res.cookie("csrf_hash", hashed, {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+      });
+    }
 
-    // Expose the RAW token via a readable cookie so the client can send it back
-    res.cookie("csrf_token", rawToken, {
-      httpOnly: false,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
+    if (!req.cookies?.["csrf_token"]) {
+      res.cookie("csrf_token", rawToken, {
+        httpOnly: false,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+      });
+    }
 
     req.csrfToken = () => rawToken;
     return next();
   }
 
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
-    // Client must echo back the raw token in X-CSRF-Token header
-    const clientToken =
-      (req.headers["x-csrf-token"] as string) || req.body?._csrf;
+    const clientToken = (req.headers["x-csrf-token"] as string) || req.body?._csrf;
     const storedHash = req.cookies?.["csrf_hash"];
 
     if (!clientToken || !storedHash) {
-      return res.status(403).json({ error: "Missing CSRF token" });
+      logger.warn(`CSRF Validation Failed: clientToken=${!!clientToken}, storedHash=${!!storedHash}`);
+      return res.status(403).json({ 
+        error: "Missing CSRF token", 
+        message: "A valid CSRF token is required for this operation. Perform a GET request to /api/v1/csrf-token first." 
+      });
     }
 
-    // Re-hash what the client sent and compare with stored hash
     const expectedHash = hashToken(clientToken);
-    
+
     try {
       const valid = crypto.timingSafeEqual(
         Buffer.from(expectedHash, "hex"),

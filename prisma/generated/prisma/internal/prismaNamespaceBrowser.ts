@@ -66,7 +66,12 @@ export const ModelName = {
   LedgerTransaction: 'LedgerTransaction',
   Referral: 'Referral',
   SubscriptionPlan: 'SubscriptionPlan',
-  CompanySubscription: 'CompanySubscription'
+  CompanySubscription: 'CompanySubscription',
+  LedgerAccount: 'LedgerAccount',
+  FinancialTransaction: 'FinancialTransaction',
+  JournalEntry: 'JournalEntry',
+  WebhookEvent: 'WebhookEvent',
+  PendingOnboarding: 'PendingOnboarding'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -316,6 +321,72 @@ export const CompanySubscriptionScalarFieldEnum = {
 } as const
 
 export type CompanySubscriptionScalarFieldEnum = (typeof CompanySubscriptionScalarFieldEnum)[keyof typeof CompanySubscriptionScalarFieldEnum]
+
+
+export const LedgerAccountScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  balance: 'balance',
+  companyId: 'companyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LedgerAccountScalarFieldEnum = (typeof LedgerAccountScalarFieldEnum)[keyof typeof LedgerAccountScalarFieldEnum]
+
+
+export const FinancialTransactionScalarFieldEnum = {
+  id: 'id',
+  reference: 'reference',
+  description: 'description',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type FinancialTransactionScalarFieldEnum = (typeof FinancialTransactionScalarFieldEnum)[keyof typeof FinancialTransactionScalarFieldEnum]
+
+
+export const JournalEntryScalarFieldEnum = {
+  id: 'id',
+  transactionId: 'transactionId',
+  ledgerAccountId: 'ledgerAccountId',
+  debit: 'debit',
+  credit: 'credit',
+  reference: 'reference',
+  createdAt: 'createdAt'
+} as const
+
+export type JournalEntryScalarFieldEnum = (typeof JournalEntryScalarFieldEnum)[keyof typeof JournalEntryScalarFieldEnum]
+
+
+export const WebhookEventScalarFieldEnum = {
+  id: 'id',
+  source: 'source',
+  type: 'type',
+  payload: 'payload',
+  processed: 'processed',
+  createdAt: 'createdAt'
+} as const
+
+export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum]
+
+
+export const PendingOnboardingScalarFieldEnum = {
+  id: 'id',
+  onboardingId: 'onboardingId',
+  email: 'email',
+  companyName: 'companyName',
+  adminName: 'adminName',
+  passwordHash: 'passwordHash',
+  planId: 'planId',
+  paymentReference: 'paymentReference',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PendingOnboardingScalarFieldEnum = (typeof PendingOnboardingScalarFieldEnum)[keyof typeof PendingOnboardingScalarFieldEnum]
 
 
 export const SortOrder = {

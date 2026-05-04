@@ -2,10 +2,14 @@ import "dotenv/config";
 import { PrismaClient } from "./generated/prisma/client.js";
 export * from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
+const isProduction = process.env.NODE_ENV === "production";
+const connectionString = process.env.DATABASE_URL!;
+
+const adapter = isProduction
+  ? new PrismaNeon({ connectionString })
+  : new PrismaPg({ connectionString });
 
 export const prisma = new PrismaClient({ adapter }).$extends({
   result: {
@@ -25,5 +29,10 @@ export const prisma = new PrismaClient({ adapter }).$extends({
     companySubscription: { id: { needs: {}, compute: () => undefined } },
     passwordReset: { id: { needs: {}, compute: () => undefined } },
     session: { id: { needs: {}, compute: () => undefined } },
+    ledgerAccount: { id: { needs: {}, compute: () => undefined } },
+    financialTransaction: { id: { needs: {}, compute: () => undefined } },
+    journalEntry: { id: { needs: {}, compute: () => undefined } },
+    webhookEvent: { id: { needs: {}, compute: () => undefined } },
+    pendingOnboarding: { id: { needs: {}, compute: () => undefined } },
   },
 });

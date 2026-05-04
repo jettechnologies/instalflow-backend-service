@@ -33,18 +33,35 @@ export class AuthController {
   }
 
   /**
+   * Pre-validate onboarding details before payment
+   */
+  static async validateOnboarding(req: Request, res: Response) {
+    const payload = CompanyRegisterSchema.parse(req.body);
+    const pending = await AuthService.validateOnboarding(payload);
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Onboarding details validated. You may proceed to payment.",
+      { onboardingId: pending.onboardingId },
+    );
+  }
+
+  /**
    * For onboarding a new company tenant
    */
   static async onboardCompany(req: Request, res: Response) {
     const payload = CompanyRegisterSchema.parse(req.body);
     const result = await AuthService.onboardCompany(payload);
 
-    res.cookie("refresh_token", result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    if ("refreshToken" in result) {
+      res.cookie("refresh_token", result.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+    }
 
     return ApiResponse.success(
       res,

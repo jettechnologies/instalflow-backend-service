@@ -6,6 +6,7 @@ import router from "./routes";
 import { errorHandler } from "./middlewares/errorHandler";
 import { configureExpress } from "./config/express";
 import { setupSwagger } from "./config/swagger";
+// import { httpServerHandler } from "cloudflare:node";
 
 const app = express();
 
@@ -21,3 +22,5 @@ app.use(errorHandler as any);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server Live on port ${PORT} 🚀`));
+
+// export default httpServerHandler({ port: PORT });

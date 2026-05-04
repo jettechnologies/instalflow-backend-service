@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "./generated/prisma"
+  provider        = "prisma-client"
+  output          = "./generated/prisma"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -60,6 +61,14 @@ enum SubscriptionStatus {
   CANCELLED
 }
 
+enum AccountType {
+  ASSET
+  LIABILITY
+  REVENUE
+  EXPENSE
+  EQUITY
+}
+
 model Company {
   id        BigInt   @id @default(autoincrement())
   companyId String   @unique @default(uuid())
@@ -69,9 +78,10 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users         User[]
-  products      Product[]
-  subscriptions CompanySubscription[]
+  users          User[]
+  products       Product[]
+  subscriptions  CompanySubscription[]
+  ledgerAccounts LedgerAccount[]
 }
 
 model User {
@@ -284,4 +294,64 @@ model CompanySubscription {
   endDate        DateTime?
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
+}
+
+model LedgerAccount {
+  id        BigInt      @id @default(autoincrement())
+  name      String // e.g., "PAYSTACK_CLEARING", "PLATFORM_REVENUE"
+  type      AccountType
+  balance   Decimal     @default(0)
+  companyId String? // Null for system-wide accounts
+  company   Company?    @relation(fields: [companyId], references: [companyId])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  entries JournalEntry[]
+
+  @@unique([name, companyId])
+}
+
+model FinancialTransaction {
+  id          BigInt   @id @default(autoincrement())
+  reference   String   @unique // e.g., Paystack Ref, Payout ID
+  description String?
+  metadata    Json? // Store raw gateway response
+  createdAt   DateTime @default(now())
+
+  entries JournalEntry[]
+}
+
+model JournalEntry {
+  id              BigInt               @id @default(autoincrement())
+  transactionId   BigInt
+  transaction     FinancialTransaction @relation(fields: [transactionId], references: [id])
+  ledgerAccountId BigInt
+  account         LedgerAccount        @relation(fields: [ledgerAccountId], references: [id])
+  debit           Decimal              @default(0)
+  credit          Decimal              @default(0)
+  reference       String               @unique // Unique for this specific line
+  createdAt       DateTime             @default(now())
+}
+
+model WebhookEvent {
+  id        String   @id // External Event ID (e.g. Paystack event ID)
+  source    String // e.g., "PAYSTACK"
+  type      String // e.g., "charge.success"
+  payload   Json
+  processed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model PendingOnboarding {
+  id               BigInt   @id @default(autoincrement())
+  onboardingId     String   @unique @default(uuid())
+  email            String   @unique
+  companyName      String
+  adminName        String
+  passwordHash     String
+  planId           String
+  paymentReference String   @unique
+  status           String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }

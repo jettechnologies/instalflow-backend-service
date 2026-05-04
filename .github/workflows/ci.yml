@@ -2,35 +2,45 @@ name: Instalflow Backend Framework CI
 
 on:
   push:
-    branches: [ "main", "staging" ]
+    branches: ["main", "staging"]
   pull_request:
-    branches: [ "main", "staging" ]
+    branches: ["main", "staging"]
 
 jobs:
   build:
     name: Typechecking & Standard Build
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js Environment
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
-        
-    - name: Bootstrap PNPM
-      run: npm install -g pnpm
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
 
-    - name: Install Dependencies
-      run: pnpm install --frozen-lockfile=false
-      
-    - name: Generate Prisma Engine Mappings
-      run: pnpm dlx prisma generate
+      - name: Bootstrap PNPM
+        run: npm install -g pnpm
 
-    - name: Strict Typescript Check
-      run: npx tsc --noEmit
-      
-    - name: Optimized TSUP Compilation
-      run: pnpm run build
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Generate Prisma Engine Mappings
+        run: pnpm dlx prisma generate
+
+      - name: Strict Typescript Check
+        run: npx tsc --noEmit
+
+      - name: Optimized TSUP Compilation
+        run: pnpm run build
+
+  deploy:
+    name: Deploy to Render
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deploy Hook
+        run: |
+          curl -f ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

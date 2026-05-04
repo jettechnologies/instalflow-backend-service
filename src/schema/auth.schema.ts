@@ -6,7 +6,7 @@ export const RegisterSchema = z.object({
     message: "Invalid email address",
   }),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  referredByMarketerId: z.string().uuid().optional(),
+  referredByMarketerId: z.uuid().optional(),
 });
 
 export const LoginSchema = z.object({
@@ -45,6 +45,8 @@ export const CompanyRegisterSchema = z.object({
     message: "Invalid email address",
   }),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  planId: z.string().uuid("Invalid plan ID"),
+  paymentReference: z.string().min(1, "Required"),
 });
 
 /**

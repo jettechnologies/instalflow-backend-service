@@ -1,5 +1,7 @@
 import { prisma } from "../../prisma/client.js";
 import AppError, { BadRequestError, NotFoundError } from "../libs/AppError.js";
+import { LedgerService } from "./ledger.service.js";
+import { AccountType } from "../../prisma/client.js";
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
@@ -76,9 +78,9 @@ export class SubscriptionService {
   }
 
   /**
-   * Verify Paystack payment and activate subscription
+   * Internal: Verify a Paystack transaction and return data
    */
-  static async verifySubscription(reference: string) {
+  static async validatePaystackTransaction(reference: string) {
     const response = await fetch(
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
@@ -89,10 +91,20 @@ export class SubscriptionService {
 
     const data = await response.json();
     if (!data.status || data.data.status !== "success") {
-      throw new BadRequestError("Payment verification failed");
+      throw new BadRequestError(
+        data.message || "Payment verification failed or incomplete",
+      );
     }
 
-    const { companyId, planId } = data.data.metadata;
+    return data.data; // Full transaction object
+  }
+
+  /**
+   * Verify Paystack payment and activate subscription
+   */
+  static async verifySubscription(reference: string) {
+    const transaction = await this.validatePaystackTransaction(reference);
+    const { companyId, planId } = transaction.metadata;
 
     // Start Atomic Transaction: Activate Subscription + Ledger Entry
     return prisma.$transaction(async (tx) => {
@@ -124,23 +136,27 @@ export class SubscriptionService {
         data: { plan: plan.name },
       });
 
-      // 4. Ledger Entry (Asset: Bank_Settled, Revenue: Platform_Revenue)
-      // Note: In a real system, we'd use the company's admin user for the transaction record
-      const admin = await tx.user.findFirst({
-        where: { companyId, role: "ADMIN" },
-      });
-
-      if (admin) {
-        await tx.ledgerTransaction.create({
-          data: {
-            userId: admin.userId,
-            type: "CREDIT",
-            amount: plan.discountPrice || plan.price,
-            referenceId: reference,
-            description: `Subscription Payment: ${plan.name}`,
-          },
-        });
-      }
+      // 4. Ledger Entry (Double Entry: Asset Debit, Revenue Credit)
+      await LedgerService.recordTransaction(
+        {
+          reference: reference,
+          description: `Subscription Payment: ${plan.name}`,
+          companyId: companyId,
+          entries: [
+            {
+              accountName: "PAYSTACK_CLEARING",
+              accountType: AccountType.ASSET,
+              debit: plan.discountPrice || plan.price,
+            },
+            {
+              accountName: "PLATFORM_REVENUE",
+              accountType: AccountType.REVENUE,
+              credit: plan.discountPrice || plan.price,
+            },
+          ],
+        },
+        tx
+      );
 
       return { status: "ACTIVE", plan: plan.name };
     });

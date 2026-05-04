@@ -1,0 +1,66 @@
+services:
+  - type: web
+    runtime: node
+    name: shopery-backend
+    plan: free
+    region: oregon
+
+    buildCommand: |
+      corepack enable
+      corepack prepare pnpm@latest --activate
+      pnpm install --frozen-lockfile
+      pnpm run db:generate
+      pnpm run build
+      if [ "$NODE_ENV" = "production" ]; then pnpm run db:push; fi
+      pnpm run db:seed
+
+    startCommand: pnpm run start
+
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+
+      - key: DIRECT_URL
+        sync: false
+
+      - key: JWT_ACCESS_SECRET
+        sync: false
+
+      - key: JWT_REFRESH_SECRET
+        sync: false
+
+      - key: SMTP_FROM
+        sync: false
+
+      - key: EMAIL_PROVIDER
+        sync: false
+
+      - key: CSRF_SECRET
+        sync: false
+
+      - key: BREVO_API_KEY
+        sync: false
+
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+
+      - key: NOTIFICATION_HUB_SECRET
+        sync: false
+
+      - key: EMAIL_WORKER_SECRET
+        sync: false
+
+      - key: WORKER_SECRET
+        sync: false
+
+      - key: NOTIFICATION_HUB_URL
+        sync: false
+
+      - key: BCRYPT_SALT_ROUNDS
+        value: "12"
+
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 10000

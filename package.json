@@ -29,6 +29,8 @@
   "packageManager": "pnpm@10.33.2",
   "dependencies": {
     "@getbrevo/brevo": "^5.0.4",
+    "@neondatabase/serverless": "^1.1.0",
+    "@prisma/adapter-neon": "^7.8.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "bcryptjs": "^3.0.3",
@@ -37,6 +39,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.4.1",
     "express-session": "^1.19.0",
     "handlebars": "^4.7.9",
     "helmet": "^8.1.0",

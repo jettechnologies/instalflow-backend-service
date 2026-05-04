@@ -121,3 +121,28 @@ export type SubscriptionPlan = Prisma.SubscriptionPlanModel
  * 
  */
 export type CompanySubscription = Prisma.CompanySubscriptionModel
+/**
+ * Model LedgerAccount
+ * 
+ */
+export type LedgerAccount = Prisma.LedgerAccountModel
+/**
+ * Model FinancialTransaction
+ * 
+ */
+export type FinancialTransaction = Prisma.FinancialTransactionModel
+/**
+ * Model JournalEntry
+ * 
+ */
+export type JournalEntry = Prisma.JournalEntryModel
+/**
+ * Model WebhookEvent
+ * 
+ */
+export type WebhookEvent = Prisma.WebhookEventModel
+/**
+ * Model PendingOnboarding
+ * 
+ */
+export type PendingOnboarding = Prisma.PendingOnboardingModel
