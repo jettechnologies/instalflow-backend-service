@@ -131,6 +131,23 @@ export class WebhookController {
       });
 
       // inside webhook
+      // await onboardingQueue.add(
+      //   "process-onboarding",
+      //   {
+      //     intentId: intent.intentId,
+      //     reference,
+      //   },
+      //   {
+      //     attempts: 5,
+      //     backoff: {
+      //       type: "exponential",
+      //       delay: 60 * 1000, // 1 minute
+      //     },
+      // removeOnComplete: true,
+      // removeOnFail: false,
+      //   },
+      // );
+
       await onboardingQueue.add(
         "process-onboarding",
         {
@@ -138,10 +155,11 @@ export class WebhookController {
           reference,
         },
         {
+          jobId: intent.intentId,
           attempts: 5,
           backoff: {
             type: "exponential",
-            delay: 60 * 1000, // 1 minute
+            delay: 60000,
           },
           removeOnComplete: true,
           removeOnFail: false,
