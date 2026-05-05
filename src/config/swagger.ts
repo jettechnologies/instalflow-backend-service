@@ -8,12 +8,17 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: "Instalflow Platform API",
       version: "1.0.0",
-      description: "API documentation for the Instalflow B2B/B2C core service engine.",
+      description:
+        "API documentation for the Instalflow B2B/B2C core service engine.",
     },
     servers: [
       {
         url: "http://localhost:3000/api/v1",
         description: "Development core server",
+      },
+      {
+        url: "https://instalflow-backend-6kiz.onrender.com/api/v1",
+        description: "Production server",
       },
     ],
     components: {
@@ -28,7 +33,7 @@ const options: swaggerJsdoc.Options = {
     },
   },
   // Following Architecture Guide #7: Decoupled API Documentation
-  apis: ["./docs/swagger/**/*.yaml"], 
+  apis: ["./docs/swagger/**/*.yaml"],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
