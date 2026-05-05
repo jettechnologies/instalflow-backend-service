@@ -71,7 +71,7 @@ export const ModelName = {
   FinancialTransaction: 'FinancialTransaction',
   JournalEntry: 'JournalEntry',
   WebhookEvent: 'WebhookEvent',
-  PendingOnboarding: 'PendingOnboarding'
+  OnboardingIntent: 'OnboardingIntent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -372,9 +372,9 @@ export const WebhookEventScalarFieldEnum = {
 export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum]
 
 
-export const PendingOnboardingScalarFieldEnum = {
+export const OnboardingIntentScalarFieldEnum = {
   id: 'id',
-  onboardingId: 'onboardingId',
+  intentId: 'intentId',
   email: 'email',
   companyName: 'companyName',
   adminName: 'adminName',
@@ -386,7 +386,7 @@ export const PendingOnboardingScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type PendingOnboardingScalarFieldEnum = (typeof PendingOnboardingScalarFieldEnum)[keyof typeof PendingOnboardingScalarFieldEnum]
+export type OnboardingIntentScalarFieldEnum = (typeof OnboardingIntentScalarFieldEnum)[keyof typeof OnboardingIntentScalarFieldEnum]
 
 
 export const SortOrder = {

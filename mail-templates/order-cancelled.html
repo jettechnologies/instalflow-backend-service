@@ -1,18 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Order Cancelled</title>
-    <style>
-        body { font-family: 'Inter', sans-serif; color: #2d3748; padding: 20px; }
-        .card { max-width: 600px; margin: auto; border: 1px solid #fed7d7; border-radius: 8px; padding: 30px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Cancelled - Instalflow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap');
+    
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: #0B0F1A;
+      color: #9CA3AF;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: #111827;
+      border: 1px solid #1F2937;
+      border-radius: 24px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+    .header {
+      padding: 2.5rem 1.5rem 1rem;
+      text-align: center;
+    }
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+    }
+    .logo-text span {
+      color: #7C3AED;
+    }
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      margin: 1.5rem auto;
+      background-color: #EF4444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .content {
+      padding: 0 2.5rem 2.5rem;
+      text-align: center;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+      margin: 0.5rem 0;
+    }
+    .data-grid {
+      background: #0B0F1A;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #1F2937;
+    }
+    .data-row:last-child {
+      border-bottom: none;
+    }
+    .data-label {
+      color: #9CA3AF;
+      font-size: 0.875rem;
+    }
+    .data-value {
+      color: #F9FAFB;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    .footer {
+      background-color: #0B0F1A;
+      border-top: 1px solid #1F2937;
+      padding: 2rem;
+      text-align: center;
+    }
+    .signature {
+      font-size: 0.875rem;
+      color: #9CA3AF;
+    }
+    .signature .product-name {
+      color: #F9FAFB;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-    <div class="card">
-        <h1 style="color: #c53030;">Order Cancelled</h1>
-        <p>Your order #{{orderId}} has been cancelled as requested or due to a system restriction.</p>
-        <p>If you believe this is an error, please contact our support team immediately.</p>
+  <div class="container">
+    <div class="header">
+      <div class="logo-text">Instal<span>flow</span></div>
+      <div class="hero-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <h1 class="title">Order Cancelled</h1>
     </div>
+    
+    <div class="content">
+      <div class="message">
+        <p>Your order <strong>#${orderId}</strong> has been cancelled. If you believe this was an error, please contact support.</p>
+      </div>
+      
+      <div class="data-grid">
+        <div class="data-row">
+          <span class="data-label">Reference:</span>
+          <span class="data-value">${reference}</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Status:</span>
+          <span class="data-value" style="color: #EF4444;">Cancelled</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="signature">
+        <p>The <span class="product-name">Instalflow</span> Team</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

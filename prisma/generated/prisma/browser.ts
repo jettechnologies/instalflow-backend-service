@@ -118,7 +118,7 @@ export type JournalEntry = Prisma.JournalEntryModel
  */
 export type WebhookEvent = Prisma.WebhookEventModel
 /**
- * Model PendingOnboarding
+ * Model OnboardingIntent
  * 
  */
-export type PendingOnboarding = Prisma.PendingOnboardingModel
+export type OnboardingIntent = Prisma.OnboardingIntentModel

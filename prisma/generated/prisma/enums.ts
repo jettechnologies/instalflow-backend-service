@@ -95,3 +95,14 @@ export const AccountType = {
 } as const
 
 export type AccountType = (typeof AccountType)[keyof typeof AccountType]
+
+
+export const OnboardingStatus = {
+  PENDING: 'PENDING',
+  PAYMENT_INITIALIZED: 'PAYMENT_INITIALIZED',
+  PAID: 'PAID',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type OnboardingStatus = (typeof OnboardingStatus)[keyof typeof OnboardingStatus]

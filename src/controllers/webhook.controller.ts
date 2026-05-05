@@ -4,6 +4,7 @@ import { prisma } from "@/prisma/client.js";
 import logger from "../libs/logger";
 import { AuthService } from "../services/auth.service";
 import { SubscriptionService } from "../services/subscription.service";
+import { onboardingQueue } from "@/queue/onboarding.queue";
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || "";
 
@@ -69,48 +70,88 @@ export class WebhookController {
   /**
    * Handle successful payment
    */
+  // private static async handleChargeSuccess(data: any) {
+  //   const reference = data.reference;
+
+  //   // A. Check if this is a Pending Onboarding
+  //   const pending = await prisma.pendingOnboarding.findUnique({
+  //     where: { paymentReference: reference },
+  //   });
+
+  //   if (pending && pending.status === "PENDING") {
+  //     logger.info(`Auto-Onboarding triggered for reference: ${reference}`);
+
+  //     // Execute onboarding (This will create Company, Admin, Sub, and Ledger)
+  //     await AuthService.onboardCompany(
+  //       {
+  //         email: pending.email,
+  //         password: "", // Not needed for internal call or use special flag
+  //         companyName: pending.companyName,
+  //         adminName: pending.adminName,
+  //         planId: pending.planId,
+  //         paymentReference: reference,
+  //       },
+  //       true,
+  //     ); // Pass a flag to skip password hashing/checking if needed
+
+  //     await prisma.pendingOnboarding.update({
+  //       where: { id: pending.id },
+  //       data: { status: "COMPLETED" },
+  //     });
+
+  //     return;
+  //   }
+
+  //   if (pending && pending.status === "COMPLETED") {
+  //     logger.info(`Already onboarded for reference: ${reference}`);
+  //     return;
+  //   }
+
+  //   // B. Check if this is an existing subscription renewal/payment
+  //   // If it's not pending onboarding, it might be a normal subscription verification
+  //   // This part would usually be handled by SubscriptionService.verifySubscription
+  //   // but we can trigger it here for async safety.
+  //   logger.info(`Processing standard payment for reference: ${reference}`);
+  //   await SubscriptionService.verifySubscription(reference);
+  // }
+
   private static async handleChargeSuccess(data: any) {
     const reference = data.reference;
 
-    // A. Check if this is a Pending Onboarding
-    const pending = await prisma.pendingOnboarding.findUnique({
+    const intent = await prisma.onboardingIntent.findFirst({
       where: { paymentReference: reference },
     });
 
-    if (pending && pending.status === "PENDING") {
-      logger.info(`Auto-Onboarding triggered for reference: ${reference}`);
+    if (intent) {
+      if (intent.status === "COMPLETED") return;
 
-      // Execute onboarding (This will create Company, Admin, Sub, and Ledger)
-      await AuthService.onboardCompany(
-        {
-          email: pending.email,
-          password: "", // Not needed for internal call or use special flag
-          companyName: pending.companyName,
-          adminName: pending.adminName,
-          planId: pending.planId,
-          paymentReference: reference,
-        },
-        true,
-      ); // Pass a flag to skip password hashing/checking if needed
-
-      await prisma.pendingOnboarding.update({
-        where: { id: pending.id },
-        data: { status: "COMPLETED" },
+      await prisma.onboardingIntent.update({
+        where: { id: intent.id },
+        data: { status: "PAID" },
       });
 
+      // inside webhook
+      await onboardingQueue.add(
+        "process-onboarding",
+        {
+          intentId: intent.intentId,
+          reference,
+        },
+        {
+          attempts: 5,
+          backoff: {
+            type: "exponential",
+            delay: 60 * 1000, // 1 minute
+          },
+          removeOnComplete: true,
+          removeOnFail: false,
+        },
+      );
+
       return;
     }
 
-    if (pending && pending.status === "COMPLETED") {
-      logger.info(`Already onboarded for reference: ${reference}`);
-      return;
-    }
-
-    // B. Check if this is an existing subscription renewal/payment
-    // If it's not pending onboarding, it might be a normal subscription verification
-    // This part would usually be handled by SubscriptionService.verifySubscription
-    // but we can trigger it here for async safety.
-    logger.info(`Processing standard payment for reference: ${reference}`);
+    // fallback → normal subscription
     await SubscriptionService.verifySubscription(reference);
   }
 }

@@ -277,6 +277,7 @@ export type SubscriptionPlanWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
+  onboardingIntents?: Prisma.OnboardingIntentListRelationFilter
 }
 
 export type SubscriptionPlanOrderByWithRelationInput = {
@@ -292,6 +293,7 @@ export type SubscriptionPlanOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   subscriptions?: Prisma.CompanySubscriptionOrderByRelationAggregateInput
+  onboardingIntents?: Prisma.OnboardingIntentOrderByRelationAggregateInput
 }
 
 export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
@@ -310,6 +312,7 @@ export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
+  onboardingIntents?: Prisma.OnboardingIntentListRelationFilter
 }, "id" | "planId" | "name">
 
 export type SubscriptionPlanOrderByWithAggregationInput = {
@@ -361,6 +364,7 @@ export type SubscriptionPlanCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutPlanInput
+  onboardingIntents?: Prisma.OnboardingIntentCreateNestedManyWithoutPlanInput
 }
 
 export type SubscriptionPlanUncheckedCreateInput = {
@@ -376,6 +380,7 @@ export type SubscriptionPlanUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutPlanInput
+  onboardingIntents?: Prisma.OnboardingIntentUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type SubscriptionPlanUpdateInput = {
@@ -391,6 +396,7 @@ export type SubscriptionPlanUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutPlanNestedInput
+  onboardingIntents?: Prisma.OnboardingIntentUpdateManyWithoutPlanNestedInput
 }
 
 export type SubscriptionPlanUncheckedUpdateInput = {
@@ -406,6 +412,7 @@ export type SubscriptionPlanUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutPlanNestedInput
+  onboardingIntents?: Prisma.OnboardingIntentUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type SubscriptionPlanCreateManyInput = {
@@ -537,6 +544,20 @@ export type SubscriptionPlanUpdateOneRequiredWithoutSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SubscriptionPlanUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.SubscriptionPlanUpdateWithoutSubscriptionsInput>, Prisma.SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput>
 }
 
+export type SubscriptionPlanCreateNestedOneWithoutOnboardingIntentsInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionPlanCreateWithoutOnboardingIntentsInput, Prisma.SubscriptionPlanUncheckedCreateWithoutOnboardingIntentsInput>
+  connectOrCreate?: Prisma.SubscriptionPlanCreateOrConnectWithoutOnboardingIntentsInput
+  connect?: Prisma.SubscriptionPlanWhereUniqueInput
+}
+
+export type SubscriptionPlanUpdateOneRequiredWithoutOnboardingIntentsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionPlanCreateWithoutOnboardingIntentsInput, Prisma.SubscriptionPlanUncheckedCreateWithoutOnboardingIntentsInput>
+  connectOrCreate?: Prisma.SubscriptionPlanCreateOrConnectWithoutOnboardingIntentsInput
+  upsert?: Prisma.SubscriptionPlanUpsertWithoutOnboardingIntentsInput
+  connect?: Prisma.SubscriptionPlanWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubscriptionPlanUpdateToOneWithWhereWithoutOnboardingIntentsInput, Prisma.SubscriptionPlanUpdateWithoutOnboardingIntentsInput>, Prisma.SubscriptionPlanUncheckedUpdateWithoutOnboardingIntentsInput>
+}
+
 export type SubscriptionPlanCreateWithoutSubscriptionsInput = {
   id?: bigint | number
   planId?: string
@@ -549,6 +570,7 @@ export type SubscriptionPlanCreateWithoutSubscriptionsInput = {
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  onboardingIntents?: Prisma.OnboardingIntentCreateNestedManyWithoutPlanInput
 }
 
 export type SubscriptionPlanUncheckedCreateWithoutSubscriptionsInput = {
@@ -563,6 +585,7 @@ export type SubscriptionPlanUncheckedCreateWithoutSubscriptionsInput = {
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  onboardingIntents?: Prisma.OnboardingIntentUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type SubscriptionPlanCreateOrConnectWithoutSubscriptionsInput = {
@@ -593,6 +616,7 @@ export type SubscriptionPlanUpdateWithoutSubscriptionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingIntents?: Prisma.OnboardingIntentUpdateManyWithoutPlanNestedInput
 }
 
 export type SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput = {
@@ -607,6 +631,83 @@ export type SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingIntents?: Prisma.OnboardingIntentUncheckedUpdateManyWithoutPlanNestedInput
+}
+
+export type SubscriptionPlanCreateWithoutOnboardingIntentsInput = {
+  id?: bigint | number
+  planId?: string
+  name: string
+  description?: string | null
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  interval?: $Enums.SubscriptionInterval
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutPlanInput
+}
+
+export type SubscriptionPlanUncheckedCreateWithoutOnboardingIntentsInput = {
+  id?: bigint | number
+  planId?: string
+  name: string
+  description?: string | null
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  interval?: $Enums.SubscriptionInterval
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutPlanInput
+}
+
+export type SubscriptionPlanCreateOrConnectWithoutOnboardingIntentsInput = {
+  where: Prisma.SubscriptionPlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubscriptionPlanCreateWithoutOnboardingIntentsInput, Prisma.SubscriptionPlanUncheckedCreateWithoutOnboardingIntentsInput>
+}
+
+export type SubscriptionPlanUpsertWithoutOnboardingIntentsInput = {
+  update: Prisma.XOR<Prisma.SubscriptionPlanUpdateWithoutOnboardingIntentsInput, Prisma.SubscriptionPlanUncheckedUpdateWithoutOnboardingIntentsInput>
+  create: Prisma.XOR<Prisma.SubscriptionPlanCreateWithoutOnboardingIntentsInput, Prisma.SubscriptionPlanUncheckedCreateWithoutOnboardingIntentsInput>
+  where?: Prisma.SubscriptionPlanWhereInput
+}
+
+export type SubscriptionPlanUpdateToOneWithWhereWithoutOnboardingIntentsInput = {
+  where?: Prisma.SubscriptionPlanWhereInput
+  data: Prisma.XOR<Prisma.SubscriptionPlanUpdateWithoutOnboardingIntentsInput, Prisma.SubscriptionPlanUncheckedUpdateWithoutOnboardingIntentsInput>
+}
+
+export type SubscriptionPlanUpdateWithoutOnboardingIntentsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutPlanNestedInput
+}
+
+export type SubscriptionPlanUncheckedUpdateWithoutOnboardingIntentsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 
@@ -616,10 +717,12 @@ export type SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput = {
 
 export type SubscriptionPlanCountOutputType = {
   subscriptions: number
+  onboardingIntents: number
 }
 
 export type SubscriptionPlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscriptions?: boolean | SubscriptionPlanCountOutputTypeCountSubscriptionsArgs
+  onboardingIntents?: boolean | SubscriptionPlanCountOutputTypeCountOnboardingIntentsArgs
 }
 
 /**
@@ -639,6 +742,13 @@ export type SubscriptionPlanCountOutputTypeCountSubscriptionsArgs<ExtArgs extend
   where?: Prisma.CompanySubscriptionWhereInput
 }
 
+/**
+ * SubscriptionPlanCountOutputType without action
+ */
+export type SubscriptionPlanCountOutputTypeCountOnboardingIntentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OnboardingIntentWhereInput
+}
+
 
 export type SubscriptionPlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -653,6 +763,7 @@ export type SubscriptionPlanSelect<ExtArgs extends runtime.Types.Extensions.Inte
   createdAt?: boolean
   updatedAt?: boolean
   subscriptions?: boolean | Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>
+  onboardingIntents?: boolean | Prisma.SubscriptionPlan$onboardingIntentsArgs<ExtArgs>
   _count?: boolean | Prisma.SubscriptionPlanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscriptionPlan"]>
 
@@ -701,6 +812,7 @@ export type SubscriptionPlanSelectScalar = {
 export type SubscriptionPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "planId" | "name" | "description" | "price" | "discountPrice" | "discountPercentage" | "interval" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
 export type SubscriptionPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscriptions?: boolean | Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>
+  onboardingIntents?: boolean | Prisma.SubscriptionPlan$onboardingIntentsArgs<ExtArgs>
   _count?: boolean | Prisma.SubscriptionPlanCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubscriptionPlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -710,6 +822,7 @@ export type $SubscriptionPlanPayload<ExtArgs extends runtime.Types.Extensions.In
   name: "SubscriptionPlan"
   objects: {
     subscriptions: Prisma.$CompanySubscriptionPayload<ExtArgs>[]
+    onboardingIntents: Prisma.$OnboardingIntentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -1118,6 +1231,7 @@ readonly fields: SubscriptionPlanFieldRefs;
 export interface Prisma__SubscriptionPlanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   subscriptions<T extends Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanySubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  onboardingIntents<T extends Prisma.SubscriptionPlan$onboardingIntentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubscriptionPlan$onboardingIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OnboardingIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1572,6 +1686,30 @@ export type SubscriptionPlan$subscriptionsArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.CompanySubscriptionScalarFieldEnum | Prisma.CompanySubscriptionScalarFieldEnum[]
+}
+
+/**
+ * SubscriptionPlan.onboardingIntents
+ */
+export type SubscriptionPlan$onboardingIntentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OnboardingIntent
+   */
+  select?: Prisma.OnboardingIntentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OnboardingIntent
+   */
+  omit?: Prisma.OnboardingIntentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OnboardingIntentInclude<ExtArgs> | null
+  where?: Prisma.OnboardingIntentWhereInput
+  orderBy?: Prisma.OnboardingIntentOrderByWithRelationInput | Prisma.OnboardingIntentOrderByWithRelationInput[]
+  cursor?: Prisma.OnboardingIntentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OnboardingIntentScalarFieldEnum | Prisma.OnboardingIntentScalarFieldEnum[]
 }
 
 /**

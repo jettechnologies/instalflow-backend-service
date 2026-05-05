@@ -1,24 +1,146 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Order Confirmation</title>
-    <style>
-        body { font-family: 'Inter', sans-serif; color: #2d3748; padding: 20px; }
-        .card { max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 30px; }
-        .status { color: #38a169; font-weight: 700; text-transform: uppercase; font-size: 14px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation - Instalflow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+    
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: #0B0F1A;
+      color: #9CA3AF;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: #111827;
+      border: 1px solid #1F2937;
+      border-radius: 24px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+    .header {
+      padding: 2.5rem 1.5rem 1rem;
+      text-align: center;
+    }
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+    }
+    .logo-text span {
+      color: #7C3AED;
+    }
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      margin: 1.5rem auto;
+      background-color: #10B981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+    .content {
+      padding: 0 2.5rem 2.5rem;
+      text-align: center;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+      margin: 0.5rem 0;
+    }
+    .data-grid {
+      background: #0B0F1A;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #1F2937;
+    }
+    .data-row:last-child {
+      border-bottom: none;
+    }
+    .data-label {
+      color: #9CA3AF;
+      font-size: 0.875rem;
+    }
+    .data-value {
+      color: #F9FAFB;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    .footer {
+      background-color: #0B0F1A;
+      border-top: 1px solid #1F2937;
+      padding: 2rem;
+      text-align: center;
+    }
+    .signature {
+      font-size: 0.875rem;
+      color: #9CA3AF;
+    }
+    .signature .product-name {
+      color: #F9FAFB;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-    <div class="card">
-        <div class="status">Payment Confirmed</div>
-        <h1>Order #{{orderId}}</h1>
-        <p>Thank you for your purchase. Your payment for the installment has been successfully processed.</p>
-        <div style="background: #f7fafc; padding: 15px; border-radius: 4px;">
-            <strong>Amount Paid:</strong> {{amount}}<br>
-            <strong>Date:</strong> {{date}}
-        </div>
-        <p>You can view your installment schedule in the <a href="{{dashboard_url}}">dashboard</a>.</p>
+  <div class="container">
+    <div class="header">
+      <div class="logo-text">Instal<span>flow</span></div>
+      <div class="hero-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+        </svg>
+      </div>
+      <h1 class="title">Order Confirmed</h1>
     </div>
+    
+    <div class="content">
+      <div class="message" style="text-align: center;">
+        <p>Thank you for your purchase. Your payment for <strong>Order #${orderId}</strong> has been successfully processed.</p>
+      </div>
+      
+      <div class="data-grid">
+        <div class="data-row">
+          <span class="data-label">Amount Paid:</span>
+          <span class="data-value">${amount}</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Date:</span>
+          <span class="data-value">${date}</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Status:</span>
+          <span class="data-value" style="color: #10B981;">Confirmed</span>
+        </div>
+      </div>
+      
+      <p style="font-size: 0.875rem;">You can view your installment schedule in your dashboard.</p>
+    </div>
+    
+    <div class="footer">
+      <div class="signature">
+        <p>The <span class="product-name">Instalflow</span> Team</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

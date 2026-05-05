@@ -28,6 +28,7 @@ declare global {
 
 const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const isAuthRoute = req.path.startsWith("/api/v1/auth/");
+  const isWebhookRoute = req.path.startsWith("/api/v1/webhooks/");
   const isBearerAuth = req.headers.authorization?.startsWith("Bearer ");
   const isCsrfEndpoint = req.path === "/api/v1/csrf-token";
 
@@ -64,14 +65,18 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
   }
 
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
-    const clientToken = (req.headers["x-csrf-token"] as string) || req.body?._csrf;
+    const clientToken =
+      (req.headers["x-csrf-token"] as string) || req.body?._csrf;
     const storedHash = req.cookies?.["csrf_hash"];
 
     if (!clientToken || !storedHash) {
-      logger.warn(`CSRF Validation Failed: clientToken=${!!clientToken}, storedHash=${!!storedHash}`);
-      return res.status(403).json({ 
-        error: "Missing CSRF token", 
-        message: "A valid CSRF token is required for this operation. Perform a GET request to /api/v1/csrf-token first." 
+      logger.warn(
+        `CSRF Validation Failed: clientToken=${!!clientToken}, storedHash=${!!storedHash}`,
+      );
+      return res.status(403).json({
+        error: "Missing CSRF token",
+        message:
+          "A valid CSRF token is required for this operation. Perform a GET request to /api/v1/csrf-token first.",
       });
     }
 

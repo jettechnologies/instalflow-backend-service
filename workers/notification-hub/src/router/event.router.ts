@@ -21,7 +21,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 	[DomainEvent.USER_REGISTERED]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			template: 'welcome',
+			template: 'welcome-customer',
 			subject: 'Welcome to Instalflow 🎉',
 			context: (p) => ({
 				name: p.name,

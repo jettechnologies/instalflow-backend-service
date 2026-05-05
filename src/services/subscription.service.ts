@@ -16,6 +16,56 @@ export class SubscriptionService {
     });
   }
 
+  // for initial onboarding subscription payment
+  static async initializeOnboardingPayment(intentId: string) {
+    const intent = await prisma.onboardingIntent.findUnique({
+      where: { intentId },
+    });
+
+    if (!intent) throw new NotFoundError("Onboarding intent not found");
+
+    const plan = await prisma.subscriptionPlan.findUnique({
+      where: { planId: intent.planId },
+    });
+
+    if (!plan) throw new NotFoundError("Plan not found");
+
+    const amount = Number(plan.discountPrice || plan.price);
+
+    const response = await fetch(
+      "https://api.paystack.co/transaction/initialize",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: intent.email,
+          amount: Math.round(amount * 100),
+          metadata: {
+            intentId: intent.intentId, // 🔥 KEY CHANGE
+            type: "onboarding",
+          },
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!data.status) throw new BadRequestError("Paystack init failed");
+
+    await prisma.onboardingIntent.update({
+      where: { intentId },
+      data: {
+        paymentReference: data.data.reference,
+        status: "PAYMENT_INITIALIZED",
+      },
+    });
+
+    return data.data;
+  }
+
   /**
    * Initialize a Paystack transaction for a subscription
    */
@@ -155,7 +205,7 @@ export class SubscriptionService {
             },
           ],
         },
-        tx
+        tx,
       );
 
       return { status: "ACTIVE", plan: plan.name };

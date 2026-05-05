@@ -32,44 +32,57 @@ export class AuthController {
     );
   }
 
-  /**
-   * Pre-validate onboarding details before payment
-   */
-  static async validateOnboarding(req: Request, res: Response) {
+  //  start onboarding process for company
+  static async startOnboarding(req: Request, res: Response) {
     const payload = CompanyRegisterSchema.parse(req.body);
-    const pending = await AuthService.validateOnboarding(payload);
+    const onboardingIntent = await AuthService.startOnboarding(payload);
 
     return ApiResponse.success(
       res,
       200,
       "Onboarding details validated. You may proceed to payment.",
-      { onboardingId: pending.onboardingId },
+      { onboardingIntent },
     );
   }
 
-  /**
-   * For onboarding a new company tenant
-   */
-  static async onboardCompany(req: Request, res: Response) {
-    const payload = CompanyRegisterSchema.parse(req.body);
-    const result = await AuthService.onboardCompany(payload);
+  // /**
+  //  * Pre-validate onboarding details before payment
+  //  */
+  // static async validateOnboarding(req: Request, res: Response) {
+  // const payload = CompanyRegisterSchema.parse(req.body);
+  // const pending = await AuthService.validateOnboarding(payload);
 
-    if ("refreshToken" in result) {
-      res.cookie("refresh_token", result.refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
-    }
+  // return ApiResponse.success(
+  //   res,
+  //   200,
+  //   "Onboarding details validated. You may proceed to payment.",
+  //   { onboardingId: pending.onboardingId },
+  // );
+  // }
 
-    return ApiResponse.success(
-      res,
-      201,
-      "Company and Admin created successfully",
-      result,
-    );
-  }
+  // /**
+  //  * For onboarding a new company tenant
+  //  */
+  // static async onboardCompany(req: Request, res: Response) {
+  //   const payload = CompanyRegisterSchema.parse(req.body);
+  //   const result = await AuthService.onboardCompany(payload);
+
+  //   if ("refreshToken" in result) {
+  //     res.cookie("refresh_token", result.refreshToken, {
+  //       httpOnly: true,
+  //       secure: process.env.NODE_ENV === "production",
+  //       sameSite: "strict",
+  //       maxAge: 7 * 24 * 60 * 60 * 1000,
+  //     });
+  //   }
+
+  //   return ApiResponse.success(
+  //     res,
+  //     201,
+  //     "Company and Admin created successfully",
+  //     result,
+  //   );
+  // }
 
   /**
    * For Company/Admin users to create marketers

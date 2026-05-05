@@ -1,7 +1,6 @@
 generator client {
-  provider        = "prisma-client"
-  output          = "./generated/prisma"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client"
+  output   = "./generated/prisma"
 }
 
 datasource db {
@@ -279,7 +278,8 @@ model SubscriptionPlan {
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 
-  subscriptions CompanySubscription[]
+  subscriptions     CompanySubscription[]
+  onboardingIntents OnboardingIntent[]
 }
 
 model CompanySubscription {
@@ -342,16 +342,32 @@ model WebhookEvent {
   createdAt DateTime @default(now())
 }
 
-model PendingOnboarding {
-  id               BigInt   @id @default(autoincrement())
-  onboardingId     String   @unique @default(uuid())
-  email            String   @unique
-  companyName      String
-  adminName        String
-  passwordHash     String
-  planId           String
-  paymentReference String   @unique
-  status           String   @default("PENDING") // PENDING, COMPLETED, FAILED
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+model OnboardingIntent {
+  id       BigInt @id @default(autoincrement())
+  intentId String @unique @default(uuid())
+
+  email        String @unique
+  companyName  String
+  adminName    String
+  passwordHash String
+
+  planId String
+  plan   SubscriptionPlan @relation(fields: [planId], references: [planId])
+
+  paymentReference String? @unique
+
+  status OnboardingStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([paymentReference])
+}
+
+enum OnboardingStatus {
+  PENDING
+  PAYMENT_INITIALIZED
+  PAID
+  COMPLETED
+  FAILED
 }

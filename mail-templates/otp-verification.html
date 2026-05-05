@@ -1,28 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your email</title>
-    <style>
-        body { font-family: 'Inter', system-ui, sans-serif; color: #1a202c; background-color: #f7fafc; margin: 0; padding: 0; }
-        .container { max-width: 500px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
-        .content { padding: 40px; text-align: center; }
-        .otp-box { background: #edf2f7; border-radius: 8px; padding: 20px; font-size: 32px; font-weight: 700; letter-spacing: 0.5em; margin: 24px 0; color: #2b6cb0; text-indent: 0.5em; }
-        .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 13px; color: #a0aec0; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Email - Instalflow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+    
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: #0B0F1A;
+      color: #9CA3AF;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      background-color: #111827;
+      border: 1px solid #1F2937;
+      border-radius: 24px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      animation: floatUp 0.6s ease;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .header {
+      padding: 2.5rem 1.5rem 1rem;
+      text-align: center;
+    }
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+      letter-spacing: -0.05rem;
+    }
+    .logo-text span {
+      color: #7C3AED;
+    }
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      margin: 1.5rem auto;
+      background: linear-gradient(135deg, #1E3A8A 0%, #7C3AED 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    }
+    .content {
+      padding: 0 2.5rem 2.5rem;
+      text-align: center;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+      margin: 0.5rem 0;
+    }
+    .subtitle {
+      font-size: 0.875rem;
+      color: #7C3AED;
+      text-transform: uppercase;
+      letter-spacing: 0.1rem;
+      margin-bottom: 2rem;
+    }
+    .message {
+      text-align: left;
+      font-size: 15px;
+      color: #9CA3AF;
+      margin-bottom: 2rem;
+    }
+    .access-code-container {
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #0B0F1A;
+      border: 1px solid #1F2937;
+      border-radius: 16px;
+    }
+    .access-code-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #9CA3AF;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05rem;
+    }
+    .access-code {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 2.5rem;
+      letter-spacing: 0.5rem;
+      color: #F9FAFB;
+      text-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+    }
+    .footer {
+      background-color: #0B0F1A;
+      border-top: 1px solid #1F2937;
+      padding: 2rem;
+      text-align: center;
+    }
+    .signature {
+      font-size: 0.875rem;
+      color: #9CA3AF;
+    }
+    .signature .product-name {
+      color: #F9FAFB;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <h2 style="margin-top: 0;">Verify Your Email</h2>
-            <p>Please use the verification code below to complete your sign-up process.</p>
-            <div class="otp-box">{{otp}}</div>
-            <p style="font-size: 14px; color: #718096;">This code will expire in 10 minutes. If you didn't request this, you can safely ignore this email.</p>
-        </div>
-        <div class="footer">
-            &copy; 2026 Instalflow Platform.
-        </div>
+  <div class="container">
+    <div class="header">
+      <div class="logo-text">Instal<span>flow</span></div>
+      <div class="hero-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <h1 class="title">Verify Your Email</h1>
+      <p class="subtitle">Secure Verification</p>
     </div>
+    
+    <div class="content">
+      <div class="message">
+        <p>Welcome to <strong>Instalflow</strong>. Please use the verification code below to complete your account setup.</p>
+      </div>
+      
+      <div class="access-code-container">
+        <div class="access-code-title">YOUR OTP CODE</div>
+        <div class="access-code">${otpCode}</div>
+      </div>
+      
+      <p style="font-size: 0.875rem;">This code is valid for 10 minutes. If you didn't request this, you can safely ignore this email.</p>
+    </div>
+    
+    <div class="footer">
+      <div class="signature">
+        <p>The <span class="product-name">Instalflow</span> Team</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

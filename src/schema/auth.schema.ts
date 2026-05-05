@@ -46,7 +46,6 @@ export const CompanyRegisterSchema = z.object({
   }),
   password: z.string().min(6, "Password must be at least 6 characters"),
   planId: z.string().uuid("Invalid plan ID"),
-  paymentReference: z.string().min(1, "Required"),
 });
 
 /**

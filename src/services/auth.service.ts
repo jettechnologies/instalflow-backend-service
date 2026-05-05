@@ -109,35 +109,245 @@ export class AuthService {
     };
   }
 
-  /**
-   * Pre-validate onboarding data and create a pending record.
-   * This is called BEFORE the user pays.
-   */
-  static async validateOnboarding(data: z.infer<typeof CompanyRegisterSchema>) {
-    // 1. Check if email exists in active users
+  // /**
+  //  * Pre-validate onboarding data and create a pending record.
+  //  * This is called BEFORE the user pays.
+  //  */
+  // static async validateOnboarding(data: z.infer<typeof CompanyRegisterSchema>) {
+  //   // 1. Check if email exists in active users
+  //   const existingUser = await prisma.user.findUnique({
+  //     where: { email: data.email },
+  //   });
+  //   if (existingUser) throw new ConflictError("Admin email already in use");
+
+  //   // 2. Check if company name is already taken
+  //   const existingCompany = await prisma.company.findFirst({
+  //     where: { name: data.companyName },
+  //   });
+  //   if (existingCompany) throw new ConflictError("Company name already taken");
+
+  //   // 3. Check for existing pending onboarding with same email
+  //   // If it exists, we'll update it instead of creating a new one to prevent spam
+  //   const hashedPassword = await bcryptHash(data.password);
+
+  //   return await prisma.pendingOnboarding.upsert({
+  //     where: { email: data.email },
+  //     update: {
+  //       companyName: data.companyName,
+  //       adminName: data.adminName,
+  //       passwordHash: hashedPassword,
+  //       planId: data.planId,
+  //       paymentReference: data.paymentReference,
+  //       status: "PENDING",
+  //     },
+  //     create: {
+  //       email: data.email,
+  //       companyName: data.companyName,
+  //       adminName: data.adminName,
+  //       passwordHash: hashedPassword,
+  //       planId: data.planId,
+  //       paymentReference: data.paymentReference,
+  //       status: "PENDING",
+  //     },
+  //   });
+  // }
+
+  // /**
+  //  * Onboard a brand new Company + Admin User
+  //  */
+  // static async onboardCompany(
+  //   data: z.infer<typeof CompanyRegisterSchema>,
+  //   isInternal = false,
+  // ) {
+  //   let hashedPassword = "";
+
+  //   if (isInternal) {
+  //     // Path B: Webhook Safety Net
+  //     // We retrieve the pre-hashed password from the Pending record
+  //     const pending = await prisma.pendingOnboarding.findUnique({
+  //       where: { paymentReference: data.paymentReference },
+  //     });
+
+  //     if (!pending) {
+  //       throw new NotFoundError("Pending onboarding record not found");
+  //     }
+
+  //     if (pending.status === "COMPLETED") {
+  //       return { message: "Already onboarded" };
+  //     }
+
+  //     hashedPassword = pending.passwordHash;
+  //   } else {
+  //     // Path A: Frontend Redirect
+  //     // 1. Validate payment first
+  //     const transaction = await SubscriptionService.validatePaystackTransaction(
+  //       data.paymentReference,
+  //     );
+
+  //     // 2. Ensure payment plan matches requested plan
+  //     if (transaction.metadata.planId !== data.planId) {
+  //       throw new BadRequestError("Payment plan mismatch");
+  //     }
+
+  //     const existing = await prisma.user.findUnique({
+  //       where: { email: data.email },
+  //     });
+  //     if (existing) throw new ConflictError("Admin email already in use");
+
+  //     hashedPassword = await bcryptHash(data.password);
+  //   }
+
+  //   return await prisma.$transaction(async (tx) => {
+  //     // 3. Create Company
+  //     const company = await tx.company.create({
+  //       data: { name: data.companyName, plan: "Pending" }, // Actual plan set below
+  //     });
+
+  //     // 4. Create Admin User
+  //     const user = await tx.user.create({
+  //       data: {
+  //         name: data.adminName,
+  //         email: data.email,
+  //         password: hashedPassword,
+  //         role: "COMPANY",
+  //         companyId: company.companyId,
+  //       },
+  //       select: {
+  //         userId: true,
+  //         name: true,
+  //         email: true,
+  //         role: true,
+  //         companyId: true,
+  //         createdAt: true,
+  //       },
+  //     });
+
+  //     // 5. Activate Subscription
+  //     const plan = await tx.subscriptionPlan.findUnique({
+  //       where: { planId: data.planId },
+  //     });
+  //     if (!plan) throw new Error("Plan not found");
+
+  //     const startDate = new Date();
+  //     const endDate = new Date();
+  //     if (plan.interval === "WEEKLY") endDate.setDate(endDate.getDate() + 7);
+  //     else if (plan.interval === "MONTHLY")
+  //       endDate.setMonth(endDate.getMonth() + 1);
+  //     else if (plan.interval === "YEARLY")
+  //       endDate.setFullYear(endDate.getFullYear() + 1);
+
+  //     await tx.companySubscription.create({
+  //       data: {
+  //         companyId: company.companyId,
+  //         planId: plan.planId,
+  //         status: "ACTIVE",
+  //         startDate,
+  //         endDate,
+  //       },
+  //     });
+
+  //     // 6. Update Company with correct plan name
+  //     await tx.company.update({
+  //       where: { companyId: company.companyId },
+  //       data: { plan: plan.name },
+  //     });
+
+  //     // 7. Ledger Entry (Double Entry: Asset Debit, Revenue Credit)
+  //     await LedgerService.recordTransaction(
+  //       {
+  //         reference: data.paymentReference,
+  //         description: `Initial Subscription: ${plan.name} (Company: ${company.name})`,
+  //         companyId: company.companyId,
+  //         entries: [
+  //           {
+  //             accountName: "PAYSTACK_CLEARING",
+  //             accountType: AccountType.ASSET,
+  //             debit: plan.discountPrice || plan.price,
+  //           },
+  //           {
+  //             accountName: "PLATFORM_REVENUE",
+  //             accountType: AccountType.REVENUE,
+  //             credit: plan.discountPrice || plan.price,
+  //           },
+  //         ],
+  //       },
+  //       tx
+  //     );
+
+  //     // 8. Mark Pending Onboarding as COMPLETED
+  //     await tx.pendingOnboarding.updateMany({
+  //       where: { paymentReference: data.paymentReference },
+  //       data: { status: "COMPLETED" },
+  //     });
+
+  //     const refreshToken = generateRefreshToken({
+  //       companyId: company.companyId,
+  //       userId: user.userId,
+  //       role: user.role,
+  //       email: user.email,
+  //     });
+  //     const expiresAt = new Date();
+  //     expiresAt.setDate(expiresAt.getDate() + 7);
+
+  //     const session = await tx.userSession.create({
+  //       data: {
+  //         user: { connect: { userId: user.userId } },
+  //         tokenHash: refreshToken,
+  //         expiresAt,
+  //       },
+  //     });
+
+  //     const accessToken = generateAccessToken({
+  //       companyId: company.companyId,
+  //       userId: user.userId,
+  //       role: user.role,
+  //       email: user.email,
+  //       sessionId: session.sessionId,
+  //     });
+
+  //     // ✅ Fires → notification-hub → email_queue → email-worker → Brevo (company-onboarding)
+  //     emitEvent(DomainEvent.COMPANY_ONBOARDED, {
+  //       adminName: user.name,
+  //       companyName: company.name,
+  //       dashboard_url: process.env.FRONTEND_URL,
+  //     });
+
+  //     return {
+  //       company,
+  //       user: {
+  //         userId: user.userId,
+  //         name: user.name,
+  //         email: user.email,
+  //         role: user.role,
+  //         companyId: user.companyId,
+  //         createdAt: user.createdAt,
+  //       },
+  //       accessToken,
+  //       refreshToken,
+  //     };
+  //   });
+  // }
+
+  static async startOnboarding(data: z.infer<typeof CompanyRegisterSchema>) {
     const existingUser = await prisma.user.findUnique({
       where: { email: data.email },
     });
     if (existingUser) throw new ConflictError("Admin email already in use");
 
-    // 2. Check if company name is already taken
     const existingCompany = await prisma.company.findFirst({
       where: { name: data.companyName },
     });
     if (existingCompany) throw new ConflictError("Company name already taken");
 
-    // 3. Check for existing pending onboarding with same email
-    // If it exists, we'll update it instead of creating a new one to prevent spam
     const hashedPassword = await bcryptHash(data.password);
 
-    return await prisma.pendingOnboarding.upsert({
+    const intent = await prisma.onboardingIntent.upsert({
       where: { email: data.email },
       update: {
         companyName: data.companyName,
         adminName: data.adminName,
         passwordHash: hashedPassword,
         planId: data.planId,
-        paymentReference: data.paymentReference,
         status: "PENDING",
       },
       create: {
@@ -146,186 +356,10 @@ export class AuthService {
         adminName: data.adminName,
         passwordHash: hashedPassword,
         planId: data.planId,
-        paymentReference: data.paymentReference,
-        status: "PENDING",
       },
     });
-  }
 
-  /**
-   * Onboard a brand new Company + Admin User
-   */
-  static async onboardCompany(
-    data: z.infer<typeof CompanyRegisterSchema>,
-    isInternal = false,
-  ) {
-    let hashedPassword = "";
-
-    if (isInternal) {
-      // Path B: Webhook Safety Net
-      // We retrieve the pre-hashed password from the Pending record
-      const pending = await prisma.pendingOnboarding.findUnique({
-        where: { paymentReference: data.paymentReference },
-      });
-
-      if (!pending) {
-        throw new NotFoundError("Pending onboarding record not found");
-      }
-
-      if (pending.status === "COMPLETED") {
-        return { message: "Already onboarded" };
-      }
-
-      hashedPassword = pending.passwordHash;
-    } else {
-      // Path A: Frontend Redirect
-      // 1. Validate payment first
-      const transaction = await SubscriptionService.validatePaystackTransaction(
-        data.paymentReference,
-      );
-
-      // 2. Ensure payment plan matches requested plan
-      if (transaction.metadata.planId !== data.planId) {
-        throw new BadRequestError("Payment plan mismatch");
-      }
-
-      const existing = await prisma.user.findUnique({
-        where: { email: data.email },
-      });
-      if (existing) throw new ConflictError("Admin email already in use");
-
-      hashedPassword = await bcryptHash(data.password);
-    }
-
-    return await prisma.$transaction(async (tx) => {
-      // 3. Create Company
-      const company = await tx.company.create({
-        data: { name: data.companyName, plan: "Pending" }, // Actual plan set below
-      });
-
-      // 4. Create Admin User
-      const user = await tx.user.create({
-        data: {
-          name: data.adminName,
-          email: data.email,
-          password: hashedPassword,
-          role: "COMPANY",
-          companyId: company.companyId,
-        },
-        select: {
-          userId: true,
-          name: true,
-          email: true,
-          role: true,
-          companyId: true,
-          createdAt: true,
-        },
-      });
-
-      // 5. Activate Subscription
-      const plan = await tx.subscriptionPlan.findUnique({
-        where: { planId: data.planId },
-      });
-      if (!plan) throw new Error("Plan not found");
-
-      const startDate = new Date();
-      const endDate = new Date();
-      if (plan.interval === "WEEKLY") endDate.setDate(endDate.getDate() + 7);
-      else if (plan.interval === "MONTHLY")
-        endDate.setMonth(endDate.getMonth() + 1);
-      else if (plan.interval === "YEARLY")
-        endDate.setFullYear(endDate.getFullYear() + 1);
-
-      await tx.companySubscription.create({
-        data: {
-          companyId: company.companyId,
-          planId: plan.planId,
-          status: "ACTIVE",
-          startDate,
-          endDate,
-        },
-      });
-
-      // 6. Update Company with correct plan name
-      await tx.company.update({
-        where: { companyId: company.companyId },
-        data: { plan: plan.name },
-      });
-
-      // 7. Ledger Entry (Double Entry: Asset Debit, Revenue Credit)
-      await LedgerService.recordTransaction(
-        {
-          reference: data.paymentReference,
-          description: `Initial Subscription: ${plan.name} (Company: ${company.name})`,
-          companyId: company.companyId,
-          entries: [
-            {
-              accountName: "PAYSTACK_CLEARING",
-              accountType: AccountType.ASSET,
-              debit: plan.discountPrice || plan.price,
-            },
-            {
-              accountName: "PLATFORM_REVENUE",
-              accountType: AccountType.REVENUE,
-              credit: plan.discountPrice || plan.price,
-            },
-          ],
-        },
-        tx
-      );
-
-      // 8. Mark Pending Onboarding as COMPLETED
-      await tx.pendingOnboarding.updateMany({
-        where: { paymentReference: data.paymentReference },
-        data: { status: "COMPLETED" },
-      });
-
-      const refreshToken = generateRefreshToken({
-        companyId: company.companyId,
-        userId: user.userId,
-        role: user.role,
-        email: user.email,
-      });
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 7);
-
-      const session = await tx.userSession.create({
-        data: {
-          user: { connect: { userId: user.userId } },
-          tokenHash: refreshToken,
-          expiresAt,
-        },
-      });
-
-      const accessToken = generateAccessToken({
-        companyId: company.companyId,
-        userId: user.userId,
-        role: user.role,
-        email: user.email,
-        sessionId: session.sessionId,
-      });
-
-      // ✅ Fires → notification-hub → email_queue → email-worker → Brevo (company-onboarding)
-      emitEvent(DomainEvent.COMPANY_ONBOARDED, {
-        adminName: user.name,
-        companyName: company.name,
-        dashboard_url: process.env.FRONTEND_URL,
-      });
-
-      return {
-        company,
-        user: {
-          userId: user.userId,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          companyId: user.companyId,
-          createdAt: user.createdAt,
-        },
-        accessToken,
-        refreshToken,
-      };
-    });
+    return intent;
   }
 
   /**

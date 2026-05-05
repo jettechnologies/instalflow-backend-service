@@ -25,8 +25,8 @@ export const otpLimiter = rateLimit({
 });
 
 export const publicApiLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute window
-  max: 100, // Limit each IP to 100 requests per window
+  windowMs: 60 * 1000,
+  max: 100,
   message: "Too many requests from this IP, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,

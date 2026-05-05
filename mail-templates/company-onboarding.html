@@ -1,48 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Instalflow - Company Onboarded</title>
-    <style>
-        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; color: #1a202c; background-color: #f7fafc; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
-        .header { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 40px 20px; text-align: center; }
-        .header h1 { color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
-        .content { padding: 40px; }
-        .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 14px; color: #718096; }
-        .button { display: inline-block; padding: 14px 28px; background-color: #38a169; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 24px; transition: background 0.2s; }
-        .highlight { color: #38a169; font-weight: 600; }
-        .info-box { background-color: #f0fff4; border-left: 4px solid #38a169; padding: 16px; margin: 24px 0; border-radius: 4px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Onboarding - Instalflow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+    
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: #0B0F1A;
+      color: #9CA3AF;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: #111827;
+      border: 1px solid #1F2937;
+      border-radius: 24px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+    .header {
+      padding: 2.5rem 1.5rem 1rem;
+      text-align: center;
+    }
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+      letter-spacing: -0.05rem;
+    }
+    .logo-text span {
+      color: #7C3AED;
+    }
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      margin: 1.5rem auto;
+      background: linear-gradient(135deg, #1E3A8A 0%, #7C3AED 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    }
+    .content {
+      padding: 0 2.5rem 2.5rem;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #F9FAFB;
+      margin: 0.5rem 0;
+      text-align: center;
+    }
+    .subtitle {
+      font-size: 0.875rem;
+      color: #7C3AED;
+      text-transform: uppercase;
+      letter-spacing: 0.1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .message {
+      text-align: left;
+      font-size: 15px;
+      color: #9CA3AF;
+      margin-bottom: 2rem;
+    }
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+    }
+    .feature-item {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      color: #F9FAFB;
+      font-size: 0.9rem;
+    }
+    .feature-item svg {
+      margin-right: 12px;
+      flex-shrink: 0;
+      color: #10B981;
+    }
+    .highlight-card {
+      background: #0B0F1A;
+      border: 1px solid #1F2937;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .btn-action {
+      display: inline-block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #1E3A8A 0%, #7C3AED 100%);
+      color: #F9FAFB;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+    }
+    .footer {
+      background-color: #0B0F1A;
+      border-top: 1px solid #1F2937;
+      padding: 2rem;
+      text-align: center;
+    }
+    .signature {
+      font-size: 0.875rem;
+      color: #9CA3AF;
+    }
+    .signature .product-name {
+      color: #F9FAFB;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Welcome to Instalflow</h1>
-        </div>
-        <div class="content">
-            <p>Hi <span class="highlight">{{adminName}}</span>,</p>
-            <p>Congratulations! <span class="highlight">{{companyName}}</span> has been successfully onboarded to the Instalflow platform.</p>
-            <p>Your administrator account is ready. You can now start managing your products, setting up installment plans, and overseeing your marketers.</p>
-            
-            <div class="info-box">
-                <strong>Next Steps:</strong>
-                <ul>
-                    <li>Log in to your admin dashboard</li>
-                    <li>Complete your company profile</li>
-                    <li>Add your first product catalog</li>
-                </ul>
-            </div>
-
-            <a href="{{dashboard_url}}" class="button">Go to Dashboard</a>
-            
-            <p style="margin-top: 32px;">We're excited to help you grow your business with flexible payment options.</p>
-            <p>Best regards,<br>The Instalflow Team</p>
-        </div>
-        <div class="footer">
-            &copy; 2026 Instalflow Platform. All rights reserved.
-        </div>
+  <div class="container">
+    <div class="header">
+      <div class="logo-text">Instal<span>flow</span></div>
+      <div class="hero-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </div>
+      <h1 class="title">Scale Your Business</h1>
+      <p class="subtitle">Company Onboarding Successful</p>
     </div>
+    
+    <div class="content">
+      <div class="message">
+        <p>Dear <strong>${companyName}</strong>,</p>
+        <p>Welcome to <strong>Instalflow</strong>. You have successfully deployed your new Sales and Installment Infrastructure. Our platform is built to help your business sell smarter and scale faster by removing the friction from high-value transactions.</p>
+        
+        <p>With Instalflow, you can now structure complex installment plans, automate recurring payment collection, and gain full visibility into your revenue streams.</p>
+
+        <div class="highlight-card">
+          <p style="margin-top: 0; color: #F9FAFB; font-weight: 600;">Your Infrastructure Capabilities:</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Automate payment tracking, reminders, and collections</span>
+            </div>
+            <div class="feature-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Manage referral-driven sales through your Marketer Network</span>
+            </div>
+            <div class="feature-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Calculate and track commissions with financial precision</span>
+            </div>
+            <div class="feature-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Gain real-time insights through your Admin Dashboard</span>
+            </div>
+          </div>
+        </div>
+
+        <p>We are excited to be the financial infrastructure powering your growth.</p>
+      </div>
+      
+      <a href="${dashboard_url}" class="btn-action">Access Admin Console</a>
+    </div>
+    
+    <div class="footer">
+      <div class="signature">
+        <p>The <span class="product-name">Instalflow</span> Team</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

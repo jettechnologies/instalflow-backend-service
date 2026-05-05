@@ -404,7 +404,7 @@ export const ModelName = {
   FinancialTransaction: 'FinancialTransaction',
   JournalEntry: 'JournalEntry',
   WebhookEvent: 'WebhookEvent',
-  PendingOnboarding: 'PendingOnboarding'
+  OnboardingIntent: 'OnboardingIntent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -420,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "application" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "pendingOnboarding"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "application" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1904,77 +1904,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    PendingOnboarding: {
-      payload: Prisma.$PendingOnboardingPayload<ExtArgs>
-      fields: Prisma.PendingOnboardingFieldRefs
+    OnboardingIntent: {
+      payload: Prisma.$OnboardingIntentPayload<ExtArgs>
+      fields: Prisma.OnboardingIntentFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.PendingOnboardingFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload> | null
+          args: Prisma.OnboardingIntentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.PendingOnboardingFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>
+          args: Prisma.OnboardingIntentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>
         }
         findFirst: {
-          args: Prisma.PendingOnboardingFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload> | null
+          args: Prisma.OnboardingIntentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.PendingOnboardingFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>
+          args: Prisma.OnboardingIntentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>
         }
         findMany: {
-          args: Prisma.PendingOnboardingFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>[]
+          args: Prisma.OnboardingIntentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>[]
         }
         create: {
-          args: Prisma.PendingOnboardingCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>
+          args: Prisma.OnboardingIntentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>
         }
         createMany: {
-          args: Prisma.PendingOnboardingCreateManyArgs<ExtArgs>
+          args: Prisma.OnboardingIntentCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.PendingOnboardingCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>[]
+          args: Prisma.OnboardingIntentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>[]
         }
         delete: {
-          args: Prisma.PendingOnboardingDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>
+          args: Prisma.OnboardingIntentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>
         }
         update: {
-          args: Prisma.PendingOnboardingUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>
+          args: Prisma.OnboardingIntentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>
         }
         deleteMany: {
-          args: Prisma.PendingOnboardingDeleteManyArgs<ExtArgs>
+          args: Prisma.OnboardingIntentDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.PendingOnboardingUpdateManyArgs<ExtArgs>
+          args: Prisma.OnboardingIntentUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.PendingOnboardingUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>[]
+          args: Prisma.OnboardingIntentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>[]
         }
         upsert: {
-          args: Prisma.PendingOnboardingUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingOnboardingPayload>
+          args: Prisma.OnboardingIntentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingIntentPayload>
         }
         aggregate: {
-          args: Prisma.PendingOnboardingAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePendingOnboarding>
+          args: Prisma.OnboardingIntentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOnboardingIntent>
         }
         groupBy: {
-          args: Prisma.PendingOnboardingGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PendingOnboardingGroupByOutputType>[]
+          args: Prisma.OnboardingIntentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OnboardingIntentGroupByOutputType>[]
         }
         count: {
-          args: Prisma.PendingOnboardingCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PendingOnboardingCountAggregateOutputType> | number
+          args: Prisma.OnboardingIntentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OnboardingIntentCountAggregateOutputType> | number
         }
       }
     }
@@ -2299,9 +2299,9 @@ export const WebhookEventScalarFieldEnum = {
 export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum]
 
 
-export const PendingOnboardingScalarFieldEnum = {
+export const OnboardingIntentScalarFieldEnum = {
   id: 'id',
-  onboardingId: 'onboardingId',
+  intentId: 'intentId',
   email: 'email',
   companyName: 'companyName',
   adminName: 'adminName',
@@ -2313,7 +2313,7 @@ export const PendingOnboardingScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type PendingOnboardingScalarFieldEnum = (typeof PendingOnboardingScalarFieldEnum)[keyof typeof PendingOnboardingScalarFieldEnum]
+export type OnboardingIntentScalarFieldEnum = (typeof OnboardingIntentScalarFieldEnum)[keyof typeof OnboardingIntentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2588,6 +2588,20 @@ export type ListEnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'OnboardingStatus'
+ */
+export type EnumOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OnboardingStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OnboardingStatus[]'
+ */
+export type ListEnumOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OnboardingStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -2730,7 +2744,7 @@ export type GlobalOmitConfig = {
   financialTransaction?: Prisma.FinancialTransactionOmit
   journalEntry?: Prisma.JournalEntryOmit
   webhookEvent?: Prisma.WebhookEventOmit
-  pendingOnboarding?: Prisma.PendingOnboardingOmit
+  onboardingIntent?: Prisma.OnboardingIntentOmit
 }
 
 /* Types for Logging */
