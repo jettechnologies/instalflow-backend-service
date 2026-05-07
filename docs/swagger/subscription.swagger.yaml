@@ -97,6 +97,46 @@ paths:
                       plan:
                         type: string
 
+  /subscriptions/onboarding/initialize:
+    post:
+      summary: Initialize payment for a new company onboarding
+      tags: [Subscription]
+      parameters:
+        - $ref: "#/components/parameters/CsrfTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - intentId
+              properties:
+                intentId:
+                  type: string
+                  description: The ID of the onboarding intent created during registration.
+      responses:
+        "200":
+          description: Paystack initialization successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      authorization_url:
+                        type: string
+                      reference:
+                        type: string
+        "404":
+          description: Intent or Plan not found
+
 components:
   securitySchemes:
     bearerAuth:

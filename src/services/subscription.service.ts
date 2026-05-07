@@ -30,7 +30,9 @@ export class SubscriptionService {
 
     if (!plan) throw new NotFoundError("Plan not found");
 
-    const amount = Number(plan.discountPrice || plan.price);
+    const discountValue = Number(plan.discountPrice);
+
+    const amount = discountValue > 0 ? discountValue : Number(plan.price);
 
     const response = await fetch(
       "https://api.paystack.co/transaction/initialize",
