@@ -12,33 +12,91 @@ export class WebhookController {
   /**
    * Main entry point for Paystack Webhooks
    */
+  // static async handlePaystack(req: Request, res: Response) {
+  //   const signature = req.headers["x-paystack-signature"] as string;
+
+  //   // 1. Verify HMAC Signature
+  //   const hash = crypto
+  //     .createHmac("sha256", PAYSTACK_SECRET)
+  //     .update(JSON.stringify(req.body))
+  //     .digest("hex");
+
+  //   if (hash !== signature) {
+  //     logger.error("Invalid Paystack Signature received");
+  //     return res.status(400).send("Invalid signature");
+  //   }
+
+  //   const event = req.body;
+  //   logger.info(`Received Paystack Webhook: ${event.event}`);
+
+  //   // 2. Idempotency: Check if we already processed this event
+  //   const existingEvent = await prisma.webhookEvent.findUnique({
+  //     where: { id: event.data.id.toString() },
+  //   });
+
+  //   if (existingEvent) {
+  //     return res.status(200).send("Event already processed");
+  //   }
+
+  //   // 3. Log the event
+  //   await prisma.webhookEvent.create({
+  //     data: {
+  //       id: event.data.id.toString(),
+  //       source: "PAYSTACK",
+  //       type: event.event,
+  //       payload: event.data,
+  //     },
+  //   });
+
+  //   // 4. Handle Specific Events
+  //   try {
+  //     if (event.event === "charge.success") {
+  //       await WebhookController.handleChargeSuccess(event.data);
+  //     }
+
+  //     // Update event as processed
+  //     await prisma.webhookEvent.update({
+  //       where: { id: event.data.id.toString() },
+  //       data: { processed: true },
+  //     });
+
+  //     return res.status(200).send("Webhook Processed");
+  //   } catch (error: any) {
+  //     logger.error(`Webhook Processing Error (${event.event}):`, error);
+  //     return res.status(500).send("Internal Server Error during processing");
+  //   }
+  // }
+
   static async handlePaystack(req: Request, res: Response) {
     const signature = req.headers["x-paystack-signature"] as string;
 
-    // 1. Verify HMAC Signature
     const hash = crypto
       .createHmac("sha256", PAYSTACK_SECRET)
       .update(JSON.stringify(req.body))
       .digest("hex");
 
     if (hash !== signature) {
-      logger.error("Invalid Paystack Signature received");
+      logger.webhook.signatureFailure({ received: signature, computed: hash });
       return res.status(400).send("Invalid signature");
     }
 
     const event = req.body;
-    logger.info(`Received Paystack Webhook: ${event.event}`);
+    logger.webhook.received(event.event, {
+      event_id: event.data.id,
+      metadata_type: event.data.metadata?.type,
+    });
 
-    // 2. Idempotency: Check if we already processed this event
     const existingEvent = await prisma.webhookEvent.findUnique({
       where: { id: event.data.id.toString() },
     });
 
     if (existingEvent) {
+      logger.webhook.duplicate(event.data.id.toString(), {
+        event_type: event.event,
+      });
       return res.status(200).send("Event already processed");
     }
 
-    // 3. Log the event
     await prisma.webhookEvent.create({
       data: {
         id: event.data.id.toString(),
@@ -48,22 +106,73 @@ export class WebhookController {
       },
     });
 
-    // 4. Handle Specific Events
     try {
       if (event.event === "charge.success") {
         await WebhookController.handleChargeSuccess(event.data);
       }
 
-      // Update event as processed
       await prisma.webhookEvent.update({
         where: { id: event.data.id.toString() },
         data: { processed: true },
       });
 
+      logger.webhook.processed(event.event, {
+        event_id: event.data.id,
+        metadata_type: event.data.metadata?.type,
+      });
+
       return res.status(200).send("Webhook Processed");
     } catch (error: any) {
-      logger.error(`Webhook Processing Error (${event.event}):`, error);
+      logger.webhook.failed(event.event, error, { event_id: event.data.id });
       return res.status(500).send("Internal Server Error during processing");
+    }
+  }
+
+  private static async handleChargeSuccess(data: any) {
+    const reference = data.reference;
+    const metadataType = data.metadata?.type;
+
+    logger.webhook.paystack.chargeSuccess(reference, metadataType, {
+      intent_id: data.metadata?.intentId,
+    });
+
+    switch (metadataType) {
+      case "onboarding": {
+        const intent = await prisma.onboardingIntent.findFirst({
+          where: { paymentReference: reference },
+        });
+
+        if (!intent) {
+          logger.error("No intent found for reference", { reference });
+          return;
+        }
+
+        if (intent.status === "COMPLETED") return;
+
+        await prisma.onboardingIntent.update({
+          where: { id: intent.id },
+          data: { status: "PAID" },
+        });
+
+        await onboardingQueue.add(
+          "process-onboarding",
+          { intentId: intent.intentId, reference },
+          {
+            jobId: intent.intentId,
+            attempts: 5,
+            backoff: { type: "exponential", delay: 60000 },
+            removeOnComplete: true,
+            removeOnFail: false,
+          },
+        );
+
+        logger.webhook.paystack.onboardingQueued(intent.intentId, reference);
+        return;
+      }
+
+      default:
+        logger.webhook.paystack.subscriptionFallback(reference);
+        await SubscriptionService.verifySubscription(reference);
     }
   }
 
@@ -115,61 +224,66 @@ export class WebhookController {
   //   await SubscriptionService.verifySubscription(reference);
   // }
 
-  private static async handleChargeSuccess(data: any) {
-    const reference = data.reference;
+  // private static async handleChargeSuccess(data: any) {
+  //   const reference = data.reference;
+  //   const metadataType = data.metadata?.type;
 
-    const intent = await prisma.onboardingIntent.findFirst({
-      where: { paymentReference: reference },
-    });
+  //   logger.webhook.paystack.chargeSuccess(reference, metadataType, {
+  //     intent_id: data.metadata?.intentId,
+  //   });
 
-    if (intent) {
-      if (intent.status === "COMPLETED") return;
+  //   const intent = await prisma.onboardingIntent.findFirst({
+  //     where: { paymentReference: reference },
+  //   });
 
-      await prisma.onboardingIntent.update({
-        where: { id: intent.id },
-        data: { status: "PAID" },
-      });
+  //   if (intent) {
+  //     if (intent.status === "COMPLETED") return;
 
-      // inside webhook
-      // await onboardingQueue.add(
-      //   "process-onboarding",
-      //   {
-      //     intentId: intent.intentId,
-      //     reference,
-      //   },
-      //   {
-      //     attempts: 5,
-      //     backoff: {
-      //       type: "exponential",
-      //       delay: 60 * 1000, // 1 minute
-      //     },
-      // removeOnComplete: true,
-      // removeOnFail: false,
-      //   },
-      // );
+  //     await prisma.onboardingIntent.update({
+  //       where: { id: intent.id },
+  //       data: { status: "PAID" },
+  //     });
 
-      await onboardingQueue.add(
-        "process-onboarding",
-        {
-          intentId: intent.intentId,
-          reference,
-        },
-        {
-          jobId: intent.intentId,
-          attempts: 5,
-          backoff: {
-            type: "exponential",
-            delay: 60000,
-          },
-          removeOnComplete: true,
-          removeOnFail: false,
-        },
-      );
+  //     // inside webhook
+  //     // await onboardingQueue.add(
+  //     //   "process-onboarding",
+  //     //   {
+  //     //     intentId: intent.intentId,
+  //     //     reference,
+  //     //   },
+  //     //   {
+  //     //     attempts: 5,
+  //     //     backoff: {
+  //     //       type: "exponential",
+  //     //       delay: 60 * 1000, // 1 minute
+  //     //     },
+  //     // removeOnComplete: true,
+  //     // removeOnFail: false,
+  //     //   },
+  //     // );
 
-      return;
-    }
+  //     await onboardingQueue.add(
+  //       "process-onboarding",
+  //       {
+  //         intentId: intent.intentId,
+  //         reference,
+  //       },
+  //       {
+  //         jobId: intent.intentId,
+  //         attempts: 5,
+  //         backoff: {
+  //           type: "exponential",
+  //           delay: 60000,
+  //         },
+  //         removeOnComplete: true,
+  //         removeOnFail: false,
+  //       },
+  //     );
 
-    // fallback → normal subscription
-    await SubscriptionService.verifySubscription(reference);
-  }
+  //     return;
+  //   }
+
+  //   // fallback → normal subscription
+  //   await SubscriptionService.verifySubscription(reference);
+  // }
 }

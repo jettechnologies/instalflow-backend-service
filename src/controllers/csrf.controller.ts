@@ -45,7 +45,9 @@ export class CsrfController {
           "CSRF token generated successfully. Ensure you send it back in the 'x-csrf-token' header for state-changing requests.",
       });
     } catch (error) {
-      logger.error("Error generating CSRF token:", error);
+      logger.error("Error generating CSRF token:", {
+        error,
+      });
       return res
         .status(500)
         .json({ error: "Internal Server Error during CSRF token generation" });
