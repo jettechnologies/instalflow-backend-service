@@ -340,6 +340,8 @@ model WebhookEvent {
   payload   Json
   processed Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  @@index([id])
 }
 
 model OnboardingIntent {
