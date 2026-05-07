@@ -6,7 +6,7 @@ import router from "./routes";
 import { errorHandler } from "./middlewares/errorHandler";
 import { configureExpress } from "./config/express";
 import { setupSwagger } from "./config/swagger";
-import "./instrumentation";
+import "@/libs/instruments";
 // import { httpServerHandler } from "cloudflare:node";
 
 const app = express();
