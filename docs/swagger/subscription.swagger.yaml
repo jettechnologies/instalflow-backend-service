@@ -10,7 +10,7 @@ paths:
       summary: List all active subscription plans
       tags: [Subscription]
       responses:
-        '200':
+        "200":
           description: List of active plans
           content:
             application/json:
@@ -23,7 +23,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/SubscriptionPlan'
+                      $ref: "#/components/schemas/SubscriptionPlan"
 
   /subscriptions/initialize:
     post:
@@ -31,6 +31,8 @@ paths:
       tags: [Subscription]
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfTokenHeader"
       requestBody:
         required: true
         content:
@@ -44,7 +46,7 @@ paths:
                   type: string
                   format: uuid
       responses:
-        '200':
+        "200":
           description: Payment initialization data (Paystack)
           content:
             application/json:
@@ -75,8 +77,9 @@ paths:
           required: true
           schema:
             type: string
+        - $ref: "#/components/parameters/CsrfTokenHeader"
       responses:
-        '200':
+        "200":
           description: Subscription activated
           content:
             application/json:
@@ -100,6 +103,13 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    CsrfTokenHeader:
+      in: header
+      name: x-csrf-token
+      required: true
+      schema:
+        type: string
 
   schemas:
     SubscriptionPlan:
