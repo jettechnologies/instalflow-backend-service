@@ -12,17 +12,19 @@ import webhookRoutes from "./routes/webhook.routes";
 
 const app = express();
 
+app.use(
+  "/api/v1/webhooks",
+  express.raw({ type: "application/json" }),
+  webhookRoutes,
+);
+
 configureExpress(app);
 setupSwagger(app);
 app.use(cors());
 
 // Mount primary domain routers
 app.use("/api/v1", router);
-app.use(
-  "/api/v1/webhooks",
-  express.raw({ type: "application/json" }),
-  webhookRoutes,
-);
+
 // Catch all errors propagating out of routes natively
 app.use(errorHandler as any);
 

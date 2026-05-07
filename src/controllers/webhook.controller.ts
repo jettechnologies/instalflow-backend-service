@@ -128,8 +128,79 @@ export class WebhookController {
   //   }
   // }
 
+  // static async handlePaystack(req: Request, res: Response) {
+  //   const rawBody = req.body as Buffer;
+  //   const signature = req.headers["x-paystack-signature"] as string;
+
+  //   if (!signature) {
+  //     logger.webhook.signatureFailure({ reason: "missing_signature_header" });
+  //     return res.status(400).send("Missing signature");
+  //   }
+
+  //   const hash = crypto
+  //     .createHmac("sha256", PAYSTACK_SECRET)
+  //     .update(rawBody)
+  //     .digest("hex");
+
+  //   if (hash !== signature) {
+  //     logger.webhook.signatureFailure({
+  //       received: signature,
+  //       computed: hash,
+  //       reason: "hash_mismatch",
+  //     });
+  //     return res.status(400).send("Invalid signature");
+  //   }
+
+  //   const event = JSON.parse(rawBody.toString("utf8"));
+
+  //   logger.webhook.received(event.event, {
+  //     event_id: event.data.id,
+  //     metadata_type: event.data.metadata?.type,
+  //   });
+
+  //   const existingEvent = await prisma.webhookEvent.findUnique({
+  //     where: { id: event.data.id.toString() },
+  //   });
+
+  //   if (existingEvent) {
+  //     logger.webhook.duplicate(event.data.id.toString(), {
+  //       event_type: event.event,
+  //     });
+  //     return res.status(200).send("Event already processed");
+  //   }
+
+  //   await prisma.webhookEvent.create({
+  //     data: {
+  //       id: event.data.id.toString(),
+  //       source: "PAYSTACK",
+  //       type: event.event,
+  //       payload: event.data,
+  //     },
+  //   });
+
+  //   try {
+  //     if (event.event === "charge.success") {
+  //       await WebhookController.handleChargeSuccess(event.data);
+  //     }
+
+  //     await prisma.webhookEvent.update({
+  //       where: { id: event.data.id.toString() },
+  //       data: { processed: true },
+  //     });
+
+  //     logger.webhook.processed(event.event, {
+  //       event_id: event.data.id,
+  //       metadata_type: event.data.metadata?.type,
+  //     });
+
+  //     return res.status(200).send("Webhook Processed");
+  //   } catch (error: any) {
+  //     logger.webhook.failed(event.event, error, { event_id: event.data.id });
+  //     return res.status(500).send("Internal Server Error during processing");
+  //   }
+  // }
+
   static async handlePaystack(req: Request, res: Response) {
-    const rawBody = req.body as Buffer;
     const signature = req.headers["x-paystack-signature"] as string;
 
     if (!signature) {
@@ -137,9 +208,27 @@ export class WebhookController {
       return res.status(400).send("Missing signature");
     }
 
+    // ─── Normalize to raw string regardless of middleware order ───────────────
+    let rawBody: string;
+
+    if (Buffer.isBuffer(req.body)) {
+      // express.raw() ran correctly
+      rawBody = req.body.toString("utf8");
+    } else if (typeof req.body === "string") {
+      // express.text() ran
+      rawBody = req.body;
+    } else if (typeof req.body === "object") {
+      // express.json() ran first — re-serialize deterministically
+      rawBody = JSON.stringify(req.body);
+    } else {
+      logger.webhook.signatureFailure({ reason: "unparseable_body" });
+      return res.status(400).send("Invalid body");
+    }
+
+    // ─── Verify signature ─────────────────────────────────────────────────────
     const hash = crypto
       .createHmac("sha256", PAYSTACK_SECRET)
-      .update(rawBody)
+      .update(rawBody) // always a string now
       .digest("hex");
 
     if (hash !== signature) {
@@ -151,7 +240,8 @@ export class WebhookController {
       return res.status(400).send("Invalid signature");
     }
 
-    const event = JSON.parse(rawBody.toString("utf8"));
+    // ─── Parse event ──────────────────────────────────────────────────────────
+    const event = typeof req.body === "object" ? req.body : JSON.parse(rawBody);
 
     logger.webhook.received(event.event, {
       event_id: event.data.id,
