@@ -27,13 +27,20 @@ declare global {
 }
 
 const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const isAuthRoute = req.path.startsWith("/api/v1/auth/");
-  const isWebhookRoute = req.path.startsWith("/api/v1/webhooks/");
+  // const isAuthRoute = req.path.startsWith("/api/v1/auth/");
+  // const isWebhookRoute = req.path.startsWith("/api/v1/webhooks/");
+  // const isBearerAuth = req.headers.authorization?.startsWith("Bearer ");
+  // const isCsrfEndpoint = req.path === "/api/v1/csrf-token";
+
+  const path = req.originalUrl.split("?")[0];
+
+  const isAuthRoute = path.startsWith("/api/v1/auth/");
+  const isWebhookRoute = path.startsWith("/api/v1/webhooks/");
   const isBearerAuth = req.headers.authorization?.startsWith("Bearer ");
-  const isCsrfEndpoint = req.path === "/api/v1/csrf-token";
+  const isCsrfEndpoint = path === "/api/v1/csrf-token";
 
   // Skip CSRF for auth routes, bearer token authenticated requests, or the CSRF endpoint itself
-  if (isAuthRoute || isBearerAuth || isCsrfEndpoint) {
+  if (isAuthRoute || isBearerAuth || isCsrfEndpoint || isWebhookRoute) {
     return next();
   }
 
