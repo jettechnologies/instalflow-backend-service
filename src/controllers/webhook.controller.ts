@@ -67,20 +67,92 @@ export class WebhookController {
   //   }
   // }
 
+  // static async handlePaystack(req: Request, res: Response) {
+  //   const signature = req.headers["x-paystack-signature"] as string;
+
+  //   const hash = crypto
+  //     .createHmac("sha256", PAYSTACK_SECRET)
+  //     .update(JSON.stringify(req.body))
+  //     .digest("hex");
+
+  //   if (hash !== signature) {
+  //     logger.webhook.signatureFailure({ received: signature, computed: hash });
+  //     return res.status(400).send("Invalid signature");
+  //   }
+
+  //   const event = req.body;
+  //   logger.webhook.received(event.event, {
+  //     event_id: event.data.id,
+  //     metadata_type: event.data.metadata?.type,
+  //   });
+
+  //   const existingEvent = await prisma.webhookEvent.findUnique({
+  //     where: { id: event.data.id.toString() },
+  //   });
+
+  //   if (existingEvent) {
+  //     logger.webhook.duplicate(event.data.id.toString(), {
+  //       event_type: event.event,
+  //     });
+  //     return res.status(200).send("Event already processed");
+  //   }
+
+  //   await prisma.webhookEvent.create({
+  //     data: {
+  //       id: event.data.id.toString(),
+  //       source: "PAYSTACK",
+  //       type: event.event,
+  //       payload: event.data,
+  //     },
+  //   });
+
+  //   try {
+  //     if (event.event === "charge.success") {
+  //       await WebhookController.handleChargeSuccess(event.data);
+  //     }
+
+  //     await prisma.webhookEvent.update({
+  //       where: { id: event.data.id.toString() },
+  //       data: { processed: true },
+  //     });
+
+  //     logger.webhook.processed(event.event, {
+  //       event_id: event.data.id,
+  //       metadata_type: event.data.metadata?.type,
+  //     });
+
+  //     return res.status(200).send("Webhook Processed");
+  //   } catch (error: any) {
+  //     logger.webhook.failed(event.event, error, { event_id: event.data.id });
+  //     return res.status(500).send("Internal Server Error during processing");
+  //   }
+  // }
+
   static async handlePaystack(req: Request, res: Response) {
+    const rawBody = req.body as Buffer;
     const signature = req.headers["x-paystack-signature"] as string;
+
+    if (!signature) {
+      logger.webhook.signatureFailure({ reason: "missing_signature_header" });
+      return res.status(400).send("Missing signature");
+    }
 
     const hash = crypto
       .createHmac("sha256", PAYSTACK_SECRET)
-      .update(JSON.stringify(req.body))
+      .update(rawBody)
       .digest("hex");
 
     if (hash !== signature) {
-      logger.webhook.signatureFailure({ received: signature, computed: hash });
+      logger.webhook.signatureFailure({
+        received: signature,
+        computed: hash,
+        reason: "hash_mismatch",
+      });
       return res.status(400).send("Invalid signature");
     }
 
-    const event = req.body;
+    const event = JSON.parse(rawBody.toString("utf8"));
+
     logger.webhook.received(event.event, {
       event_id: event.data.id,
       metadata_type: event.data.metadata?.type,
