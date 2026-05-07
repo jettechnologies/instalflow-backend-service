@@ -13,8 +13,7 @@ router.get("/health", (req, res) => {
 router.get("/csrf-token", CsrfController.generateToken);
 
 // Webhooks (Exempt from CSRF if you have a CSRF middleware globally)
-router.post("/webhooks/paystack", WebhookController.handlePaystack);
-
+// router.post("/webhooks/paystack", WebhookController.handlePaystack);
 router.use("/auth", authRoutes);
 router.use("/subscriptions", subscriptionRoutes);
 router.use("/superadmin", superadminRoutes);
