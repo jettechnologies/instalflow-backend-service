@@ -135,7 +135,7 @@ paths:
   #       409:
   #         description: Admin email already in use
 
-  /auth/company/onboarding:
+  /auth/start-onboarding:
     post:
       summary: Start Company Onboarding
       description: Starts the company onboarding process by validating the admin email, company name, and selected subscription plan. Creates or updates a pending onboarding intent before payment initialization.
