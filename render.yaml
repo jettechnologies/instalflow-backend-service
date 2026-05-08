@@ -1,7 +1,10 @@
 services:
+  # =========================================================
+  # API SERVICE
+  # =========================================================
   - type: web
     runtime: node
-    name: instalflow-backend
+    name: instalflow-api
     plan: free
     region: oregon
 
@@ -64,3 +67,52 @@ services:
 
       - key: PORT
         value: 10000
+
+  # =========================================================
+  # WORKER SERVICE (BullMQ Consumers)
+  # =========================================================
+  - type: worker
+    runtime: node
+    name: instalflow-workers
+    plan: free
+    region: oregon
+
+    buildCommand: |
+      corepack enable
+      corepack prepare pnpm@latest --activate
+      pnpm install --frozen-lockfile
+      pnpm run db:generate
+      pnpm run build
+
+    startCommand: pnpm run start:worker
+
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+
+      - key: DIRECT_URL
+        sync: false
+
+      - key: REDIS_HOST
+        sync: false
+
+      - key: REDIS_PORT
+        sync: false
+
+      - key: REDIS_USERNAME
+        sync: false
+
+      - key: REDIS_PASSWORD
+        sync: false
+
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+
+      - key: NOTIFICATION_HUB_URL
+        sync: false
+
+      - key: NOTIFICATION_HUB_SECRET
+        sync: false
+
+      - key: NODE_ENV
+        value: production

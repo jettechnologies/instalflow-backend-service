@@ -4,13 +4,14 @@
   "type": "module",
   "description": "",
   "main": "index.js",
-  "_moduleAliases": {
-    "@": "dist/src"
-  },
   "scripts": {
-    "dev": "nodemon --watch src --ext ts,tsx --exec \"npx tsx src/index.ts\"",
+    "dev": "tsx watch src/api/index.ts",
+    "dev:worker": "tsx watch src/job-workers/index.ts",
+    "dev:scheduler": "tsx watch src/schedulers/index.ts",
     "build": "tsup",
-    "start": "node dist/index.js",
+    "start": "node dist/api/index.js",
+    "start:worker": "node dist/job-workers/index.js",
+    "start:scheduler": "node dist/schedulers/index.js",
     "lint": "eslint . --ext .ts,.tsx",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -19,7 +20,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force && pnpm run db:seed",
     "postinstall": "prisma generate",
-    "swagger": "tsx ./src/config/swagger.ts",
+    "swagger": "tsx ./src/infrastructure/config/swagger.ts",
     "deploy:mail-worker": "cd mail-worker && wrangler deploy --name mail-worker",
     "test": "glob -c \"node --no-warnings --import tsx --test\" \"src/**/*.test.ts\""
   },
