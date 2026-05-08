@@ -5,6 +5,7 @@ import logger from "../libs/logger";
 import { AuthService } from "../services/auth.service";
 import { SubscriptionService } from "../services/subscription.service";
 import { onboardingQueue } from "@/queue/onboarding.queue";
+import { PaystackService } from "@/services/paystack.service";
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || "";
 
@@ -226,17 +227,29 @@ export class WebhookController {
     }
 
     // ─── Verify signature ─────────────────────────────────────────────────────
-    const hash = crypto
-      .createHmac("sha256", PAYSTACK_SECRET)
-      .update(rawBody) // always a string now
-      .digest("hex");
+    // const hash = crypto
+    //   .createHmac("sha256", PAYSTACK_SECRET)
+    //   .update(rawBody) // always a string now
+    //   .digest("hex");
 
-    if (hash !== signature) {
+    //
+    const isValid = PaystackService.verifyWebhookSignature(rawBody, signature);
+
+    // if (isValid) {
+    //   logger.webhook.signatureFailure({
+    //     received: signature,
+    //     computed: hash,
+    //     reason: "hash_mismatch",
+    //   });
+    //   return res.status(400).send("Invalid signature");
+    // }
+
+    if (!isValid) {
       logger.webhook.signatureFailure({
         received: signature,
-        computed: hash,
-        reason: "hash_mismatch",
+        reason: "invalid_signature",
       });
+
       return res.status(400).send("Invalid signature");
     }
 
