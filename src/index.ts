@@ -8,6 +8,7 @@ import { configureExpress } from "./config/express";
 import { setupSwagger } from "./config/swagger";
 import "@/libs/instruments";
 import webhookRoutes from "./routes/webhook.routes";
+import "@/workers/onboarding-workers";
 // import { httpServerHandler } from "cloudflare:node";
 
 const app = express();
