@@ -29,5 +29,8 @@ app.use("/api/v1", router);
 // Catch all errors propagating out of routes natively
 app.use(errorHandler as any);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 API Server Live on port ${PORT}`));
+const PORT = Number(process.env.PORT) || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 API Server Live on port ${PORT}`);
+});
