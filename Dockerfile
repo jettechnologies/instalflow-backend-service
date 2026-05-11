@@ -15,7 +15,7 @@ COPY prisma ./prisma
 COPY prisma.config.ts ./prisma.config.ts
 
 # IMPORTANT: no prisma generate here
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # =========================================================
 # Copy full source
@@ -39,8 +39,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 ENV NODE_ENV=production
 
-# Copy only runtime artifacts
+# Install only production deps (clean runtime)
 COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --prod
+
+# Copy only runtime artifacts
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/dist ./dist
 COPY --from=base /app/prisma ./prisma

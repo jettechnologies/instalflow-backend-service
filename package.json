@@ -19,7 +19,6 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force && pnpm run db:seed",
-    "postinstall": "prisma generate",
     "swagger": "tsx ./src/infrastructure/config/swagger.ts",
     "deploy:mail-worker": "cd mail-worker && wrangler deploy --name mail-worker",
     "test": "glob -c \"node --no-warnings --import tsx --test\" \"src/**/*.test.ts\""
