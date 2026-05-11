@@ -5,8 +5,8 @@ FROM node:20-alpine AS base
 
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable
+# Enable corepack + pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # =========================================================
 # Dependencies Layer
