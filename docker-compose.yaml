@@ -98,32 +98,3 @@ services:
 networks:
   instalflow-network:
     driver: bridge
-
-# version: "3.9"
-
-# services:
-#   api:
-#     build: .
-#     container_name: instalflow-api
-#     restart: always
-#     ports:
-#       - "10000:10000"
-#     command: pnpm run start
-#     env_file:
-#       - .env
-
-#   workers:
-#     build: .
-#     container_name: instalflow-workers
-#     restart: always
-#     command: pnpm run start:worker
-#     env_file:
-#       - .env
-
-#   schedulers:
-#     build: .
-#     container_name: instalflow-schedulers
-#     restart: always
-#     command: pnpm run start:scheduler
-#     env_file:
-#       - .env
