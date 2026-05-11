@@ -209,7 +209,7 @@ export class WebhookController {
           { intentId: intent.intentId, reference },
           {
             jobId: intent.intentId,
-            attempts: 5,
+            attempts: 3,
             backoff: { type: "exponential", delay: 60000 },
             removeOnComplete: true,
             removeOnFail: false,

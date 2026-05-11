@@ -125,7 +125,11 @@ export const onboardingWorker = new Worker(
   },
   {
     connection: redis,
-    concurrency: 5,
+    concurrency: 2,
+    limiter: {
+      max: 10,
+      duration: 1000,
+    },
   },
 );
 

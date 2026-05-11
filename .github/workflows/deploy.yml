@@ -1,0 +1,111 @@
+name: Instalflow CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: corepack enable
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run db:generate
+
+      - run: pnpm run build
+
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy To Production Droplet
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+
+          script: |
+            cd BACKEND-SERVICE
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy To Staging Droplet
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_STAGING_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+
+          script: |
+            cd BACKEND-SERVICE
+            git pull origin staging
+            docker compose down
+            docker compose up -d --build
+
+# name: Instalflow Backend Framework CI
+
+# on:
+#   push:
+#     branches: ["main", "staging"]
+#   pull_request:
+#     branches: ["main", "staging"]
+
+# jobs:
+#   build:
+#     name: Typechecking & Standard Build
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+
+#       - name: Setup Node.js Environment
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: "18.x"
+
+#       - name: Bootstrap PNPM
+#         run: npm install -g pnpm
+
+#       - name: Install Dependencies
+#         run: pnpm install --frozen-lockfile=false
+
+#       - name: Generate Prisma Engine Mappings
+#         run: pnpm dlx prisma generate
+
+#       - name: Strict Typescript Check
+#         run: npx tsc --noEmit
+
+#       - name: Optimized TSUP Compilation
+#         run: pnpm run build
+
+#   deploy:
+#     name: Deploy to Render
+#     needs: build
+#     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Trigger Render Deploy Hook
+#         run: |
+#           curl -f ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

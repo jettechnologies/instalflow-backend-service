@@ -1,0 +1,129 @@
+version: "3.9"
+
+services:
+  # =========================================================
+  # API SERVICE
+  # =========================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: instalflow-api
+
+    restart: unless-stopped
+
+    command: node dist/index.js
+
+    ports:
+      - "10000:10000"
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+      PORT: 10000
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:10000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+    mem_limit: 350m
+
+    networks:
+      - instalflow-network
+
+  # =========================================================
+  # WORKER SERVICE
+  # =========================================================
+  workers:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: instalflow-workers
+
+    restart: unless-stopped
+
+    command: node dist/workers/index.js
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+
+    mem_limit: 350m
+
+    depends_on:
+      - api
+
+    networks:
+      - instalflow-network
+
+  # =========================================================
+  # SCHEDULER SERVICE
+  # =========================================================
+  schedulers:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: instalflow-schedulers
+
+    restart: unless-stopped
+
+    command: node dist/schedulers/index.js
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+
+    mem_limit: 200m
+
+    depends_on:
+      - api
+
+    networks:
+      - instalflow-network
+
+# =========================================================
+# NETWORKS
+# =========================================================
+networks:
+  instalflow-network:
+    driver: bridge
+
+# version: "3.9"
+
+# services:
+#   api:
+#     build: .
+#     container_name: instalflow-api
+#     restart: always
+#     ports:
+#       - "10000:10000"
+#     command: pnpm run start
+#     env_file:
+#       - .env
+
+#   workers:
+#     build: .
+#     container_name: instalflow-workers
+#     restart: always
+#     command: pnpm run start:worker
+#     env_file:
+#       - .env
+
+#   schedulers:
+#     build: .
+#     container_name: instalflow-schedulers
+#     restart: always
+#     command: pnpm run start:scheduler
+#     env_file:
+#       - .env

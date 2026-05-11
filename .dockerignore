@@ -1,0 +1,21 @@
+# Dependency folders
+node_modules
+npm-debug.log*
+
+# Build artifacts
+dist
+*.tsbuildinfo
+
+# Configuration/Temporary files
+.env
+.DS_Store
+.git
+.gitignore
+.editorconfig
+.prettierrc*
+.eslint*
+.nvmrc
+coverage
+tmp
+README.md
+LICENSE
