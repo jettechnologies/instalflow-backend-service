@@ -53,4 +53,7 @@ COPY --from=base /app/mail-templates ./mail-templates
 EXPOSE 10000
 
 # Default command
-CMD ["node", "dist/index.js"]
+# CMD ["node", "dist/index.js"]
+COPY docker ./docker
+
+RUN chmod +x docker/*.sh

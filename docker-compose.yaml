@@ -13,7 +13,7 @@ services:
 
     restart: unless-stopped
 
-    command: node dist/index.js
+    command: sh docker/start-api.sh
 
     ports:
       - "10000:10000"
@@ -48,7 +48,7 @@ services:
 
     restart: unless-stopped
 
-    command: node dist/workers/index.js
+    command: sh docker/start-workers.sh
 
     env_file:
       - .env
@@ -76,7 +76,7 @@ services:
 
     restart: unless-stopped
 
-    command: node dist/schedulers/index.js
+    command: sh docker/start-schedulers.sh
 
     env_file:
       - .env
