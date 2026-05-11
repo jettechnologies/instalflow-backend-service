@@ -44,6 +44,7 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
 
           script: |
+            cd instalflow-backend-service
             git pull origin main
             docker compose down
             docker compose up -d --build
@@ -62,6 +63,7 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
 
           script: |
+            cd instalflow-backend-service
             git pull origin staging
             docker compose down
             docker compose up -d --build
