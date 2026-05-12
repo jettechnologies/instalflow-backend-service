@@ -1,4 +1,4 @@
 #!/bin/sh
 
 echo "Starting app..."
-node dist/index.js
+node dist/api/index.js
