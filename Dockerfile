@@ -4,6 +4,8 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
+RUN apk add --no-cache curl 
+
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma
 COPY prisma.config.ts ./prisma.config.ts
@@ -20,6 +22,8 @@ FROM node:20-alpine AS production
 WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
+
+RUN apk add --no-cache curl 
 
 ENV NODE_ENV=production
 
