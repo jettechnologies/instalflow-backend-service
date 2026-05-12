@@ -42,7 +42,7 @@ services:
   workers:
     build:
       context: .
-      dockerfile: Dockerfile
+      # dockerfile: Dockerfile
 
     container_name: instalflow-workers
 
@@ -70,7 +70,7 @@ services:
   schedulers:
     build:
       context: .
-      dockerfile: Dockerfile
+      # dockerfile: Dockerfile
 
     container_name: instalflow-schedulers
 
