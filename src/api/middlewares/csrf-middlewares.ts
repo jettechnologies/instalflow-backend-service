@@ -30,12 +30,19 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const path = req.originalUrl.split("?")[0];
 
   const isAuthRoute = path.startsWith("/api/v1/auth/");
+  const isHealthRoute = path === "/api/v1/health";
   const isWebhookRoute = path.startsWith("/api/v1/webhooks/");
   const isBearerAuth = req.headers.authorization?.startsWith("Bearer ");
   const isCsrfEndpoint = path === "/api/v1/csrf-token";
 
   // Skip CSRF for auth routes, bearer token authenticated requests, or the CSRF endpoint itself
-  if (isAuthRoute || isBearerAuth || isCsrfEndpoint || isWebhookRoute) {
+  if (
+    isAuthRoute ||
+    isBearerAuth ||
+    isCsrfEndpoint ||
+    isWebhookRoute ||
+    isHealthRoute
+  ) {
     return next();
   }
 
