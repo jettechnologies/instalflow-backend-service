@@ -1,36 +1,20 @@
-# =========================================================
-# Base Image
-# =========================================================
 FROM node:20-alpine AS base
 
 WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# =========================================================
-# Install dependencies (ONLY dependencies)
-# =========================================================
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma
 COPY prisma.config.ts ./prisma.config.ts
 
-# IMPORTANT: no prisma generate here
 RUN pnpm install
 
-# =========================================================
-# Copy full source
-# =========================================================
 COPY . .
 
-# =========================================================
-# Build ONLY (safe, no env dependency)
-# =========================================================
 RUN pnpm run build
 
-
-# =========================================================
-# Production Image
-# =========================================================
+# production image
 FROM node:20-alpine AS production
 
 WORKDIR /app
@@ -57,4 +41,4 @@ RUN ls -R dist
 
 EXPOSE 10000
 
-CMD ["echo", "Use docker-compose to start services"]
+CMD ["sh", "docker/start-api.sh"]

@@ -33,5 +33,5 @@ export function configureExpress(app: Application): void {
     }),
   );
 
-  // app.use(csrfMiddleware);
+  app.use(csrfMiddleware);
 }
