@@ -53,6 +53,8 @@ COPY --from=base /app/docker ./docker
 
 RUN chmod +x docker/*.sh
 
+RUN ls -R dist
+
 EXPOSE 10000
 
-CMD ["node", "dist/index.js"]
+CMD ["echo", "Use docker-compose to start services"]
