@@ -21,7 +21,24 @@ app.use(
 
 configureExpress(app);
 setupSwagger(app);
-app.use(cors());
+// app.use(cors());
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [
+  "http://localhost:3000",
+];
+
+app.set("trust proxy", 1);
+
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      if (allowedOrigins.includes(origin)) return cb(null, true);
+      return cb(new Error("CORS blocked"));
+    },
+    credentials: true,
+  }),
+);
 
 // Mount primary domain routers
 app.use("/api/v1", router);
