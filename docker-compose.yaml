@@ -29,7 +29,7 @@ services:
 
     healthcheck:
       # test: ["CMD", "wget", "--spider", "-q", "http://localhost:10000/health"]
-      test: ["CMD", "curl", "-f", "http://localhost:10000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:10000/api/v1/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -94,7 +94,6 @@ services:
 networks:
   instalflow-network:
     driver: bridge
-    external: true
 
 # version: "3.9"
 
