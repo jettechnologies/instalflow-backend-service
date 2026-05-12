@@ -94,6 +94,7 @@ services:
 networks:
   instalflow-network:
     driver: bridge
+    external: true
 
 # version: "3.9"
 
