@@ -2,16 +2,22 @@ import "dotenv/config";
 import { PrismaClient } from "./generated/prisma/client.js";
 export * from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaNeon } from "@prisma/adapter-neon";
+// import { PrismaNeon } from "@prisma/adapter-neon";
 
-const isProduction = process.env.NODE_ENV === "production";
+// const isProduction = process.env.NODE_ENV === "production";
+// const connectionString = process.env.DATABASE_URL!;
+
+// const adapter = isProduction
+//   ? new PrismaNeon({ connectionString })
+//   : new PrismaPg({ connectionString });
+
 const connectionString = process.env.DATABASE_URL!;
 
-const adapter = isProduction
-  ? new PrismaNeon({ connectionString })
-  : new PrismaPg({ connectionString });
+const adapter = new PrismaPg({
+  connectionString,
+});
 
-export const prisma = new PrismaClient({ adapter }).$extends({
+export const prisma = new PrismaClient({ adapter, log: ["error"] }).$extends({
   result: {
     product: { id: { needs: {}, compute: () => undefined } },
     user: { id: { needs: {}, compute: () => undefined } },
