@@ -18,6 +18,22 @@ export function configureExpress(app: Application): void {
 
   app.set("trust proxy", 1);
 
+  app.use("/api-docs", (req, res, next) => {
+    // Remove helmet's CSP and set a permissive one for swagger
+    res.setHeader(
+      "Content-Security-Policy",
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline'",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data:",
+        "connect-src 'self'",
+        // Critical: do NOT include upgrade-insecure-requests
+      ].join("; "),
+    );
+    next();
+  });
+
   app.use(
     session({
       store: new PrismaSessionStore(60 * 60 * 24),
