@@ -55,6 +55,7 @@
     "posthog-node": "^5.30.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.32.6",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^14.0.0",
     "zod": "^4.3.6"
   },
