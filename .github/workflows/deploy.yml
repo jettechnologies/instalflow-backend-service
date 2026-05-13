@@ -49,6 +49,7 @@ jobs:
             cd instalflow-backend-service
             git pull origin main
             docker compose down
+            docker build -t instalflow-backend-service:latest .
             docker compose up -d --build --remove-orphans
 
   deploy-staging:
@@ -68,6 +69,7 @@ jobs:
             cd instalflow-backend-service
             git pull origin staging
             docker compose down
+            docker build -t instalflow-backend-service:latest .
             docker compose up -d --build --remove-orphans
 
 # name: Instalflow Backend Framework CI

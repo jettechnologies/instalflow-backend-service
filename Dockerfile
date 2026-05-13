@@ -29,8 +29,6 @@ ENV NODE_ENV=production
 
 # Install only production deps (clean runtime)
 COPY package.json pnpm-lock.yaml ./
-# RUN pnpm install --prod
-RUN pnpm install --prod --ignore-scripts
 
 # Copy only runtime artifacts
 COPY --from=base /app/node_modules ./node_modules
