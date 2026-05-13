@@ -1,6 +1,7 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import express, { Express, Request, Response, NextFunction } from "express";
 import swaggerUiDist from "swagger-ui-dist";
+import path from "path";
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -22,7 +23,8 @@ const options: swaggerJsdoc.Options = {
       },
     },
   },
-  apis: ["./docs/swagger/**/*.yaml"],
+  // apis: ["./docs/swagger/**/*.yaml"],
+  apis: [path.join(process.cwd(), "docs/swagger/**/*.yaml")],
 };
 
 export const swaggerSpec = (() => {
@@ -107,6 +109,11 @@ export function setupSwagger(app: Express): void {
       </body>
       </html>`);
   });
+
+  console.log(
+    "Swagger Path:",
+    path.join(process.cwd(), "docs/swagger/**/*.yaml"),
+  );
 
   // 4. Static assets — serves css, js, icons from swagger-ui-dist
   app.use("/api-docs", express.static(uiAssetsPath));

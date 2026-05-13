@@ -33,6 +33,7 @@ COPY package.json pnpm-lock.yaml ./
 # Copy only runtime artifacts
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/dist ./dist
+COPY --from=base /app/docs ./docs
 COPY --from=base /app/prisma ./prisma
 COPY --from=base /app/prisma.config.ts ./prisma.config.ts
 COPY --from=base /app/mail-templates ./mail-templates
