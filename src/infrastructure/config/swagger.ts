@@ -83,7 +83,11 @@ export function setupSwagger(app: Express): void {
             presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
             plugins: [SwaggerUIBundle.plugins.DownloadUrl],
             layout: "StandaloneLayout",
-            validatorUrl: null
+            validatorUrl: null,
+            requestInterceptor: (req) => {
+              req.credentials = "include";
+              return req;
+            },
           });
         };
     `);
