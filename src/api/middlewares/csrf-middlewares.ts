@@ -73,10 +73,10 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
       storedHash = hashToken(rawToken);
 
       const cookieOptions = {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "lax" as const,
         secure: isSecure,
-        path: "/", // CRITICAL
+        path: "/",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       };
 
@@ -86,7 +86,7 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
       res.cookie("csrf_token", rawToken, {
         ...cookieOptions,
-        httpOnly: false,
+        // httpOnly: false,
       });
 
       logger.info("Generated new CSRF cookies");
