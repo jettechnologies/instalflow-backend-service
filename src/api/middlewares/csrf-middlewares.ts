@@ -29,6 +29,10 @@ declare global {
 const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const path = req.originalUrl.split("?")[0];
 
+  const isSecure =
+    process.env.NODE_ENV === "production" &&
+    req.headers["x-forwarded-proto"] === "https";
+
   const isAuthRoute = path.startsWith("/api/v1/auth/");
   const isHealthRoute = path === "/api/v1/health";
   const isWebhookRoute = path.startsWith("/api/v1/webhooks/");
@@ -54,8 +58,9 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
     if (!req.cookies?.["csrf_hash"]) {
       res.cookie("csrf_hash", hashed, {
         httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        // secure: process.env.NODE_ENV === "production",
+        secure: isSecure,
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });
     }
@@ -63,8 +68,9 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
     if (!req.cookies?.["csrf_token"]) {
       res.cookie("csrf_token", rawToken, {
         httpOnly: false,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        // secure: process.env.NODE_ENV === "production",
+        secure: isSecure,
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });
     }
