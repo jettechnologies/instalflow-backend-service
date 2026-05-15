@@ -23,9 +23,13 @@ configureExpress(app);
 setupSwagger(app);
 // app.use(cors());
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [
-  "http://localhost:3000",
-];
+// const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",").map((origin) =>
+//   origin.trim().replace(/\/$/, ""),
+// )
+
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim().replace(/\/$/, ""));
 
 app.set("trust proxy", 1);
 
