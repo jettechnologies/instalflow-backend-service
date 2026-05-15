@@ -2,43 +2,35 @@ import "dotenv/config";
 import { PrismaClient } from "./generated/prisma/client.js";
 export * from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
-// import { PrismaNeon } from "@prisma/adapter-neon";
-
-// const isProduction = process.env.NODE_ENV === "production";
-// const connectionString = process.env.DATABASE_URL!;
-
-// const adapter = isProduction
-//   ? new PrismaNeon({ connectionString })
-//   : new PrismaPg({ connectionString });
+import pg from "pg";
 
 const connectionString = process.env.DATABASE_URL!;
 
-const adapter = new PrismaPg({
+const pool = new pg.Pool({
   connectionString,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
+
+const adapter = new PrismaPg(pool);
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 export const prisma = new PrismaClient({ adapter, log: ["error"] }).$extends({
   result: {
-    product: { id: { needs: {}, compute: () => undefined } },
-    user: { id: { needs: {}, compute: () => undefined } },
-    company: { id: { needs: {}, compute: () => undefined } },
-    category: { id: { needs: {}, compute: () => undefined } },
-    productVariant: { id: { needs: {}, compute: () => undefined } },
-    application: { id: { needs: {}, compute: () => undefined } },
-    installment: { id: { needs: {}, compute: () => undefined } },
-    payment: { id: { needs: {}, compute: () => undefined } },
-    commission: { id: { needs: {}, compute: () => undefined } },
-    ledgerTransaction: { id: { needs: {}, compute: () => undefined } },
-    referral: { id: { needs: {}, compute: () => undefined } },
-    userSession: { id: { needs: {}, compute: () => undefined } },
-    subscriptionPlan: { id: { needs: {}, compute: () => undefined } },
-    companySubscription: { id: { needs: {}, compute: () => undefined } },
-    passwordReset: { id: { needs: {}, compute: () => undefined } },
-    session: { id: { needs: {}, compute: () => undefined } },
-    ledgerAccount: { id: { needs: {}, compute: () => undefined } },
-    financialTransaction: { id: { needs: {}, compute: () => undefined } },
-    journalEntry: { id: { needs: {}, compute: () => undefined } },
-    webhookEvent: { id: { needs: {}, compute: () => undefined } },
-    pendingOnboarding: { id: { needs: {}, compute: () => undefined } },
+    $allModels: {
+      toJSON: {
+        compute(data) {
+          return () => {
+            const { id, ...rest } = data as any;
+            return rest;
+          };
+        },
+      },
+    },
   },
 });
