@@ -182,7 +182,7 @@ export class AuthService {
     emitEvent(DomainEvent.MARKETER_CREATED, {
       email: user.email,
       name: user.name,
-      tempPassword,
+      tempPassword: tempPassword,
       dashboard_url: process.env.FRONTEND_URL,
     });
 

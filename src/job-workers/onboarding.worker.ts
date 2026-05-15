@@ -115,6 +115,7 @@ export const onboardingWorker = new Worker(
 
     if (result) {
       emitEvent(DomainEvent.COMPANY_ONBOARDED, {
+        email: intent.email,
         adminName: result.user.name,
         companyName: result.company.name,
         dashboard_url: process.env.FRONTEND_URL,
