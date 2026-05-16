@@ -3,7 +3,7 @@
 export enum DomainEvent {
   // Auth / Identity
   USER_REGISTERED = "user.registered",
-  MARKETER_CREATED = "marketer.created",
+  STAFF_CREATED = "staff.created",
   OTP_REQUESTED = "auth.otp.requested",
   PASSWORD_RESET_REQUESTED = "auth.password.reset.requested",
   PASSWORD_RESET_COMPLETED = "auth.password.reset.completed",

@@ -7,12 +7,11 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Path logic to handle both dev (src/services) and build (dist/src/services) locales
 const TEMPLATES_DIR = path.resolve(__dirname, "../../mail-templates");
 
 export enum EmailTemplate {
   WELCOME = "welcome",
-  MARKETER_WELCOME = "marketer-welcome",
+  STAFF_WELCOME = "staff-welcome",
   OTP_VERIFICATION = "otp-verification",
   PASSWORD_RESET = "password-reset",
   FORGOT_PASSWORD_OTP = "forgot-password-otp",
@@ -39,9 +38,6 @@ export class EmailService {
     }
   }
 
-  /**
-   * Compiles and returns the HTML content from the template file
-   */
   private static getTemplate(templateName: EmailTemplate, context: any) {
     const filePath = path.join(TEMPLATES_DIR, `${templateName}.html`);
 
@@ -53,9 +49,6 @@ export class EmailService {
     return handlebars.compile(source)(context);
   }
 
-  /**
-   * Offloads email sending to an external Cloudflare Worker / microservice
-   */
   private static async sendViaWorker(props: SendEmailProps) {
     const workerUrl = process.env.EMAIL_WORKER_URL;
     if (!workerUrl) {
@@ -99,9 +92,6 @@ export class EmailService {
     }
   }
 
-  /**
-   * Sends email directly via Brevo Transactional API (v5.x SDK)
-   */
   private static async sendViaBrevo(props: SendEmailProps) {
     if (!this.brevoClient) {
       throw new Error("Brevo client not initialized. Check BREVO_API_KEY.");
@@ -122,9 +112,6 @@ export class EmailService {
     await this.brevoClient.transactionalEmails.sendTransacEmail(sendRequest);
   }
 
-  /**
-   * Entry point for sending emails
-   */
   static async sendMail(props: SendEmailProps) {
     try {
       const provider = process.env.EMAIL_PROVIDER || "brevo";

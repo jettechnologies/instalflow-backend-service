@@ -1,12 +1,15 @@
-import { prisma, ApprovalAction, ApprovalStatus, Role } from "@/infrastructure/prisma";
+import {
+  prisma,
+  ApprovalAction,
+  ApprovalStatus,
+  Role,
+} from "@/infrastructure/prisma";
 import crypto from "crypto";
 import { z } from "zod";
 import { bcryptHash } from "@/shared/utils/password-hash-verify";
 import {
   ConflictError,
-  UnauthorizedError,
   NotFoundError,
-  BadRequestError,
   ForbiddenError,
 } from "@/shared/utils/AppError";
 import {
@@ -14,21 +17,14 @@ import {
   ToggleStatusSchema,
   HandleApprovalSchema,
 } from "@/shared/schemas/user-management.schema";
+import { emitEvent } from "@/core/events/emitter";
+import { DomainEvent } from "@/core/events/event.types";
 
 export class UserManagementService {
-  /**
-   * ==========================================
-   * COMPANY ROLE ACTIONS
-   * ==========================================
-   */
-
-  /**
-   * Create an ADMIN user under the company.
-   */
   static async createAdmin(
     companyId: string,
     creatorId: string,
-    data: z.infer<typeof CreateAdminSchema>
+    data: z.infer<typeof CreateAdminSchema>,
   ) {
     const existing = await prisma.user.findUnique({
       where: { email: data.email },
@@ -58,16 +54,21 @@ export class UserManagementService {
       },
     });
 
+    emitEvent(DomainEvent.STAFF_CREATED, {
+      email: user.email,
+      name: user.name,
+      role: "Admin",
+      tempPassword: tempPassword,
+      dashboard_url: process.env.FRONTEND_URL,
+    });
+
     return { user, tempPassword };
   }
 
-  /**
-   * Directly toggle an ADMIN's active status (Company only).
-   */
   static async toggleAdminStatus(
     companyId: string,
     adminId: string,
-    data: z.infer<typeof ToggleStatusSchema>
+    data: z.infer<typeof ToggleStatusSchema>,
   ) {
     const admin = await prisma.user.findFirst({
       where: { userId: adminId, companyId, role: Role.ADMIN, deletedAt: null },
@@ -83,9 +84,6 @@ export class UserManagementService {
     return updated;
   }
 
-  /**
-   * Directly soft delete an ADMIN (Company only).
-   */
   static async softDeleteAdmin(companyId: string, adminId: string) {
     const admin = await prisma.user.findFirst({
       where: { userId: adminId, companyId, role: Role.ADMIN, deletedAt: null },
@@ -98,7 +96,6 @@ export class UserManagementService {
       select: { userId: true, name: true, deletedAt: true },
     });
 
-    // Optionally revoke all active sessions for this admin
     await prisma.userSession.updateMany({
       where: { user: { userId: adminId }, revoked: false },
       data: { revoked: true },
@@ -107,13 +104,10 @@ export class UserManagementService {
     return updated;
   }
 
-  /**
-   * Handle an ApprovalRequest (Company only).
-   */
   static async handleApprovalRequest(
     companyId: string,
     requestId: string,
-    data: z.infer<typeof HandleApprovalSchema>
+    data: z.infer<typeof HandleApprovalSchema>,
   ) {
     const request = await prisma.approvalRequest.findFirst({
       where: { requestId, companyId, status: ApprovalStatus.PENDING },
@@ -129,7 +123,6 @@ export class UserManagementService {
       return { message: "Request rejected" };
     }
 
-    // Process Approval
     await prisma.$transaction(async (tx) => {
       await tx.approvalRequest.update({
         where: { id: request.id },
@@ -160,59 +153,51 @@ export class UserManagementService {
     return { message: "Request approved and action executed" };
   }
 
-  /**
-   * Get all pending approval requests for the company.
-   */
   static async getPendingApprovals(companyId: string) {
     return prisma.approvalRequest.findMany({
       where: { companyId, status: ApprovalStatus.PENDING },
       include: {
         requestedBy: { select: { name: true, email: true } },
-        targetUser: { select: { name: true, email: true, role: true, active: true } },
+        targetUser: {
+          select: { name: true, email: true, role: true, active: true },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
   }
 
-  /**
-   * ==========================================
-   * ADMIN ROLE ACTIONS (Maker-Checker)
-   * ==========================================
-   */
-
-  /**
-   * Enforce Rule: Admin cannot act on Marketers directly created by Company users.
-   */
   private static async ensureAdminCanManageMarketer(
     adminCompanyId: string,
-    marketerId: string
+    marketerId: string,
   ) {
     const marketer = await prisma.user.findFirst({
-      where: { userId: marketerId, companyId: adminCompanyId, role: Role.MARKETER, deletedAt: null },
+      where: {
+        userId: marketerId,
+        companyId: adminCompanyId,
+        role: Role.MARKETER,
+        deletedAt: null,
+      },
       include: { creator: true },
     });
 
     if (!marketer) throw new NotFoundError("Marketer not found or deleted");
 
-    // If marketer was created by a COMPANY role user, Admin cannot manage them.
     if (marketer.creator && marketer.creator.role === Role.COMPANY) {
-      throw new ForbiddenError("You cannot modify a marketer created by the Company Owner.");
+      throw new ForbiddenError(
+        "You cannot modify a marketer created by the Company Owner.",
+      );
     }
 
     return marketer;
   }
 
-  /**
-   * Request to toggle a MARKETER's active status.
-   */
   static async requestMarketerToggle(
     adminId: string,
     companyId: string,
-    marketerId: string
+    marketerId: string,
   ) {
     await this.ensureAdminCanManageMarketer(companyId, marketerId);
 
-    // Check if there's already a pending request for this
     const existing = await prisma.approvalRequest.findFirst({
       where: {
         companyId,
@@ -221,7 +206,10 @@ export class UserManagementService {
         status: ApprovalStatus.PENDING,
       },
     });
-    if (existing) throw new ConflictError("A toggle request is already pending for this user.");
+    if (existing)
+      throw new ConflictError(
+        "A toggle request is already pending for this user.",
+      );
 
     const request = await prisma.approvalRequest.create({
       data: {
@@ -241,13 +229,10 @@ export class UserManagementService {
     return request;
   }
 
-  /**
-   * Request to soft delete a MARKETER.
-   */
   static async requestMarketerDeletion(
     adminId: string,
     companyId: string,
-    marketerId: string
+    marketerId: string,
   ) {
     await this.ensureAdminCanManageMarketer(companyId, marketerId);
 
@@ -259,7 +244,10 @@ export class UserManagementService {
         status: ApprovalStatus.PENDING,
       },
     });
-    if (existing) throw new ConflictError("A deletion request is already pending for this user.");
+    if (existing)
+      throw new ConflictError(
+        "A deletion request is already pending for this user.",
+      );
 
     const request = await prisma.approvalRequest.create({
       data: {

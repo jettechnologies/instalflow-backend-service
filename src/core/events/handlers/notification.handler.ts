@@ -23,17 +23,18 @@ onEvent(DomainEvent.USER_REGISTERED, async (payload) => {
 });
 
 /**
- * MARKETER CREATED
+ * STAFF CREATED
  */
-onEvent(DomainEvent.MARKETER_CREATED, async (payload) => {
+onEvent(DomainEvent.STAFF_CREATED, async (payload) => {
   await NotificationService.send({
     to: payload.email,
     channel: NotificationChannel.EMAIL,
-    template: EmailTemplate.MARKETER_WELCOME,
-    subject: "Your Instalflow Marketer Account",
+    template: EmailTemplate.STAFF_WELCOME,
+    subject: `Your Instalflow ${payload.role} Account`,
     context: {
       name: payload.name,
       email: payload.email,
+      role: payload.role,
       tempPassword: payload.tempPassword,
       dashboard_url: process.env.FRONTEND_URL,
     },

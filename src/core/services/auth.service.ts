@@ -180,10 +180,10 @@ export class AuthService {
       },
     });
 
-    // ✅ Fires → notification-hub → email_queue → email-worker → Brevo (marketer-welcome)
-    emitEvent(DomainEvent.MARKETER_CREATED, {
+    emitEvent(DomainEvent.STAFF_CREATED, {
       email: user.email,
       name: user.name,
+      role: "Marketer",
       tempPassword: tempPassword,
       dashboard_url: process.env.FRONTEND_URL,
     });
