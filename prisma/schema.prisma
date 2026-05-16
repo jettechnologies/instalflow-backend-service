@@ -68,6 +68,17 @@ enum AccountType {
   EQUITY
 }
 
+enum ApprovalAction {
+  TOGGLE_ACTIVE
+  SOFT_DELETE
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Company {
   id        BigInt   @id @default(autoincrement())
   companyId String   @unique @default(uuid())
@@ -81,6 +92,7 @@ model Company {
   products       Product[]
   subscriptions  CompanySubscription[]
   ledgerAccounts LedgerAccount[]
+  approvalRequests ApprovalRequest[]
 }
 
 model User {
@@ -108,6 +120,15 @@ model User {
   commissions    Commission[]
   transactions   LedgerTransaction[]
   passwordResets PasswordReset[]
+
+  active               Boolean  @default(true)
+  deletedAt            DateTime?
+  createdById          String?
+  creator              User?    @relation("UserCreator", fields: [createdById], references: [userId])
+  createdUsers         User[]   @relation("UserCreator")
+  
+  requestedApprovals   ApprovalRequest[] @relation("RequestedApprovals")
+  targetedApprovals    ApprovalRequest[] @relation("TargetedApprovals")
 }
 
 model UserSession {
@@ -157,8 +178,8 @@ model Product {
   name           String
   slug           String   @unique
   description    String?
-  minPrice       Decimal  @default(0)
-  maxPrice       Decimal  @default(0)
+  minPrice       Decimal? @map("min_price")
+  maxPrice       Decimal? @map("max_price")
   stockQuantity  Int      @default(0)
   price          Decimal  @default(0)
   commissionRate Decimal  @default(0)
@@ -169,16 +190,17 @@ model Product {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [categoryId])
 
-  variants     ProductVariant[]
-  referrals    Referral[]
-  installments Installment[]
+  variants         ProductVariant[]
+  referrals        Referral[]
+  installments     Installment[]
+  installmentPlans ProductInstallmentPlan[]
 }
 
 model ProductVariant {
   id            BigInt   @id @default(autoincrement())
   variantId     String   @unique @default(uuid())
   productId     String
-  product       Product  @relation(fields: [productId], references: [productId])
+  product       Product  @relation(fields: [productId], references: [productId], onDelete: Cascade)
   sku           String   @unique
   size          String?
   color         String[] // PostgreSQL string array
@@ -372,4 +394,31 @@ enum OnboardingStatus {
   PAID
   COMPLETED
   FAILED
+}
+
+model ApprovalRequest {
+  id             BigInt         @id @default(autoincrement())
+  requestId      String         @unique @default(uuid())
+  companyId      String
+  company        Company        @relation(fields: [companyId], references: [companyId])
+  requestedById  String
+  requestedBy    User           @relation("RequestedApprovals", fields: [requestedById], references: [userId])
+  targetUserId   String
+  targetUser     User           @relation("TargetedApprovals", fields: [targetUserId], references: [userId])
+  action         ApprovalAction
+  status         ApprovalStatus @default(PENDING)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model ProductInstallmentPlan {
+  id                 BigInt   @id @default(autoincrement())
+  planId             String   @unique @default(uuid())
+  productId          String
+  product            Product  @relation(fields: [productId], references: [productId], onDelete: Cascade)
+  durationMonths     Int
+  interestPercentage Decimal  @default(0)
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }

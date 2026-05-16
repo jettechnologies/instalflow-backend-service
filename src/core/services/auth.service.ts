@@ -149,6 +149,7 @@ export class AuthService {
    */
   static async createMarketer(
     companyId: string,
+    creatorId: string,
     data: z.infer<typeof MarketerCreateSchema>,
   ) {
     const existing = await prisma.user.findUnique({
@@ -166,6 +167,7 @@ export class AuthService {
         password: hashedPassword,
         role: "MARKETER",
         companyId: companyId,
+        createdById: creatorId,
         forcePasswordChange: true,
       },
       select: {

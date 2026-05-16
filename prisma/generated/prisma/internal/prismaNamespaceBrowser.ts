@@ -71,7 +71,9 @@ export const ModelName = {
   FinancialTransaction: 'FinancialTransaction',
   JournalEntry: 'JournalEntry',
   WebhookEvent: 'WebhookEvent',
-  OnboardingIntent: 'OnboardingIntent'
+  OnboardingIntent: 'OnboardingIntent',
+  ApprovalRequest: 'ApprovalRequest',
+  ProductInstallmentPlan: 'ProductInstallmentPlan'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -115,7 +117,10 @@ export const UserScalarFieldEnum = {
   referredByMarketerId: 'referredByMarketerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  referralCode: 'referralCode'
+  referralCode: 'referralCode',
+  active: 'active',
+  deletedAt: 'deletedAt',
+  createdById: 'createdById'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -387,6 +392,35 @@ export const OnboardingIntentScalarFieldEnum = {
 } as const
 
 export type OnboardingIntentScalarFieldEnum = (typeof OnboardingIntentScalarFieldEnum)[keyof typeof OnboardingIntentScalarFieldEnum]
+
+
+export const ApprovalRequestScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  companyId: 'companyId',
+  requestedById: 'requestedById',
+  targetUserId: 'targetUserId',
+  action: 'action',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ApprovalRequestScalarFieldEnum = (typeof ApprovalRequestScalarFieldEnum)[keyof typeof ApprovalRequestScalarFieldEnum]
+
+
+export const ProductInstallmentPlanScalarFieldEnum = {
+  id: 'id',
+  planId: 'planId',
+  productId: 'productId',
+  durationMonths: 'durationMonths',
+  interestPercentage: 'interestPercentage',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductInstallmentPlanScalarFieldEnum = (typeof ProductInstallmentPlanScalarFieldEnum)[keyof typeof ProductInstallmentPlanScalarFieldEnum]
 
 
 export const SortOrder = {

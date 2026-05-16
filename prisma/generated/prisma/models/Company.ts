@@ -236,6 +236,7 @@ export type CompanyWhereInput = {
   products?: Prisma.ProductListRelationFilter
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
   ledgerAccounts?: Prisma.LedgerAccountListRelationFilter
+  approvalRequests?: Prisma.ApprovalRequestListRelationFilter
 }
 
 export type CompanyOrderByWithRelationInput = {
@@ -250,6 +251,7 @@ export type CompanyOrderByWithRelationInput = {
   products?: Prisma.ProductOrderByRelationAggregateInput
   subscriptions?: Prisma.CompanySubscriptionOrderByRelationAggregateInput
   ledgerAccounts?: Prisma.LedgerAccountOrderByRelationAggregateInput
+  approvalRequests?: Prisma.ApprovalRequestOrderByRelationAggregateInput
 }
 
 export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -267,6 +269,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   products?: Prisma.ProductListRelationFilter
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
   ledgerAccounts?: Prisma.LedgerAccountListRelationFilter
+  approvalRequests?: Prisma.ApprovalRequestListRelationFilter
 }, "id" | "companyId">
 
 export type CompanyOrderByWithAggregationInput = {
@@ -309,6 +312,7 @@ export type CompanyCreateInput = {
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateInput = {
@@ -323,6 +327,7 @@ export type CompanyUncheckedCreateInput = {
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUpdateInput = {
@@ -337,6 +342,7 @@ export type CompanyUpdateInput = {
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateInput = {
@@ -351,6 +357,7 @@ export type CompanyUncheckedUpdateInput = {
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateManyInput = {
@@ -513,6 +520,20 @@ export type CompanyUpdateOneWithoutLedgerAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutLedgerAccountsInput, Prisma.CompanyUpdateWithoutLedgerAccountsInput>, Prisma.CompanyUncheckedUpdateWithoutLedgerAccountsInput>
 }
 
+export type CompanyCreateNestedOneWithoutApprovalRequestsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutApprovalRequestsInput, Prisma.CompanyUncheckedCreateWithoutApprovalRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutApprovalRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutApprovalRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutApprovalRequestsInput, Prisma.CompanyUncheckedCreateWithoutApprovalRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutApprovalRequestsInput
+  upsert?: Prisma.CompanyUpsertWithoutApprovalRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutApprovalRequestsInput, Prisma.CompanyUpdateWithoutApprovalRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutApprovalRequestsInput>
+}
+
 export type CompanyCreateWithoutUsersInput = {
   id?: bigint | number
   companyId?: string
@@ -524,6 +545,7 @@ export type CompanyCreateWithoutUsersInput = {
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -537,6 +559,7 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -566,6 +589,7 @@ export type CompanyUpdateWithoutUsersInput = {
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -579,6 +603,7 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutProductsInput = {
@@ -592,6 +617,7 @@ export type CompanyCreateWithoutProductsInput = {
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutProductsInput = {
@@ -605,6 +631,7 @@ export type CompanyUncheckedCreateWithoutProductsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutProductsInput = {
@@ -634,6 +661,7 @@ export type CompanyUpdateWithoutProductsInput = {
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutProductsInput = {
@@ -647,6 +675,7 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutSubscriptionsInput = {
@@ -660,6 +689,7 @@ export type CompanyCreateWithoutSubscriptionsInput = {
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
@@ -673,6 +703,7 @@ export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutSubscriptionsInput = {
@@ -702,6 +733,7 @@ export type CompanyUpdateWithoutSubscriptionsInput = {
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
@@ -715,6 +747,7 @@ export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutLedgerAccountsInput = {
@@ -728,6 +761,7 @@ export type CompanyCreateWithoutLedgerAccountsInput = {
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
@@ -741,6 +775,7 @@ export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutLedgerAccountsInput = {
@@ -770,6 +805,7 @@ export type CompanyUpdateWithoutLedgerAccountsInput = {
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
@@ -783,6 +819,79 @@ export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutApprovalRequestsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutApprovalRequestsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutApprovalRequestsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutApprovalRequestsInput, Prisma.CompanyUncheckedCreateWithoutApprovalRequestsInput>
+}
+
+export type CompanyUpsertWithoutApprovalRequestsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutApprovalRequestsInput, Prisma.CompanyUncheckedUpdateWithoutApprovalRequestsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutApprovalRequestsInput, Prisma.CompanyUncheckedCreateWithoutApprovalRequestsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutApprovalRequestsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutApprovalRequestsInput, Prisma.CompanyUncheckedUpdateWithoutApprovalRequestsInput>
+}
+
+export type CompanyUpdateWithoutApprovalRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 
@@ -795,6 +904,7 @@ export type CompanyCountOutputType = {
   products: number
   subscriptions: number
   ledgerAccounts: number
+  approvalRequests: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -802,6 +912,7 @@ export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   products?: boolean | CompanyCountOutputTypeCountProductsArgs
   subscriptions?: boolean | CompanyCountOutputTypeCountSubscriptionsArgs
   ledgerAccounts?: boolean | CompanyCountOutputTypeCountLedgerAccountsArgs
+  approvalRequests?: boolean | CompanyCountOutputTypeCountApprovalRequestsArgs
 }
 
 /**
@@ -842,6 +953,13 @@ export type CompanyCountOutputTypeCountLedgerAccountsArgs<ExtArgs extends runtim
   where?: Prisma.LedgerAccountWhereInput
 }
 
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountApprovalRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApprovalRequestWhereInput
+}
+
 
 export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -855,6 +973,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   products?: boolean | Prisma.Company$productsArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Company$subscriptionsArgs<ExtArgs>
   ledgerAccounts?: boolean | Prisma.Company$ledgerAccountsArgs<ExtArgs>
+  approvalRequests?: boolean | Prisma.Company$approvalRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
@@ -894,6 +1013,7 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   products?: boolean | Prisma.Company$productsArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Company$subscriptionsArgs<ExtArgs>
   ledgerAccounts?: boolean | Prisma.Company$ledgerAccountsArgs<ExtArgs>
+  approvalRequests?: boolean | Prisma.Company$approvalRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -906,6 +1026,7 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     products: Prisma.$ProductPayload<ExtArgs>[]
     subscriptions: Prisma.$CompanySubscriptionPayload<ExtArgs>[]
     ledgerAccounts: Prisma.$LedgerAccountPayload<ExtArgs>[]
+    approvalRequests: Prisma.$ApprovalRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -1313,6 +1434,7 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
   products<T extends Prisma.Company$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.Company$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanySubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ledgerAccounts<T extends Prisma.Company$ledgerAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$ledgerAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvalRequests<T extends Prisma.Company$approvalRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$approvalRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1835,6 +1957,30 @@ export type Company$ledgerAccountsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.LedgerAccountScalarFieldEnum | Prisma.LedgerAccountScalarFieldEnum[]
+}
+
+/**
+ * Company.approvalRequests
+ */
+export type Company$approvalRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApprovalRequest
+   */
+  select?: Prisma.ApprovalRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApprovalRequest
+   */
+  omit?: Prisma.ApprovalRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApprovalRequestInclude<ExtArgs> | null
+  where?: Prisma.ApprovalRequestWhereInput
+  orderBy?: Prisma.ApprovalRequestOrderByWithRelationInput | Prisma.ApprovalRequestOrderByWithRelationInput[]
+  cursor?: Prisma.ApprovalRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApprovalRequestScalarFieldEnum | Prisma.ApprovalRequestScalarFieldEnum[]
 }
 
 /**

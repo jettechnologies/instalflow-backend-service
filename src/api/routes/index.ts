@@ -4,6 +4,9 @@ import subscriptionRoutes from "@/api/routes/subscription.routes";
 import superadminRoutes from "@/api/routes/superadmin.routes";
 import { CsrfController } from "@/api/controllers/csrf.controller";
 import { WebhookController } from "@/api/controllers/webhook.controller";
+import companyRoutes from "@/api/routes/company.routes";
+import adminRoutes from "@/api/routes/admin.routes";
+import productRoutes from "@/api/routes/product.routes";
 const router = Router();
 
 router.get("/health", (req, res) => {
@@ -17,5 +20,8 @@ router.get("/csrf-token", CsrfController.generateToken);
 router.use("/auth", authRoutes);
 router.use("/subscriptions", subscriptionRoutes);
 router.use("/superadmin", superadminRoutes);
+router.use("/company", companyRoutes);
+router.use("/admin", adminRoutes);
+router.use("/products", productRoutes);
 
 export default router;

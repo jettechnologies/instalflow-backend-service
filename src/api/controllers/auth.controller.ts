@@ -67,6 +67,7 @@ export class AuthController {
 
     const { user, tempPassword } = await AuthService.createMarketer(
       admin.companyId!,
+      admin.userId!,
       payload,
     );
 

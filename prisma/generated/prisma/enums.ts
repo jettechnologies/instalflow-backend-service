@@ -97,6 +97,23 @@ export const AccountType = {
 export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 
 
+export const ApprovalAction = {
+  TOGGLE_ACTIVE: 'TOGGLE_ACTIVE',
+  SOFT_DELETE: 'SOFT_DELETE'
+} as const
+
+export type ApprovalAction = (typeof ApprovalAction)[keyof typeof ApprovalAction]
+
+
+export const ApprovalStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
+
+
 export const OnboardingStatus = {
   PENDING: 'PENDING',
   PAYMENT_INITIALIZED: 'PAYMENT_INITIALIZED',

@@ -146,3 +146,13 @@ export type WebhookEvent = Prisma.WebhookEventModel
  * 
  */
 export type OnboardingIntent = Prisma.OnboardingIntentModel
+/**
+ * Model ApprovalRequest
+ * 
+ */
+export type ApprovalRequest = Prisma.ApprovalRequestModel
+/**
+ * Model ProductInstallmentPlan
+ * 
+ */
+export type ProductInstallmentPlan = Prisma.ProductInstallmentPlanModel

@@ -10,7 +10,7 @@
 ### Technology Stack
 - **Runtime**: Node.js (ESM)
 - **Framework**: Express `^5.1.0` (Native promise propagation)
-- **ORM**: Prisma `^7.0` (with custom Postgres Driver Adapters)
+- **ORM**: Prisma `^7.0` (using `PrismaPg` adapter with `pg.Pool` SSL configurations for Neon Serverless DB in production)
 - **Validation**: Zod (Strict schema enforcement)
 - **Auth**: JWT (Access) + DB-backed UserSessions (Refresh) + `express-session` (CSRF backing)
 - **Docs**: Swagger UI (Decoupled YAML strategy)
@@ -60,7 +60,7 @@ src/
 ### 2.1 The Dual-ID Pattern
 - **Internal**: `BigInt` auto-increment for database performance (Clustering).
 - **External**: `UUID` for public-facing API references.
-- **Rule**: Never expose `BigInt` IDs. Use the Prisma Client Extension to automatically strip them from query results globally.
+- **Rule**: Never expose `BigInt` IDs. Use a global `toJSON` Prisma Client Extension to automatically strip the internal `id` during JSON serialization. **Do not use `compute: () => undefined`**, as this nullifies the ID in the execution memory and breaks internal Prisma relations (e.g., `JournalEntry` creation).
 - **Direct Connect**: Use `connect: { someId: uuid }` directly. Never query for an internal ID just to perform an insertion.
 
 ### 2.2 Express 5 & Clean Controllers

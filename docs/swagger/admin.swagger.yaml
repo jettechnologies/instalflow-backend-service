@@ -1,0 +1,40 @@
+tags:
+  - name: Admin Operations
+    description: Endpoints for admins to manage marketers via maker-checker approvals.
+
+paths:
+  /api/v1/admin/marketers/{id}/request-toggle:
+    post:
+      summary: Request to toggle a marketer's active status
+      tags: [Admin Operations]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: User ID of the marketer
+      responses:
+        "201":
+          description: Toggle request submitted for approval
+
+  /api/v1/admin/marketers/{id}/request-delete:
+    post:
+      summary: Request to soft delete a marketer
+      tags: [Admin Operations]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: User ID of the marketer
+      responses:
+        "201":
+          description: Delete request submitted for approval

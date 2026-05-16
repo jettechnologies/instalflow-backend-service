@@ -47,6 +47,9 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   referralCode: string | null
+  active: boolean | null
+  deletedAt: Date | null
+  createdById: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -62,6 +65,9 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   referralCode: string | null
+  active: boolean | null
+  deletedAt: Date | null
+  createdById: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -77,6 +83,9 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   referralCode: number
+  active: number
+  deletedAt: number
+  createdById: number
   _all: number
 }
 
@@ -102,6 +111,9 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   referralCode?: true
+  active?: true
+  deletedAt?: true
+  createdById?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -117,6 +129,9 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   referralCode?: true
+  active?: true
+  deletedAt?: true
+  createdById?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -132,6 +147,9 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   referralCode?: true
+  active?: true
+  deletedAt?: true
+  createdById?: true
   _all?: true
 }
 
@@ -234,6 +252,9 @@ export type UserGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   referralCode: string | null
+  active: boolean
+  deletedAt: Date | null
+  createdById: string | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -272,6 +293,9 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   referralCode?: Prisma.StringNullableFilter<"User"> | string | null
+  active?: Prisma.BoolFilter<"User"> | boolean
+  deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  createdById?: Prisma.StringNullableFilter<"User"> | string | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   referredByMarketer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   referredUsers?: Prisma.UserListRelationFilter
@@ -282,6 +306,10 @@ export type UserWhereInput = {
   commissions?: Prisma.CommissionListRelationFilter
   transactions?: Prisma.LedgerTransactionListRelationFilter
   passwordResets?: Prisma.PasswordResetListRelationFilter
+  creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  createdUsers?: Prisma.UserListRelationFilter
+  requestedApprovals?: Prisma.ApprovalRequestListRelationFilter
+  targetedApprovals?: Prisma.ApprovalRequestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -297,6 +325,9 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   referralCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  active?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
   referredByMarketer?: Prisma.UserOrderByWithRelationInput
   referredUsers?: Prisma.UserOrderByRelationAggregateInput
@@ -307,6 +338,10 @@ export type UserOrderByWithRelationInput = {
   commissions?: Prisma.CommissionOrderByRelationAggregateInput
   transactions?: Prisma.LedgerTransactionOrderByRelationAggregateInput
   passwordResets?: Prisma.PasswordResetOrderByRelationAggregateInput
+  creator?: Prisma.UserOrderByWithRelationInput
+  createdUsers?: Prisma.UserOrderByRelationAggregateInput
+  requestedApprovals?: Prisma.ApprovalRequestOrderByRelationAggregateInput
+  targetedApprovals?: Prisma.ApprovalRequestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -325,6 +360,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   referredByMarketerId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  active?: Prisma.BoolFilter<"User"> | boolean
+  deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  createdById?: Prisma.StringNullableFilter<"User"> | string | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   referredByMarketer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   referredUsers?: Prisma.UserListRelationFilter
@@ -335,6 +373,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   commissions?: Prisma.CommissionListRelationFilter
   transactions?: Prisma.LedgerTransactionListRelationFilter
   passwordResets?: Prisma.PasswordResetListRelationFilter
+  creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  createdUsers?: Prisma.UserListRelationFilter
+  requestedApprovals?: Prisma.ApprovalRequestListRelationFilter
+  targetedApprovals?: Prisma.ApprovalRequestListRelationFilter
 }, "id" | "userId" | "email" | "referralCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -350,6 +392,9 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   referralCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  active?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -373,6 +418,9 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   referralCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  active?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  createdById?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
@@ -386,6 +434,8 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -396,6 +446,10 @@ export type UserCreateInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -411,6 +465,9 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -419,6 +476,9 @@ export type UserUncheckedCreateInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUpdateInput = {
@@ -432,6 +492,8 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -442,6 +504,10 @@ export type UserUpdateInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -457,6 +523,9 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -465,6 +534,9 @@ export type UserUncheckedUpdateInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -480,6 +552,9 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -493,6 +568,8 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -508,6 +585,9 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserListRelationFilter = {
@@ -538,6 +618,9 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  createdById?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -557,6 +640,9 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  createdById?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -572,6 +658,9 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  createdById?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -638,10 +727,30 @@ export type UserCreateNestedManyWithoutReferredByMarketerInput = {
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
 }
 
+export type UserCreateNestedOneWithoutCreatedUsersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedUsersInput, Prisma.UserUncheckedCreateWithoutCreatedUsersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedUsersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedManyWithoutCreatorInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatorInput, Prisma.UserUncheckedCreateWithoutCreatorInput> | Prisma.UserCreateWithoutCreatorInput[] | Prisma.UserUncheckedCreateWithoutCreatorInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatorInput | Prisma.UserCreateOrConnectWithoutCreatorInput[]
+  createMany?: Prisma.UserCreateManyCreatorInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
 export type UserUncheckedCreateNestedManyWithoutReferredByMarketerInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutReferredByMarketerInput, Prisma.UserUncheckedCreateWithoutReferredByMarketerInput> | Prisma.UserCreateWithoutReferredByMarketerInput[] | Prisma.UserUncheckedCreateWithoutReferredByMarketerInput[]
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutReferredByMarketerInput | Prisma.UserCreateOrConnectWithoutReferredByMarketerInput[]
   createMany?: Prisma.UserCreateManyReferredByMarketerInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUncheckedCreateNestedManyWithoutCreatorInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatorInput, Prisma.UserUncheckedCreateWithoutCreatorInput> | Prisma.UserCreateWithoutCreatorInput[] | Prisma.UserUncheckedCreateWithoutCreatorInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatorInput | Prisma.UserCreateOrConnectWithoutCreatorInput[]
+  createMany?: Prisma.UserCreateManyCreatorInputEnvelope
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
 }
 
@@ -651,6 +760,10 @@ export type EnumRoleFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type UserUpdateOneWithoutReferredUsersNestedInput = {
@@ -677,6 +790,30 @@ export type UserUpdateManyWithoutReferredByMarketerNestedInput = {
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
+export type UserUpdateOneWithoutCreatedUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedUsersInput, Prisma.UserUncheckedCreateWithoutCreatedUsersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedUsersInput
+  upsert?: Prisma.UserUpsertWithoutCreatedUsersInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedUsersInput, Prisma.UserUpdateWithoutCreatedUsersInput>, Prisma.UserUncheckedUpdateWithoutCreatedUsersInput>
+}
+
+export type UserUpdateManyWithoutCreatorNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatorInput, Prisma.UserUncheckedCreateWithoutCreatorInput> | Prisma.UserCreateWithoutCreatorInput[] | Prisma.UserUncheckedCreateWithoutCreatorInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatorInput | Prisma.UserCreateOrConnectWithoutCreatorInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutCreatorInput | Prisma.UserUpsertWithWhereUniqueWithoutCreatorInput[]
+  createMany?: Prisma.UserCreateManyCreatorInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutCreatorInput | Prisma.UserUpdateWithWhereUniqueWithoutCreatorInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutCreatorInput | Prisma.UserUpdateManyWithWhereWithoutCreatorInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
 export type UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutReferredByMarketerInput, Prisma.UserUncheckedCreateWithoutReferredByMarketerInput> | Prisma.UserCreateWithoutReferredByMarketerInput[] | Prisma.UserUncheckedCreateWithoutReferredByMarketerInput[]
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutReferredByMarketerInput | Prisma.UserCreateOrConnectWithoutReferredByMarketerInput[]
@@ -688,6 +825,20 @@ export type UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput = {
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   update?: Prisma.UserUpdateWithWhereUniqueWithoutReferredByMarketerInput | Prisma.UserUpdateWithWhereUniqueWithoutReferredByMarketerInput[]
   updateMany?: Prisma.UserUpdateManyWithWhereWithoutReferredByMarketerInput | Prisma.UserUpdateManyWithWhereWithoutReferredByMarketerInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserUncheckedUpdateManyWithoutCreatorNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatorInput, Prisma.UserUncheckedCreateWithoutCreatorInput> | Prisma.UserCreateWithoutCreatorInput[] | Prisma.UserUncheckedCreateWithoutCreatorInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatorInput | Prisma.UserCreateOrConnectWithoutCreatorInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutCreatorInput | Prisma.UserUpsertWithWhereUniqueWithoutCreatorInput[]
+  createMany?: Prisma.UserCreateManyCreatorInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutCreatorInput | Prisma.UserUpdateWithWhereUniqueWithoutCreatorInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutCreatorInput | Prisma.UserUpdateManyWithWhereWithoutCreatorInput[]
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
@@ -789,6 +940,34 @@ export type UserUpdateOneRequiredWithoutReferralsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReferralsInput, Prisma.UserUpdateWithoutReferralsInput>, Prisma.UserUncheckedUpdateWithoutReferralsInput>
 }
 
+export type UserCreateNestedOneWithoutRequestedApprovalsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRequestedApprovalsInput, Prisma.UserUncheckedCreateWithoutRequestedApprovalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRequestedApprovalsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutTargetedApprovalsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTargetedApprovalsInput, Prisma.UserUncheckedCreateWithoutTargetedApprovalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTargetedApprovalsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRequestedApprovalsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRequestedApprovalsInput, Prisma.UserUncheckedCreateWithoutRequestedApprovalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRequestedApprovalsInput
+  upsert?: Prisma.UserUpsertWithoutRequestedApprovalsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRequestedApprovalsInput, Prisma.UserUpdateWithoutRequestedApprovalsInput>, Prisma.UserUncheckedUpdateWithoutRequestedApprovalsInput>
+}
+
+export type UserUpdateOneRequiredWithoutTargetedApprovalsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTargetedApprovalsInput, Prisma.UserUncheckedCreateWithoutTargetedApprovalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTargetedApprovalsInput
+  upsert?: Prisma.UserUpsertWithoutTargetedApprovalsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTargetedApprovalsInput, Prisma.UserUpdateWithoutTargetedApprovalsInput>, Prisma.UserUncheckedUpdateWithoutTargetedApprovalsInput>
+}
+
 export type UserCreateWithoutCompanyInput = {
   id?: bigint | number
   userId?: string
@@ -800,6 +979,8 @@ export type UserCreateWithoutCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
@@ -809,6 +990,10 @@ export type UserCreateWithoutCompanyInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -823,6 +1008,9 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -831,6 +1019,9 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -875,6 +1066,9 @@ export type UserScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   referralCode?: Prisma.StringNullableFilter<"User"> | string | null
+  active?: Prisma.BoolFilter<"User"> | boolean
+  deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  createdById?: Prisma.StringNullableFilter<"User"> | string | null
 }
 
 export type UserCreateWithoutReferredUsersInput = {
@@ -888,6 +1082,8 @@ export type UserCreateWithoutReferredUsersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
@@ -897,6 +1093,10 @@ export type UserCreateWithoutReferredUsersInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -912,6 +1112,9 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
@@ -919,6 +1122,9 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -937,6 +1143,8 @@ export type UserCreateWithoutReferredByMarketerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
@@ -946,6 +1154,10 @@ export type UserCreateWithoutReferredByMarketerInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredByMarketerInput = {
@@ -960,6 +1172,9 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -968,6 +1183,9 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredByMarketerInput = {
@@ -977,6 +1195,133 @@ export type UserCreateOrConnectWithoutReferredByMarketerInput = {
 
 export type UserCreateManyReferredByMarketerInputEnvelope = {
   data: Prisma.UserCreateManyReferredByMarketerInput | Prisma.UserCreateManyReferredByMarketerInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserCreateWithoutCreatedUsersInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+}
+
+export type UserUncheckedCreateWithoutCreatedUsersInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+}
+
+export type UserCreateOrConnectWithoutCreatedUsersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedUsersInput, Prisma.UserUncheckedCreateWithoutCreatedUsersInput>
+}
+
+export type UserCreateWithoutCreatorInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+}
+
+export type UserUncheckedCreateWithoutCreatorInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+}
+
+export type UserCreateOrConnectWithoutCreatorInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatorInput, Prisma.UserUncheckedCreateWithoutCreatorInput>
+}
+
+export type UserCreateManyCreatorInputEnvelope = {
+  data: Prisma.UserCreateManyCreatorInput | Prisma.UserCreateManyCreatorInput[]
   skipDuplicates?: boolean
 }
 
@@ -1002,6 +1347,8 @@ export type UserUpdateWithoutReferredUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
@@ -1011,6 +1358,10 @@ export type UserUpdateWithoutReferredUsersInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -1026,6 +1377,9 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
@@ -1033,6 +1387,9 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutReferredByMarketerInput = {
@@ -1051,6 +1408,89 @@ export type UserUpdateManyWithWhereWithoutReferredByMarketerInput = {
   data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerInput>
 }
 
+export type UserUpsertWithoutCreatedUsersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedUsersInput, Prisma.UserUncheckedUpdateWithoutCreatedUsersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedUsersInput, Prisma.UserUncheckedCreateWithoutCreatedUsersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedUsersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedUsersInput, Prisma.UserUncheckedUpdateWithoutCreatedUsersInput>
+}
+
+export type UserUpdateWithoutCreatedUsersInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedUsersInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+}
+
+export type UserUpsertWithWhereUniqueWithoutCreatorInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatorInput, Prisma.UserUncheckedUpdateWithoutCreatorInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatorInput, Prisma.UserUncheckedCreateWithoutCreatorInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutCreatorInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatorInput, Prisma.UserUncheckedUpdateWithoutCreatorInput>
+}
+
+export type UserUpdateManyWithWhereWithoutCreatorInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutCreatorInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: bigint | number
   userId?: string
@@ -1062,6 +1502,8 @@ export type UserCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -1071,6 +1513,10 @@ export type UserCreateWithoutSessionsInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1086,6 +1532,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
@@ -1093,6 +1542,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1122,6 +1574,8 @@ export type UserUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -1131,6 +1585,10 @@ export type UserUpdateWithoutSessionsInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1146,6 +1604,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
@@ -1153,6 +1614,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
@@ -1166,6 +1630,8 @@ export type UserCreateWithoutPasswordResetsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -1175,6 +1641,10 @@ export type UserCreateWithoutPasswordResetsInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
@@ -1190,6 +1660,9 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1197,6 +1670,9 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -1226,6 +1702,8 @@ export type UserUpdateWithoutPasswordResetsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -1235,6 +1713,10 @@ export type UserUpdateWithoutPasswordResetsInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
@@ -1250,6 +1732,9 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1257,6 +1742,9 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserCreateWithoutApplicationsInput = {
@@ -1270,6 +1758,8 @@ export type UserCreateWithoutApplicationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -1279,6 +1769,10 @@ export type UserCreateWithoutApplicationsInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
@@ -1294,6 +1788,9 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
@@ -1301,6 +1798,9 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -1330,6 +1830,8 @@ export type UserUpdateWithoutApplicationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -1339,6 +1841,10 @@ export type UserUpdateWithoutApplicationsInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
@@ -1354,6 +1860,9 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
@@ -1361,6 +1870,9 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserCreateWithoutInstallmentsInput = {
@@ -1374,6 +1886,8 @@ export type UserCreateWithoutInstallmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -1383,6 +1897,10 @@ export type UserCreateWithoutInstallmentsInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutInstallmentsInput = {
@@ -1398,6 +1916,9 @@ export type UserUncheckedCreateWithoutInstallmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1405,6 +1926,9 @@ export type UserUncheckedCreateWithoutInstallmentsInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutInstallmentsInput = {
@@ -1434,6 +1958,8 @@ export type UserUpdateWithoutInstallmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -1443,6 +1969,10 @@ export type UserUpdateWithoutInstallmentsInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInstallmentsInput = {
@@ -1458,6 +1988,9 @@ export type UserUncheckedUpdateWithoutInstallmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1465,6 +1998,9 @@ export type UserUncheckedUpdateWithoutInstallmentsInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserCreateWithoutCommissionsInput = {
@@ -1478,6 +2014,8 @@ export type UserCreateWithoutCommissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -1487,6 +2025,10 @@ export type UserCreateWithoutCommissionsInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutCommissionsInput = {
@@ -1502,6 +2044,9 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1509,6 +2054,9 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutCommissionsInput = {
@@ -1538,6 +2086,8 @@ export type UserUpdateWithoutCommissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -1547,6 +2097,10 @@ export type UserUpdateWithoutCommissionsInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommissionsInput = {
@@ -1562,6 +2116,9 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1569,6 +2126,9 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -1582,6 +2142,8 @@ export type UserCreateWithoutTransactionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -1591,6 +2153,10 @@ export type UserCreateWithoutTransactionsInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -1606,6 +2172,9 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1613,6 +2182,9 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -1642,6 +2214,8 @@ export type UserUpdateWithoutTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -1651,6 +2225,10 @@ export type UserUpdateWithoutTransactionsInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -1666,6 +2244,9 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1673,6 +2254,9 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserCreateWithoutReferralsInput = {
@@ -1686,6 +2270,8 @@ export type UserCreateWithoutReferralsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
@@ -1695,6 +2281,10 @@ export type UserCreateWithoutReferralsInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralsInput = {
@@ -1710,6 +2300,9 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1717,6 +2310,9 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralsInput = {
@@ -1746,6 +2342,8 @@ export type UserUpdateWithoutReferralsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
@@ -1755,6 +2353,10 @@ export type UserUpdateWithoutReferralsInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralsInput = {
@@ -1770,6 +2372,9 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1777,6 +2382,265 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+}
+
+export type UserCreateWithoutRequestedApprovalsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+}
+
+export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+}
+
+export type UserCreateOrConnectWithoutRequestedApprovalsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRequestedApprovalsInput, Prisma.UserUncheckedCreateWithoutRequestedApprovalsInput>
+}
+
+export type UserCreateWithoutTargetedApprovalsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+}
+
+export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+}
+
+export type UserCreateOrConnectWithoutTargetedApprovalsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTargetedApprovalsInput, Prisma.UserUncheckedCreateWithoutTargetedApprovalsInput>
+}
+
+export type UserUpsertWithoutRequestedApprovalsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRequestedApprovalsInput, Prisma.UserUncheckedUpdateWithoutRequestedApprovalsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRequestedApprovalsInput, Prisma.UserUncheckedCreateWithoutRequestedApprovalsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRequestedApprovalsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRequestedApprovalsInput, Prisma.UserUncheckedUpdateWithoutRequestedApprovalsInput>
+}
+
+export type UserUpdateWithoutRequestedApprovalsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+}
+
+export type UserUpsertWithoutTargetedApprovalsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTargetedApprovalsInput, Prisma.UserUncheckedUpdateWithoutTargetedApprovalsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTargetedApprovalsInput, Prisma.UserUncheckedCreateWithoutTargetedApprovalsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTargetedApprovalsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTargetedApprovalsInput, Prisma.UserUncheckedUpdateWithoutTargetedApprovalsInput>
+}
+
+export type UserUpdateWithoutTargetedApprovalsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -1791,6 +2655,9 @@ export type UserCreateManyCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
 }
 
 export type UserUpdateWithoutCompanyInput = {
@@ -1804,6 +2671,8 @@ export type UserUpdateWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
@@ -1813,6 +2682,10 @@ export type UserUpdateWithoutCompanyInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -1827,6 +2700,9 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1835,6 +2711,9 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -1849,6 +2728,9 @@ export type UserUncheckedUpdateManyWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCreateManyReferredByMarketerInput = {
@@ -1863,6 +2745,26 @@ export type UserCreateManyReferredByMarketerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+}
+
+export type UserCreateManyCreatorInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
 }
 
 export type UserUpdateWithoutReferredByMarketerInput = {
@@ -1876,6 +2778,8 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
@@ -1885,6 +2789,10 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
@@ -1899,6 +2807,9 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1907,6 +2818,9 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutReferredByMarketerInput = {
@@ -1921,6 +2835,82 @@ export type UserUncheckedUpdateManyWithoutReferredByMarketerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type UserUpdateWithoutCreatorInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatorInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+}
+
+export type UserUncheckedUpdateManyWithoutCreatorInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1937,6 +2927,9 @@ export type UserCountOutputType = {
   commissions: number
   transactions: number
   passwordResets: number
+  createdUsers: number
+  requestedApprovals: number
+  targetedApprovals: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1948,6 +2941,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   commissions?: boolean | UserCountOutputTypeCountCommissionsArgs
   transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
   passwordResets?: boolean | UserCountOutputTypeCountPasswordResetsArgs
+  createdUsers?: boolean | UserCountOutputTypeCountCreatedUsersArgs
+  requestedApprovals?: boolean | UserCountOutputTypeCountRequestedApprovalsArgs
+  targetedApprovals?: boolean | UserCountOutputTypeCountTargetedApprovalsArgs
 }
 
 /**
@@ -2016,6 +3012,27 @@ export type UserCountOutputTypeCountPasswordResetsArgs<ExtArgs extends runtime.T
   where?: Prisma.PasswordResetWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRequestedApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApprovalRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTargetedApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApprovalRequestWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2030,6 +3047,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   referralCode?: boolean
+  active?: boolean
+  deletedAt?: boolean
+  createdById?: boolean
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   referredByMarketer?: boolean | Prisma.User$referredByMarketerArgs<ExtArgs>
   referredUsers?: boolean | Prisma.User$referredUsersArgs<ExtArgs>
@@ -2040,6 +3060,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
   passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
+  creator?: boolean | Prisma.User$creatorArgs<ExtArgs>
+  createdUsers?: boolean | Prisma.User$createdUsersArgs<ExtArgs>
+  requestedApprovals?: boolean | Prisma.User$requestedApprovalsArgs<ExtArgs>
+  targetedApprovals?: boolean | Prisma.User$targetedApprovalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2056,8 +3080,12 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   referralCode?: boolean
+  active?: boolean
+  deletedAt?: boolean
+  createdById?: boolean
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   referredByMarketer?: boolean | Prisma.User$referredByMarketerArgs<ExtArgs>
+  creator?: boolean | Prisma.User$creatorArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2073,8 +3101,12 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   referralCode?: boolean
+  active?: boolean
+  deletedAt?: boolean
+  createdById?: boolean
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   referredByMarketer?: boolean | Prisma.User$referredByMarketerArgs<ExtArgs>
+  creator?: boolean | Prisma.User$creatorArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2090,9 +3122,12 @@ export type UserSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   referralCode?: boolean
+  active?: boolean
+  deletedAt?: boolean
+  createdById?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "email" | "password" | "name" | "role" | "forcePasswordChange" | "companyId" | "referredByMarketerId" | "createdAt" | "updatedAt" | "referralCode", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "email" | "password" | "name" | "role" | "forcePasswordChange" | "companyId" | "referredByMarketerId" | "createdAt" | "updatedAt" | "referralCode" | "active" | "deletedAt" | "createdById", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   referredByMarketer?: boolean | Prisma.User$referredByMarketerArgs<ExtArgs>
@@ -2104,15 +3139,21 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
   passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
+  creator?: boolean | Prisma.User$creatorArgs<ExtArgs>
+  createdUsers?: boolean | Prisma.User$createdUsersArgs<ExtArgs>
+  requestedApprovals?: boolean | Prisma.User$requestedApprovalsArgs<ExtArgs>
+  targetedApprovals?: boolean | Prisma.User$targetedApprovalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   referredByMarketer?: boolean | Prisma.User$referredByMarketerArgs<ExtArgs>
+  creator?: boolean | Prisma.User$creatorArgs<ExtArgs>
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   referredByMarketer?: boolean | Prisma.User$referredByMarketerArgs<ExtArgs>
+  creator?: boolean | Prisma.User$creatorArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2128,6 +3169,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     commissions: Prisma.$CommissionPayload<ExtArgs>[]
     transactions: Prisma.$LedgerTransactionPayload<ExtArgs>[]
     passwordResets: Prisma.$PasswordResetPayload<ExtArgs>[]
+    creator: Prisma.$UserPayload<ExtArgs> | null
+    createdUsers: Prisma.$UserPayload<ExtArgs>[]
+    requestedApprovals: Prisma.$ApprovalRequestPayload<ExtArgs>[]
+    targetedApprovals: Prisma.$ApprovalRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -2142,6 +3187,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     referralCode: string | null
+    active: boolean
+    deletedAt: Date | null
+    createdById: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2546,6 +3594,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   commissions<T extends Prisma.User$commissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transactions<T extends Prisma.User$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passwordResets<T extends Prisma.User$passwordResetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  creator<T extends Prisma.User$creatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$creatorArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  createdUsers<T extends Prisma.User$createdUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  requestedApprovals<T extends Prisma.User$requestedApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$requestedApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  targetedApprovals<T extends Prisma.User$targetedApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$targetedApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2587,6 +3639,9 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly referralCode: Prisma.FieldRef<"User", 'String'>
+  readonly active: Prisma.FieldRef<"User", 'Boolean'>
+  readonly deletedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly createdById: Prisma.FieldRef<"User", 'String'>
 }
     
 
@@ -3215,6 +4270,97 @@ export type User$passwordResetsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.PasswordResetScalarFieldEnum | Prisma.PasswordResetScalarFieldEnum[]
+}
+
+/**
+ * User.creator
+ */
+export type User$creatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * User.createdUsers
+ */
+export type User$createdUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  cursor?: Prisma.UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * User.requestedApprovals
+ */
+export type User$requestedApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApprovalRequest
+   */
+  select?: Prisma.ApprovalRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApprovalRequest
+   */
+  omit?: Prisma.ApprovalRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApprovalRequestInclude<ExtArgs> | null
+  where?: Prisma.ApprovalRequestWhereInput
+  orderBy?: Prisma.ApprovalRequestOrderByWithRelationInput | Prisma.ApprovalRequestOrderByWithRelationInput[]
+  cursor?: Prisma.ApprovalRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApprovalRequestScalarFieldEnum | Prisma.ApprovalRequestScalarFieldEnum[]
+}
+
+/**
+ * User.targetedApprovals
+ */
+export type User$targetedApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApprovalRequest
+   */
+  select?: Prisma.ApprovalRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApprovalRequest
+   */
+  omit?: Prisma.ApprovalRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApprovalRequestInclude<ExtArgs> | null
+  where?: Prisma.ApprovalRequestWhereInput
+  orderBy?: Prisma.ApprovalRequestOrderByWithRelationInput | Prisma.ApprovalRequestOrderByWithRelationInput[]
+  cursor?: Prisma.ApprovalRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApprovalRequestScalarFieldEnum | Prisma.ApprovalRequestScalarFieldEnum[]
 }
 
 /**
