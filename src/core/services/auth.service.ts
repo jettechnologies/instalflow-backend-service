@@ -92,7 +92,7 @@ export class AuthService {
     // ✅ Fires → notification-hub → email_queue → email-worker → Brevo (welcome)
     emitEvent(DomainEvent.USER_REGISTERED, {
       email: user.email,
-      name: user.name,
+      name: user.name!,
       dashboard_url: process.env.FRONTEND_URL,
     });
 
@@ -182,7 +182,7 @@ export class AuthService {
 
     emitEvent(DomainEvent.STAFF_CREATED, {
       email: user.email,
-      name: user.name,
+      name: user.name!,
       role: "Marketer",
       tempPassword: tempPassword,
       dashboard_url: process.env.FRONTEND_URL,
@@ -396,7 +396,7 @@ export class AuthService {
 
     emitEvent(DomainEvent.PASSWORD_RESET_REQUESTED, {
       email: user.email,
-      name: user.name,
+      name: user.name!,
       otp,
     });
 
@@ -461,7 +461,7 @@ export class AuthService {
     // ✅ Fires → notification-hub → email_queue → email-worker → Brevo (password-reset)
     emitEvent(DomainEvent.PASSWORD_RESET_COMPLETED, {
       email: user.email,
-      name: user.name,
+      name: user.name!,
     });
 
     return { message: "Password has been reset successfully" };

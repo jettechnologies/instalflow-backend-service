@@ -56,7 +56,7 @@ export class UserManagementService {
 
     emitEvent(DomainEvent.STAFF_CREATED, {
       email: user.email,
-      name: user.name,
+      name: user.name!,
       role: "Admin",
       tempPassword: tempPassword,
       dashboard_url: process.env.FRONTEND_URL,

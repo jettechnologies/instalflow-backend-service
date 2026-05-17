@@ -1,30 +1,37 @@
-// src/events/emitter.ts
-//
-// Drop-in replacement for your existing in-process emitter.
-// emitEvent() now POSTs to the Cloudflare notification-hub worker
-// instead of calling handlers directly, making it fully async + durable.
+import { DomainEvent, DomainEventPayloads } from "./event.types";
 
-type EventHandler = (payload: any) => Promise<void>;
+type EventHandler<T extends DomainEvent> = (
+  payload: DomainEventPayloads[T],
+) => Promise<void>;
 
 // ── Local in-process registry (still used for non-notification events) ────────
-const handlers: Record<string, EventHandler[]> = {};
+const handlers: Partial<Record<DomainEvent, EventHandler<any>[]>> = {};
 
-export const onEvent = (event: string, handler: EventHandler) => {
+export const onEvent = <T extends DomainEvent>(
+  event: T,
+  handler: EventHandler<T>,
+) => {
   if (!handlers[event]) handlers[event] = [];
-  handlers[event].push(handler);
+  handlers[event]!.push(handler);
 };
 
-export const removeEvent = (event: string, handler: EventHandler) => {
+export const removeEvent = <T extends DomainEvent>(
+  event: T,
+  handler: EventHandler<T>,
+) => {
   if (!handlers[event]) return;
-  handlers[event] = handlers[event].filter((h) => h !== handler);
+  handlers[event] = handlers[event]!.filter((h) => h !== handler);
 };
 
-export const removeAllEvents = (event: string) => {
+export const removeAllEvents = (event: DomainEvent) => {
   delete handlers[event];
 };
 
 // ── Main emit: local handlers + remote notification hub ──────────────────────
-export const emitEvent = async (event: string, payload: any): Promise<void> => {
+export const emitEvent = async <T extends DomainEvent>(
+  event: T,
+  payload: DomainEventPayloads[T],
+): Promise<void> => {
   // 1. Run any local in-process handlers (non-notification side-effects, etc.)
   const localHandlers = handlers[event] ?? [];
   if (localHandlers.length > 0) {

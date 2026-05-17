@@ -139,12 +139,12 @@
         </svg>
       </div>
       <h1 class="title">Welcome to the Team</h1>
-      <p class="subtitle">${role} Onboarding Successful</p>
+      <p class="subtitle">{{role}} Onboarding Successful</p>
     </div>
     
     <div class="content">
       <div class="message">
-        <p>Dear <strong>${name}</strong>,</p>
+        <p>Dear <strong>{{name}}</strong>,</p>
         <p>Welcome to the <strong>Instalflow Team</strong>. You are now part of a community of professionals leveraging modern financial infrastructure to drive growth with total transparency.</p>
         
         <p>Our platform empowers you to manage operations and track performance in real-time.</p>
@@ -171,10 +171,19 @@
           </div>
         </div>
 
+        <div class="highlight-card" style="border-left: 4px solid #7C3AED;">
+          <p style="margin-top: 0; color: #F9FAFB; font-weight: 600;">Your Login Credentials:</p>
+          <div style="margin-top: 1rem;">
+            <p style="margin: 0.5rem 0; font-size: 0.9rem;">Email: <strong style="color: #F9FAFB;">{{email}}</strong></p>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem;">Temporary Password: <strong style="color: #F9FAFB; background: #1F2937; padding: 2px 6px; border-radius: 4px; font-family: monospace;">{{tempPassword}}</strong></p>
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.75rem; color: #EF4444;">* You will be required to change this password upon your first login.</p>
+        </div>
+
         <p>We are excited to see the impact you will make.</p>
       </div>
       
-      <a href="${dashboard_url}" class="btn-action">Access Dashboard</a>
+      <a href="{{dashboard_url}}" class="btn-action">Access Dashboard</a>
     </div>
     
     <div class="footer">
