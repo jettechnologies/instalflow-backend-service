@@ -3,7 +3,7 @@ tags:
     description: Endpoints for managing products, variants, and dynamic installment plans.
 
 paths:
-  /api/v1/products:
+  /products:
     get:
       summary: List Products with Installment Breakdowns
       tags: [Product Catalog]
@@ -12,7 +12,7 @@ paths:
       responses:
         "200":
           description: A list of products with their variants and calculated monthly installment breakdowns.
-    
+
     post:
       summary: Create a Product (Admin/Company only)
       tags: [Product Catalog]
@@ -53,14 +53,20 @@ paths:
                     type: object
                     required: [durationMonths]
                     properties:
-                      durationMonths: { type: integer, description: "e.g. 3, 6, 12" }
-                      interestPercentage: { type: number, default: 0, description: "e.g. 5.5 for 5.5%" }
+                      durationMonths:
+                        { type: integer, description: "e.g. 3, 6, 12" }
+                      interestPercentage:
+                        {
+                          type: number,
+                          default: 0,
+                          description: "e.g. 5.5 for 5.5%",
+                        }
                       active: { type: boolean, default: true }
       responses:
         "201":
           description: Product created successfully
 
-  /api/v1/products/{id}:
+  /products/{id}:
     get:
       summary: Get Product by ID
       tags: [Product Catalog]
@@ -76,7 +82,7 @@ paths:
       responses:
         "200":
           description: Product details retrieved
-          
+
     patch:
       summary: Update a Product (Admin/Company only)
       tags: [Product Catalog]

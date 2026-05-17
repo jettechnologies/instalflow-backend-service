@@ -3,7 +3,7 @@ tags:
     description: Endpoints for company owners to manage admins and handle maker-checker approvals.
 
 paths:
-  /api/v1/company/admins:
+  /company/admins:
     post:
       summary: Create an Admin User
       tags: [Company Administration]
@@ -31,7 +31,8 @@ paths:
                 type: object
                 properties:
                   status: { type: string, example: "success" }
-                  message: { type: string, example: "Admin created successfully" }
+                  message:
+                    { type: string, example: "Admin created successfully" }
                   data:
                     type: object
                     properties:
@@ -39,7 +40,7 @@ paths:
                       tempPassword: { type: string }
                       instructions: { type: string }
 
-  /api/v1/company/admins/{id}/status:
+  /company/admins/{id}/status:
     patch:
       summary: Toggle an Admin's Active Status
       tags: [Company Administration]
@@ -67,7 +68,7 @@ paths:
         "200":
           description: Admin status updated
 
-  /api/v1/company/admins/{id}:
+  /company/admins/{id}:
     delete:
       summary: Soft Delete an Admin
       tags: [Company Administration]
@@ -85,7 +86,7 @@ paths:
         "200":
           description: Admin deleted successfully
 
-  /api/v1/company/approvals:
+  /company/approvals:
     get:
       summary: List Pending Approvals
       tags: [Company Administration]
@@ -95,7 +96,7 @@ paths:
         "200":
           description: List of pending approval requests
 
-  /api/v1/company/approvals/{requestId}:
+  /company/approvals/{requestId}:
     post:
       summary: Handle Maker-Checker Approval Request
       tags: [Company Administration]
