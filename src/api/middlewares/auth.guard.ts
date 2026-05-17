@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { prisma } from "@/infrastructure/prisma";
 import AppError, { ErrorType } from "@/shared/utils/AppError";
 import { verifyAccessToken } from "@/shared/utils/password-hash-verify";
 
@@ -21,9 +21,9 @@ declare global {
 
 /**
  * Validates the short-lived access token specifically.
- * Drops request if missing / malformed / expired.
+ * Drops request if missing / malformed / expired / revoked.
  */
-export const requireAuth = (
+export const requireAuth = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -40,17 +40,31 @@ export const requireAuth = (
 
     const token = authHeader.split(" ")[1];
 
-    // Natively throws if EXPIRED preventing access
+    // 1. Verify token signature and expiry
     const decoded = verifyAccessToken(token);
+
+    // 2. Check Database for Session Revocation
+    // This turns our stateless JWT into a stateful session check.
+    const activeSession = await prisma.userSession.findUnique({
+      where: { sessionId: decoded.sessionId },
+    });
+
+    if (!activeSession || activeSession.revoked || activeSession.expiresAt < new Date()) {
+      throw new AppError(
+        401,
+        "Session has been revoked or expired. Please login again.",
+        ErrorType.UNAUTHORIZED,
+      );
+    }
 
     req.user = decoded;
 
     next();
-  } catch (err) {
+  } catch (err: any) {
     next(
       new AppError(
         401,
-        "Token expired or invalid constraints",
+        err.message || "Token expired or invalid constraints",
         ErrorType.UNAUTHORIZED,
       ),
     );
