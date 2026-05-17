@@ -38,14 +38,15 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		// },
 	],
 
-	[DomainEvent.MARKETER_CREATED]: [
+	[DomainEvent.STAFF_CREATED]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			template: 'marketer-welcome',
-			subject: 'Your Instalflow Marketer Account',
+			template: 'staff-welcome',
+			subject: (p) => `Your Instalflow ${p.role} Account`,
 			context: (p) => ({
 				name: p.name,
 				email: p.email,
+				role: p.role,
 				tempPassword: p.tempPassword,
 				dashboard_url: p.dashboard_url,
 			}),
