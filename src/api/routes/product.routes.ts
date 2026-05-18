@@ -7,6 +7,8 @@ const router = Router();
 
 // Read routes: Accessible by any authenticated user (Customer, Marketer, Admin, Company)
 router.get("/", requireAuth, ProductController.getProducts);
+router.get("/cursor", requireAuth, ProductController.getProductsCursor);
+router.get("/search", requireAuth, ProductController.searchProducts);
 router.get("/:id", requireAuth, ProductController.getProductById);
 
 // Write routes: Protected to COMPANY and ADMIN roles

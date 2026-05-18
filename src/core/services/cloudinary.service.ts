@@ -27,10 +27,12 @@ export const uploadToCloudinary = async (
       transformation: [{ quality: "auto", fetch_format: "auto" }],
     });
 
-    // Remove temp file after successful upload
-    fs.unlink(filePath, (err) => {
-      if (err) console.warn("⚠️ Failed to delete temp file:", err.message);
-    });
+    // Remove temp file after successful upload if it's a local file
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (err) console.warn("⚠️ Failed to delete temp file:", err.message);
+      });
+    }
 
     return {
       url: result.secure_url,

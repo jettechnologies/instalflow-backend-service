@@ -49,16 +49,17 @@ export default {
 			for (const channel of rule.channels) {
 				try {
 					if (channel === NotificationChannel.EMAIL) {
+						const resolvedTemplate = typeof rule.template === 'function' ? rule.template(payload) : rule.template;
 						const msg: EmailQueueMessage = {
 							to: payload.email,
 							subject: resolvedSubject,
-							template: rule.template,
+							template: resolvedTemplate,
 							context: resolvedContext,
 						};
 
 						await env.email_queue.send(msg);
-						dispatched.push(`email:${rule.template}`);
-						console.log(`[hub] → email_queue  template=${rule.template} to=${payload.email}`);
+						dispatched.push(`email:${resolvedTemplate}`);
+						console.log(`[hub] → email_queue  template=${resolvedTemplate} to=${payload.email}`);
 					}
 
 					if (channel === NotificationChannel.SMS) {

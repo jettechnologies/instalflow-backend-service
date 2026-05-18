@@ -1,0 +1,393 @@
+paths:
+  /kyc/register:
+    post:
+      tags:
+        - KYC & Onboarding
+      summary: Onboard/Register Customer via Referral
+      description: |
+        Registers a new Customer account and associates them with the referring Marketer.
+        **Note:** This endpoint does NOT auto-login or return JWT session tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - referredByCode
+              properties:
+                name:
+                  type: string
+                  example: Alice Customer
+                email:
+                  type: string
+                  format: email
+                  example: alice.customer@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securepassword123
+                referredByCode:
+                  type: string
+                  example: IFL-REF-JOHNMARKETER-A8786D
+      responses:
+        '201':
+          description: Customer registered successfully via referral.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Customer registered successfully via referral. Please log in to complete your application.
+                  userId:
+                    type: string
+                    format: uuid
+                    example: f35d5f46-8589-454b-8e32-edc7d45cf312
+        '400':
+          description: Invalid inputs or invalid referral code.
+        '409':
+          description: Email is already in use.
+
+  /kyc/referral-link:
+    post:
+      tags:
+        - KYC & Onboarding
+      summary: Generate Shareable Referral Link
+      description: |
+        Generates a unique, social-ready referral onboarding link for a Marketer.
+        **Authorization:** Requires access token with role `MARKETER`.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productSlug
+              properties:
+                productSlug:
+                  type: string
+                  example: amazing-flagship-phone-6019
+                variantId:
+                  type: string
+                  format: uuid
+                  example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+      responses:
+        '200':
+          description: Link generated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  referralCode:
+                    type: string
+                    example: IFL-REF-JOHNMARKETER-A8786D
+                  referralLink:
+                    type: string
+                    example: http://localhost:5173/invite?ref=IFL-REF-JOHNMARKETER-A8786D&product=amazing-flagship-phone-6019&variant=8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+        '401':
+          description: Unauthorized session or invalid role.
+
+  /kyc/submit:
+    post:
+      tags:
+        - KYC & Onboarding
+      summary: Submit Installment Eligibility Application (KYC)
+      description: |
+        Uploads customer's financial statement PDF and submits identity parameters for mock KYC check validation.
+        **Authorization:** Requires access token with role `CUSTOMER`.
+        **Constraints:** Bank statement file size must be <= 10MB and format must be strictly `.pdf`.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - productId
+                - variantId
+                - installmentPlanId
+                - idType
+                - idNumber
+                - bankStatement
+              properties:
+                productId:
+                  type: string
+                  format: uuid
+                  example: c9f294b8-8e85-4797-bdf5-6d0a3ecaa25c
+                variantId:
+                  type: string
+                  format: uuid
+                  example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+                installmentPlanId:
+                  type: string
+                  format: uuid
+                  example: d20f9a23-bc9a-4c2c-80fe-9a6e5ee9b0f7
+                idType:
+                  type: string
+                  enum: [NIN, BVN, PASSPORT]
+                  example: NIN
+                idNumber:
+                  type: string
+                  example: "12039129031"
+                bankStatement:
+                  type: string
+                  format: binary
+                  description: Bank statement PDF document (<= 10MB)
+      responses:
+        '201':
+          description: Application submitted successfully and is now under review.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Installment application submitted successfully. It is now under review.
+                  applicationId:
+                    type: string
+                    format: uuid
+                    example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+                  status:
+                    type: string
+                    example: PENDING
+        '400':
+          description: PDF upload fails size limit or type constraint.
+        '401':
+          description: Unauthorized session.
+
+  /kyc/applications/{id}/approve:
+    post:
+      tags:
+        - KYC & Onboarding
+      summary: Maker-Checker KYC Application Approval
+      description: |
+        Approves a pending KYC application. Requires distinct approvals from BOTH the referring Marketer and their associated creator Admin to promote status to APPROVED.
+        **Authorization:** Restricted to logged-in Marketers or Admins.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The KYC Application UUID.
+          schema:
+            type: string
+            format: uuid
+            example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+      responses:
+        '200':
+          description: Approval signature recorded successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: KYC Application fully approved by both Marketer and Admin.
+                  status:
+                    type: string
+                    example: APPROVED
+        '400':
+          description: Application already processed.
+        '401':
+          description: Unauthorized session or invalid checker relationship.
+        '404':
+          description: KYC Application not found.
+
+  /kyc/applications/{id}/reject:
+    post:
+      tags:
+        - KYC & Onboarding
+      summary: Reject KYC Application
+      description: |
+        Rejects a pending KYC application. Requires only the associated creator Admin's signature with a detailed reason.
+        **Authorization:** Restricted to logged-in Admins.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The KYC Application UUID.
+          schema:
+            type: string
+            format: uuid
+            example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reason
+              properties:
+                reason:
+                  type: string
+                  example: Bank statement name does not match user account profile.
+      responses:
+        '200':
+          description: Application rejected successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: KYC Application rejected successfully.
+                  status:
+                    type: string
+                    example: REJECTED
+        '401':
+          description: Unauthorized or not the associated Admin.
+        '404':
+          description: KYC Application not found.
+
+  /kyc/applications/{id}/document:
+    get:
+      tags:
+        - KYC & Onboarding
+      summary: Retrieve Short-Lived Secure Signed Document URL
+      description: |
+        Generates a secure, short-lived signed access link (expires after 15 minutes) for a private Cloudinary document.
+        **Authorization:** Restricted to authorized Marketers and Admins in lead scope.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The KYC Application UUID.
+          schema:
+            type: string
+            format: uuid
+            example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+      responses:
+        '200':
+          description: Signed URL generated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signedUrl:
+                    type: string
+                    example: https://res.cloudinary.com/demo/image/upload/s--abc--/v12345/documents/dummy.pdf
+                  expiresIn:
+                    type: string
+                    example: 15 minutes
+        '401':
+          description: Unauthorized session.
+        '404':
+          description: Document has been purged or application not found.
+
+  /kyc/notifications:
+    get:
+      tags:
+        - KYC & Onboarding
+      summary: Retrieve Internal Notification Alerts
+      description: |
+        Retrieves internal system notification feeds.
+        **Authorization:** Restricted to logged-in Marketers or Admins.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Notification logs loaded successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    notificationId:
+                      type: string
+                      format: uuid
+                      example: 47fac1ca-80dd-4db7-b803-f945a2c5327b
+                    userId:
+                      type: string
+                      format: uuid
+                      example: dbc1bd85-1887-42fc-9ca0-faef24d3704b
+                    title:
+                      type: string
+                      example: New Installment Application
+                    message:
+                      type: string
+                      example: Customer "Alice Customer" has submitted an installment application.
+                    isRead:
+                      type: boolean
+                      example: false
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: 2026-05-18T12:03:00.000Z
+
+  /kyc/notifications/{id}/read:
+    patch:
+      tags:
+        - KYC & Onboarding
+      summary: Mark Notification Alert as Read
+      description: |
+        Safely scopes read/unread updates directly to the recipient's authenticated `userId`.
+        **Authorization:** Restricted to logged-in Marketers or Admins.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The public UUID (`notificationId`) of the alert.
+          schema:
+            type: string
+            format: uuid
+            example: 47fac1ca-80dd-4db7-b803-f945a2c5327b
+      responses:
+        '200':
+          description: Notification status updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Notification marked as read.
+                  notificationId:
+                    type: string
+                    format: uuid
+                    example: 47fac1ca-80dd-4db7-b803-f945a2c5327b
+                  isRead:
+                    type: boolean
+                    example: true
+        '404':
+          description: Notification not found or access unauthorized.

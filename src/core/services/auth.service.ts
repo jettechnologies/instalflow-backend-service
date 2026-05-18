@@ -160,6 +160,9 @@ export class AuthService {
     const tempPassword = `IFL_${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
     const hashedPassword = await bcryptHash(tempPassword);
 
+    const cleanName = data.name.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+    const referralCode = `IFL-REF-${cleanName}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
+
     const user = await prisma.user.create({
       data: {
         name: data.name,
@@ -169,6 +172,7 @@ export class AuthService {
         companyId: companyId,
         createdById: creatorId,
         forcePasswordChange: true,
+        referralCode: referralCode,
       },
       select: {
         userId: true,
@@ -177,6 +181,7 @@ export class AuthService {
         role: true,
         companyId: true,
         forcePasswordChange: true,
+        referralCode: true,
       },
     });
 

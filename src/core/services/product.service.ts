@@ -3,8 +3,13 @@ import { z } from "zod";
 import {
   CreateProductSchema,
   UpdateProductSchema,
+  SearchQueryType,
+  ProductQueryParams,
+  ProductCursorQueryParams,
 } from "@/shared/schemas/product.schema";
 import { NotFoundError } from "@/shared/utils/AppError";
+import { uploadToCloudinary, deleteFromCloudinary } from "@/core/services/cloudinary.service";
+import fs from "fs";
 
 export class ProductService {
   /**
@@ -29,6 +34,9 @@ export class ProductService {
     data: z.infer<typeof CreateProductSchema>
   ) {
     const slug = this.generateSlug(data.name);
+
+    // Process and upload images to Cloudinary if needed
+    const processedImages = await this.processImages(data.images || []);
 
     return prisma.product.create({
       data: {
@@ -59,31 +67,239 @@ export class ProductService {
             active: p.active ?? true,
           })),
         },
+        images: {
+          create: processedImages,
+        },
       },
       include: {
         variants: true,
         installmentPlans: true,
+        images: true,
       },
     });
   }
 
   /**
-   * Get all products with calculated installment breakdowns.
+   * Get all products with offset-based pagination and optional category/company filters.
    */
-  static async getProducts(companyId?: string) {
+  static async getAllProducts(params: ProductQueryParams) {
+    const { page = 1, limit = 10, sortOrder = "desc", category, companyId } = params;
+    const skip = (page - 1) * limit;
+
+    const whereClause: any = {
+      isActive: true,
+    };
+
+    if (companyId) {
+      whereClause.companyId = companyId;
+    }
+
+    if (category) {
+      whereClause.category = {
+        OR: [
+          { name: { equals: category, mode: "insensitive" } },
+          { slug: { equals: category, mode: "insensitive" } },
+        ],
+      };
+    }
+
+    const [products, total] = await prisma.$transaction([
+      prisma.product.findMany({
+        where: whereClause,
+        skip,
+        take: limit,
+        orderBy: { createdAt: sortOrder },
+        include: {
+          images: true,
+          category: true,
+          variants: true,
+          installmentPlans: {
+            where: { active: true },
+            orderBy: { durationMonths: "asc" },
+          },
+        },
+      }),
+      prisma.product.count({ where: whereClause }),
+    ]);
+
+    const productsWithBreakdowns = products.map((product) => this.attachBreakdowns(product));
+    const totalPages = Math.ceil(total / limit);
+
+    const pagination = {
+      total,
+      totalPages,
+      currentPage: page,
+      limit,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
+
+    return { products: productsWithBreakdowns, pagination };
+  }
+
+  /**
+   * Get all products with cursor-based pagination and optional category/company filters.
+   */
+  static async getAllProductCursor(params: ProductCursorQueryParams) {
+    const { limit = 10, cursor, sortOrder = "desc", category, companyId } = params;
+
+    const whereClause: any = {
+      isActive: true,
+    };
+
+    if (companyId) {
+      whereClause.companyId = companyId;
+    }
+
+    if (category) {
+      whereClause.category = {
+        OR: [
+          { name: { equals: category, mode: "insensitive" } },
+          { slug: { equals: category, mode: "insensitive" } },
+        ],
+      };
+    }
+
+    if (cursor) {
+      if (sortOrder === "desc") {
+        whereClause.id = { lte: BigInt(cursor) };
+      } else {
+        whereClause.id = { gte: BigInt(cursor) };
+      }
+    }
+
     const products = await prisma.product.findMany({
-      where: companyId ? { companyId, active: true } : { active: true },
+      where: whereClause,
+      take: limit + 1,
+      orderBy: { id: sortOrder },
       include: {
+        images: true,
+        category: true,
         variants: true,
         installmentPlans: {
           where: { active: true },
           orderBy: { durationMonths: "asc" },
         },
-        category: true,
       },
     });
 
-    return products.map((product) => this.attachBreakdowns(product));
+    const productsWithBreakdowns = products.map((product) => this.attachBreakdowns(product));
+
+    let nextCursor: string | null = null;
+    if (productsWithBreakdowns.length > limit) {
+      const nextItem = productsWithBreakdowns.pop();
+      nextCursor = nextItem ? nextItem.id.toString() : null;
+    }
+
+    const prevCursor = productsWithBreakdowns.length ? productsWithBreakdowns[0].id.toString() : null;
+
+    const pagination = {
+      limit,
+      nextCursor,
+      prevCursor,
+      hasNextPage: !!nextCursor,
+      hasPreviousPage: !!cursor,
+      nextLink: nextCursor
+        ? `/products/cursor?cursor=${nextCursor}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ""}`
+        : null,
+      prevLink: prevCursor
+        ? `/products/cursor?cursor=${prevCursor}&limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ""}`
+        : null,
+    };
+
+    return { products: productsWithBreakdowns, pagination };
+  }
+
+  /**
+   * Perfected Full-Text Search using PostgreSQL GIN indexes and plainto_tsquery, combined with Prisma relations.
+   */
+  static async searchProducts(params: SearchQueryType) {
+    const { search: q, page = 1, limit = 10, minPrice, maxPrice } = params;
+    const offset = (page - 1) * limit;
+
+    // 1. Run raw query to search by vector and get matched IDs & ranks
+    const matchResults = await prisma.$queryRaw<any[]>`
+      SELECT 
+        p.id,
+        ts_rank(p.search_vector, plainto_tsquery('english', ${q})) AS rank
+      FROM "Product" p
+      WHERE 
+        p.is_active = true
+        AND p.search_vector @@ plainto_tsquery('english', ${q})
+      ORDER BY rank DESC
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `;
+
+    // 2. Count total matches
+    const totalResult = await prisma.$queryRaw<any[]>`
+      SELECT COUNT(*)::int AS total
+      FROM "Product" p
+      WHERE 
+        p.is_active = true
+        AND p.search_vector @@ plainto_tsquery('english', ${q})
+    `;
+
+    const total = totalResult[0]?.total || 0;
+    const totalPages = Math.ceil(total / limit);
+
+    if (matchResults.length === 0) {
+      return {
+        products: [],
+        pagination: {
+          total,
+          totalPages,
+          currentPage: page,
+          limit,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        },
+      };
+    }
+
+    const matchedIds = matchResults.map(r => r.id);
+
+    // 3. Query complete products from database using matched IDs
+    const products = await prisma.product.findMany({
+      where: {
+        id: { in: matchedIds },
+        // Apply price filters in prisma if supplied
+        ...(minPrice !== undefined ? { price: { gte: minPrice } } : {}),
+        ...(maxPrice !== undefined ? { price: { lte: maxPrice } } : {}),
+      },
+      include: {
+        images: true,
+        category: true,
+        variants: true,
+        installmentPlans: {
+          where: { active: true },
+          orderBy: { durationMonths: "asc" },
+        },
+      },
+    });
+
+    // 4. Map back to products and attach breakdowns, then sort by rank matching order of matchResults
+    const productsWithBreakdowns = products.map(p => this.attachBreakdowns(p));
+    
+    // Sort products by the rank order returned by matchedIds
+    const matchedIdMap = new Map(matchedIds.map((id, index) => [id.toString(), index]));
+    productsWithBreakdowns.sort((a, b) => {
+      const indexA = matchedIdMap.get(a.id.toString()) ?? 999;
+      const indexB = matchedIdMap.get(b.id.toString()) ?? 999;
+      return indexA - indexB;
+    });
+
+    return {
+      products: productsWithBreakdowns,
+      pagination: {
+        total,
+        totalPages,
+        currentPage: page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
   }
 
   /**
@@ -99,6 +315,7 @@ export class ProductService {
           orderBy: { durationMonths: "asc" },
         },
         category: true,
+        images: true,
       },
     });
 
@@ -114,11 +331,30 @@ export class ProductService {
     productId: string,
     data: z.infer<typeof UpdateProductSchema>
   ) {
-    const product = await prisma.product.findUnique({ where: { productId } });
+    const product = await prisma.product.findUnique({ 
+      where: { productId },
+      include: { images: true }
+    });
     if (!product) throw new NotFoundError("Product not found");
 
-    // We only update top-level fields for now. 
-    // Managing nested variant/plan updates typically requires complex upsert logic or dedicated endpoints.
+    let processedImages: any[] | undefined = undefined;
+    if (data.images) {
+      // 1. Delete old images from Cloudinary
+      for (const oldImg of product.images) {
+        if (oldImg.cloudinaryPublicId) {
+          await deleteFromCloudinary(oldImg.cloudinaryPublicId);
+        }
+      }
+
+      // 2. Remove old images from DB
+      await prisma.productImage.deleteMany({
+        where: { productId: product.id },
+      });
+
+      // 3. Process new images
+      processedImages = await this.processImages(data.images);
+    }
+
     return prisma.product.update({
       where: { productId },
       data: {
@@ -130,11 +366,15 @@ export class ProductService {
         stockQuantity: data.stockQuantity,
         commissionRate: data.commissionRate,
         categoryId: data.categoryId,
-        active: data.active,
+        isActive: data.active,
+        images: processedImages ? {
+          create: processedImages,
+        } : undefined,
       },
       include: {
         variants: true,
         installmentPlans: true,
+        images: true,
       },
     });
   }
@@ -145,7 +385,7 @@ export class ProductService {
   static async deleteProduct(productId: string) {
     return prisma.product.update({
       where: { productId },
-      data: { active: false },
+      data: { isActive: false },
     });
   }
 
@@ -203,5 +443,42 @@ export class ProductService {
       ...product,
       installmentBreakdown: breakdowns,
     };
+  }
+
+  /**
+   * Helper to process and upload raw/base64/local image files to Cloudinary.
+   */
+  private static async processImages(images: any[]): Promise<any[]> {
+    if (!images || images.length === 0) return [];
+
+    const processed = [];
+    for (const img of images) {
+      let imageUrl = img.imageUrl;
+      let cloudinaryPublicId = img.cloudinaryPublicId;
+
+      const isBase64 = imageUrl.startsWith("data:image/") || imageUrl.startsWith("data:application/");
+      const isLocalFile = !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://") && fs.existsSync(imageUrl);
+
+      if (isBase64 || isLocalFile) {
+        try {
+          const uploadResult = await uploadToCloudinary(imageUrl, "products");
+          imageUrl = uploadResult.url;
+          cloudinaryPublicId = uploadResult.public_id;
+        } catch (error) {
+          console.error("Failed to upload image to Cloudinary during product image processing:", error);
+          throw error;
+        }
+      }
+
+      processed.push({
+        imageUrl,
+        altText: img.altText || null,
+        isPrimary: img.isPrimary ?? false,
+        sortOrder: img.sortOrder ?? 0,
+        cloudinaryPublicId: cloudinaryPublicId || null,
+      });
+    }
+
+    return processed;
   }
 }

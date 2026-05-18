@@ -59,7 +59,9 @@ export const ModelName = {
   Category: 'Category',
   Product: 'Product',
   ProductVariant: 'ProductVariant',
-  Application: 'Application',
+  KycApplication: 'KycApplication',
+  KycDocumentAsset: 'KycDocumentAsset',
+  KycAuditTrail: 'KycAuditTrail',
   Installment: 'Installment',
   Payment: 'Payment',
   Commission: 'Commission',
@@ -73,7 +75,9 @@ export const ModelName = {
   WebhookEvent: 'WebhookEvent',
   OnboardingIntent: 'OnboardingIntent',
   ApprovalRequest: 'ApprovalRequest',
-  ProductInstallmentPlan: 'ProductInstallmentPlan'
+  ProductInstallmentPlan: 'ProductInstallmentPlan',
+  ProductImage: 'ProductImage',
+  InternalNotification: 'InternalNotification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -186,7 +190,7 @@ export const ProductScalarFieldEnum = {
   stockQuantity: 'stockQuantity',
   price: 'price',
   commissionRate: 'commissionRate',
-  active: 'active',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   categoryId: 'categoryId'
@@ -212,17 +216,62 @@ export const ProductVariantScalarFieldEnum = {
 export type ProductVariantScalarFieldEnum = (typeof ProductVariantScalarFieldEnum)[keyof typeof ProductVariantScalarFieldEnum]
 
 
-export const ApplicationScalarFieldEnum = {
+export const KycApplicationScalarFieldEnum = {
   id: 'id',
-  applicationId: 'applicationId',
+  kycApplicationId: 'kycApplicationId',
   userId: 'userId',
+  productId: 'productId',
+  variantId: 'variantId',
+  installmentPlanId: 'installmentPlanId',
+  idType: 'idType',
+  idNumber: 'idNumber',
   status: 'status',
-  documentData: 'documentData',
+  marketerApproved: 'marketerApproved',
+  marketerApprovedAt: 'marketerApprovedAt',
+  adminApproved: 'adminApproved',
+  adminApprovedAt: 'adminApprovedAt',
+  rejectionReason: 'rejectionReason',
+  legalHold: 'legalHold',
+  isUnderFraudReview: 'isUnderFraudReview',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
+export type KycApplicationScalarFieldEnum = (typeof KycApplicationScalarFieldEnum)[keyof typeof KycApplicationScalarFieldEnum]
+
+
+export const KycDocumentAssetScalarFieldEnum = {
+  id: 'id',
+  assetId: 'assetId',
+  kycApplicationId: 'kycApplicationId',
+  cloudinaryPublicId: 'cloudinaryPublicId',
+  secureUrl: 'secureUrl',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  fileHash: 'fileHash',
+  isDeleted: 'isDeleted',
+  scheduledDeletionAt: 'scheduledDeletionAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type KycDocumentAssetScalarFieldEnum = (typeof KycDocumentAssetScalarFieldEnum)[keyof typeof KycDocumentAssetScalarFieldEnum]
+
+
+export const KycAuditTrailScalarFieldEnum = {
+  id: 'id',
+  auditId: 'auditId',
+  kycApplicationId: 'kycApplicationId',
+  action: 'action',
+  documentType: 'documentType',
+  fileHash: 'fileHash',
+  performedById: 'performedById',
+  outcome: 'outcome',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type KycAuditTrailScalarFieldEnum = (typeof KycAuditTrailScalarFieldEnum)[keyof typeof KycAuditTrailScalarFieldEnum]
 
 
 export const InstallmentScalarFieldEnum = {
@@ -421,6 +470,35 @@ export const ProductInstallmentPlanScalarFieldEnum = {
 } as const
 
 export type ProductInstallmentPlanScalarFieldEnum = (typeof ProductInstallmentPlanScalarFieldEnum)[keyof typeof ProductInstallmentPlanScalarFieldEnum]
+
+
+export const ProductImageScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  imageUrl: 'imageUrl',
+  altText: 'altText',
+  isPrimary: 'isPrimary',
+  sortOrder: 'sortOrder',
+  cloudinaryPublicId: 'cloudinaryPublicId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
+
+
+export const InternalNotificationScalarFieldEnum = {
+  id: 'id',
+  notificationId: 'notificationId',
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  metadata: 'metadata',
+  isRead: 'isRead',
+  idempotencyKey: 'idempotencyKey',
+  createdAt: 'createdAt'
+} as const
+
+export type InternalNotificationScalarFieldEnum = (typeof InternalNotificationScalarFieldEnum)[keyof typeof InternalNotificationScalarFieldEnum]
 
 
 export const SortOrder = {

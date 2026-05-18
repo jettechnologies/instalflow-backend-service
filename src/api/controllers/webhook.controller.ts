@@ -5,6 +5,7 @@ import logger from "@/infrastructure/logger/logger";
 import { AuthService } from "@/core/services/auth.service";
 import { SubscriptionService } from "@/core/services/subscription.service";
 import { onboardingQueue } from "@/infrastructure/queues/onboarding.queue";
+import { paymentQueue } from "@/infrastructure/queues/payment.queue";
 import { PaystackService } from "@/core/services/paystack.service";
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || "";
@@ -217,6 +218,34 @@ export class WebhookController {
         );
 
         logger.webhook.paystack.onboardingQueued(intent.intentId, reference);
+        return;
+      }
+
+      case "installment": {
+        const installmentId = data.metadata?.installmentId;
+        if (!installmentId) {
+          logger.error("No installmentId found in webhook metadata", { reference });
+          return;
+        }
+
+        await paymentQueue.add(
+          "process-payment",
+          {
+            installmentId,
+            amount: data.amount / 100,
+            reference,
+            gatewayRef: data.id.toString(),
+          },
+          {
+            jobId: reference,
+            attempts: 5,
+            backoff: { type: "exponential", delay: 60000 },
+            removeOnComplete: true,
+            removeOnFail: false,
+          }
+        );
+
+        logger.info(`[webhook] → paymentQueue  installmentId=${installmentId} reference=${reference}`);
         return;
       }
 

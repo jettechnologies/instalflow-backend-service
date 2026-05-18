@@ -11,6 +11,7 @@ const TEMPLATES_DIR = path.resolve(__dirname, "../../mail-templates");
 
 export enum EmailTemplate {
   WELCOME = "welcome",
+  WELCOME_CUSTOMER = "welcome-customer",
   STAFF_WELCOME = "staff-welcome",
   OTP_VERIFICATION = "otp-verification",
   PASSWORD_RESET = "password-reset",
@@ -19,6 +20,7 @@ export enum EmailTemplate {
   ORDER_CANCELLED = "order-cancelled",
   ORDER_STATUS_UPDATE = "order-status-update",
   COMPANY_ONBOARDING = "company-onboarding",
+  INSTALLMENT_PAID = "installment-paid",
 }
 
 interface SendEmailProps {

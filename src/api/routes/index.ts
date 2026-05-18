@@ -7,6 +7,9 @@ import { WebhookController } from "@/api/controllers/webhook.controller";
 import companyRoutes from "@/api/routes/company.routes";
 import adminRoutes from "@/api/routes/admin.routes";
 import productRoutes from "@/api/routes/product.routes";
+import categoryRoutes from "@/api/routes/category.routes";
+import kycRoutes from "@/api/routes/kyc.routes";
+import customerManagementRoutes from "@/api/routes/customer-management.routes";
 const router = Router();
 
 router.get("/health", (req, res) => {
@@ -23,5 +26,8 @@ router.use("/superadmin", superadminRoutes);
 router.use("/company", companyRoutes);
 router.use("/admin", adminRoutes);
 router.use("/products", productRoutes);
+router.use("/categories", categoryRoutes);
+router.use("/kyc", kycRoutes);
+router.use("/customers", customerManagementRoutes);
 
 export default router;

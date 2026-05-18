@@ -82,10 +82,20 @@ export type Product = Prisma.ProductModel
  */
 export type ProductVariant = Prisma.ProductVariantModel
 /**
- * Model Application
+ * Model KycApplication
  * 
  */
-export type Application = Prisma.ApplicationModel
+export type KycApplication = Prisma.KycApplicationModel
+/**
+ * Model KycDocumentAsset
+ * 
+ */
+export type KycDocumentAsset = Prisma.KycDocumentAssetModel
+/**
+ * Model KycAuditTrail
+ * 
+ */
+export type KycAuditTrail = Prisma.KycAuditTrailModel
 /**
  * Model Installment
  * 
@@ -156,3 +166,13 @@ export type ApprovalRequest = Prisma.ApprovalRequestModel
  * 
  */
 export type ProductInstallmentPlan = Prisma.ProductInstallmentPlanModel
+/**
+ * Model ProductImage
+ * 
+ */
+export type ProductImage = Prisma.ProductImageModel
+/**
+ * Model InternalNotification
+ * 
+ */
+export type InternalNotification = Prisma.InternalNotificationModel

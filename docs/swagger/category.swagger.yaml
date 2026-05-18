@@ -1,0 +1,122 @@
+paths:
+  /categories:
+    get:
+      summary: Retrieve all Product Categories
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: A list of categories loaded successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    categoryId:
+                      type: string
+                      format: uuid
+                      example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+                    name:
+                      type: string
+                      example: Testing Gadgets
+                    slug:
+                      type: string
+                      example: testing-gadgets
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: 2026-05-18T12:03:00.000Z
+
+    post:
+      summary: Create a Category (Admin/Company only)
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Testing Gadgets
+      responses:
+        "201":
+          description: Category created successfully.
+
+  /categories/{id}:
+    get:
+      summary: Get Category Details by ID
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The category's UUID.
+      responses:
+        "200":
+          description: Category details retrieved successfully.
+
+    patch:
+      summary: Update a Category (Admin/Company only)
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The category's UUID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Premium Electronics
+      responses:
+        "200":
+          description: Category updated successfully.
+
+    delete:
+      summary: Soft Delete/Remove a Category (Admin/Company only)
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The category's UUID.
+      responses:
+        "200":
+          description: Category successfully deleted.

@@ -138,6 +138,24 @@
         <p>Hi <strong>{{name}}</strong>,</p>
         <p>Welcome to <strong>Instalflow</strong>! We are excited to help you manage your purchases through our flexible installment plans. Our platform is designed to make paying for high-value products easier and more transparent for you.</p>
         
+        {{#if applicationUnderReview}}
+        <div style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid #F59E0B; border-radius: 8px; padding: 1.2rem; margin: 1.5rem 0; color: #F3F4F6;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #F59E0B; font-weight: 600; font-size: 1rem;">📝 Installment Application Under Review</h4>
+          <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #D1D5DB;">We have successfully received your installment plan application, including your uploaded bank statement. Our review team is currently verifying your KYC details (NIN/BVN/Passport) and your financial statement. We will notify you via email as soon as your eligibility is confirmed!</p>
+        </div>
+        {{/if}}
+
+        {{#if rejectionReason}}
+        <div style="background: rgba(239, 68, 68, 0.08); border-left: 4px solid #EF4444; border-radius: 8px; padding: 1.2rem; margin: 1.5rem 0; color: #F3F4F6;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #EF4444; font-weight: 600; font-size: 1rem;">❌ Installment Application Declined</h4>
+          <p style="margin: 0 0 1rem 0; font-size: 0.95rem; line-height: 1.6; color: #D1D5DB;">We regret to inform you that your installment plan application could not be approved at this time. Our review team provided the following reason for the decision:</p>
+          <div style="background: rgba(239, 68, 68, 0.15); border-radius: 6px; padding: 0.8rem; font-family: monospace; font-size: 0.9rem; color: #FCA5A5; border: 1px dashed rgba(239, 68, 68, 0.3); white-space: pre-wrap;">
+            {{rejectionReason}}
+          </div>
+          <p style="margin: 1rem 0 0 0; font-size: 0.9rem; color: #9CA3AF;">You can log in to your dashboard to review the criteria and re-submit a new application with the corrected details or updated bank statement.</p>
+        </div>
+        {{/if}}
+
         <p>You can now track your payments, view upcoming installments, and manage your account all in one place.</p>
 
         <div style="background: #0B0F1A; border: 1px solid #1F2937; border-radius: 16px; padding: 1.5rem; margin: 2rem 0;">

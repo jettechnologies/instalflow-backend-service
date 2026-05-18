@@ -15,6 +15,9 @@ export enum DomainEvent {
 
   // Company
   COMPANY_ONBOARDED = "company.onboarded",
+
+  // Installments
+  INSTALLMENT_PAID = "installment.paid",
 }
 
 export enum EventStatus {
@@ -28,6 +31,9 @@ export interface DomainEventPayloads {
     email: string;
     name: string;
     dashboard_url?: string;
+    role?: string;
+    applicationUnderReview?: boolean;
+    rejectionReason?: string;
   };
   [DomainEvent.STAFF_CREATED]: {
     email: string;
@@ -69,6 +75,15 @@ export interface DomainEventPayloads {
     email: string;
     adminName: string;
     companyName: string;
+    dashboard_url?: string;
+  };
+  [DomainEvent.INSTALLMENT_PAID]: {
+    email: string;
+    customerName: string;
+    productName: string;
+    amountPaid: string | number;
+    dueDate: string;
+    percentagePaid: number;
     dashboard_url?: string;
   };
 }

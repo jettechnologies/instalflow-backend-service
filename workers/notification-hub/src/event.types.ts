@@ -15,6 +15,9 @@ export enum DomainEvent {
 
 	// Company
 	COMPANY_ONBOARDED = 'company.onboarded',
+
+	// Installments
+	INSTALLMENT_PAID = 'installment.paid',
 }
 
 export enum EventStatus {

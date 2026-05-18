@@ -5,6 +5,7 @@ import session from "express-session";
 import PrismaSessionStore from "@/shared/utils/prisma-session-store";
 import sanitizer from "@/shared/utils/sanitizer";
 import csrfMiddleware from "@/api/middlewares/csrf-middlewares";
+import fileUpload from "express-fileupload";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -15,6 +16,13 @@ export function configureExpress(app: Application): void {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use(sanitizer);
+  app.use(
+    fileUpload({
+      useTempFiles: true,
+      tempFileDir: "./tmp/",
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    }),
+  );
 
   app.set("trust proxy", 1);
 

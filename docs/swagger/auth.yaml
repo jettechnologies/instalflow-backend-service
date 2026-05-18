@@ -401,7 +401,42 @@ paths:
                   format: email
       responses:
         201:
-          description: Marketer created successfully. Returns the temporary password.
+          description: Marketer created successfully. Returns the temporary password and unique referralCode.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                        format: uuid
+                        example: "ff6759e7-babb-46d3-82d6-6607b7314030"
+                      name:
+                        type: string
+                        example: "John Marketer"
+                      email:
+                        type: string
+                        format: email
+                        example: "marketer@example.com"
+                      role:
+                        type: string
+                        example: "MARKETER"
+                      companyId:
+                        type: string
+                        format: uuid
+                        example: "dbc1bd85-1887-42fc-9ca0-faef24d3704b"
+                      forcePasswordChange:
+                        type: boolean
+                        example: true
+                      referralCode:
+                        type: string
+                        example: "IFL-REF-JOHNMARKETER-A8786D"
+                  tempPassword:
+                    type: string
+                    example: "IFL_A2B93C"
         403:
           description: "Forbidden: Only company admins can create marketers."
         409:

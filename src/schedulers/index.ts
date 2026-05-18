@@ -7,4 +7,6 @@
 import "dotenv/config";
 import "@/infrastructure/logger/instruments";
 
-console.log("✅ Schedulers initialized (no active schedulers yet)");
+import "@/schedulers/kyc-retention.scheduler";
+
+console.log("✅ Schedulers initialized: KycRetentionScheduler is active");

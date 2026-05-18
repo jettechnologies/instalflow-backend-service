@@ -1,17 +1,75 @@
 tags:
   - name: Product Catalog
-    description: Endpoints for managing products, variants, and dynamic installment plans.
+    description: Endpoints for managing products, categories, variants, and dynamic installment plans.
 
 paths:
   /products:
     get:
-      summary: List Products with Installment Breakdowns
+      summary: List Products with Installment Breakdowns (Offset Paginated)
       tags: [Product Catalog]
       security:
         - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number for offset pagination.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Max number of products to return per page.
+        - in: query
+          name: categorySlug
+          schema:
+            type: string
+          description: Filter products matching a specific category slug.
+        - in: query
+          name: categoryName
+          schema:
+            type: string
+          description: Filter products matching a specific category name.
       responses:
         "200":
-          description: A list of products with their variants and calculated monthly installment breakdowns.
+          description: Offset paginated list of products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        price:
+                          type: number
+                        stockQuantity:
+                          type: integer
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      totalPages:
+                        type: integer
 
     post:
       summary: Create a Product (Admin/Company only)
@@ -25,28 +83,82 @@ paths:
           application/json:
             schema:
               type: object
-              required: [name]
+              required: [name, categoryId]
               properties:
-                name: { type: string }
-                description: { type: string }
-                categoryId: { type: string }
-                price: { type: number, default: 0 }
-                minPrice: { type: number }
-                maxPrice: { type: number }
-                commissionRate: { type: number, default: 0 }
-                stockQuantity: { type: integer, default: 0 }
+                name:
+                  type: string
+                  example: Amazing Flagship Phone
+                description:
+                  type: string
+                  example: Premium high-end flagship phone.
+                categoryId:
+                  type: string
+                  format: uuid
+                  example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+                price:
+                  type: number
+                  default: 0
+                  example: 999.99
+                minPrice:
+                  type: number
+                  example: 899.99
+                maxPrice:
+                  type: number
+                  example: 1099.99
+                commissionRate:
+                  type: number
+                  default: 0
+                  example: 5.5
+                stockQuantity:
+                  type: integer
+                  default: 0
+                  example: 100
+                images:
+                  type: array
+                  items:
+                    type: object
+                    required: [imageUrl]
+                    properties:
+                      imageUrl:
+                        type: string
+                        example: https://res.cloudinary.com/demo/image/upload/phone.jpg
+                      altText:
+                        type: string
+                        example: Front display view of the phone
+                      isPrimary:
+                        type: boolean
+                        default: false
+                      sortOrder:
+                        type: integer
+                        default: 0
                 variants:
                   type: array
                   items:
                     type: object
                     required: [sku, price]
                     properties:
-                      sku: { type: string }
-                      size: { type: string }
-                      color: { type: array, items: { type: string } }
-                      images: { type: array, items: { type: string } }
-                      stockQuantity: { type: integer }
-                      price: { type: number }
+                      sku:
+                        type: string
+                        example: PH-AMZ-256
+                      size:
+                        type: string
+                        example: 256GB
+                      color:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Space Black"]
+                      images:
+                        type: array
+                        items:
+                          type: string
+                        example: []
+                      stockQuantity:
+                        type: integer
+                        example: 50
+                      price:
+                        type: number
+                        example: 999.99
                 installmentPlans:
                   type: array
                   items:
@@ -54,17 +166,98 @@ paths:
                     required: [durationMonths]
                     properties:
                       durationMonths:
-                        { type: integer, description: "e.g. 3, 6, 12" }
+                        type: integer
+                        example: 6
                       interestPercentage:
-                        {
-                          type: number,
-                          default: 0,
-                          description: "e.g. 5.5 for 5.5%",
-                        }
-                      active: { type: boolean, default: true }
+                        type: number
+                        default: 0
+                        example: 5.0
+                      active:
+                        type: boolean
+                        default: true
       responses:
         "201":
           description: Product created successfully
+
+  /products/cursor:
+    get:
+      summary: List Products with Installment Breakdowns (Cursor Paginated)
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: cursor
+          schema:
+            type: string
+          description: Base64 or ID cursor string for pagination.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Max number of products to return.
+        - in: query
+          name: categorySlug
+          schema:
+            type: string
+          description: Filter matching a specific category slug.
+        - in: query
+          name: categoryName
+          schema:
+            type: string
+          description: Filter matching a specific category name.
+      responses:
+        "200":
+          description: Cursor-paginated list of products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  meta:
+                    type: object
+                    properties:
+                      nextCursor:
+                        type: string
+                        example: cursor_id_string
+                      hasMore:
+                        type: boolean
+                        example: true
+
+  /products/search:
+    get:
+      summary: Full-Text GIN Index Search Products
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          required: true
+          schema:
+            type: string
+          description: Query string search term matching product titles/description.
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Ranked search results returned.
 
   /products/{id}:
     get:

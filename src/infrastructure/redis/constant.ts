@@ -2,6 +2,7 @@ export const QueueNames = {
   OnboardingQueue: "onboarding-queue",
   PaymentQueue: "payment-queue",
   CommissionQueue: "commission-queue",
+  KycRetentionQueue: "kyc-retention-queue",
 };
 
 export const JobNames = {

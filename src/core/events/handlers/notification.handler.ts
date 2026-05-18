@@ -10,14 +10,18 @@ import { EmailTemplate } from "@/core/services/email.service";
  * USER REGISTERED
  */
 onEvent(DomainEvent.USER_REGISTERED, async (payload) => {
+  const isCustomer = payload.role === "CUSTOMER" || !!payload.applicationUnderReview;
   await NotificationService.send({
     to: payload.email,
     channel: NotificationChannel.EMAIL,
-    template: EmailTemplate.WELCOME,
-    subject: "Welcome to Instalflow 🎉",
+    template: isCustomer ? EmailTemplate.WELCOME_CUSTOMER : EmailTemplate.WELCOME,
+    subject: isCustomer 
+      ? (payload.applicationUnderReview ? "Your Installment Application is Under Review 📝" : "Welcome to Instalflow 🎉")
+      : "Welcome to Instalflow 🎉",
     context: {
       name: payload.name,
       dashboard_url: process.env.FRONTEND_URL,
+      applicationUnderReview: payload.applicationUnderReview || false,
     },
   });
 });
@@ -148,6 +152,26 @@ onEvent(DomainEvent.COMPANY_ONBOARDED, async (payload) => {
     context: {
       adminName: payload.adminName,
       companyName: payload.companyName,
+      dashboard_url: process.env.FRONTEND_URL,
+    },
+  });
+});
+
+/**
+ * INSTALLMENT PAID SUCCESSFULLY
+ */
+onEvent(DomainEvent.INSTALLMENT_PAID, async (payload) => {
+  await NotificationService.send({
+    to: payload.email,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_PAID,
+    subject: `Installment Paid Successfully! 🎉`,
+    context: {
+      customerName: payload.customerName,
+      productName: payload.productName,
+      amountPaid: payload.amountPaid,
+      dueDate: payload.dueDate,
+      percentagePaid: payload.percentagePaid,
       dashboard_url: process.env.FRONTEND_URL,
     },
   });

@@ -1,0 +1,104 @@
+tags:
+  - name: Customer Onboarding Management
+    description: Operations for tracking customer installment schedules, payment histories, and dynamic progress trackers.
+
+paths:
+  /customers:
+    get:
+      summary: Scoped list of referred customers
+      description: Returns a paginated list of referred customers under the caller's corporate permissions hierarchy.
+      tags: [Customer Onboarding Management]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: Max count returned
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Query parameter searching user name or email
+      responses:
+        "200":
+          description: Scoped customer array successfully retrieved.
+
+  /customers/hierarchy:
+    get:
+      summary: Corporate Organization Pipeline Hierarchy
+      description: Returns full corporate org trees (Company -> Admin -> Marketer -> Referred Customers). Restricted to COMPANY/SUPER_ADMIN.
+      tags: [Customer Onboarding Management]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Hierarchy retrieved successfully.
+
+  /customers/{id}/products:
+    get:
+      summary: Financed ongoing products list
+      description: Returns all financed products currently under active contract for the customer, with calculated paid percentages.
+      tags: [Customer Onboarding Management]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: User ID of the target customer
+      responses:
+        "200":
+          description: Ongoing purchase plans with progress percentages fetched successfully.
+
+  /customers/{id}/products/{productId}/schedule:
+    get:
+      summary: Chronological due dates & payment progress schedule
+      description: Retrieves the detailed chronological schedule of installment due dates, amounts, payment history status, and progress metrics for a purchase.
+      tags: [Customer Onboarding Management]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: User ID of the customer
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: Product ID of the financed product
+      responses:
+        "200":
+          description: Chronological installment schedule and percentage calculations returned successfully.
+
+  /customers/{id}/payments:
+    get:
+      summary: Customer payment history ledger
+      description: Retrieves complete payment ledger logs across all customer financing contracts.
+      tags: [Customer Onboarding Management]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: User ID of the customer
+      responses:
+        "200":
+          description: Customer payment logs list fetched successfully.

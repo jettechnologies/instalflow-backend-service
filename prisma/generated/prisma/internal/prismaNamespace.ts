@@ -392,7 +392,9 @@ export const ModelName = {
   Category: 'Category',
   Product: 'Product',
   ProductVariant: 'ProductVariant',
-  Application: 'Application',
+  KycApplication: 'KycApplication',
+  KycDocumentAsset: 'KycDocumentAsset',
+  KycAuditTrail: 'KycAuditTrail',
   Installment: 'Installment',
   Payment: 'Payment',
   Commission: 'Commission',
@@ -406,7 +408,9 @@ export const ModelName = {
   WebhookEvent: 'WebhookEvent',
   OnboardingIntent: 'OnboardingIntent',
   ApprovalRequest: 'ApprovalRequest',
-  ProductInstallmentPlan: 'ProductInstallmentPlan'
+  ProductInstallmentPlan: 'ProductInstallmentPlan',
+  ProductImage: 'ProductImage',
+  InternalNotification: 'InternalNotification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -422,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "application" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "internalNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1018,77 +1022,225 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Application: {
-      payload: Prisma.$ApplicationPayload<ExtArgs>
-      fields: Prisma.ApplicationFieldRefs
+    KycApplication: {
+      payload: Prisma.$KycApplicationPayload<ExtArgs>
+      fields: Prisma.KycApplicationFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.ApplicationFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload> | null
+          args: Prisma.KycApplicationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.ApplicationFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          args: Prisma.KycApplicationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>
         }
         findFirst: {
-          args: Prisma.ApplicationFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload> | null
+          args: Prisma.KycApplicationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.ApplicationFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          args: Prisma.KycApplicationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>
         }
         findMany: {
-          args: Prisma.ApplicationFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>[]
+          args: Prisma.KycApplicationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>[]
         }
         create: {
-          args: Prisma.ApplicationCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          args: Prisma.KycApplicationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>
         }
         createMany: {
-          args: Prisma.ApplicationCreateManyArgs<ExtArgs>
+          args: Prisma.KycApplicationCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.ApplicationCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>[]
+          args: Prisma.KycApplicationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>[]
         }
         delete: {
-          args: Prisma.ApplicationDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          args: Prisma.KycApplicationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>
         }
         update: {
-          args: Prisma.ApplicationUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          args: Prisma.KycApplicationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>
         }
         deleteMany: {
-          args: Prisma.ApplicationDeleteManyArgs<ExtArgs>
+          args: Prisma.KycApplicationDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.ApplicationUpdateManyArgs<ExtArgs>
+          args: Prisma.KycApplicationUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.ApplicationUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>[]
+          args: Prisma.KycApplicationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>[]
         }
         upsert: {
-          args: Prisma.ApplicationUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          args: Prisma.KycApplicationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycApplicationPayload>
         }
         aggregate: {
-          args: Prisma.ApplicationAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateApplication>
+          args: Prisma.KycApplicationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKycApplication>
         }
         groupBy: {
-          args: Prisma.ApplicationGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ApplicationGroupByOutputType>[]
+          args: Prisma.KycApplicationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KycApplicationGroupByOutputType>[]
         }
         count: {
-          args: Prisma.ApplicationCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ApplicationCountAggregateOutputType> | number
+          args: Prisma.KycApplicationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KycApplicationCountAggregateOutputType> | number
+        }
+      }
+    }
+    KycDocumentAsset: {
+      payload: Prisma.$KycDocumentAssetPayload<ExtArgs>
+      fields: Prisma.KycDocumentAssetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KycDocumentAssetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KycDocumentAssetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>
+        }
+        findFirst: {
+          args: Prisma.KycDocumentAssetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KycDocumentAssetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>
+        }
+        findMany: {
+          args: Prisma.KycDocumentAssetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>[]
+        }
+        create: {
+          args: Prisma.KycDocumentAssetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>
+        }
+        createMany: {
+          args: Prisma.KycDocumentAssetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KycDocumentAssetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>[]
+        }
+        delete: {
+          args: Prisma.KycDocumentAssetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>
+        }
+        update: {
+          args: Prisma.KycDocumentAssetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>
+        }
+        deleteMany: {
+          args: Prisma.KycDocumentAssetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KycDocumentAssetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KycDocumentAssetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>[]
+        }
+        upsert: {
+          args: Prisma.KycDocumentAssetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycDocumentAssetPayload>
+        }
+        aggregate: {
+          args: Prisma.KycDocumentAssetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKycDocumentAsset>
+        }
+        groupBy: {
+          args: Prisma.KycDocumentAssetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KycDocumentAssetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KycDocumentAssetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KycDocumentAssetCountAggregateOutputType> | number
+        }
+      }
+    }
+    KycAuditTrail: {
+      payload: Prisma.$KycAuditTrailPayload<ExtArgs>
+      fields: Prisma.KycAuditTrailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KycAuditTrailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KycAuditTrailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>
+        }
+        findFirst: {
+          args: Prisma.KycAuditTrailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KycAuditTrailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>
+        }
+        findMany: {
+          args: Prisma.KycAuditTrailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>[]
+        }
+        create: {
+          args: Prisma.KycAuditTrailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>
+        }
+        createMany: {
+          args: Prisma.KycAuditTrailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KycAuditTrailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>[]
+        }
+        delete: {
+          args: Prisma.KycAuditTrailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>
+        }
+        update: {
+          args: Prisma.KycAuditTrailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>
+        }
+        deleteMany: {
+          args: Prisma.KycAuditTrailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KycAuditTrailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KycAuditTrailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>[]
+        }
+        upsert: {
+          args: Prisma.KycAuditTrailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KycAuditTrailPayload>
+        }
+        aggregate: {
+          args: Prisma.KycAuditTrailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKycAuditTrail>
+        }
+        groupBy: {
+          args: Prisma.KycAuditTrailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KycAuditTrailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KycAuditTrailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KycAuditTrailCountAggregateOutputType> | number
         }
       }
     }
@@ -2128,6 +2280,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProductImage: {
+      payload: Prisma.$ProductImagePayload<ExtArgs>
+      fields: Prisma.ProductImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProductImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProductImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>
+        }
+        findFirst: {
+          args: Prisma.ProductImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProductImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>
+        }
+        findMany: {
+          args: Prisma.ProductImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>[]
+        }
+        create: {
+          args: Prisma.ProductImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>
+        }
+        createMany: {
+          args: Prisma.ProductImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProductImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>[]
+        }
+        delete: {
+          args: Prisma.ProductImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>
+        }
+        update: {
+          args: Prisma.ProductImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProductImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProductImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProductImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProductImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductImagePayload>
+        }
+        aggregate: {
+          args: Prisma.ProductImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductImage>
+        }
+        groupBy: {
+          args: Prisma.ProductImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProductImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    InternalNotification: {
+      payload: Prisma.$InternalNotificationPayload<ExtArgs>
+      fields: Prisma.InternalNotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InternalNotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InternalNotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.InternalNotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InternalNotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>
+        }
+        findMany: {
+          args: Prisma.InternalNotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>[]
+        }
+        create: {
+          args: Prisma.InternalNotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>
+        }
+        createMany: {
+          args: Prisma.InternalNotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InternalNotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.InternalNotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>
+        }
+        update: {
+          args: Prisma.InternalNotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.InternalNotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InternalNotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InternalNotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.InternalNotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InternalNotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.InternalNotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInternalNotification>
+        }
+        groupBy: {
+          args: Prisma.InternalNotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InternalNotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InternalNotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InternalNotificationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2261,7 +2561,7 @@ export const ProductScalarFieldEnum = {
   stockQuantity: 'stockQuantity',
   price: 'price',
   commissionRate: 'commissionRate',
-  active: 'active',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   categoryId: 'categoryId'
@@ -2287,17 +2587,62 @@ export const ProductVariantScalarFieldEnum = {
 export type ProductVariantScalarFieldEnum = (typeof ProductVariantScalarFieldEnum)[keyof typeof ProductVariantScalarFieldEnum]
 
 
-export const ApplicationScalarFieldEnum = {
+export const KycApplicationScalarFieldEnum = {
   id: 'id',
-  applicationId: 'applicationId',
+  kycApplicationId: 'kycApplicationId',
   userId: 'userId',
+  productId: 'productId',
+  variantId: 'variantId',
+  installmentPlanId: 'installmentPlanId',
+  idType: 'idType',
+  idNumber: 'idNumber',
   status: 'status',
-  documentData: 'documentData',
+  marketerApproved: 'marketerApproved',
+  marketerApprovedAt: 'marketerApprovedAt',
+  adminApproved: 'adminApproved',
+  adminApprovedAt: 'adminApprovedAt',
+  rejectionReason: 'rejectionReason',
+  legalHold: 'legalHold',
+  isUnderFraudReview: 'isUnderFraudReview',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
+export type KycApplicationScalarFieldEnum = (typeof KycApplicationScalarFieldEnum)[keyof typeof KycApplicationScalarFieldEnum]
+
+
+export const KycDocumentAssetScalarFieldEnum = {
+  id: 'id',
+  assetId: 'assetId',
+  kycApplicationId: 'kycApplicationId',
+  cloudinaryPublicId: 'cloudinaryPublicId',
+  secureUrl: 'secureUrl',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  fileHash: 'fileHash',
+  isDeleted: 'isDeleted',
+  scheduledDeletionAt: 'scheduledDeletionAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type KycDocumentAssetScalarFieldEnum = (typeof KycDocumentAssetScalarFieldEnum)[keyof typeof KycDocumentAssetScalarFieldEnum]
+
+
+export const KycAuditTrailScalarFieldEnum = {
+  id: 'id',
+  auditId: 'auditId',
+  kycApplicationId: 'kycApplicationId',
+  action: 'action',
+  documentType: 'documentType',
+  fileHash: 'fileHash',
+  performedById: 'performedById',
+  outcome: 'outcome',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type KycAuditTrailScalarFieldEnum = (typeof KycAuditTrailScalarFieldEnum)[keyof typeof KycAuditTrailScalarFieldEnum]
 
 
 export const InstallmentScalarFieldEnum = {
@@ -2498,6 +2843,35 @@ export const ProductInstallmentPlanScalarFieldEnum = {
 export type ProductInstallmentPlanScalarFieldEnum = (typeof ProductInstallmentPlanScalarFieldEnum)[keyof typeof ProductInstallmentPlanScalarFieldEnum]
 
 
+export const ProductImageScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  imageUrl: 'imageUrl',
+  altText: 'altText',
+  isPrimary: 'isPrimary',
+  sortOrder: 'sortOrder',
+  cloudinaryPublicId: 'cloudinaryPublicId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
+
+
+export const InternalNotificationScalarFieldEnum = {
+  id: 'id',
+  notificationId: 'notificationId',
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  metadata: 'metadata',
+  isRead: 'isRead',
+  idempotencyKey: 'idempotencyKey',
+  createdAt: 'createdAt'
+} as const
+
+export type InternalNotificationScalarFieldEnum = (typeof InternalNotificationScalarFieldEnum)[keyof typeof InternalNotificationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2654,20 +3028,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
- * Reference to a field of type 'ApplicationStatus'
- */
-export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus'>
-    
-
-
-/**
- * Reference to a field of type 'ApplicationStatus[]'
- */
-export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
     
 
 
@@ -2942,7 +3302,9 @@ export type GlobalOmitConfig = {
   category?: Prisma.CategoryOmit
   product?: Prisma.ProductOmit
   productVariant?: Prisma.ProductVariantOmit
-  application?: Prisma.ApplicationOmit
+  kycApplication?: Prisma.KycApplicationOmit
+  kycDocumentAsset?: Prisma.KycDocumentAssetOmit
+  kycAuditTrail?: Prisma.KycAuditTrailOmit
   installment?: Prisma.InstallmentOmit
   payment?: Prisma.PaymentOmit
   commission?: Prisma.CommissionOmit
@@ -2957,6 +3319,8 @@ export type GlobalOmitConfig = {
   onboardingIntent?: Prisma.OnboardingIntentOmit
   approvalRequest?: Prisma.ApprovalRequestOmit
   productInstallmentPlan?: Prisma.ProductInstallmentPlanOmit
+  productImage?: Prisma.ProductImageOmit
+  internalNotification?: Prisma.InternalNotificationOmit
 }
 
 /* Types for Logging */

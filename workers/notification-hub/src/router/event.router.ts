@@ -3,7 +3,7 @@ import { NotificationChannel } from '../../../shared/types';
 
 export interface RoutedNotification {
 	channels: NotificationChannel[];
-	template: string;
+	template: string | ((p: any) => string);
 	subject: string | ((p: any) => string);
 	context: ((p: any) => Record<string, any>) | Record<string, any>;
 	/** For SMS: resolve the phone number from the payload */
@@ -21,11 +21,23 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 	[DomainEvent.USER_REGISTERED]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			template: 'welcome-customer',
-			subject: 'Welcome to Instalflow 🎉',
+			template: (p) => {
+				const isCustomer = p.role === "CUSTOMER" || !!p.applicationUnderReview || !!p.rejectionReason;
+				return isCustomer ? "welcome-customer" : "welcome";
+			},
+			subject: (p) => {
+				const isCustomer = p.role === "CUSTOMER" || !!p.applicationUnderReview || !!p.rejectionReason;
+				if (!isCustomer) return "Welcome to Instalflow 🎉";
+				if (p.rejectionReason) return "Your Installment Application was Declined ❌";
+				return p.applicationUnderReview
+					? "Your Installment Application is Under Review 📝"
+					: "Welcome to Instalflow 🎉";
+			},
 			context: (p) => ({
 				name: p.name,
 				dashboard_url: p.dashboard_url,
+				applicationUnderReview: p.applicationUnderReview || false,
+				rejectionReason: p.rejectionReason,
 			}),
 		},
 		// Uncomment when SMS is live:
@@ -156,6 +168,34 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		//   phone: (p) => p.phone,
 		//   context: (p) => ({
 		//     message: `Order #${p.orderId} is now: ${p.newStatus}`,
+		//   }),
+		// },
+	],
+
+	// ─── Installments ────────────────────────────────────────────────────────────
+
+	[DomainEvent.INSTALLMENT_PAID]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			template: 'installment-paid',
+			subject: (p) => `Installment Paid Successfully! 🎉`,
+			context: (p) => ({
+				customerName: p.customerName,
+				productName: p.productName,
+				amountPaid: p.amountPaid,
+				dueDate: p.dueDate,
+				percentagePaid: p.percentagePaid,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+		// Uncomment when SMS is live:
+		// {
+		//   channels: [NotificationChannel.SMS],
+		//   template: 'installment-paid-sms',
+		//   subject: '',
+		//   phone: (p) => p.phone,
+		//   context: (p) => ({
+		//     message: `Hi ${p.customerName}, your installment for ${p.productName} has been cleared. Progress: ${p.percentagePaid}%`,
 		//   }),
 		// },
 	],
