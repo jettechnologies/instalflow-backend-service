@@ -38,9 +38,11 @@ export type InternalNotificationMinAggregateOutputType = {
   id: bigint | null
   notificationId: string | null
   userId: string | null
+  type: $Enums.InternalNotificationType | null
   title: string | null
   message: string | null
-  isRead: boolean | null
+  status: $Enums.InternalNotificationStatus | null
+  readAt: Date | null
   idempotencyKey: string | null
   createdAt: Date | null
 }
@@ -49,9 +51,11 @@ export type InternalNotificationMaxAggregateOutputType = {
   id: bigint | null
   notificationId: string | null
   userId: string | null
+  type: $Enums.InternalNotificationType | null
   title: string | null
   message: string | null
-  isRead: boolean | null
+  status: $Enums.InternalNotificationStatus | null
+  readAt: Date | null
   idempotencyKey: string | null
   createdAt: Date | null
 }
@@ -60,10 +64,12 @@ export type InternalNotificationCountAggregateOutputType = {
   id: number
   notificationId: number
   userId: number
+  type: number
   title: number
   message: number
   metadata: number
-  isRead: number
+  status: number
+  readAt: number
   idempotencyKey: number
   createdAt: number
   _all: number
@@ -82,9 +88,11 @@ export type InternalNotificationMinAggregateInputType = {
   id?: true
   notificationId?: true
   userId?: true
+  type?: true
   title?: true
   message?: true
-  isRead?: true
+  status?: true
+  readAt?: true
   idempotencyKey?: true
   createdAt?: true
 }
@@ -93,9 +101,11 @@ export type InternalNotificationMaxAggregateInputType = {
   id?: true
   notificationId?: true
   userId?: true
+  type?: true
   title?: true
   message?: true
-  isRead?: true
+  status?: true
+  readAt?: true
   idempotencyKey?: true
   createdAt?: true
 }
@@ -104,10 +114,12 @@ export type InternalNotificationCountAggregateInputType = {
   id?: true
   notificationId?: true
   userId?: true
+  type?: true
   title?: true
   message?: true
   metadata?: true
-  isRead?: true
+  status?: true
+  readAt?: true
   idempotencyKey?: true
   createdAt?: true
   _all?: true
@@ -203,10 +215,12 @@ export type InternalNotificationGroupByOutputType = {
   id: bigint
   notificationId: string
   userId: string
+  type: $Enums.InternalNotificationType
   title: string
   message: string
   metadata: runtime.JsonValue | null
-  isRead: boolean
+  status: $Enums.InternalNotificationStatus
+  readAt: Date | null
   idempotencyKey: string | null
   createdAt: Date
   _count: InternalNotificationCountAggregateOutputType | null
@@ -238,10 +252,12 @@ export type InternalNotificationWhereInput = {
   id?: Prisma.BigIntFilter<"InternalNotification"> | bigint | number
   notificationId?: Prisma.StringFilter<"InternalNotification"> | string
   userId?: Prisma.StringFilter<"InternalNotification"> | string
+  type?: Prisma.EnumInternalNotificationTypeFilter<"InternalNotification"> | $Enums.InternalNotificationType
   title?: Prisma.StringFilter<"InternalNotification"> | string
   message?: Prisma.StringFilter<"InternalNotification"> | string
   metadata?: Prisma.JsonNullableFilter<"InternalNotification">
-  isRead?: Prisma.BoolFilter<"InternalNotification"> | boolean
+  status?: Prisma.EnumInternalNotificationStatusFilter<"InternalNotification"> | $Enums.InternalNotificationStatus
+  readAt?: Prisma.DateTimeNullableFilter<"InternalNotification"> | Date | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"InternalNotification"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InternalNotification"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -251,10 +267,12 @@ export type InternalNotificationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   notificationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  isRead?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  readAt?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -268,10 +286,12 @@ export type InternalNotificationWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.InternalNotificationWhereInput[]
   NOT?: Prisma.InternalNotificationWhereInput | Prisma.InternalNotificationWhereInput[]
   userId?: Prisma.StringFilter<"InternalNotification"> | string
+  type?: Prisma.EnumInternalNotificationTypeFilter<"InternalNotification"> | $Enums.InternalNotificationType
   title?: Prisma.StringFilter<"InternalNotification"> | string
   message?: Prisma.StringFilter<"InternalNotification"> | string
   metadata?: Prisma.JsonNullableFilter<"InternalNotification">
-  isRead?: Prisma.BoolFilter<"InternalNotification"> | boolean
+  status?: Prisma.EnumInternalNotificationStatusFilter<"InternalNotification"> | $Enums.InternalNotificationStatus
+  readAt?: Prisma.DateTimeNullableFilter<"InternalNotification"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"InternalNotification"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "notificationId" | "idempotencyKey">
@@ -280,10 +300,12 @@ export type InternalNotificationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   notificationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  isRead?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  readAt?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.InternalNotificationCountOrderByAggregateInput
@@ -300,10 +322,12 @@ export type InternalNotificationScalarWhereWithAggregatesInput = {
   id?: Prisma.BigIntWithAggregatesFilter<"InternalNotification"> | bigint | number
   notificationId?: Prisma.StringWithAggregatesFilter<"InternalNotification"> | string
   userId?: Prisma.StringWithAggregatesFilter<"InternalNotification"> | string
+  type?: Prisma.EnumInternalNotificationTypeWithAggregatesFilter<"InternalNotification"> | $Enums.InternalNotificationType
   title?: Prisma.StringWithAggregatesFilter<"InternalNotification"> | string
   message?: Prisma.StringWithAggregatesFilter<"InternalNotification"> | string
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"InternalNotification">
-  isRead?: Prisma.BoolWithAggregatesFilter<"InternalNotification"> | boolean
+  status?: Prisma.EnumInternalNotificationStatusWithAggregatesFilter<"InternalNotification"> | $Enums.InternalNotificationStatus
+  readAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InternalNotification"> | Date | string | null
   idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"InternalNotification"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"InternalNotification"> | Date | string
 }
@@ -311,10 +335,12 @@ export type InternalNotificationScalarWhereWithAggregatesInput = {
 export type InternalNotificationCreateInput = {
   id?: bigint | number
   notificationId?: string
+  type: $Enums.InternalNotificationType
   title: string
   message: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: boolean
+  status?: $Enums.InternalNotificationStatus
+  readAt?: Date | string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutInternalNotificationsInput
@@ -324,10 +350,12 @@ export type InternalNotificationUncheckedCreateInput = {
   id?: bigint | number
   notificationId?: string
   userId: string
+  type: $Enums.InternalNotificationType
   title: string
   message: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: boolean
+  status?: $Enums.InternalNotificationStatus
+  readAt?: Date | string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
 }
@@ -335,10 +363,12 @@ export type InternalNotificationUncheckedCreateInput = {
 export type InternalNotificationUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   notificationId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInternalNotificationTypeFieldUpdateOperationsInput | $Enums.InternalNotificationType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumInternalNotificationStatusFieldUpdateOperationsInput | $Enums.InternalNotificationStatus
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutInternalNotificationsNestedInput
@@ -348,10 +378,12 @@ export type InternalNotificationUncheckedUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   notificationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInternalNotificationTypeFieldUpdateOperationsInput | $Enums.InternalNotificationType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumInternalNotificationStatusFieldUpdateOperationsInput | $Enums.InternalNotificationStatus
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,10 +392,12 @@ export type InternalNotificationCreateManyInput = {
   id?: bigint | number
   notificationId?: string
   userId: string
+  type: $Enums.InternalNotificationType
   title: string
   message: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: boolean
+  status?: $Enums.InternalNotificationStatus
+  readAt?: Date | string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
 }
@@ -371,10 +405,12 @@ export type InternalNotificationCreateManyInput = {
 export type InternalNotificationUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   notificationId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInternalNotificationTypeFieldUpdateOperationsInput | $Enums.InternalNotificationType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumInternalNotificationStatusFieldUpdateOperationsInput | $Enums.InternalNotificationStatus
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -383,10 +419,12 @@ export type InternalNotificationUncheckedUpdateManyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   notificationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInternalNotificationTypeFieldUpdateOperationsInput | $Enums.InternalNotificationType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumInternalNotificationStatusFieldUpdateOperationsInput | $Enums.InternalNotificationStatus
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -405,10 +443,12 @@ export type InternalNotificationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   notificationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
-  isRead?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  readAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -421,9 +461,11 @@ export type InternalNotificationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   notificationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isRead?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  readAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -432,9 +474,11 @@ export type InternalNotificationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   notificationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isRead?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  readAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -485,13 +529,23 @@ export type InternalNotificationUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.InternalNotificationScalarWhereInput | Prisma.InternalNotificationScalarWhereInput[]
 }
 
+export type EnumInternalNotificationTypeFieldUpdateOperationsInput = {
+  set?: $Enums.InternalNotificationType
+}
+
+export type EnumInternalNotificationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InternalNotificationStatus
+}
+
 export type InternalNotificationCreateWithoutUserInput = {
   id?: bigint | number
   notificationId?: string
+  type: $Enums.InternalNotificationType
   title: string
   message: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: boolean
+  status?: $Enums.InternalNotificationStatus
+  readAt?: Date | string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
 }
@@ -499,10 +553,12 @@ export type InternalNotificationCreateWithoutUserInput = {
 export type InternalNotificationUncheckedCreateWithoutUserInput = {
   id?: bigint | number
   notificationId?: string
+  type: $Enums.InternalNotificationType
   title: string
   message: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: boolean
+  status?: $Enums.InternalNotificationStatus
+  readAt?: Date | string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
 }
@@ -540,10 +596,12 @@ export type InternalNotificationScalarWhereInput = {
   id?: Prisma.BigIntFilter<"InternalNotification"> | bigint | number
   notificationId?: Prisma.StringFilter<"InternalNotification"> | string
   userId?: Prisma.StringFilter<"InternalNotification"> | string
+  type?: Prisma.EnumInternalNotificationTypeFilter<"InternalNotification"> | $Enums.InternalNotificationType
   title?: Prisma.StringFilter<"InternalNotification"> | string
   message?: Prisma.StringFilter<"InternalNotification"> | string
   metadata?: Prisma.JsonNullableFilter<"InternalNotification">
-  isRead?: Prisma.BoolFilter<"InternalNotification"> | boolean
+  status?: Prisma.EnumInternalNotificationStatusFilter<"InternalNotification"> | $Enums.InternalNotificationStatus
+  readAt?: Prisma.DateTimeNullableFilter<"InternalNotification"> | Date | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"InternalNotification"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InternalNotification"> | Date | string
 }
@@ -551,10 +609,12 @@ export type InternalNotificationScalarWhereInput = {
 export type InternalNotificationCreateManyUserInput = {
   id?: bigint | number
   notificationId?: string
+  type: $Enums.InternalNotificationType
   title: string
   message: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: boolean
+  status?: $Enums.InternalNotificationStatus
+  readAt?: Date | string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
 }
@@ -562,10 +622,12 @@ export type InternalNotificationCreateManyUserInput = {
 export type InternalNotificationUpdateWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   notificationId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInternalNotificationTypeFieldUpdateOperationsInput | $Enums.InternalNotificationType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumInternalNotificationStatusFieldUpdateOperationsInput | $Enums.InternalNotificationStatus
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -573,10 +635,12 @@ export type InternalNotificationUpdateWithoutUserInput = {
 export type InternalNotificationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   notificationId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInternalNotificationTypeFieldUpdateOperationsInput | $Enums.InternalNotificationType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumInternalNotificationStatusFieldUpdateOperationsInput | $Enums.InternalNotificationStatus
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -584,10 +648,12 @@ export type InternalNotificationUncheckedUpdateWithoutUserInput = {
 export type InternalNotificationUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   notificationId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInternalNotificationTypeFieldUpdateOperationsInput | $Enums.InternalNotificationType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumInternalNotificationStatusFieldUpdateOperationsInput | $Enums.InternalNotificationStatus
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -598,10 +664,12 @@ export type InternalNotificationSelect<ExtArgs extends runtime.Types.Extensions.
   id?: boolean
   notificationId?: boolean
   userId?: boolean
+  type?: boolean
   title?: boolean
   message?: boolean
   metadata?: boolean
-  isRead?: boolean
+  status?: boolean
+  readAt?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -611,10 +679,12 @@ export type InternalNotificationSelectCreateManyAndReturn<ExtArgs extends runtim
   id?: boolean
   notificationId?: boolean
   userId?: boolean
+  type?: boolean
   title?: boolean
   message?: boolean
   metadata?: boolean
-  isRead?: boolean
+  status?: boolean
+  readAt?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -624,10 +694,12 @@ export type InternalNotificationSelectUpdateManyAndReturn<ExtArgs extends runtim
   id?: boolean
   notificationId?: boolean
   userId?: boolean
+  type?: boolean
   title?: boolean
   message?: boolean
   metadata?: boolean
-  isRead?: boolean
+  status?: boolean
+  readAt?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -637,15 +709,17 @@ export type InternalNotificationSelectScalar = {
   id?: boolean
   notificationId?: boolean
   userId?: boolean
+  type?: boolean
   title?: boolean
   message?: boolean
   metadata?: boolean
-  isRead?: boolean
+  status?: boolean
+  readAt?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
 }
 
-export type InternalNotificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "notificationId" | "userId" | "title" | "message" | "metadata" | "isRead" | "idempotencyKey" | "createdAt", ExtArgs["result"]["internalNotification"]>
+export type InternalNotificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "notificationId" | "userId" | "type" | "title" | "message" | "metadata" | "status" | "readAt" | "idempotencyKey" | "createdAt", ExtArgs["result"]["internalNotification"]>
 export type InternalNotificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -665,10 +739,12 @@ export type $InternalNotificationPayload<ExtArgs extends runtime.Types.Extension
     id: bigint
     notificationId: string
     userId: string
+    type: $Enums.InternalNotificationType
     title: string
     message: string
     metadata: runtime.JsonValue | null
-    isRead: boolean
+    status: $Enums.InternalNotificationStatus
+    readAt: Date | null
     idempotencyKey: string | null
     createdAt: Date
   }, ExtArgs["result"]["internalNotification"]>
@@ -1098,10 +1174,12 @@ export interface InternalNotificationFieldRefs {
   readonly id: Prisma.FieldRef<"InternalNotification", 'BigInt'>
   readonly notificationId: Prisma.FieldRef<"InternalNotification", 'String'>
   readonly userId: Prisma.FieldRef<"InternalNotification", 'String'>
+  readonly type: Prisma.FieldRef<"InternalNotification", 'InternalNotificationType'>
   readonly title: Prisma.FieldRef<"InternalNotification", 'String'>
   readonly message: Prisma.FieldRef<"InternalNotification", 'String'>
   readonly metadata: Prisma.FieldRef<"InternalNotification", 'Json'>
-  readonly isRead: Prisma.FieldRef<"InternalNotification", 'Boolean'>
+  readonly status: Prisma.FieldRef<"InternalNotification", 'InternalNotificationStatus'>
+  readonly readAt: Prisma.FieldRef<"InternalNotification", 'DateTime'>
   readonly idempotencyKey: Prisma.FieldRef<"InternalNotification", 'String'>
   readonly createdAt: Prisma.FieldRef<"InternalNotification", 'DateTime'>
 }

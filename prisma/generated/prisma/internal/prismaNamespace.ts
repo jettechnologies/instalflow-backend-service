@@ -2861,10 +2861,12 @@ export const InternalNotificationScalarFieldEnum = {
   id: 'id',
   notificationId: 'notificationId',
   userId: 'userId',
+  type: 'type',
   title: 'title',
   message: 'message',
   metadata: 'metadata',
-  isRead: 'isRead',
+  status: 'status',
+  readAt: 'readAt',
   idempotencyKey: 'idempotencyKey',
   createdAt: 'createdAt'
 } as const
@@ -3168,6 +3170,34 @@ export type EnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'ApprovalStatus[]'
  */
 export type ListEnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InternalNotificationType'
+ */
+export type EnumInternalNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InternalNotificationType'>
+    
+
+
+/**
+ * Reference to a field of type 'InternalNotificationType[]'
+ */
+export type ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InternalNotificationType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InternalNotificationStatus'
+ */
+export type EnumInternalNotificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InternalNotificationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InternalNotificationStatus[]'
+ */
+export type ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InternalNotificationStatus[]'>
     
 
 

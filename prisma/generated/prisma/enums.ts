@@ -114,6 +114,26 @@ export const ApprovalStatus = {
 export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
 
 
+export const InternalNotificationType = {
+  KYC_APPLICATION_SUBMITTED: 'KYC_APPLICATION_SUBMITTED',
+  INSTALLMENT_OVERDUE: 'INSTALLMENT_OVERDUE',
+  PAYMENT_CONFIRMED: 'PAYMENT_CONFIRMED',
+  COMMISSION_ACCRUED: 'COMMISSION_ACCRUED',
+  COMMISSION_TRANSFER_REQUEST: 'COMMISSION_TRANSFER_REQUEST'
+} as const
+
+export type InternalNotificationType = (typeof InternalNotificationType)[keyof typeof InternalNotificationType]
+
+
+export const InternalNotificationStatus = {
+  UNREAD: 'UNREAD',
+  READ: 'READ',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type InternalNotificationStatus = (typeof InternalNotificationStatus)[keyof typeof InternalNotificationStatus]
+
+
 export const OnboardingStatus = {
   PENDING: 'PENDING',
   PAYMENT_INITIALIZED: 'PAYMENT_INITIALIZED',

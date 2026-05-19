@@ -79,6 +79,20 @@ enum ApprovalStatus {
   REJECTED
 }
 
+enum InternalNotificationType {
+  KYC_APPLICATION_SUBMITTED
+  INSTALLMENT_OVERDUE
+  PAYMENT_CONFIRMED
+  COMMISSION_ACCRUED
+  COMMISSION_TRANSFER_REQUEST
+}
+
+enum InternalNotificationStatus {
+  UNREAD
+  READ
+  ARCHIVED
+}
+
 model Company {
   id        BigInt   @id @default(autoincrement())
   companyId String   @unique @default(uuid())
@@ -88,10 +102,10 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users          User[]
-  products       Product[]
-  subscriptions  CompanySubscription[]
-  ledgerAccounts LedgerAccount[]
+  users            User[]
+  products         Product[]
+  subscriptions    CompanySubscription[]
+  ledgerAccounts   LedgerAccount[]
   approvalRequests ApprovalRequest[]
 }
 
@@ -111,10 +125,10 @@ model User {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
-  sessions     UserSession[]
-  kycApplications KycApplication[] @relation("UserKyc")
-  kycAuditTrails  KycAuditTrail[]
-  installments Installment[]
+  sessions              UserSession[]
+  kycApplications       KycApplication[]       @relation("UserKyc")
+  kycAuditTrails        KycAuditTrail[]
+  installments          Installment[]
   internalNotifications InternalNotification[]
 
   referralCode   String?             @unique
@@ -123,14 +137,14 @@ model User {
   transactions   LedgerTransaction[]
   passwordResets PasswordReset[]
 
-  active               Boolean  @default(true)
-  deletedAt            DateTime?
-  createdById          String?
-  creator              User?    @relation("UserCreator", fields: [createdById], references: [userId])
-  createdUsers         User[]   @relation("UserCreator")
-  
-  requestedApprovals   ApprovalRequest[] @relation("RequestedApprovals")
-  targetedApprovals    ApprovalRequest[] @relation("TargetedApprovals")
+  active       Boolean   @default(true)
+  deletedAt    DateTime?
+  createdById  String?
+  creator      User?     @relation("UserCreator", fields: [createdById], references: [userId])
+  createdUsers User[]    @relation("UserCreator")
+
+  requestedApprovals ApprovalRequest[] @relation("RequestedApprovals")
+  targetedApprovals  ApprovalRequest[] @relation("TargetedApprovals")
 }
 
 model UserSession {
@@ -173,22 +187,22 @@ model Category {
 }
 
 model Product {
-  id             BigInt   @id @default(autoincrement())
-  productId      String   @unique @default(uuid())
+  id             BigInt                   @id @default(autoincrement())
+  productId      String                   @unique @default(uuid())
   companyId      String?
-  company        Company? @relation(fields: [companyId], references: [companyId])
+  company        Company?                 @relation(fields: [companyId], references: [companyId])
   name           String
-  slug           String   @unique
+  slug           String                   @unique
   description    String?
-  minPrice       Decimal? @map("min_price")
-  maxPrice       Decimal? @map("max_price")
-  stockQuantity  Int      @default(0)
-  price          Decimal  @default(0)
-  commissionRate Decimal  @default(0)
-  isActive       Boolean  @default(true) @map("is_active")
+  minPrice       Decimal?                 @map("min_price")
+  maxPrice       Decimal?                 @map("max_price")
+  stockQuantity  Int                      @default(0)
+  price          Decimal                  @default(0)
+  commissionRate Decimal                  @default(0)
+  isActive       Boolean                  @default(true) @map("is_active")
   searchVector   Unsupported("tsvector")? @map("search_vector")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [categoryId])
@@ -216,59 +230,59 @@ model ProductVariant {
 }
 
 model KycApplication {
-  id                  BigInt             @id @default(autoincrement())
-  kycApplicationId    String             @unique @default(uuid()) @map("kyc_application_id")
-  userId              String             @map("user_id")
-  user                User               @relation("UserKyc", fields: [userId], references: [userId])
-  productId           String             @map("product_id")
-  variantId           String             @map("variant_id")
-  installmentPlanId   String             @map("installment_plan_id")
-  idType              String             @map("id_type")
-  idNumber            String             @map("id_number")
-  status              String             @default("PENDING") // PENDING, APPROVED, REJECTED
-  marketerApproved    Boolean            @default(false) @map("marketer_approved")
-  marketerApprovedAt  DateTime?          @map("marketer_approved_at")
-  adminApproved       Boolean            @default(false) @map("admin_approved")
-  adminApprovedAt     DateTime?          @map("admin_approved_at")
-  rejectionReason     String?            @map("rejection_reason")
-  legalHold           Boolean            @default(false) @map("legal_hold")
-  isUnderFraudReview  Boolean            @default(false) @map("is_under_fraud_review")
-  createdAt           DateTime           @default(now()) @map("created_at")
-  updatedAt           DateTime           @updatedAt @map("updated_at")
+  id                 BigInt    @id @default(autoincrement())
+  kycApplicationId   String    @unique @default(uuid()) @map("kyc_application_id")
+  userId             String    @map("user_id")
+  user               User      @relation("UserKyc", fields: [userId], references: [userId])
+  productId          String    @map("product_id")
+  variantId          String    @map("variant_id")
+  installmentPlanId  String    @map("installment_plan_id")
+  idType             String    @map("id_type")
+  idNumber           String    @map("id_number")
+  status             String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  marketerApproved   Boolean   @default(false) @map("marketer_approved")
+  marketerApprovedAt DateTime? @map("marketer_approved_at")
+  adminApproved      Boolean   @default(false) @map("admin_approved")
+  adminApprovedAt    DateTime? @map("admin_approved_at")
+  rejectionReason    String?   @map("rejection_reason")
+  legalHold          Boolean   @default(false) @map("legal_hold")
+  isUnderFraudReview Boolean   @default(false) @map("is_under_fraud_review")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
 
-  kycDocumentAssets   KycDocumentAsset[]
-  kycAuditTrails      KycAuditTrail[]
+  kycDocumentAssets KycDocumentAsset[]
+  kycAuditTrails    KycAuditTrail[]
 }
 
 model KycDocumentAsset {
-  id                  BigInt             @id @default(autoincrement())
-  assetId             String             @unique @default(uuid()) @map("asset_id")
-  kycApplicationId    String             @map("kyc_application_id")
-  kycApplication      KycApplication     @relation(fields: [kycApplicationId], references: [kycApplicationId], onDelete: Cascade)
-  cloudinaryPublicId  String             @map("cloudinary_public_id")
-  secureUrl           String             @map("secure_url")
-  fileSize            Int                @map("file_size")
-  mimeType            String             @map("mime_type")
-  fileHash            String             @map("file_hash")
-  isDeleted           Boolean            @default(false) @map("is_deleted")
-  scheduledDeletionAt DateTime           @map("scheduled_deletion_at")
-  deletedAt           DateTime?          @map("deleted_at")
-  createdAt           DateTime           @default(now()) @map("created_at")
+  id                  BigInt         @id @default(autoincrement())
+  assetId             String         @unique @default(uuid()) @map("asset_id")
+  kycApplicationId    String         @map("kyc_application_id")
+  kycApplication      KycApplication @relation(fields: [kycApplicationId], references: [kycApplicationId], onDelete: Cascade)
+  cloudinaryPublicId  String         @map("cloudinary_public_id")
+  secureUrl           String         @map("secure_url")
+  fileSize            Int            @map("file_size")
+  mimeType            String         @map("mime_type")
+  fileHash            String         @map("file_hash")
+  isDeleted           Boolean        @default(false) @map("is_deleted")
+  scheduledDeletionAt DateTime       @map("scheduled_deletion_at")
+  deletedAt           DateTime?      @map("deleted_at")
+  createdAt           DateTime       @default(now()) @map("created_at")
 }
 
 model KycAuditTrail {
-  id                  BigInt             @id @default(autoincrement())
-  auditId             String             @unique @default(uuid()) @map("audit_id")
-  kycApplicationId    String             @map("kyc_application_id")
-  kycApplication      KycApplication     @relation(fields: [kycApplicationId], references: [kycApplicationId], onDelete: Cascade)
-  action              String
-  documentType        String             @map("document_type")
-  fileHash            String             @map("file_hash")
-  performedById       String?            @map("performed_by_id")
-  performedBy         User?              @relation(fields: [performedById], references: [userId])
-  outcome             String
-  details             String?
-  createdAt           DateTime           @default(now()) @map("created_at")
+  id               BigInt         @id @default(autoincrement())
+  auditId          String         @unique @default(uuid()) @map("audit_id")
+  kycApplicationId String         @map("kyc_application_id")
+  kycApplication   KycApplication @relation(fields: [kycApplicationId], references: [kycApplicationId], onDelete: Cascade)
+  action           String
+  documentType     String         @map("document_type")
+  fileHash         String         @map("file_hash")
+  performedById    String?        @map("performed_by_id")
+  performedBy      User?          @relation(fields: [performedById], references: [userId])
+  outcome          String
+  details          String?
+  createdAt        DateTime       @default(now()) @map("created_at")
 }
 
 model Installment {
@@ -446,18 +460,18 @@ enum OnboardingStatus {
 }
 
 model ApprovalRequest {
-  id             BigInt         @id @default(autoincrement())
-  requestId      String         @unique @default(uuid())
-  companyId      String
-  company        Company        @relation(fields: [companyId], references: [companyId])
-  requestedById  String
-  requestedBy    User           @relation("RequestedApprovals", fields: [requestedById], references: [userId])
-  targetUserId   String
-  targetUser     User           @relation("TargetedApprovals", fields: [targetUserId], references: [userId])
-  action         ApprovalAction
-  status         ApprovalStatus @default(PENDING)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  id            BigInt         @id @default(autoincrement())
+  requestId     String         @unique @default(uuid())
+  companyId     String
+  company       Company        @relation(fields: [companyId], references: [companyId])
+  requestedById String
+  requestedBy   User           @relation("RequestedApprovals", fields: [requestedById], references: [userId])
+  targetUserId  String
+  targetUser    User           @relation("TargetedApprovals", fields: [targetUserId], references: [userId])
+  action        ApprovalAction
+  status        ApprovalStatus @default(PENDING)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model ProductInstallmentPlan {
@@ -484,16 +498,43 @@ model ProductImage {
   createdAt          DateTime @default(now()) @map("created_at")
 }
 
-model InternalNotification {
-  id             BigInt   @id @default(autoincrement())
-  notificationId String   @unique @default(uuid()) @map("notification_id")
-  userId         String   @map("user_id")
-  user           User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  title          String
-  message        String
-  metadata       Json?
-  isRead         Boolean  @default(false) @map("is_read")
-  idempotencyKey String?  @unique @map("idempotency_key")
-  createdAt      DateTime @default(now()) @map("created_at")
-}
+// model InternalNotification {
+//   id             BigInt   @id @default(autoincrement())
+//   notificationId String   @unique @default(uuid()) @map("notification_id")
+//   userId         String   @map("user_id")
+//   user           User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+//   title          String
+//   message        String
+//   metadata       Json?
+//   isRead         Boolean  @default(false) @map("is_read")
+//   idempotencyKey String?  @unique @map("idempotency_key")
+//   createdAt      DateTime @default(now()) @map("created_at")
+// }
 
+model InternalNotification {
+  id BigInt @id @default(autoincrement())
+
+  notificationId String @unique @default(uuid()) @map("notification_id")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  type InternalNotificationType
+
+  title   String
+  message String
+
+  metadata Json?
+
+  status InternalNotificationStatus @default(UNREAD)
+
+  readAt DateTime? @map("read_at")
+
+  idempotencyKey String? @unique @map("idempotency_key")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, status])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([type])
+}

@@ -545,6 +545,40 @@ export type EnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumApprovalStatusFilter<$PrismaModel>
 }
 
+export type EnumInternalNotificationTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationType | Prisma.EnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationTypeFilter<$PrismaModel> | $Enums.InternalNotificationType
+}
+
+export type EnumInternalNotificationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationStatus | Prisma.EnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationStatusFilter<$PrismaModel> | $Enums.InternalNotificationStatus
+}
+
+export type EnumInternalNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationType | Prisma.EnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.InternalNotificationType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInternalNotificationTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInternalNotificationTypeFilter<$PrismaModel>
+}
+
+export type EnumInternalNotificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationStatus | Prisma.EnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.InternalNotificationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInternalNotificationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInternalNotificationStatusFilter<$PrismaModel>
+}
+
 export type NestedBigIntFilter<$PrismaModel = never> = {
   equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
   in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
@@ -1033,6 +1067,40 @@ export type NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumApprovalStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumApprovalStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumInternalNotificationTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationType | Prisma.EnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationTypeFilter<$PrismaModel> | $Enums.InternalNotificationType
+}
+
+export type NestedEnumInternalNotificationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationStatus | Prisma.EnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationStatusFilter<$PrismaModel> | $Enums.InternalNotificationStatus
+}
+
+export type NestedEnumInternalNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationType | Prisma.EnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationType[] | Prisma.ListEnumInternalNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.InternalNotificationType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInternalNotificationTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInternalNotificationTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumInternalNotificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InternalNotificationStatus | Prisma.EnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InternalNotificationStatus[] | Prisma.ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInternalNotificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.InternalNotificationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInternalNotificationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInternalNotificationStatusFilter<$PrismaModel>
 }
 
 

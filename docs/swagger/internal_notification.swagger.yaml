@@ -1,0 +1,119 @@
+tags:
+  - name: Internal Notification Management
+    description: >
+      Operations for retrieving, synchronizing, and managing
+      in-application internal notifications across the Instalflow platform.
+
+paths:
+  /notifications:
+    get:
+      summary: Retrieve paginated notification feed
+      description: >
+        Returns a paginated chronological feed of internal in-application notifications
+        for the authenticated user.
+
+      tags: [Internal Notification Management]
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Pagination page number
+
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: Maximum number of notifications returned
+
+      responses:
+        "200":
+          description: Notification feed retrieved successfully.
+
+  /notifications/unread-count:
+    get:
+      summary: Retrieve unread notification count
+      description: >
+        Returns the total unread notification count for the authenticated user.
+
+      tags: [Internal Notification Management]
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Unread notification count retrieved successfully.
+
+  /notifications/{notificationId}/read:
+    patch:
+      summary: Mark single notification as read
+      description: >
+        Marks an individual notification as READ for the authenticated user.
+
+      tags: [Internal Notification Management]
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: Public UUID notification identifier
+
+      responses:
+        "200":
+          description: Notification marked as read successfully.
+
+  /notifications/read-selected:
+    patch:
+      summary: Mark selected notifications as read
+      description: >
+        Marks a provided array of notification IDs as READ.
+
+      tags: [Internal Notification Management]
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - notificationIds
+              properties:
+                notificationIds:
+                  type: array
+                  items:
+                    type: string
+
+      responses:
+        "200":
+          description: Selected notifications marked as read successfully.
+
+  /notifications/read-all:
+    patch:
+      summary: Mark all notifications as read
+      description: >
+        Marks all unread notifications belonging to the authenticated user as READ.
+
+      tags: [Internal Notification Management]
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: All notifications marked as read successfully.

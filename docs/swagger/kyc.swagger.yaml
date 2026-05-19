@@ -34,7 +34,7 @@ paths:
                   type: string
                   example: IFL-REF-JOHNMARKETER-A8786D
       responses:
-        '201':
+        "201":
           description: Customer registered successfully via referral.
           content:
             application/json:
@@ -51,9 +51,9 @@ paths:
                     type: string
                     format: uuid
                     example: f35d5f46-8589-454b-8e32-edc7d45cf312
-        '400':
+        "400":
           description: Invalid inputs or invalid referral code.
-        '409':
+        "409":
           description: Email is already in use.
 
   /kyc/referral-link:
@@ -83,7 +83,7 @@ paths:
                   format: uuid
                   example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
       responses:
-        '200':
+        "200":
           description: Link generated successfully.
           content:
             application/json:
@@ -96,7 +96,7 @@ paths:
                   referralLink:
                     type: string
                     example: http://localhost:5173/invite?ref=IFL-REF-JOHNMARKETER-A8786D&product=amazing-flagship-phone-6019&variant=8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
-        '401':
+        "401":
           description: Unauthorized session or invalid role.
 
   /kyc/submit:
@@ -148,7 +148,7 @@ paths:
                   format: binary
                   description: Bank statement PDF document (<= 10MB)
       responses:
-        '201':
+        "201":
           description: Application submitted successfully and is now under review.
           content:
             application/json:
@@ -168,9 +168,9 @@ paths:
                   status:
                     type: string
                     example: PENDING
-        '400':
+        "400":
           description: PDF upload fails size limit or type constraint.
-        '401':
+        "401":
           description: Unauthorized session.
 
   /kyc/applications/{id}/approve:
@@ -193,7 +193,7 @@ paths:
             format: uuid
             example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
       responses:
-        '200':
+        "200":
           description: Approval signature recorded successfully.
           content:
             application/json:
@@ -209,11 +209,11 @@ paths:
                   status:
                     type: string
                     example: APPROVED
-        '400':
+        "400":
           description: Application already processed.
-        '401':
+        "401":
           description: Unauthorized session or invalid checker relationship.
-        '404':
+        "404":
           description: KYC Application not found.
 
   /kyc/applications/{id}/reject:
@@ -248,7 +248,7 @@ paths:
                   type: string
                   example: Bank statement name does not match user account profile.
       responses:
-        '200':
+        "200":
           description: Application rejected successfully.
           content:
             application/json:
@@ -264,9 +264,9 @@ paths:
                   status:
                     type: string
                     example: REJECTED
-        '401':
+        "401":
           description: Unauthorized or not the associated Admin.
-        '404':
+        "404":
           description: KYC Application not found.
 
   /kyc/applications/{id}/document:
@@ -289,7 +289,7 @@ paths:
             format: uuid
             example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
       responses:
-        '200':
+        "200":
           description: Signed URL generated successfully.
           content:
             application/json:
@@ -302,92 +302,7 @@ paths:
                   expiresIn:
                     type: string
                     example: 15 minutes
-        '401':
+        "401":
           description: Unauthorized session.
-        '404':
+        "404":
           description: Document has been purged or application not found.
-
-  /kyc/notifications:
-    get:
-      tags:
-        - KYC & Onboarding
-      summary: Retrieve Internal Notification Alerts
-      description: |
-        Retrieves internal system notification feeds.
-        **Authorization:** Restricted to logged-in Marketers or Admins.
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Notification logs loaded successfully.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    notificationId:
-                      type: string
-                      format: uuid
-                      example: 47fac1ca-80dd-4db7-b803-f945a2c5327b
-                    userId:
-                      type: string
-                      format: uuid
-                      example: dbc1bd85-1887-42fc-9ca0-faef24d3704b
-                    title:
-                      type: string
-                      example: New Installment Application
-                    message:
-                      type: string
-                      example: Customer "Alice Customer" has submitted an installment application.
-                    isRead:
-                      type: boolean
-                      example: false
-                    createdAt:
-                      type: string
-                      format: date-time
-                      example: 2026-05-18T12:03:00.000Z
-
-  /kyc/notifications/{id}/read:
-    patch:
-      tags:
-        - KYC & Onboarding
-      summary: Mark Notification Alert as Read
-      description: |
-        Safely scopes read/unread updates directly to the recipient's authenticated `userId`.
-        **Authorization:** Restricted to logged-in Marketers or Admins.
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The public UUID (`notificationId`) of the alert.
-          schema:
-            type: string
-            format: uuid
-            example: 47fac1ca-80dd-4db7-b803-f945a2c5327b
-      responses:
-        '200':
-          description: Notification status updated successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: Notification marked as read.
-                  notificationId:
-                    type: string
-                    format: uuid
-                    example: 47fac1ca-80dd-4db7-b803-f945a2c5327b
-                  isRead:
-                    type: boolean
-                    example: true
-        '404':
-          description: Notification not found or access unauthorized.

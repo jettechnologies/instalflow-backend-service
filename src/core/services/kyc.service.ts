@@ -19,6 +19,8 @@ import { DomainEvent } from "@/core/events/event.types";
 import { KycStorageService } from "./kyc-storage.service";
 import path from "path";
 import fs from "fs";
+import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
+import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 
 export class KycService {
   /**
@@ -26,7 +28,10 @@ export class KycService {
    */
   private static getFileHash(filePath: string): string {
     if (!fs.existsSync(filePath)) {
-      return crypto.createHash("sha256").update(filePath || "mock-hash").digest("hex");
+      return crypto
+        .createHash("sha256")
+        .update(filePath || "mock-hash")
+        .digest("hex");
     }
     const fileBuffer = fs.readFileSync(filePath);
     return crypto.createHash("sha256").update(fileBuffer).digest("hex");
@@ -44,7 +49,9 @@ export class KycService {
     });
 
     if (!marketer) {
-      throw new UnauthorizedError("Only marketers can generate referral links.");
+      throw new UnauthorizedError(
+        "Only marketers can generate referral links.",
+      );
     }
 
     let referralCode = marketer.referralCode;
@@ -124,7 +131,8 @@ export class KycService {
 
     return {
       success: true,
-      message: "Customer registered successfully via referral. Please log in to complete your application.",
+      message:
+        "Customer registered successfully via referral. Please log in to complete your application.",
       userId: user.userId,
     };
   }
@@ -154,7 +162,9 @@ export class KycService {
     // Check size limit: <= 10MB
     const MAX_SIZE = 10 * 1024 * 1024; // 10MB
     if (file.size > MAX_SIZE) {
-      throw new BadRequestError("Bank statement size must be less than or equal to 10MB.");
+      throw new BadRequestError(
+        "Bank statement size must be less than or equal to 10MB.",
+      );
     }
 
     // Verify PDF mime-type / extension
@@ -258,11 +268,24 @@ export class KycService {
     });
 
     // 7. Dispatch Internal Notification Alerts
-    await this.dispatchInternalNotifications(customer, application);
+    // await this.dispatchInternalNotifications(customer, application);
+    await NotificationOrchestrator.handle(
+      NotificationEventType.KYC_APPLICATION_SUBMITTED,
+      {
+        applicationId: application.kycApplicationId,
+        customerName: customer.name ?? "Customer",
+        customerEmail: customer.email,
+        customer: {
+          userId: customer.userId,
+          referredByMarketerId: customer.referredByMarketerId ?? undefined,
+        },
+      },
+    );
 
     return {
       success: true,
-      message: "Installment application submitted successfully. It is now under review.",
+      message:
+        "Installment application submitted successfully. It is now under review.",
       applicationId: application.kycApplicationId,
       status: application.status,
     };
@@ -291,7 +314,9 @@ export class KycService {
     }
 
     if (application.status !== "PENDING") {
-      throw new BadRequestError(`Application is already processed: ${application.status}.`);
+      throw new BadRequestError(
+        `Application is already processed: ${application.status}.`,
+      );
     }
 
     const customer = application.user;
@@ -301,7 +326,9 @@ export class KycService {
     // Check Maker-Checker scoping credentials
     if (reviewer.role === "MARKETER") {
       if (customer.referredByMarketerId !== reviewer.userId) {
-        throw new UnauthorizedError("Unauthorized: You are not the referring marketer for this customer.");
+        throw new UnauthorizedError(
+          "Unauthorized: You are not the referring marketer for this customer.",
+        );
       }
       isMarketerApproval = true;
     } else if (reviewer.role === "ADMIN" || reviewer.role === "SUPER_ADMIN") {
@@ -309,8 +336,13 @@ export class KycService {
         const marketer = await prisma.user.findUnique({
           where: { userId: customer.referredByMarketerId },
         });
-        if (marketer?.createdById !== reviewer.userId && reviewer.role !== "SUPER_ADMIN") {
-          throw new UnauthorizedError("Unauthorized: You are not the Admin associated with this marketer.");
+        if (
+          marketer?.createdById !== reviewer.userId &&
+          reviewer.role !== "SUPER_ADMIN"
+        ) {
+          throw new UnauthorizedError(
+            "Unauthorized: You are not the Admin associated with this marketer.",
+          );
         }
       }
       isAdminApproval = true;
@@ -383,9 +415,10 @@ export class KycService {
 
     return {
       success: true,
-      message: updatedApp.status === "APPROVED"
-        ? "KYC Application fully approved by both Marketer and Admin."
-        : `Approval recorded. Awaiting remaining Maker/Checker signature.`,
+      message:
+        updatedApp.status === "APPROVED"
+          ? "KYC Application fully approved by both Marketer and Admin."
+          : `Approval recorded. Awaiting remaining Maker/Checker signature.`,
       status: updatedApp.status,
     };
   }
@@ -394,13 +427,19 @@ export class KycService {
    * Rejection Process:
    * Requires only the associated Admin's signature with a detailed reason.
    */
-  static async rejectApplication(applicationId: string, adminId: string, reason: string) {
+  static async rejectApplication(
+    applicationId: string,
+    adminId: string,
+    reason: string,
+  ) {
     const admin = await prisma.user.findUnique({
       where: { userId: adminId },
     });
 
     if (!admin || (admin.role !== "ADMIN" && admin.role !== "SUPER_ADMIN")) {
-      throw new UnauthorizedError("Only associated Admins can reject KYC applications.");
+      throw new UnauthorizedError(
+        "Only associated Admins can reject KYC applications.",
+      );
     }
 
     const application = await prisma.kycApplication.findUnique({
@@ -413,7 +452,9 @@ export class KycService {
     }
 
     if (application.status !== "PENDING") {
-      throw new BadRequestError(`Application is already processed: ${application.status}.`);
+      throw new BadRequestError(
+        `Application is already processed: ${application.status}.`,
+      );
     }
 
     const customer = application.user;
@@ -423,8 +464,13 @@ export class KycService {
       const marketer = await prisma.user.findUnique({
         where: { userId: customer.referredByMarketerId },
       });
-      if (marketer?.createdById !== admin.userId && admin.role !== "SUPER_ADMIN") {
-        throw new UnauthorizedError("Unauthorized: You are not the Admin associated with this marketer.");
+      if (
+        marketer?.createdById !== admin.userId &&
+        admin.role !== "SUPER_ADMIN"
+      ) {
+        throw new UnauthorizedError(
+          "Unauthorized: You are not the Admin associated with this marketer.",
+        );
       }
     }
 
@@ -503,7 +549,9 @@ export class KycService {
     // Secure Scoping Checks
     if (reviewer.role === "MARKETER") {
       if (customer.referredByMarketerId !== reviewer.userId) {
-        throw new UnauthorizedError("Unauthorized: You are not the referring marketer for this customer.");
+        throw new UnauthorizedError(
+          "Unauthorized: You are not the referring marketer for this customer.",
+        );
       }
     } else if (reviewer.role === "ADMIN") {
       if (customer.referredByMarketerId) {
@@ -511,17 +559,23 @@ export class KycService {
           where: { userId: customer.referredByMarketerId },
         });
         if (marketer?.createdById !== reviewer.userId) {
-          throw new UnauthorizedError("Unauthorized: You are not the Admin associated with this marketer.");
+          throw new UnauthorizedError(
+            "Unauthorized: You are not the Admin associated with this marketer.",
+          );
         }
       }
     }
 
     const asset = application.kycDocumentAssets.find((a) => !a.isDeleted);
     if (!asset) {
-      throw new NotFoundError("Physical bank statement file has been purged from servers under NDPR compliance policies.");
+      throw new NotFoundError(
+        "Physical bank statement file has been purged from servers under NDPR compliance policies.",
+      );
     }
 
-    const signedUrl = await KycStorageService.generateSignedUrl(asset.cloudinaryPublicId);
+    const signedUrl = await KycStorageService.generateSignedUrl(
+      asset.cloudinaryPublicId,
+    );
 
     return {
       signedUrl,
@@ -532,105 +586,105 @@ export class KycService {
   /**
    * Dispatch internal notification alerts.
    */
-  private static async dispatchInternalNotifications(customer: any, application: any) {
-    try {
-      const title = "New Installment Application";
-      const message = `Customer "${customer.name}" has submitted an installment application for review.`;
+  // private static async dispatchInternalNotifications(customer: any, application: any) {
+  //   try {
+  //     const title = "New Installment Application";
+  //     const message = `Customer "${customer.name}" has submitted an installment application for review.`;
 
-      const metadata = {
-        applicationId: application.kycApplicationId,
-        customerName: customer.name,
-        customerEmail: customer.email,
-      };
+  //     const metadata = {
+  //       applicationId: application.kycApplicationId,
+  //       customerName: customer.name,
+  //       customerEmail: customer.email,
+  //     };
 
-      // Recipient 1: The referring Marketer
-      if (customer.referredByMarketerId) {
-        const marketerId = customer.referredByMarketerId;
-        const marketerIdempotency = `notif-marketer-${application.kycApplicationId}`;
-        await prisma.internalNotification.upsert({
-          where: { idempotencyKey: marketerIdempotency },
-          update: {},
-          create: {
-            userId: marketerId,
-            title,
-            message,
-            metadata,
-            idempotencyKey: marketerIdempotency,
-          },
-        });
+  //     // Recipient 1: The referring Marketer
+  //     if (customer.referredByMarketerId) {
+  //       const marketerId = customer.referredByMarketerId;
+  //       const marketerIdempotency = `notif-marketer-${application.kycApplicationId}`;
+  //       await prisma.internalNotification.upsert({
+  //         where: { idempotencyKey: marketerIdempotency },
+  //         update: {},
+  //         create: {
+  //           userId: marketerId,
+  //           title,
+  //           message,
+  //           metadata,
+  //           idempotencyKey: marketerIdempotency,
+  //         },
+  //       });
 
-        // Recipient 2: The creator Admin
-        const marketer = await prisma.user.findUnique({
-          where: { userId: marketerId },
-          select: { createdById: true },
-        });
+  //       // Recipient 2: The creator Admin
+  //       const marketer = await prisma.user.findUnique({
+  //         where: { userId: marketerId },
+  //         select: { createdById: true },
+  //       });
 
-        if (marketer?.createdById) {
-          const adminId = marketer.createdById;
-          const adminIdempotency = `notif-admin-${application.kycApplicationId}`;
-          await prisma.internalNotification.upsert({
-            where: { idempotencyKey: adminIdempotency },
-            update: {},
-            create: {
-              userId: adminId,
-              title: `${title} (Marketer Referral)`,
-              message: `${message} (Assigned Marketer: ${marketerId})`,
-              metadata,
-              idempotencyKey: adminIdempotency,
-            },
-          });
-        }
-      } else {
-        // Fallback: Super Admin
-        const superAdmin = await prisma.user.findFirst({
-          where: { role: "SUPER_ADMIN" },
-        });
+  //       if (marketer?.createdById) {
+  //         const adminId = marketer.createdById;
+  //         const adminIdempotency = `notif-admin-${application.kycApplicationId}`;
+  //         await prisma.internalNotification.upsert({
+  //           where: { idempotencyKey: adminIdempotency },
+  //           update: {},
+  //           create: {
+  //             userId: adminId,
+  //             title: `${title} (Marketer Referral)`,
+  //             message: `${message} (Assigned Marketer: ${marketerId})`,
+  //             metadata,
+  //             idempotencyKey: adminIdempotency,
+  //           },
+  //         });
+  //       }
+  //     } else {
+  //       // Fallback: Super Admin
+  //       const superAdmin = await prisma.user.findFirst({
+  //         where: { role: "SUPER_ADMIN" },
+  //       });
 
-        if (superAdmin) {
-          const fallbackIdempotency = `notif-fallback-${application.kycApplicationId}`;
-          await prisma.internalNotification.upsert({
-            where: { idempotencyKey: fallbackIdempotency },
-            update: {},
-            create: {
-              userId: superAdmin.userId,
-              title: `${title} (Direct Applicant)`,
-              message,
-              metadata,
-              idempotencyKey: fallbackIdempotency,
-            },
-          });
-        }
-      }
-    } catch (err: any) {
-      console.error("⚠️ Failed to dispatch internal notifications:", err.message);
-    }
-  }
+  //       if (superAdmin) {
+  //         const fallbackIdempotency = `notif-fallback-${application.kycApplicationId}`;
+  //         await prisma.internalNotification.upsert({
+  //           where: { idempotencyKey: fallbackIdempotency },
+  //           update: {},
+  //           create: {
+  //             userId: superAdmin.userId,
+  //             title: `${title} (Direct Applicant)`,
+  //             message,
+  //             metadata,
+  //             idempotencyKey: fallbackIdempotency,
+  //           },
+  //         });
+  //       }
+  //     }
+  //   } catch (err: any) {
+  //     console.error("⚠️ Failed to dispatch internal notifications:", err.message);
+  //   }
+  // }
 
-  /**
-   * Retrieve internal notifications for the logged in user.
-   */
-  static async getNotifications(userId: string) {
-    return prisma.internalNotification.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
-  }
+  // /**
+  //  * Retrieve internal notifications for the logged in user.
+  //  */
+  // static async getNotifications(userId: string) {
+  //   return prisma.internalNotification.findMany({
+  //     where: { userId },
+  //     orderBy: { createdAt: "desc" },
+  //   });
+  // }
 
-  /**
-   * Mark a notification as read safely.
-   */
-  static async markAsRead(userId: string, notificationId: string) {
-    const notif = await prisma.internalNotification.findFirst({
-      where: { notificationId, userId },
-    });
+  // /**
+  //  * Mark a notification as read safely.
+  //  */
+  // static async markAsRead(userId: string, notificationId: string) {
+  //   const notif = await prisma.internalNotification.findFirst({
+  //     where: { notificationId, userId },
+  //   });
 
-    if (!notif) {
-      throw new NotFoundError("Notification not found.");
-    }
+  //   if (!notif) {
+  //     throw new NotFoundError("Notification not found.");
+  //   }
 
-    return prisma.internalNotification.update({
-      where: { notificationId },
-      data: { isRead: true },
-    });
-  }
+  //   return prisma.internalNotification.update({
+  //     where: { notificationId },
+  //     data: { isRead: true },
+  //   });
+  // }
 }

@@ -9,10 +9,6 @@ import {
 import { BadRequestError } from "@/shared/utils/AppError";
 
 export class KycController {
-  /**
-   * POST /kyc/referral-link
-   * Restricted to MARKETER roles.
-   */
   static async generateReferralLink(
     req: Request,
     res: Response,
@@ -25,10 +21,7 @@ export class KycController {
       }
 
       const params = GenerateReferralLinkSchema.parse(req.body);
-      const result = await KycService.generateReferralLink(
-        marketerId,
-        params,
-      );
+      const result = await KycService.generateReferralLink(marketerId, params);
 
       res.status(200).json(result);
     } catch (error) {
@@ -36,10 +29,6 @@ export class KycController {
     }
   }
 
-  /**
-   * POST /kyc/register
-   * Public onboarding registration for customer.
-   */
   static async registerViaReferral(
     req: Request,
     res: Response,
@@ -55,10 +44,6 @@ export class KycController {
     }
   }
 
-  /**
-   * POST /kyc/submit
-   * Restricted to CUSTOMER roles. Accepts multipart form file upload.
-   */
   static async submitApplication(
     req: Request,
     res: Response,
@@ -85,10 +70,6 @@ export class KycController {
     }
   }
 
-  /**
-   * POST /kyc/applications/:id/approve
-   * Maker-Checker approval endpoint. Requires either Marketer or Admin credentials.
-   */
   static async approveApplication(
     req: Request,
     res: Response,
@@ -101,7 +82,10 @@ export class KycController {
       }
 
       const applicationId = req.params.id as string;
-      const result = await KycService.approveApplication(applicationId, reviewerId);
+      const result = await KycService.approveApplication(
+        applicationId,
+        reviewerId,
+      );
 
       res.status(200).json(result);
     } catch (error) {
@@ -109,10 +93,6 @@ export class KycController {
     }
   }
 
-  /**
-   * POST /kyc/applications/:id/reject
-   * Rejection endpoint. Requires associated Admin credentials.
-   */
   static async rejectApplication(
     req: Request,
     res: Response,
@@ -139,10 +119,6 @@ export class KycController {
     }
   }
 
-  /**
-   * GET /kyc/applications/:id/document
-   * Retrieves secure signed transient view URL for statement PDF.
-   */
   static async getSignedDocumentUrl(
     req: Request,
     res: Response,
@@ -155,7 +131,10 @@ export class KycController {
       }
 
       const applicationId = req.params.id as string;
-      const result = await KycService.getSignedDocumentUrl(applicationId, reviewerId);
+      const result = await KycService.getSignedDocumentUrl(
+        applicationId,
+        reviewerId,
+      );
 
       res.status(200).json(result);
     } catch (error) {
@@ -167,49 +146,49 @@ export class KycController {
    * GET /kyc/notifications
    * Restricted to logged-in Marketers or Admins.
    */
-  static async getNotifications(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
-    try {
-      const userId = (req as any).user?.userId;
-      if (!userId) {
-        throw new BadRequestError("Unauthorized user session.");
-      }
+  // static async getNotifications(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ) {
+  //   try {
+  //     const userId = (req as any).user?.userId;
+  //     if (!userId) {
+  //       throw new BadRequestError("Unauthorized user session.");
+  //     }
 
-      const notifications = await KycService.getNotifications(userId);
-      res.status(200).json(notifications);
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     const notifications = await KycService.getNotifications(userId);
+  //     res.status(200).json(notifications);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
-  /**
-   * PATCH /kyc/notifications/:id/read
-   * Scopes reading/updating directly to the userId.
-   */
-  static async markAsRead(req: Request, res: Response, next: NextFunction) {
-    try {
-      const userId = (req as any).user?.userId;
-      if (!userId) {
-        throw new BadRequestError("Unauthorized user session.");
-      }
+  // /**
+  //  * PATCH /kyc/notifications/:id/read
+  //  * Scopes reading/updating directly to the userId.
+  //  */
+  // static async markAsRead(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const userId = (req as any).user?.userId;
+  //     if (!userId) {
+  //       throw new BadRequestError("Unauthorized user session.");
+  //     }
 
-      const notificationId = req.params.id as string;
-      const result = await KycService.markAsRead(
-        userId,
-        notificationId,
-      );
+  //     const notificationId = req.params.id as string;
+  //     const result = await KycService.markAsRead(
+  //       userId,
+  //       notificationId,
+  //     );
 
-      res.status(200).json({
-        success: true,
-        message: "Notification marked as read.",
-        notificationId: result.notificationId,
-        isRead: result.isRead,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     res.status(200).json({
+  //       success: true,
+  //       message: "Notification marked as read.",
+  //       notificationId: result.notificationId,
+  //       isRead: result.isRead,
+  //     });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 }

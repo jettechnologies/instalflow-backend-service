@@ -490,10 +490,12 @@ export const InternalNotificationScalarFieldEnum = {
   id: 'id',
   notificationId: 'notificationId',
   userId: 'userId',
+  type: 'type',
   title: 'title',
   message: 'message',
   metadata: 'metadata',
-  isRead: 'isRead',
+  status: 'status',
+  readAt: 'readAt',
   idempotencyKey: 'idempotencyKey',
   createdAt: 'createdAt'
 } as const
