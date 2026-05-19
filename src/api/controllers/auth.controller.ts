@@ -113,10 +113,10 @@ export class AuthController {
   }
 
   static async logout(req: Request, res: Response) {
-    const sessionId = req.body.sessionId || req.user?.sessionId;
+    const sessionId = req.user?.sessionId;
     const userId = req.user!.userId;
 
-    await AuthService.logout(sessionId, userId);
+    await AuthService.logout(sessionId!, userId);
 
     res.clearCookie("refresh_token");
     return ApiResponse.success(res, 200, "Logged out successfully");

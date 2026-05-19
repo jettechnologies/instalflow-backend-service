@@ -289,15 +289,6 @@ paths:
       tags: [Auth]
       security:
         - bearerAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                sessionId:
-                  type: string
-                  description: Optional — if omitted, all active sessions are revoked.
       responses:
         200:
           description: Logged out successfully
