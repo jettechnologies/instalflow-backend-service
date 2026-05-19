@@ -10,6 +10,7 @@ import productRoutes from "@/api/routes/product.routes";
 import categoryRoutes from "@/api/routes/category.routes";
 import kycRoutes from "@/api/routes/kyc.routes";
 import customerManagementRoutes from "@/api/routes/customer-management.routes";
+import internalNotificationRoutes from "@/api/routes/internal_notification";
 const router = Router();
 
 router.get("/health", (req, res) => {
@@ -29,5 +30,5 @@ router.use("/products", productRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/kyc", kycRoutes);
 router.use("/customers", customerManagementRoutes);
-
+router.use("/notifications", internalNotificationRoutes);
 export default router;
