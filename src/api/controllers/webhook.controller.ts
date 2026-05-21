@@ -238,7 +238,7 @@ export class WebhookController {
           },
           {
             jobId: reference,
-            attempts: 5,
+            attempts: 3,
             backoff: { type: "exponential", delay: 60000 },
             removeOnComplete: true,
             removeOnFail: false,

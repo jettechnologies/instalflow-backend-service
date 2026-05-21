@@ -7,6 +7,7 @@ export enum DomainEvent {
   OTP_REQUESTED = "auth.otp.requested",
   PASSWORD_RESET_REQUESTED = "auth.password.reset.requested",
   PASSWORD_RESET_COMPLETED = "auth.password.reset.completed",
+  PASSWORD_CHANGED = "auth.password.changed",
 
   // Orders
   ORDER_CREATED = "order.created",
@@ -54,6 +55,11 @@ export interface DomainEventPayloads {
   [DomainEvent.PASSWORD_RESET_COMPLETED]: {
     email: string;
     name: string;
+  };
+  [DomainEvent.PASSWORD_CHANGED]: {
+    name: string;
+    email: string;
+    deactivate_url?: string;
   };
   [DomainEvent.ORDER_CREATED]: {
     email: string;

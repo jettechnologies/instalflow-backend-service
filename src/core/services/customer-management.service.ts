@@ -324,6 +324,7 @@ export class CustomerManagementService {
         userId: true,
         name: true,
         email: true,
+        role: true,
         createdUsers: {
           where: { role: Role.MARKETER },
           select: {
@@ -331,6 +332,7 @@ export class CustomerManagementService {
             name: true,
             email: true,
             referralCode: true,
+            role: true,
             referredUsers: {
               where: { role: Role.CUSTOMER },
               select: {

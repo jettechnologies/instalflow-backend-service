@@ -21,6 +21,7 @@ export enum EmailTemplate {
   ORDER_STATUS_UPDATE = "order-status-update",
   COMPANY_ONBOARDING = "company-onboarding",
   INSTALLMENT_PAID = "installment-paid",
+  PASSWORD_CHANGED = "password-changed",
 }
 
 interface SendEmailProps {

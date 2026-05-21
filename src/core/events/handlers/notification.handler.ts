@@ -10,13 +10,18 @@ import { EmailTemplate } from "@/core/services/email.service";
  * USER REGISTERED
  */
 onEvent(DomainEvent.USER_REGISTERED, async (payload) => {
-  const isCustomer = payload.role === "CUSTOMER" || !!payload.applicationUnderReview;
+  const isCustomer =
+    payload.role === "CUSTOMER" || !!payload.applicationUnderReview;
   await NotificationService.send({
     to: payload.email,
     channel: NotificationChannel.EMAIL,
-    template: isCustomer ? EmailTemplate.WELCOME_CUSTOMER : EmailTemplate.WELCOME,
-    subject: isCustomer 
-      ? (payload.applicationUnderReview ? "Your Installment Application is Under Review 📝" : "Welcome to Instalflow 🎉")
+    template: isCustomer
+      ? EmailTemplate.WELCOME_CUSTOMER
+      : EmailTemplate.WELCOME,
+    subject: isCustomer
+      ? payload.applicationUnderReview
+        ? "Your Installment Application is Under Review 📝"
+        : "Welcome to Instalflow 🎉"
       : "Welcome to Instalflow 🎉",
     context: {
       name: payload.name,
@@ -87,6 +92,19 @@ onEvent(DomainEvent.PASSWORD_RESET_COMPLETED, async (payload) => {
     subject: "Your Password Has Been Reset",
     context: {
       name: payload.name,
+    },
+  });
+});
+
+onEvent(DomainEvent.PASSWORD_CHANGED, async (payload) => {
+  await NotificationService.send({
+    to: payload.email,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.PASSWORD_CHANGED,
+    subject: "Password Changed Successfully",
+    context: {
+      name: payload.name,
+      deactivate_url: payload.deactivate_url,
     },
   });
 });

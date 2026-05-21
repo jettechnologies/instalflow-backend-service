@@ -22,16 +22,14 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		{
 			channels: [NotificationChannel.EMAIL],
 			template: (p) => {
-				const isCustomer = p.role === "CUSTOMER" || !!p.applicationUnderReview || !!p.rejectionReason;
-				return isCustomer ? "welcome-customer" : "welcome";
+				const isCustomer = p.role === 'CUSTOMER' || !!p.applicationUnderReview || !!p.rejectionReason;
+				return isCustomer ? 'welcome-customer' : 'welcome';
 			},
 			subject: (p) => {
-				const isCustomer = p.role === "CUSTOMER" || !!p.applicationUnderReview || !!p.rejectionReason;
-				if (!isCustomer) return "Welcome to Instalflow 🎉";
-				if (p.rejectionReason) return "Your Installment Application was Declined ❌";
-				return p.applicationUnderReview
-					? "Your Installment Application is Under Review 📝"
-					: "Welcome to Instalflow 🎉";
+				const isCustomer = p.role === 'CUSTOMER' || !!p.applicationUnderReview || !!p.rejectionReason;
+				if (!isCustomer) return 'Welcome to Instalflow 🎉';
+				if (p.rejectionReason) return 'Your Installment Application was Declined ❌';
+				return p.applicationUnderReview ? 'Your Installment Application is Under Review 📝' : 'Welcome to Instalflow 🎉';
 			},
 			context: (p) => ({
 				name: p.name,
@@ -87,7 +85,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			channels: [NotificationChannel.EMAIL],
 			template: 'forgot-password-otp',
 			subject: 'Password Reset OTP',
-			context: (p) => ({ name: p.name, otp: p.otp }),
+			context: (p) => ({ email: p.email, name: p.name, otp: p.otp }),
 		},
 		// {
 		//   channels: [NotificationChannel.SMS],
@@ -103,7 +101,15 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			channels: [NotificationChannel.EMAIL],
 			template: 'password-reset',
 			subject: 'Your Password Has Been Reset',
-			context: (p) => ({ name: p.name }),
+			context: (p) => ({ name: p.name, email: p.email }),
+		},
+	],
+	[DomainEvent.PASSWORD_CHANGED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			template: 'password-changed',
+			subject: 'Password Changed Successfully',
+			context: (p) => ({ name: p.name, email: p.email, deactivate_url: p.deactivate_url }),
 		},
 	],
 
