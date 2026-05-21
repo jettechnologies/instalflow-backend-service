@@ -8,7 +8,10 @@ import {
   ProductCursorQueryParams,
 } from "@/shared/schemas/product.schema";
 import { NotFoundError } from "@/shared/utils/AppError";
-import { uploadToCloudinary, deleteFromCloudinary } from "@/core/services/cloudinary.service";
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} from "@/core/services/cloudinary.service";
 import fs from "fs";
 
 export class ProductService {
@@ -29,14 +32,78 @@ export class ProductService {
   /**
    * Create a new product with optional variants and installment plans.
    */
+  // static async createProduct(
+  //   companyId: string | undefined,
+  //   data: z.infer<typeof CreateProductSchema>
+  // ) {
+  //   const slug = this.generateSlug(data.name);
+
+  //   // Process and upload images to Cloudinary if needed
+  //   const processedImages = await this.processImages(data.images || []);
+
+  //   return prisma.product.create({
+  //     data: {
+  //       name: data.name,
+  //       slug,
+  //       description: data.description,
+  //       price: data.price,
+  //       minPrice: data.minPrice,
+  //       maxPrice: data.maxPrice,
+  //       stockQuantity: data.stockQuantity,
+  //       commissionRate: data.commissionRate,
+  //       companyId: companyId,
+  //       categoryId: data.categoryId,
+  //       variants: {
+  //         create: data.variants?.map((v) => ({
+  //           sku: v.sku,
+  //           size: v.size,
+  //           color: v.color,
+  //           images: v.images,
+  //           stockQuantity: v.stockQuantity,
+  //           price: v.price,
+  //         })),
+  //       },
+  //       installmentPlans: {
+  //         create: data.installmentPlans?.map((p) => ({
+  //           durationMonths: p.durationMonths,
+  //           interestPercentage: p.interestPercentage,
+  //           active: p.active ?? true,
+  //         })),
+  //       },
+  //       images: {
+  //         create: processedImages,
+  //       },
+  //     },
+  //     include: {
+  //       variants: true,
+  //       installmentPlans: true,
+  //       images: true,
+  //     },
+  //   });
+  // }
+
   static async createProduct(
     companyId: string | undefined,
-    data: z.infer<typeof CreateProductSchema>
+    data: z.infer<typeof CreateProductSchema>,
+    files?: Express.Multer.File[],
   ) {
     const slug = this.generateSlug(data.name);
 
-    // Process and upload images to Cloudinary if needed
-    const processedImages = await this.processImages(data.images || []);
+    let processedImages: any[] = [];
+
+    if (files && files.length > 0) {
+      // Map multer files into the shape processImages expects, then let it handle Cloudinary upload
+      const fileImages = files.map((file, idx) => ({
+        imageUrl: file.path, // local disk path — processImages detects isLocalFile
+        altText: data.name,
+        isPrimary: idx === 0,
+        sortOrder: idx,
+        cloudinaryPublicId: null,
+      }));
+      processedImages = await this.processImages(fileImages);
+    } else if (data.images && data.images.length > 0) {
+      processedImages = await this.processImages(data.images);
+    }
 
     return prisma.product.create({
       data: {
@@ -48,7 +115,7 @@ export class ProductService {
         maxPrice: data.maxPrice,
         stockQuantity: data.stockQuantity,
         commissionRate: data.commissionRate,
-        companyId: companyId,
+        companyId,
         categoryId: data.categoryId,
         variants: {
           create: data.variants?.map((v) => ({
@@ -71,11 +138,65 @@ export class ProductService {
           create: processedImages,
         },
       },
-      include: {
-        variants: true,
-        installmentPlans: true,
-        images: true,
+      include: { variants: true, installmentPlans: true, images: true },
+    });
+  }
+
+  static async updateProduct(
+    productId: string,
+    data: z.infer<typeof UpdateProductSchema>,
+    files?: Express.Multer.File[],
+  ) {
+    const product = await prisma.product.findUnique({
+      where: { productId },
+      include: { images: true },
+    });
+    if (!product) throw new NotFoundError("Product not found");
+
+    let processedImages: any[] | undefined = undefined;
+    const hasNewFiles = files && files.length > 0;
+    const hasNewUrls = data.images && data.images.length > 0;
+
+    if (hasNewFiles || hasNewUrls) {
+      // Delete old Cloudinary assets and DB records for either path
+      for (const oldImg of product.images) {
+        if (oldImg.cloudinaryPublicId) {
+          await deleteFromCloudinary(oldImg.cloudinaryPublicId);
+        }
+      }
+      await prisma.productImage.deleteMany({
+        where: { productId: product.id },
+      });
+
+      if (hasNewFiles) {
+        const fileImages = files!.map((file, idx) => ({
+          imageUrl: file.path, // local disk path — processImages detects isLocalFile
+          altText: data.name ?? product.name,
+          isPrimary: idx === 0,
+          sortOrder: idx,
+          cloudinaryPublicId: null,
+        }));
+        processedImages = await this.processImages(fileImages);
+      } else {
+        processedImages = await this.processImages(data.images!);
+      }
+    }
+
+    return prisma.product.update({
+      where: { productId },
+      data: {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        minPrice: data.minPrice,
+        maxPrice: data.maxPrice,
+        stockQuantity: data.stockQuantity,
+        commissionRate: data.commissionRate,
+        categoryId: data.categoryId,
+        isActive: data.active,
+        images: processedImages ? { create: processedImages } : undefined,
       },
+      include: { variants: true, installmentPlans: true, images: true },
     });
   }
 
@@ -83,7 +204,13 @@ export class ProductService {
    * Get all products with offset-based pagination and optional category/company filters.
    */
   static async getAllProducts(params: ProductQueryParams) {
-    const { page = 1, limit = 10, sortOrder = "desc", category, companyId } = params;
+    const {
+      page = 1,
+      limit = 10,
+      sortOrder = "desc",
+      category,
+      companyId,
+    } = params;
     const skip = (page - 1) * limit;
 
     const whereClause: any = {
@@ -122,7 +249,9 @@ export class ProductService {
       prisma.product.count({ where: whereClause }),
     ]);
 
-    const productsWithBreakdowns = products.map((product) => this.attachBreakdowns(product));
+    const productsWithBreakdowns = products.map((product) =>
+      this.attachBreakdowns(product),
+    );
     const totalPages = Math.ceil(total / limit);
 
     const pagination = {
@@ -141,7 +270,13 @@ export class ProductService {
    * Get all products with cursor-based pagination and optional category/company filters.
    */
   static async getAllProductCursor(params: ProductCursorQueryParams) {
-    const { limit = 10, cursor, sortOrder = "desc", category, companyId } = params;
+    const {
+      limit = 10,
+      cursor,
+      sortOrder = "desc",
+      category,
+      companyId,
+    } = params;
 
     const whereClause: any = {
       isActive: true,
@@ -183,7 +318,9 @@ export class ProductService {
       },
     });
 
-    const productsWithBreakdowns = products.map((product) => this.attachBreakdowns(product));
+    const productsWithBreakdowns = products.map((product) =>
+      this.attachBreakdowns(product),
+    );
 
     let nextCursor: string | null = null;
     if (productsWithBreakdowns.length > limit) {
@@ -191,7 +328,9 @@ export class ProductService {
       nextCursor = nextItem ? nextItem.id.toString() : null;
     }
 
-    const prevCursor = productsWithBreakdowns.length ? productsWithBreakdowns[0].id.toString() : null;
+    const prevCursor = productsWithBreakdowns.length
+      ? productsWithBreakdowns[0].id.toString()
+      : null;
 
     const pagination = {
       limit,
@@ -257,7 +396,7 @@ export class ProductService {
       };
     }
 
-    const matchedIds = matchResults.map(r => r.id);
+    const matchedIds = matchResults.map((r) => r.id);
 
     // 3. Query complete products from database using matched IDs
     const products = await prisma.product.findMany({
@@ -279,10 +418,14 @@ export class ProductService {
     });
 
     // 4. Map back to products and attach breakdowns, then sort by rank matching order of matchResults
-    const productsWithBreakdowns = products.map(p => this.attachBreakdowns(p));
-    
+    const productsWithBreakdowns = products.map((p) =>
+      this.attachBreakdowns(p),
+    );
+
     // Sort products by the rank order returned by matchedIds
-    const matchedIdMap = new Map(matchedIds.map((id, index) => [id.toString(), index]));
+    const matchedIdMap = new Map(
+      matchedIds.map((id, index) => [id.toString(), index]),
+    );
     productsWithBreakdowns.sort((a, b) => {
       const indexA = matchedIdMap.get(a.id.toString()) ?? 999;
       const indexB = matchedIdMap.get(b.id.toString()) ?? 999;
@@ -327,57 +470,59 @@ export class ProductService {
   /**
    * Update a product (Note: Does not perform full nested sync for simplicity. Usually better to delete/recreate variants).
    */
-  static async updateProduct(
-    productId: string,
-    data: z.infer<typeof UpdateProductSchema>
-  ) {
-    const product = await prisma.product.findUnique({ 
-      where: { productId },
-      include: { images: true }
-    });
-    if (!product) throw new NotFoundError("Product not found");
+  // static async updateProduct(
+  //   productId: string,
+  //   data: z.infer<typeof UpdateProductSchema>,
+  // ) {
+  //   const product = await prisma.product.findUnique({
+  //     where: { productId },
+  //     include: { images: true },
+  //   });
+  //   if (!product) throw new NotFoundError("Product not found");
 
-    let processedImages: any[] | undefined = undefined;
-    if (data.images) {
-      // 1. Delete old images from Cloudinary
-      for (const oldImg of product.images) {
-        if (oldImg.cloudinaryPublicId) {
-          await deleteFromCloudinary(oldImg.cloudinaryPublicId);
-        }
-      }
+  //   let processedImages: any[] | undefined = undefined;
+  //   if (data.images) {
+  //     // 1. Delete old images from Cloudinary
+  //     for (const oldImg of product.images) {
+  //       if (oldImg.cloudinaryPublicId) {
+  //         await deleteFromCloudinary(oldImg.cloudinaryPublicId);
+  //       }
+  //     }
 
-      // 2. Remove old images from DB
-      await prisma.productImage.deleteMany({
-        where: { productId: product.id },
-      });
+  //     // 2. Remove old images from DB
+  //     await prisma.productImage.deleteMany({
+  //       where: { productId: product.id },
+  //     });
 
-      // 3. Process new images
-      processedImages = await this.processImages(data.images);
-    }
+  //     // 3. Process new images
+  //     processedImages = await this.processImages(data.images);
+  //   }
 
-    return prisma.product.update({
-      where: { productId },
-      data: {
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        minPrice: data.minPrice,
-        maxPrice: data.maxPrice,
-        stockQuantity: data.stockQuantity,
-        commissionRate: data.commissionRate,
-        categoryId: data.categoryId,
-        isActive: data.active,
-        images: processedImages ? {
-          create: processedImages,
-        } : undefined,
-      },
-      include: {
-        variants: true,
-        installmentPlans: true,
-        images: true,
-      },
-    });
-  }
+  //   return prisma.product.update({
+  //     where: { productId },
+  //     data: {
+  //       name: data.name,
+  //       description: data.description,
+  //       price: data.price,
+  //       minPrice: data.minPrice,
+  //       maxPrice: data.maxPrice,
+  //       stockQuantity: data.stockQuantity,
+  //       commissionRate: data.commissionRate,
+  //       categoryId: data.categoryId,
+  //       isActive: data.active,
+  //       images: processedImages
+  //         ? {
+  //             create: processedImages,
+  //           }
+  //         : undefined,
+  //     },
+  //     include: {
+  //       variants: true,
+  //       installmentPlans: true,
+  //       images: true,
+  //     },
+  //   });
+  // }
 
   /**
    * Soft delete a product.
@@ -456,8 +601,13 @@ export class ProductService {
       let imageUrl = img.imageUrl;
       let cloudinaryPublicId = img.cloudinaryPublicId;
 
-      const isBase64 = imageUrl.startsWith("data:image/") || imageUrl.startsWith("data:application/");
-      const isLocalFile = !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://") && fs.existsSync(imageUrl);
+      const isBase64 =
+        imageUrl.startsWith("data:image/") ||
+        imageUrl.startsWith("data:application/");
+      const isLocalFile =
+        !imageUrl.startsWith("http://") &&
+        !imageUrl.startsWith("https://") &&
+        fs.existsSync(imageUrl);
 
       if (isBase64 || isLocalFile) {
         try {
@@ -465,7 +615,10 @@ export class ProductService {
           imageUrl = uploadResult.url;
           cloudinaryPublicId = uploadResult.public_id;
         } catch (error) {
-          console.error("Failed to upload image to Cloudinary during product image processing:", error);
+          console.error(
+            "Failed to upload image to Cloudinary during product image processing:",
+            error,
+          );
           throw error;
         }
       }

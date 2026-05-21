@@ -80,7 +80,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required: [name, categoryId]
@@ -115,66 +115,18 @@ paths:
                   example: 100
                 images:
                   type: array
+                  description: Array of product image files to upload.
                   items:
-                    type: object
-                    required: [imageUrl]
-                    properties:
-                      imageUrl:
-                        type: string
-                        example: https://res.cloudinary.com/demo/image/upload/phone.jpg
-                      altText:
-                        type: string
-                        example: Front display view of the phone
-                      isPrimary:
-                        type: boolean
-                        default: false
-                      sortOrder:
-                        type: integer
-                        default: 0
+                    type: string
+                    format: binary
                 variants:
-                  type: array
-                  items:
-                    type: object
-                    required: [sku, price]
-                    properties:
-                      sku:
-                        type: string
-                        example: PH-AMZ-256
-                      size:
-                        type: string
-                        example: 256GB
-                      color:
-                        type: array
-                        items:
-                          type: string
-                        example: ["Space Black"]
-                      images:
-                        type: array
-                        items:
-                          type: string
-                        example: []
-                      stockQuantity:
-                        type: integer
-                        example: 50
-                      price:
-                        type: number
-                        example: 999.99
+                  type: string
+                  description: JSON stringified array of variant objects.
+                  example: '[{"sku":"PH-AMZ-256","size":"256GB","color":["Space Black"],"images":[],"stockQuantity":50,"price":999.99}]'
                 installmentPlans:
-                  type: array
-                  items:
-                    type: object
-                    required: [durationMonths]
-                    properties:
-                      durationMonths:
-                        type: integer
-                        example: 6
-                      interestPercentage:
-                        type: number
-                        default: 0
-                        example: 5.0
-                      active:
-                        type: boolean
-                        default: true
+                  type: string
+                  description: JSON stringified array of installment plan objects.
+                  example: '[{"durationMonths":6,"interestPercentage":5.0,"active":true}]'
       responses:
         "201":
           description: Product created successfully
@@ -291,14 +243,52 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                name: { type: string }
-                description: { type: string }
-                price: { type: number }
-                active: { type: boolean }
+                name:
+                  type: string
+                  example: Amazing Flagship Phone V2
+                description:
+                  type: string
+                  example: Updated premium high-end flagship phone.
+                categoryId:
+                  type: string
+                  format: uuid
+                  example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+                price:
+                  type: number
+                  example: 949.99
+                minPrice:
+                  type: number
+                  example: 849.99
+                maxPrice:
+                  type: number
+                  example: 1049.99
+                commissionRate:
+                  type: number
+                  example: 6.0
+                stockQuantity:
+                  type: integer
+                  example: 120
+                active:
+                  type: boolean
+                  default: true
+                images:
+                  type: array
+                  description: Array of new product image files to upload (replaces existing images).
+                  items:
+                    type: string
+                    format: binary
+                variants:
+                  type: string
+                  description: JSON stringified array of variant objects.
+                  example: '[{"sku":"PH-AMZ-256-V2","size":"256GB","color":["Space Gray"],"images":[],"stockQuantity":60,"price":949.99}]'
+                installmentPlans:
+                  type: string
+                  description: JSON stringified array of installment plan objects.
+                  example: '[{"durationMonths":12,"interestPercentage":8.0,"active":true}]'
       responses:
         "200":
           description: Product updated
