@@ -326,9 +326,13 @@ paths:
             schema:
               type: object
               required:
+                - email
                 - token
                 - newPassword
               properties:
+                email:
+                  type: string
+                  format: email
                 token:
                   type: string
                 newPassword:
