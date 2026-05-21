@@ -3,6 +3,7 @@ import {
   ApprovalAction,
   ApprovalStatus,
   Role,
+  Prisma,
 } from "@/infrastructure/prisma";
 import crypto from "crypto";
 import { z } from "zod";
@@ -265,5 +266,102 @@ export class UserManagementService {
     });
 
     return request;
+  }
+
+  static async getAdminMarketers(params: {
+    adminId: string;
+    companyId: string;
+    page?: number;
+    limit?: number;
+    sortOrder?: "asc" | "desc";
+  }) {
+    const {
+      adminId,
+      companyId,
+      page = 1,
+      limit = 10,
+      sortOrder = "desc",
+    } = params;
+
+    const skip = (page - 1) * limit;
+
+    // Ensure admin exists and belongs to the company
+    const admin = await prisma.user.findFirst({
+      where: {
+        userId: adminId,
+        companyId,
+        role: {
+          in: [Role.ADMIN, Role.COMPANY],
+        },
+        deletedAt: null,
+      },
+
+      select: {
+        userId: true,
+      },
+    });
+
+    if (!admin) {
+      throw new ForbiddenError(
+        "You are not allowed to access these marketers.",
+      );
+    }
+
+    const whereClause: Prisma.UserWhereInput = {
+      createdById: adminId,
+      companyId,
+      role: Role.MARKETER,
+      deletedAt: null,
+    };
+
+    const [marketers, total] = await prisma.$transaction([
+      prisma.user.findMany({
+        where: whereClause,
+
+        skip,
+        take: limit,
+
+        orderBy: {
+          createdAt: sortOrder,
+        },
+
+        select: {
+          userId: true,
+          name: true,
+          email: true,
+          role: true,
+          active: true,
+          referralCode: true,
+          createdAt: true,
+          updatedAt: true,
+
+          _count: {
+            select: {
+              referredUsers: true,
+            },
+          },
+        },
+      }),
+
+      prisma.user.count({
+        where: whereClause,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    const pagination = {
+      total,
+      totalPages,
+      currentPage: page,
+      limit,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
+
+    return {
+      marketers,
+      pagination,
+    };
   }
 }

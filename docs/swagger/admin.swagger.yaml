@@ -3,6 +3,133 @@ tags:
     description: Endpoints for admins to manage marketers via maker-checker approvals.
 
 paths:
+  /admin/marketers:
+    get:
+      summary: Get all marketers created by the authenticated admin
+      tags: [Admin Operations]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            default: 1
+
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 10
+
+        - in: query
+          name: sortOrder
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+
+      responses:
+        "200":
+          description: Marketers fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Marketers fetched successfully
+
+                  data:
+                    type: object
+
+                    properties:
+                      marketers:
+                        type: array
+
+                        items:
+                          type: object
+
+                          properties:
+                            userId:
+                              type: string
+                              example: 9f2f5f7c-bab1-4d6f-a3bb-6c4d8d87b120
+
+                            name:
+                              type: string
+                              example: John Doe
+
+                            email:
+                              type: string
+                              example: john@example.com
+
+                            role:
+                              type: string
+                              example: MARKETER
+
+                            active:
+                              type: boolean
+                              example: true
+
+                            referralCode:
+                              type: string
+                              nullable: true
+                              example: REF12345
+
+                            createdAt:
+                              type: string
+                              format: date-time
+
+                            updatedAt:
+                              type: string
+                              format: date-time
+
+                            _count:
+                              type: object
+
+                              properties:
+                                referredUsers:
+                                  type: integer
+                                  example: 12
+
+                      pagination:
+                        type: object
+
+                        properties:
+                          total:
+                            type: integer
+                            example: 100
+
+                          totalPages:
+                            type: integer
+                            example: 10
+
+                          currentPage:
+                            type: integer
+                            example: 1
+
+                          limit:
+                            type: integer
+                            example: 10
+
+                          hasNextPage:
+                            type: boolean
+                            example: true
+
+                          hasPreviousPage:
+                            type: boolean
+                            example: false
+
   /admin/marketers/{id}/request-toggle:
     post:
       summary: Request to toggle a marketer's active status
@@ -10,6 +137,7 @@ paths:
       security:
         - bearerAuth: []
         - csrfToken: []
+
       parameters:
         - in: path
           name: id
@@ -17,6 +145,7 @@ paths:
           schema:
             type: string
           description: User ID of the marketer
+
       responses:
         "201":
           description: Toggle request submitted for approval
@@ -28,6 +157,7 @@ paths:
       security:
         - bearerAuth: []
         - csrfToken: []
+
       parameters:
         - in: path
           name: id
@@ -35,6 +165,48 @@ paths:
           schema:
             type: string
           description: User ID of the marketer
+
       responses:
         "201":
           description: Delete request submitted for approval
+
+# tags:
+#   - name: Admin Operations
+#     description: Endpoints for admins to manage marketers via maker-checker approvals.
+
+# paths:
+#   /admin/marketers/{id}/request-toggle:
+#     post:
+#       summary: Request to toggle a marketer's active status
+#       tags: [Admin Operations]
+#       security:
+#         - bearerAuth: []
+#         - csrfToken: []
+#       parameters:
+#         - in: path
+#           name: id
+#           required: true
+#           schema:
+#             type: string
+#           description: User ID of the marketer
+#       responses:
+#         "201":
+#           description: Toggle request submitted for approval
+
+#   /admin/marketers/{id}/request-delete:
+#     post:
+#       summary: Request to soft delete a marketer
+#       tags: [Admin Operations]
+#       security:
+#         - bearerAuth: []
+#         - csrfToken: []
+#       parameters:
+#         - in: path
+#           name: id
+#           required: true
+#           schema:
+#             type: string
+#           description: User ID of the marketer
+#       responses:
+#         "201":
+#           description: Delete request submitted for approval

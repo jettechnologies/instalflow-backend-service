@@ -8,6 +8,13 @@ const router = Router();
 
 // All routes require authentication and ADMIN role
 router.use(requireAuth);
+
+router.get(
+  "/marketers",
+  requireRole([Role.ADMIN, Role.COMPANY]),
+  AdminController.getAdminMarketers,
+);
+
 router.use(requireRole([Role.ADMIN]));
 
 // Maker-Checker Requests

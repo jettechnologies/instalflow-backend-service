@@ -9,10 +9,15 @@ export class AdminController {
     const request = await UserManagementService.requestMarketerToggle(
       req.user!.userId!,
       req.user!.companyId!,
-      marketerId
+      marketerId,
     );
 
-    return ApiResponse.success(res, 201, "Toggle request submitted for approval", request);
+    return ApiResponse.success(
+      res,
+      201,
+      "Toggle request submitted for approval",
+      request,
+    );
   }
 
   static async requestDeleteMarketer(req: Request, res: Response) {
@@ -21,9 +26,36 @@ export class AdminController {
     const request = await UserManagementService.requestMarketerDeletion(
       req.user!.userId!,
       req.user!.companyId!,
-      marketerId
+      marketerId,
     );
 
-    return ApiResponse.success(res, 201, "Delete request submitted for approval", request);
+    return ApiResponse.success(
+      res,
+      201,
+      "Delete request submitted for approval",
+      request,
+    );
+  }
+
+  static async getAdminMarketers(req: Request, res: Response) {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const sortOrder = req.query.sortOrder === "asc" ? "asc" : "desc";
+
+    const result = await UserManagementService.getAdminMarketers({
+      adminId: req.user!.userId!,
+      companyId: req.user!.companyId!,
+      page,
+      limit,
+      sortOrder,
+    });
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Marketers fetched successfully",
+      result,
+    );
   }
 }
