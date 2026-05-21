@@ -27,7 +27,7 @@ export const ResetPasswordSchema = z.object({
     message: "Invalid email address",
   }),
   token: z.string().length(6, "OTP must be 6 digits"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export const ChangePasswordSchema = z.object({

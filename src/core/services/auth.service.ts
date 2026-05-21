@@ -441,7 +441,7 @@ export class AuthService {
       throw new BadRequestError("Invalid or expired reset OTP");
     }
 
-    const hashedPassword = await bcryptHash(data.password);
+    const hashedPassword = await bcryptHash(data.newPassword);
 
     await prisma.$transaction(async (tx) => {
       await tx.user.update({
