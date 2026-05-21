@@ -333,6 +333,7 @@ export class CustomerManagementService {
             email: true,
             referralCode: true,
             role: true,
+            active: true,
             referredUsers: {
               where: { role: Role.CUSTOMER },
               select: {

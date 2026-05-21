@@ -133,9 +133,6 @@ export class UserManagementService {
       if (request.action === ApprovalAction.TOGGLE_ACTIVE) {
         await tx.user.update({
           where: { userId: request.targetUserId },
-          // If active is true, we want to toggle to false. If false, toggle to true.
-          // The request doesn't hold the requested boolean state, so we just flip it.
-          // Wait, the prompt implies toggle on/off. We'll flip the current state.
           data: { active: !request.targetUser.active },
         });
       } else if (request.action === ApprovalAction.SOFT_DELETE) {
