@@ -6,6 +6,7 @@ import {
   uploadSingle,
   validateUploadedFileSizes,
 } from "@/api/middlewares/multer.middlewares";
+import { kycSubmitLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
 
@@ -13,6 +14,7 @@ router.post("/register", KycController.registerViaReferral);
 
 router.post(
   "/submit",
+  kycSubmitLimiter,
   requireAuth,
   requireRole([Role.CUSTOMER]),
   uploadSingle("bankStatement"),

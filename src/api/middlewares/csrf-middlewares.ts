@@ -50,6 +50,7 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const isAuthRoute = path.startsWith("/api/v1/auth/");
   const isHealthRoute = path === "/api/v1/health";
   const isWebhookRoute = path.startsWith("/api/v1/webhooks/");
+  const isKycRoute = path.startsWith("/api/v1/kyc/");
   const isBearerAuth = req.headers.authorization?.startsWith("Bearer ");
 
   const isCsrfEndpoint = path === "/api/v1/csrf-token";
@@ -59,6 +60,7 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
     isBearerAuth ||
     isWebhookRoute ||
     isHealthRoute ||
+    isKycRoute ||
     isCsrfEndpoint
   ) {
     return next();

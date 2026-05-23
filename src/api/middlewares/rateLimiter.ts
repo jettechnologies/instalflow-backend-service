@@ -9,15 +9,23 @@ export const loginLimiter = rateLimit({
 });
 
 export const registerLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 5 max attempts per hour for registration
+  windowMs: 60 * 60 * 1000,
   max: 5,
   message: "Too many registration attempts. Please try again after an hour.",
   standardHeaders: true,
   legacyHeaders: false,
 });
 
+export const kycSubmitLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: "Too many KYC submission attempts. Please try again after an hour.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 export const otpLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 5 requests per 10 mins for OTP
+  windowMs: 10 * 60 * 1000,
   max: 5,
   message: "Too many OTP requests. Please try again later.",
   standardHeaders: true,
