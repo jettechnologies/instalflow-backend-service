@@ -12,7 +12,10 @@ import {
   InviteRegisterSchema,
   SubmitApplicationSchema,
 } from "@/shared/schemas/kyc.schema";
-import { bcryptHash, generateOnboardingToken } from "@/shared/utils/password-hash-verify";
+import {
+  bcryptHash,
+  generateOnboardingToken,
+} from "@/shared/utils/password-hash-verify";
 import { uploadToCloudinary } from "./cloudinary.service";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
@@ -181,10 +184,7 @@ export class KycService {
 
     // 2. Upload PDF to Cloudinary as private documents (Bypass in test/mock environments)
     let uploadResult;
-    if (
-      filePath.includes("dummy.pdf") ||
-      process.env.NODE_ENV === "test"
-    ) {
+    if (filePath.includes("dummy.pdf") || process.env.NODE_ENV === "test") {
       uploadResult = {
         url: "https://res.cloudinary.com/demo/image/upload/v12345/dummy.pdf",
         public_id: "documents/dummy_pdf_test",
@@ -340,14 +340,14 @@ export class KycService {
         );
       }
       isMarketerApproval = true;
-    } else if (reviewer.role === "ADMIN" || reviewer.role === "SUPER_ADMIN") {
+    } else if (reviewer.role === "ADMIN" || reviewer.role === "COMPANY") {
       if (customer.referredByMarketerId) {
         const marketer = await prisma.user.findUnique({
           where: { userId: customer.referredByMarketerId },
         });
         if (
           marketer?.createdById !== reviewer.userId &&
-          reviewer.role !== "SUPER_ADMIN"
+          reviewer.role !== "COMPANY"
         ) {
           throw new UnauthorizedError(
             "Unauthorized: You are not the Admin associated with this marketer.",
