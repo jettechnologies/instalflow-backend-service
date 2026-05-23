@@ -612,9 +612,20 @@ export class ProductService {
       if (isBase64 || isLocalFile) {
         try {
           const uploadResult = await uploadToCloudinary(imageUrl, "products");
+          
+          // Cleanup local temp files to prevent filling the disk
+          if (isLocalFile && fs.existsSync(imageUrl)) {
+            fs.unlink(imageUrl, (err) => {
+              if (err) console.error(`Failed to delete temp file ${imageUrl}:`, err);
+            });
+          }
+
           imageUrl = uploadResult.url;
           cloudinaryPublicId = uploadResult.public_id;
         } catch (error) {
+          if (isLocalFile && fs.existsSync(imageUrl)) {
+            fs.unlink(imageUrl, () => {});
+          }
           console.error(
             "Failed to upload image to Cloudinary during product image processing:",
             error,

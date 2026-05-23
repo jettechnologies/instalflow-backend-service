@@ -56,7 +56,7 @@ export class KycController {
       }
 
       const params = SubmitApplicationSchema.parse(req.body);
-      const file = (req as any).files?.bankStatement;
+      const file = req.file;
 
       const result = await KycService.submitApplication(
         customerId,

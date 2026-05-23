@@ -2,6 +2,10 @@ import { Router } from "express";
 import { KycController } from "@/api/controllers/kyc.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { Role } from "@/infrastructure/prisma";
+import {
+  uploadSingle,
+  validateUploadedFileSizes,
+} from "@/api/middlewares/multer.middlewares";
 
 const router = Router();
 
@@ -9,7 +13,10 @@ router.post("/register", KycController.registerViaReferral);
 
 router.post(
   "/submit",
+  requireAuth,
   requireRole([Role.CUSTOMER]),
+  uploadSingle("bankStatement"),
+  validateUploadedFileSizes,
   KycController.submitApplication,
 );
 

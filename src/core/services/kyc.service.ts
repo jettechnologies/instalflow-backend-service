@@ -168,7 +168,10 @@ export class KycService {
     }
 
     // Verify PDF mime-type / extension
-    const ext = path.extname(file.name).toLowerCase();
+    const fileName = file.originalname || file.name || "";
+    const filePath = file.path || file.tempFilePath || "";
+
+    const ext = path.extname(fileName).toLowerCase();
     if (ext !== ".pdf" || file.mimetype !== "application/pdf") {
       throw new BadRequestError("Only PDF (.pdf) documents are accepted.");
     }
@@ -176,7 +179,7 @@ export class KycService {
     // 2. Upload PDF to Cloudinary as private documents (Bypass in test/mock environments)
     let uploadResult;
     if (
-      file.tempFilePath.includes("dummy.pdf") ||
+      filePath.includes("dummy.pdf") ||
       process.env.NODE_ENV === "test"
     ) {
       uploadResult = {
@@ -185,15 +188,18 @@ export class KycService {
         format: "pdf",
         resource_type: "raw",
       };
-      if (fs.existsSync(file.tempFilePath)) {
-        fs.unlink(file.tempFilePath, () => {});
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, () => {});
       }
     } else {
-      uploadResult = await uploadToCloudinary(file.tempFilePath, "documents");
+      uploadResult = await uploadToCloudinary(filePath, "documents");
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, () => {});
+      }
     }
 
     // 3. Compute Cryptographic Checksum SHA-256
-    const fileHash = this.getFileHash(file.tempFilePath);
+    const fileHash = this.getFileHash(filePath);
 
     // 4. Simulate External KYC Check
     const customerName = customer.name || "Customer";
