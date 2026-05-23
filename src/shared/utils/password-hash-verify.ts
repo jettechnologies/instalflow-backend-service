@@ -82,3 +82,39 @@ export function verifyRefreshToken(token: string) {
 export function verifyAccessToken(token: string) {
   return jwt.verify(token, ACCESS_TOKEN_SECRET) as AccessTokenParams;
 }
+
+const KYC_ONBOARDING_SECRET = process.env.KYC_ONBOARDING_SECRET!;
+
+interface OnboardingTokenPayload {
+  customerId: string;
+  purpose: "KYC_ONBOARDING";
+}
+
+/**
+ * Generates a short-lived (1 hour) signed onboarding JWT for use exclusively
+ * on the POST /kyc/submit endpoint after customer invite registration.
+ */
+export function generateOnboardingToken(customerId: string): string {
+  return jwt.sign(
+    { customerId, purpose: "KYC_ONBOARDING" } as OnboardingTokenPayload,
+    KYC_ONBOARDING_SECRET,
+    { expiresIn: "1h" },
+  );
+}
+
+/**
+ * Verifies a KYC onboarding token and returns its payload.
+ * Throws if expired, malformed, or purpose mismatch.
+ */
+export function verifyOnboardingToken(token: string): OnboardingTokenPayload {
+  const decoded = jwt.verify(
+    token,
+    KYC_ONBOARDING_SECRET,
+  ) as OnboardingTokenPayload;
+
+  if (decoded.purpose !== "KYC_ONBOARDING") {
+    throw new Error("Invalid token purpose.");
+  }
+
+  return decoded;
+}

@@ -113,3 +113,27 @@ export const validateUploadedFileSizes = (req: any, _res: any, next: any) => {
 
   next();
 };
+
+const PDF_SIZE_LIMIT = 10 * 1024 * 1024;
+
+const pdfFilter = (
+  _req: any,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback,
+) => {
+  const extname = path.extname(file.originalname).toLowerCase();
+  const mimetype = file.mimetype;
+
+  if (extname !== ".pdf" || mimetype !== "application/pdf") {
+    return cb(new BadRequestError("Only PDF (.pdf) documents are accepted."));
+  }
+
+  cb(null, true);
+};
+
+export const uploadSinglePdf = (fieldName: string) =>
+  multer({
+    storage,
+    fileFilter: pdfFilter,
+    limits: { fileSize: PDF_SIZE_LIMIT },
+  }).single(fieldName);

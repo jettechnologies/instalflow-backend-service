@@ -35,7 +35,7 @@ paths:
                   example: IFL-REF-JOHNMARKETER-A8786D
       responses:
         "201":
-          description: Customer registered successfully via referral.
+          description: Customer registered successfully. Use the onboardingToken to call POST /kyc/submit.
           content:
             application/json:
               schema:
@@ -46,11 +46,10 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Customer registered successfully via referral. Please log in to complete your application.
-                  userId:
+                    example: Customer registered successfully via referral. Use the onboardingToken to complete your KYC application.
+                  onboardingToken:
                     type: string
-                    format: uuid
-                    example: f35d5f46-8589-454b-8e32-edc7d45cf312
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         "400":
           description: Invalid inputs or invalid referral code.
         "409":
@@ -106,7 +105,7 @@ paths:
       summary: Submit Installment Eligibility Application (KYC)
       description: |
         Uploads customer's financial statement PDF and submits identity parameters for mock KYC check validation.
-        **Authorization:** Requires access token with role `CUSTOMER`.
+        **Authorization:** Requires the short-lived `onboardingToken` returned by `POST /kyc/register` as `Authorization: Bearer <onboardingToken>`. This token expires in **1 hour**.
         **Constraints:** Bank statement file size must be <= 10MB and format must be strictly `.pdf`.
       security:
         - bearerAuth: []
@@ -171,7 +170,7 @@ paths:
         "400":
           description: PDF upload fails size limit or type constraint.
         "401":
-          description: Unauthorized session.
+          description: Onboarding token missing, expired, or invalid.
 
   /kyc/applications/{id}/approve:
     post:

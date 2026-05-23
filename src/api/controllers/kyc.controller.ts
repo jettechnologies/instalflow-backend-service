@@ -50,11 +50,7 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const customerId = (req as any).user?.userId;
-      if (!customerId) {
-        throw new BadRequestError("Unauthorized customer session.");
-      }
-
+      const customerId = (req as any).onboardingCustomerId!;
       const params = SubmitApplicationSchema.parse(req.body);
       const file = req.file;
 

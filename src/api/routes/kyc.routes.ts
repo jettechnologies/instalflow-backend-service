@@ -2,10 +2,8 @@ import { Router } from "express";
 import { KycController } from "@/api/controllers/kyc.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { Role } from "@/infrastructure/prisma";
-import {
-  uploadSingle,
-  validateUploadedFileSizes,
-} from "@/api/middlewares/multer.middlewares";
+import { uploadSinglePdf } from "@/api/middlewares/multer.middlewares";
+import { requireOnboardingToken } from "@/api/middlewares/kyc-onboarding.guard";
 import { kycSubmitLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
@@ -15,10 +13,8 @@ router.post("/register", KycController.registerViaReferral);
 router.post(
   "/submit",
   kycSubmitLimiter,
-  requireAuth,
-  requireRole([Role.CUSTOMER]),
-  uploadSingle("bankStatement"),
-  validateUploadedFileSizes,
+  requireOnboardingToken,
+  uploadSinglePdf("bankStatement"),
   KycController.submitApplication,
 );
 

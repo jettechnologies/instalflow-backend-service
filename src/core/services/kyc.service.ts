@@ -12,7 +12,7 @@ import {
   InviteRegisterSchema,
   SubmitApplicationSchema,
 } from "@/shared/schemas/kyc.schema";
-import { bcryptHash } from "@/shared/utils/password-hash-verify";
+import { bcryptHash, generateOnboardingToken } from "@/shared/utils/password-hash-verify";
 import { uploadToCloudinary } from "./cloudinary.service";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
@@ -129,11 +129,14 @@ export class KycService {
       },
     });
 
+    // Issue a short-lived onboarding token (1hr) scoped only to POST /kyc/submit
+    const onboardingToken = generateOnboardingToken(user.userId);
+
     return {
       success: true,
       message:
-        "Customer registered successfully via referral. Please log in to complete your application.",
-      userId: user.userId,
+        "Customer registered successfully via referral. Use the onboardingToken to complete your KYC application.",
+      onboardingToken,
     };
   }
 
