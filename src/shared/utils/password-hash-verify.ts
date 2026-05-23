@@ -90,10 +90,6 @@ interface OnboardingTokenPayload {
   purpose: "KYC_ONBOARDING";
 }
 
-/**
- * Generates a short-lived (1 hour) signed onboarding JWT for use exclusively
- * on the POST /kyc/submit endpoint after customer invite registration.
- */
 export function generateOnboardingToken(customerId: string): string {
   return jwt.sign(
     { customerId, purpose: "KYC_ONBOARDING" } as OnboardingTokenPayload,
@@ -102,10 +98,6 @@ export function generateOnboardingToken(customerId: string): string {
   );
 }
 
-/**
- * Verifies a KYC onboarding token and returns its payload.
- * Throws if expired, malformed, or purpose mismatch.
- */
 export function verifyOnboardingToken(token: string): OnboardingTokenPayload {
   const decoded = jwt.verify(
     token,
