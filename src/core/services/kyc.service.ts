@@ -16,7 +16,7 @@ import {
   bcryptHash,
   generateOnboardingToken,
 } from "@/shared/utils/password-hash-verify";
-import { uploadToCloudinary } from "./cloudinary.service";
+import { uploadPdfToCloudinary } from "./cloudinary.service";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 import { KycStorageService } from "./kyc-storage.service";
@@ -195,10 +195,11 @@ export class KycService {
         fs.unlink(filePath, () => {});
       }
     } else {
-      uploadResult = await uploadToCloudinary(filePath, "documents");
+      uploadResult = await uploadPdfToCloudinary(filePath, "documents");
       if (fs.existsSync(filePath)) {
         fs.unlink(filePath, () => {});
       }
+      // uploadPdfToCloudinary already handles temp file cleanup internally
     }
 
     // 3. Compute Cryptographic Checksum SHA-256
@@ -562,7 +563,7 @@ export class KycService {
           "Unauthorized: You are not the referring marketer for this customer.",
         );
       }
-    } else if (reviewer.role === "ADMIN") {
+    } else if (reviewer.role === "ADMIN" || reviewer.role === "COMPANY") {
       if (customer.referredByMarketerId) {
         const marketer = await prisma.user.findUnique({
           where: { userId: customer.referredByMarketerId },
