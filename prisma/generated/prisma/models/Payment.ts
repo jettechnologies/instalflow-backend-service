@@ -42,7 +42,7 @@ export type PaymentMinAggregateOutputType = {
   installmentId: string | null
   amount: runtime.Decimal | null
   status: $Enums.PaymentStatus | null
-  gatewayRef: string | null
+  providerReference: string | null
   idempotencyKey: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -54,7 +54,7 @@ export type PaymentMaxAggregateOutputType = {
   installmentId: string | null
   amount: runtime.Decimal | null
   status: $Enums.PaymentStatus | null
-  gatewayRef: string | null
+  providerReference: string | null
   idempotencyKey: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -66,9 +66,8 @@ export type PaymentCountAggregateOutputType = {
   installmentId: number
   amount: number
   status: number
-  gatewayRef: number
+  providerReference: number
   idempotencyKey: number
-  webhookPayload: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -91,7 +90,7 @@ export type PaymentMinAggregateInputType = {
   installmentId?: true
   amount?: true
   status?: true
-  gatewayRef?: true
+  providerReference?: true
   idempotencyKey?: true
   createdAt?: true
   updatedAt?: true
@@ -103,7 +102,7 @@ export type PaymentMaxAggregateInputType = {
   installmentId?: true
   amount?: true
   status?: true
-  gatewayRef?: true
+  providerReference?: true
   idempotencyKey?: true
   createdAt?: true
   updatedAt?: true
@@ -115,9 +114,8 @@ export type PaymentCountAggregateInputType = {
   installmentId?: true
   amount?: true
   status?: true
-  gatewayRef?: true
+  providerReference?: true
   idempotencyKey?: true
-  webhookPayload?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -215,9 +213,8 @@ export type PaymentGroupByOutputType = {
   installmentId: string
   amount: runtime.Decimal
   status: $Enums.PaymentStatus
-  gatewayRef: string | null
+  providerReference: string | null
   idempotencyKey: string | null
-  webhookPayload: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: PaymentCountAggregateOutputType | null
@@ -251,9 +248,8 @@ export type PaymentWhereInput = {
   installmentId?: Prisma.StringFilter<"Payment"> | string
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
-  gatewayRef?: Prisma.StringNullableFilter<"Payment"> | string | null
+  providerReference?: Prisma.StringNullableFilter<"Payment"> | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"Payment"> | string | null
-  webhookPayload?: Prisma.JsonNullableFilter<"Payment">
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   installment?: Prisma.XOR<Prisma.InstallmentScalarRelationFilter, Prisma.InstallmentWhereInput>
@@ -265,9 +261,8 @@ export type PaymentOrderByWithRelationInput = {
   installmentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  gatewayRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  providerReference?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
-  webhookPayload?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   installment?: Prisma.InstallmentOrderByWithRelationInput
@@ -276,7 +271,7 @@ export type PaymentOrderByWithRelationInput = {
 export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   paymentId?: string
-  gatewayRef?: string
+  providerReference?: string
   idempotencyKey?: string
   AND?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   OR?: Prisma.PaymentWhereInput[]
@@ -284,11 +279,10 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   installmentId?: Prisma.StringFilter<"Payment"> | string
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
-  webhookPayload?: Prisma.JsonNullableFilter<"Payment">
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   installment?: Prisma.XOR<Prisma.InstallmentScalarRelationFilter, Prisma.InstallmentWhereInput>
-}, "id" | "paymentId" | "gatewayRef" | "idempotencyKey">
+}, "id" | "paymentId" | "providerReference" | "idempotencyKey">
 
 export type PaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -296,9 +290,8 @@ export type PaymentOrderByWithAggregationInput = {
   installmentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  gatewayRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  providerReference?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
-  webhookPayload?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PaymentCountOrderByAggregateInput
@@ -317,9 +310,8 @@ export type PaymentScalarWhereWithAggregatesInput = {
   installmentId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   amount?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Payment"> | $Enums.PaymentStatus
-  gatewayRef?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  providerReference?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
-  webhookPayload?: Prisma.JsonNullableWithAggregatesFilter<"Payment">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
 }
@@ -329,9 +321,8 @@ export type PaymentCreateInput = {
   paymentId?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.PaymentStatus
-  gatewayRef?: string | null
+  providerReference?: string | null
   idempotencyKey?: string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   installment: Prisma.InstallmentCreateNestedOneWithoutPaymentsInput
@@ -343,9 +334,8 @@ export type PaymentUncheckedCreateInput = {
   installmentId: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.PaymentStatus
-  gatewayRef?: string | null
+  providerReference?: string | null
   idempotencyKey?: string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -355,9 +345,8 @@ export type PaymentUpdateInput = {
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  providerReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   installment?: Prisma.InstallmentUpdateOneRequiredWithoutPaymentsNestedInput
@@ -369,9 +358,8 @@ export type PaymentUncheckedUpdateInput = {
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  providerReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -382,9 +370,8 @@ export type PaymentCreateManyInput = {
   installmentId: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.PaymentStatus
-  gatewayRef?: string | null
+  providerReference?: string | null
   idempotencyKey?: string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -394,9 +381,8 @@ export type PaymentUpdateManyMutationInput = {
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  providerReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -407,9 +393,8 @@ export type PaymentUncheckedUpdateManyInput = {
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  providerReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -430,9 +415,8 @@ export type PaymentCountOrderByAggregateInput = {
   installmentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  gatewayRef?: Prisma.SortOrder
+  providerReference?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
-  webhookPayload?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -448,7 +432,7 @@ export type PaymentMaxOrderByAggregateInput = {
   installmentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  gatewayRef?: Prisma.SortOrder
+  providerReference?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -460,7 +444,7 @@ export type PaymentMinOrderByAggregateInput = {
   installmentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  gatewayRef?: Prisma.SortOrder
+  providerReference?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -522,9 +506,8 @@ export type PaymentCreateWithoutInstallmentInput = {
   paymentId?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.PaymentStatus
-  gatewayRef?: string | null
+  providerReference?: string | null
   idempotencyKey?: string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -534,9 +517,8 @@ export type PaymentUncheckedCreateWithoutInstallmentInput = {
   paymentId?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.PaymentStatus
-  gatewayRef?: string | null
+  providerReference?: string | null
   idempotencyKey?: string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -576,9 +558,8 @@ export type PaymentScalarWhereInput = {
   installmentId?: Prisma.StringFilter<"Payment"> | string
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
-  gatewayRef?: Prisma.StringNullableFilter<"Payment"> | string | null
+  providerReference?: Prisma.StringNullableFilter<"Payment"> | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"Payment"> | string | null
-  webhookPayload?: Prisma.JsonNullableFilter<"Payment">
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
 }
@@ -588,9 +569,8 @@ export type PaymentCreateManyInstallmentInput = {
   paymentId?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.PaymentStatus
-  gatewayRef?: string | null
+  providerReference?: string | null
   idempotencyKey?: string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -600,9 +580,8 @@ export type PaymentUpdateWithoutInstallmentInput = {
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  providerReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -612,9 +591,8 @@ export type PaymentUncheckedUpdateWithoutInstallmentInput = {
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  providerReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -624,9 +602,8 @@ export type PaymentUncheckedUpdateManyWithoutInstallmentInput = {
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  providerReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  webhookPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -639,9 +616,8 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   installmentId?: boolean
   amount?: boolean
   status?: boolean
-  gatewayRef?: boolean
+  providerReference?: boolean
   idempotencyKey?: boolean
-  webhookPayload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   installment?: boolean | Prisma.InstallmentDefaultArgs<ExtArgs>
@@ -653,9 +629,8 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   installmentId?: boolean
   amount?: boolean
   status?: boolean
-  gatewayRef?: boolean
+  providerReference?: boolean
   idempotencyKey?: boolean
-  webhookPayload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   installment?: boolean | Prisma.InstallmentDefaultArgs<ExtArgs>
@@ -667,9 +642,8 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   installmentId?: boolean
   amount?: boolean
   status?: boolean
-  gatewayRef?: boolean
+  providerReference?: boolean
   idempotencyKey?: boolean
-  webhookPayload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   installment?: boolean | Prisma.InstallmentDefaultArgs<ExtArgs>
@@ -681,14 +655,13 @@ export type PaymentSelectScalar = {
   installmentId?: boolean
   amount?: boolean
   status?: boolean
-  gatewayRef?: boolean
+  providerReference?: boolean
   idempotencyKey?: boolean
-  webhookPayload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "paymentId" | "installmentId" | "amount" | "status" | "gatewayRef" | "idempotencyKey" | "webhookPayload" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "paymentId" | "installmentId" | "amount" | "status" | "providerReference" | "idempotencyKey" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   installment?: boolean | Prisma.InstallmentDefaultArgs<ExtArgs>
 }
@@ -710,9 +683,8 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     installmentId: string
     amount: runtime.Decimal
     status: $Enums.PaymentStatus
-    gatewayRef: string | null
+    providerReference: string | null
     idempotencyKey: string | null
-    webhookPayload: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["payment"]>
@@ -1144,9 +1116,8 @@ export interface PaymentFieldRefs {
   readonly installmentId: Prisma.FieldRef<"Payment", 'String'>
   readonly amount: Prisma.FieldRef<"Payment", 'Decimal'>
   readonly status: Prisma.FieldRef<"Payment", 'PaymentStatus'>
-  readonly gatewayRef: Prisma.FieldRef<"Payment", 'String'>
+  readonly providerReference: Prisma.FieldRef<"Payment", 'String'>
   readonly idempotencyKey: Prisma.FieldRef<"Payment", 'String'>
-  readonly webhookPayload: Prisma.FieldRef<"Payment", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Payment", 'DateTime'>
 }

@@ -189,7 +189,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				customerName: p.customerName,
 				productName: p.productName,
 				amountPaid: p.amountPaid,
-				dueDate: p.dueDate,
+				nextDueDate: p.nextDueDate,
 				percentagePaid: p.percentagePaid,
 				dashboard_url: p.dashboard_url,
 			}),

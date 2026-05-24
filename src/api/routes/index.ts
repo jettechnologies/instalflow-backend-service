@@ -11,6 +11,7 @@ import categoryRoutes from "@/api/routes/category.routes";
 import kycRoutes from "@/api/routes/kyc.routes";
 import customerManagementRoutes from "@/api/routes/customer-management.routes";
 import internalNotificationRoutes from "@/api/routes/internal_notification";
+import installmentRoutes from "@/api/routes/installment.routes";
 const router = Router();
 
 router.get("/health", (req, res) => {
@@ -31,4 +32,5 @@ router.use("/categories", categoryRoutes);
 router.use("/kyc", kycRoutes);
 router.use("/customers", customerManagementRoutes);
 router.use("/notifications", internalNotificationRoutes);
+router.use("/installments", installmentRoutes);
 export default router;

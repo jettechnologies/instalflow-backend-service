@@ -1,0 +1,295 @@
+tags:
+  - name: ["Installment Management"]
+    description: Financing contract installments, payment processing, and progress tracking
+
+paths:
+  /installments/{contractId}:
+    get:
+      tags: ["Installment Management"]
+      summary: Retrieve customer installment plan
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: Financing Contract ID
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Customer installment plan retrieved successfully.
+                  data:
+                    type: object
+                    properties:
+                      contract:
+                        $ref: "#/components/schemas/FinancingContract"
+                      installments:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Installment"
+                      overdueStatus:
+                        type: string
+                        enum: ["NORMAL", "OVERDUE", "PAID"]
+                        example: NORMAL
+
+  /installments/{contractId}/products:
+    get:
+      tags: ["Installment Management"]
+      summary: Retrieve financed products for a contract
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/FinancedProduct"
+
+  /installments/{contractId}/progress:
+    get:
+      tags: ["Installment Management"]
+      summary: Retrieve contract payment progress
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      percentagePaid:
+                        type: number
+                        example: 65.5
+                      totalPaid:
+                        type: number
+                      totalFinanced:
+                        type: number
+
+  /installments/{installmentId}/pay:
+    post:
+      tags: ["Installment Management"]
+      summary: Initialize installment payment
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: installmentId
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Payment initialized successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      authorizationUrl:
+                        type: string
+                      reference:
+                        type: string
+                      amount:
+                        type: number
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    FinancingContract:
+      type: object
+      properties:
+        contractId:
+          type: string
+
+        userId:
+          type: string
+
+        productId:
+          type: string
+
+        variantId:
+          type: string
+          nullable: true
+
+        kycApplicationId:
+          type: string
+
+        approvedProductPrice:
+          type: number
+
+        approvedInterestPercentage:
+          type: number
+
+        approvedDurationMonths:
+          type: integer
+
+        principal:
+          type: number
+
+        interest:
+          type: number
+
+        totalFinanced:
+          type: number
+
+        status:
+          type: string
+          enum:
+            - PENDING_ACTIVATION
+            - ACTIVE
+            - COMPLETED
+            - DEFAULTED
+            - CANCELLED
+            - RESTRUCTURED
+            - WRITTEN_OFF
+
+        activatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+        defaultedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+        cancelledAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    Installment:
+      type: object
+      properties:
+        installmentId:
+          type: string
+
+        financingContractId:
+          type: string
+
+        sequence:
+          type: integer
+
+        amount:
+          type: number
+
+        dueDate:
+          type: string
+          format: date-time
+
+        status:
+          type: string
+          enum:
+            - PENDING
+            - PAID
+            - OVERDUE
+            - DEFAULTED
+
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+
+        overdueAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    FinancedProduct:
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        price:
+          type: number
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+
+        message:
+          type: string
+
+        errorType:
+          type: string
+          enum:
+            - "Bad Request"
+            - "Authentication Error"
+            - "Authorization Error"
+            - "Not Found"
+            - "Conflict Error"
+            - "Validation Error"
+
+        statusCode:
+          type: integer
+          example: 400

@@ -320,9 +320,10 @@ export type ProductWhereInput = {
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.ProductVariantListRelationFilter
   referrals?: Prisma.ReferralListRelationFilter
-  installments?: Prisma.InstallmentListRelationFilter
   installmentPlans?: Prisma.ProductInstallmentPlanListRelationFilter
   images?: Prisma.ProductImageListRelationFilter
+  kycApplications?: Prisma.KycApplicationListRelationFilter
+  financingContracts?: Prisma.FinancingContractListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -345,9 +346,10 @@ export type ProductOrderByWithRelationInput = {
   category?: Prisma.CategoryOrderByWithRelationInput
   variants?: Prisma.ProductVariantOrderByRelationAggregateInput
   referrals?: Prisma.ReferralOrderByRelationAggregateInput
-  installments?: Prisma.InstallmentOrderByRelationAggregateInput
   installmentPlans?: Prisma.ProductInstallmentPlanOrderByRelationAggregateInput
   images?: Prisma.ProductImageOrderByRelationAggregateInput
+  kycApplications?: Prisma.KycApplicationOrderByRelationAggregateInput
+  financingContracts?: Prisma.FinancingContractOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -373,9 +375,10 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.ProductVariantListRelationFilter
   referrals?: Prisma.ReferralListRelationFilter
-  installments?: Prisma.InstallmentListRelationFilter
   installmentPlans?: Prisma.ProductInstallmentPlanListRelationFilter
   images?: Prisma.ProductImageListRelationFilter
+  kycApplications?: Prisma.KycApplicationListRelationFilter
+  financingContracts?: Prisma.FinancingContractListRelationFilter
 }, "id" | "productId" | "slug">
 
 export type ProductOrderByWithAggregationInput = {
@@ -440,9 +443,10 @@ export type ProductCreateInput = {
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -463,9 +467,10 @@ export type ProductUncheckedCreateInput = {
   categoryId: string
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -486,9 +491,10 @@ export type ProductUpdateInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -509,9 +515,10 @@ export type ProductUncheckedUpdateInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -772,18 +779,32 @@ export type ProductUpdateOneRequiredWithoutVariantsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutVariantsInput, Prisma.ProductUpdateWithoutVariantsInput>, Prisma.ProductUncheckedUpdateWithoutVariantsInput>
 }
 
-export type ProductCreateNestedOneWithoutInstallmentsInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutInstallmentsInput, Prisma.ProductUncheckedCreateWithoutInstallmentsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutInstallmentsInput
+export type ProductCreateNestedOneWithoutKycApplicationsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutKycApplicationsInput, Prisma.ProductUncheckedCreateWithoutKycApplicationsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutKycApplicationsInput
   connect?: Prisma.ProductWhereUniqueInput
 }
 
-export type ProductUpdateOneRequiredWithoutInstallmentsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutInstallmentsInput, Prisma.ProductUncheckedCreateWithoutInstallmentsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutInstallmentsInput
-  upsert?: Prisma.ProductUpsertWithoutInstallmentsInput
+export type ProductUpdateOneRequiredWithoutKycApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutKycApplicationsInput, Prisma.ProductUncheckedCreateWithoutKycApplicationsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutKycApplicationsInput
+  upsert?: Prisma.ProductUpsertWithoutKycApplicationsInput
   connect?: Prisma.ProductWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutInstallmentsInput, Prisma.ProductUpdateWithoutInstallmentsInput>, Prisma.ProductUncheckedUpdateWithoutInstallmentsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutKycApplicationsInput, Prisma.ProductUpdateWithoutKycApplicationsInput>, Prisma.ProductUncheckedUpdateWithoutKycApplicationsInput>
+}
+
+export type ProductCreateNestedOneWithoutFinancingContractsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutFinancingContractsInput, Prisma.ProductUncheckedCreateWithoutFinancingContractsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutFinancingContractsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutFinancingContractsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutFinancingContractsInput, Prisma.ProductUncheckedCreateWithoutFinancingContractsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutFinancingContractsInput
+  upsert?: Prisma.ProductUpsertWithoutFinancingContractsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutFinancingContractsInput, Prisma.ProductUpdateWithoutFinancingContractsInput>, Prisma.ProductUncheckedUpdateWithoutFinancingContractsInput>
 }
 
 export type ProductCreateNestedOneWithoutReferralsInput = {
@@ -847,9 +868,10 @@ export type ProductCreateWithoutCompanyInput = {
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutCompanyInput = {
@@ -869,9 +891,10 @@ export type ProductUncheckedCreateWithoutCompanyInput = {
   categoryId: string
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutCompanyInput = {
@@ -938,9 +961,10 @@ export type ProductCreateWithoutCategoryInput = {
   company?: Prisma.CompanyCreateNestedOneWithoutProductsInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -960,9 +984,10 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   updatedAt?: Date | string
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -1008,9 +1033,10 @@ export type ProductCreateWithoutVariantsInput = {
   company?: Prisma.CompanyCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutVariantsInput = {
@@ -1030,9 +1056,10 @@ export type ProductUncheckedCreateWithoutVariantsInput = {
   updatedAt?: Date | string
   categoryId: string
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutVariantsInput = {
@@ -1068,9 +1095,10 @@ export type ProductUpdateWithoutVariantsInput = {
   company?: Prisma.CompanyUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutVariantsInput = {
@@ -1090,12 +1118,13 @@ export type ProductUncheckedUpdateWithoutVariantsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
 }
 
-export type ProductCreateWithoutInstallmentsInput = {
+export type ProductCreateWithoutKycApplicationsInput = {
   id?: bigint | number
   productId?: string
   name: string
@@ -1115,9 +1144,10 @@ export type ProductCreateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
-export type ProductUncheckedCreateWithoutInstallmentsInput = {
+export type ProductUncheckedCreateWithoutKycApplicationsInput = {
   id?: bigint | number
   productId?: string
   companyId?: string | null
@@ -1137,25 +1167,26 @@ export type ProductUncheckedCreateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
-export type ProductCreateOrConnectWithoutInstallmentsInput = {
+export type ProductCreateOrConnectWithoutKycApplicationsInput = {
   where: Prisma.ProductWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProductCreateWithoutInstallmentsInput, Prisma.ProductUncheckedCreateWithoutInstallmentsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutKycApplicationsInput, Prisma.ProductUncheckedCreateWithoutKycApplicationsInput>
 }
 
-export type ProductUpsertWithoutInstallmentsInput = {
-  update: Prisma.XOR<Prisma.ProductUpdateWithoutInstallmentsInput, Prisma.ProductUncheckedUpdateWithoutInstallmentsInput>
-  create: Prisma.XOR<Prisma.ProductCreateWithoutInstallmentsInput, Prisma.ProductUncheckedCreateWithoutInstallmentsInput>
+export type ProductUpsertWithoutKycApplicationsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutKycApplicationsInput, Prisma.ProductUncheckedUpdateWithoutKycApplicationsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutKycApplicationsInput, Prisma.ProductUncheckedCreateWithoutKycApplicationsInput>
   where?: Prisma.ProductWhereInput
 }
 
-export type ProductUpdateToOneWithWhereWithoutInstallmentsInput = {
+export type ProductUpdateToOneWithWhereWithoutKycApplicationsInput = {
   where?: Prisma.ProductWhereInput
-  data: Prisma.XOR<Prisma.ProductUpdateWithoutInstallmentsInput, Prisma.ProductUncheckedUpdateWithoutInstallmentsInput>
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutKycApplicationsInput, Prisma.ProductUncheckedUpdateWithoutKycApplicationsInput>
 }
 
-export type ProductUpdateWithoutInstallmentsInput = {
+export type ProductUpdateWithoutKycApplicationsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1175,9 +1206,10 @@ export type ProductUpdateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
-export type ProductUncheckedUpdateWithoutInstallmentsInput = {
+export type ProductUncheckedUpdateWithoutKycApplicationsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1197,6 +1229,115 @@ export type ProductUncheckedUpdateWithoutInstallmentsInput = {
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
+}
+
+export type ProductCreateWithoutFinancingContractsInput = {
+  id?: bigint | number
+  productId?: string
+  name: string
+  slug: string
+  description?: string | null
+  minPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  maxPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  stockQuantity?: number
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutProductsInput
+  category: Prisma.CategoryCreateNestedOneWithoutProductsInput
+  variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
+  installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
+  images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutFinancingContractsInput = {
+  id?: bigint | number
+  productId?: string
+  companyId?: string | null
+  name: string
+  slug: string
+  description?: string | null
+  minPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  maxPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  stockQuantity?: number
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  categoryId: string
+  variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
+  installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
+  images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutFinancingContractsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutFinancingContractsInput, Prisma.ProductUncheckedCreateWithoutFinancingContractsInput>
+}
+
+export type ProductUpsertWithoutFinancingContractsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutFinancingContractsInput, Prisma.ProductUncheckedUpdateWithoutFinancingContractsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutFinancingContractsInput, Prisma.ProductUncheckedCreateWithoutFinancingContractsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutFinancingContractsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutFinancingContractsInput, Prisma.ProductUncheckedUpdateWithoutFinancingContractsInput>
+}
+
+export type ProductUpdateWithoutFinancingContractsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  maxPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  stockQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutProductsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
+  variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
+  installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
+  images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutFinancingContractsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  maxPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  stockQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
+  installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
+  images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutReferralsInput = {
@@ -1216,9 +1357,10 @@ export type ProductCreateWithoutReferralsInput = {
   company?: Prisma.CompanyCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutReferralsInput = {
@@ -1238,9 +1380,10 @@ export type ProductUncheckedCreateWithoutReferralsInput = {
   updatedAt?: Date | string
   categoryId: string
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutReferralsInput = {
@@ -1276,9 +1419,10 @@ export type ProductUpdateWithoutReferralsInput = {
   company?: Prisma.CompanyUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutReferralsInput = {
@@ -1298,9 +1442,10 @@ export type ProductUncheckedUpdateWithoutReferralsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutInstallmentPlansInput = {
@@ -1321,8 +1466,9 @@ export type ProductCreateWithoutInstallmentPlansInput = {
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutInstallmentPlansInput = {
@@ -1343,8 +1489,9 @@ export type ProductUncheckedCreateWithoutInstallmentPlansInput = {
   categoryId: string
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutProductInput
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutInstallmentPlansInput = {
@@ -1381,8 +1528,9 @@ export type ProductUpdateWithoutInstallmentPlansInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutInstallmentPlansInput = {
@@ -1403,8 +1551,9 @@ export type ProductUncheckedUpdateWithoutInstallmentPlansInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutImagesInput = {
@@ -1425,8 +1574,9 @@ export type ProductCreateWithoutImagesInput = {
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutImagesInput = {
@@ -1447,8 +1597,9 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   categoryId: string
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutProductInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutProductInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedCreateNestedManyWithoutProductInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutProductInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutImagesInput = {
@@ -1485,8 +1636,9 @@ export type ProductUpdateWithoutImagesInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -1507,8 +1659,9 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyCompanyInput = {
@@ -1545,9 +1698,10 @@ export type ProductUpdateWithoutCompanyInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutCompanyInput = {
@@ -1567,9 +1721,10 @@ export type ProductUncheckedUpdateWithoutCompanyInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutCompanyInput = {
@@ -1623,9 +1778,10 @@ export type ProductUpdateWithoutCategoryInput = {
   company?: Prisma.CompanyUpdateOneWithoutProductsNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -1645,9 +1801,10 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutProductNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutProductNestedInput
   installmentPlans?: Prisma.ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutProductNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -1675,17 +1832,19 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
 export type ProductCountOutputType = {
   variants: number
   referrals: number
-  installments: number
   installmentPlans: number
   images: number
+  kycApplications: number
+  financingContracts: number
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   variants?: boolean | ProductCountOutputTypeCountVariantsArgs
   referrals?: boolean | ProductCountOutputTypeCountReferralsArgs
-  installments?: boolean | ProductCountOutputTypeCountInstallmentsArgs
   installmentPlans?: boolean | ProductCountOutputTypeCountInstallmentPlansArgs
   images?: boolean | ProductCountOutputTypeCountImagesArgs
+  kycApplications?: boolean | ProductCountOutputTypeCountKycApplicationsArgs
+  financingContracts?: boolean | ProductCountOutputTypeCountFinancingContractsArgs
 }
 
 /**
@@ -1715,13 +1874,6 @@ export type ProductCountOutputTypeCountReferralsArgs<ExtArgs extends runtime.Typ
 /**
  * ProductCountOutputType without action
  */
-export type ProductCountOutputTypeCountInstallmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InstallmentWhereInput
-}
-
-/**
- * ProductCountOutputType without action
- */
 export type ProductCountOutputTypeCountInstallmentPlansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ProductInstallmentPlanWhereInput
 }
@@ -1731,6 +1883,20 @@ export type ProductCountOutputTypeCountInstallmentPlansArgs<ExtArgs extends runt
  */
 export type ProductCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ProductImageWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountKycApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KycApplicationWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountFinancingContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FinancingContractWhereInput
 }
 
 
@@ -1754,9 +1920,10 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Product$variantsArgs<ExtArgs>
   referrals?: boolean | Prisma.Product$referralsArgs<ExtArgs>
-  installments?: boolean | Prisma.Product$installmentsArgs<ExtArgs>
   installmentPlans?: boolean | Prisma.Product$installmentPlansArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
+  kycApplications?: boolean | Prisma.Product$kycApplicationsArgs<ExtArgs>
+  financingContracts?: boolean | Prisma.Product$financingContractsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
@@ -1824,9 +1991,10 @@ export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Product$variantsArgs<ExtArgs>
   referrals?: boolean | Prisma.Product$referralsArgs<ExtArgs>
-  installments?: boolean | Prisma.Product$installmentsArgs<ExtArgs>
   installmentPlans?: boolean | Prisma.Product$installmentPlansArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
+  kycApplications?: boolean | Prisma.Product$kycApplicationsArgs<ExtArgs>
+  financingContracts?: boolean | Prisma.Product$financingContractsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1845,9 +2013,10 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     category: Prisma.$CategoryPayload<ExtArgs>
     variants: Prisma.$ProductVariantPayload<ExtArgs>[]
     referrals: Prisma.$ReferralPayload<ExtArgs>[]
-    installments: Prisma.$InstallmentPayload<ExtArgs>[]
     installmentPlans: Prisma.$ProductInstallmentPlanPayload<ExtArgs>[]
     images: Prisma.$ProductImagePayload<ExtArgs>[]
+    kycApplications: Prisma.$KycApplicationPayload<ExtArgs>[]
+    financingContracts: Prisma.$FinancingContractPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -2263,9 +2432,10 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   variants<T extends Prisma.Product$variantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$variantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductVariantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   referrals<T extends Prisma.Product$referralsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  installments<T extends Prisma.Product$installmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$installmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   installmentPlans<T extends Prisma.Product$installmentPlansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$installmentPlansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductInstallmentPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   images<T extends Prisma.Product$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  kycApplications<T extends Prisma.Product$kycApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$kycApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financingContracts<T extends Prisma.Product$financingContractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$financingContractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancingContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2778,30 +2948,6 @@ export type Product$referralsArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Product.installments
- */
-export type Product$installmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Installment
-   */
-  select?: Prisma.InstallmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Installment
-   */
-  omit?: Prisma.InstallmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.InstallmentInclude<ExtArgs> | null
-  where?: Prisma.InstallmentWhereInput
-  orderBy?: Prisma.InstallmentOrderByWithRelationInput | Prisma.InstallmentOrderByWithRelationInput[]
-  cursor?: Prisma.InstallmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.InstallmentScalarFieldEnum | Prisma.InstallmentScalarFieldEnum[]
-}
-
-/**
  * Product.installmentPlans
  */
 export type Product$installmentPlansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2847,6 +2993,54 @@ export type Product$imagesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ProductImageScalarFieldEnum | Prisma.ProductImageScalarFieldEnum[]
+}
+
+/**
+ * Product.kycApplications
+ */
+export type Product$kycApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the KycApplication
+   */
+  select?: Prisma.KycApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the KycApplication
+   */
+  omit?: Prisma.KycApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KycApplicationInclude<ExtArgs> | null
+  where?: Prisma.KycApplicationWhereInput
+  orderBy?: Prisma.KycApplicationOrderByWithRelationInput | Prisma.KycApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.KycApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KycApplicationScalarFieldEnum | Prisma.KycApplicationScalarFieldEnum[]
+}
+
+/**
+ * Product.financingContracts
+ */
+export type Product$financingContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancingContract
+   */
+  select?: Prisma.FinancingContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancingContract
+   */
+  omit?: Prisma.FinancingContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancingContractInclude<ExtArgs> | null
+  where?: Prisma.FinancingContractWhereInput
+  orderBy?: Prisma.FinancingContractOrderByWithRelationInput | Prisma.FinancingContractOrderByWithRelationInput[]
+  cursor?: Prisma.FinancingContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FinancingContractScalarFieldEnum | Prisma.FinancingContractScalarFieldEnum[]
 }
 
 /**

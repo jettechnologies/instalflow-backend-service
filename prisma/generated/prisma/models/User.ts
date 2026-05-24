@@ -302,7 +302,6 @@ export type UserWhereInput = {
   sessions?: Prisma.UserSessionListRelationFilter
   kycApplications?: Prisma.KycApplicationListRelationFilter
   kycAuditTrails?: Prisma.KycAuditTrailListRelationFilter
-  installments?: Prisma.InstallmentListRelationFilter
   internalNotifications?: Prisma.InternalNotificationListRelationFilter
   referrals?: Prisma.ReferralListRelationFilter
   commissions?: Prisma.CommissionListRelationFilter
@@ -312,6 +311,7 @@ export type UserWhereInput = {
   createdUsers?: Prisma.UserListRelationFilter
   requestedApprovals?: Prisma.ApprovalRequestListRelationFilter
   targetedApprovals?: Prisma.ApprovalRequestListRelationFilter
+  financingContracts?: Prisma.FinancingContractListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -336,7 +336,6 @@ export type UserOrderByWithRelationInput = {
   sessions?: Prisma.UserSessionOrderByRelationAggregateInput
   kycApplications?: Prisma.KycApplicationOrderByRelationAggregateInput
   kycAuditTrails?: Prisma.KycAuditTrailOrderByRelationAggregateInput
-  installments?: Prisma.InstallmentOrderByRelationAggregateInput
   internalNotifications?: Prisma.InternalNotificationOrderByRelationAggregateInput
   referrals?: Prisma.ReferralOrderByRelationAggregateInput
   commissions?: Prisma.CommissionOrderByRelationAggregateInput
@@ -346,6 +345,7 @@ export type UserOrderByWithRelationInput = {
   createdUsers?: Prisma.UserOrderByRelationAggregateInput
   requestedApprovals?: Prisma.ApprovalRequestOrderByRelationAggregateInput
   targetedApprovals?: Prisma.ApprovalRequestOrderByRelationAggregateInput
+  financingContracts?: Prisma.FinancingContractOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -373,7 +373,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sessions?: Prisma.UserSessionListRelationFilter
   kycApplications?: Prisma.KycApplicationListRelationFilter
   kycAuditTrails?: Prisma.KycAuditTrailListRelationFilter
-  installments?: Prisma.InstallmentListRelationFilter
   internalNotifications?: Prisma.InternalNotificationListRelationFilter
   referrals?: Prisma.ReferralListRelationFilter
   commissions?: Prisma.CommissionListRelationFilter
@@ -383,6 +382,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdUsers?: Prisma.UserListRelationFilter
   requestedApprovals?: Prisma.ApprovalRequestListRelationFilter
   targetedApprovals?: Prisma.ApprovalRequestListRelationFilter
+  financingContracts?: Prisma.FinancingContractListRelationFilter
 }, "id" | "userId" | "email" | "referralCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -448,7 +448,6 @@ export type UserCreateInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -458,6 +457,7 @@ export type UserCreateInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -480,7 +480,6 @@ export type UserUncheckedCreateInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -489,6 +488,7 @@ export type UserUncheckedCreateInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -510,7 +510,6 @@ export type UserUpdateInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -520,6 +519,7 @@ export type UserUpdateInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -542,7 +542,6 @@ export type UserUncheckedUpdateInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -551,6 +550,7 @@ export type UserUncheckedUpdateInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -914,18 +914,18 @@ export type UserUpdateOneWithoutKycAuditTrailsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutKycAuditTrailsInput, Prisma.UserUpdateWithoutKycAuditTrailsInput>, Prisma.UserUncheckedUpdateWithoutKycAuditTrailsInput>
 }
 
-export type UserCreateNestedOneWithoutInstallmentsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutInstallmentsInput, Prisma.UserUncheckedCreateWithoutInstallmentsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInstallmentsInput
+export type UserCreateNestedOneWithoutFinancingContractsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFinancingContractsInput, Prisma.UserUncheckedCreateWithoutFinancingContractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFinancingContractsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutInstallmentsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutInstallmentsInput, Prisma.UserUncheckedCreateWithoutInstallmentsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInstallmentsInput
-  upsert?: Prisma.UserUpsertWithoutInstallmentsInput
+export type UserUpdateOneRequiredWithoutFinancingContractsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFinancingContractsInput, Prisma.UserUncheckedCreateWithoutFinancingContractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFinancingContractsInput
+  upsert?: Prisma.UserUpsertWithoutFinancingContractsInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInstallmentsInput, Prisma.UserUpdateWithoutInstallmentsInput>, Prisma.UserUncheckedUpdateWithoutInstallmentsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFinancingContractsInput, Prisma.UserUpdateWithoutFinancingContractsInput>, Prisma.UserUncheckedUpdateWithoutFinancingContractsInput>
 }
 
 export type UserCreateNestedOneWithoutCommissionsInput = {
@@ -1030,7 +1030,6 @@ export type UserCreateWithoutCompanyInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1040,6 +1039,7 @@ export type UserCreateWithoutCompanyInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -1061,7 +1061,6 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1070,6 +1069,7 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -1137,7 +1137,6 @@ export type UserCreateWithoutReferredUsersInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1147,6 +1146,7 @@ export type UserCreateWithoutReferredUsersInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -1168,7 +1168,6 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1177,6 +1176,7 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -1202,7 +1202,6 @@ export type UserCreateWithoutReferredByMarketerInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1212,6 +1211,7 @@ export type UserCreateWithoutReferredByMarketerInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredByMarketerInput = {
@@ -1233,7 +1233,6 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1242,6 +1241,7 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredByMarketerInput = {
@@ -1273,7 +1273,6 @@ export type UserCreateWithoutCreatedUsersInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1282,6 +1281,7 @@ export type UserCreateWithoutCreatedUsersInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedUsersInput = {
@@ -1304,7 +1304,6 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1312,6 +1311,7 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedUsersInput = {
@@ -1338,7 +1338,6 @@ export type UserCreateWithoutCreatorInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1347,6 +1346,7 @@ export type UserCreateWithoutCreatorInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatorInput = {
@@ -1368,7 +1368,6 @@ export type UserUncheckedCreateWithoutCreatorInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1377,6 +1376,7 @@ export type UserUncheckedCreateWithoutCreatorInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatorInput = {
@@ -1418,7 +1418,6 @@ export type UserUpdateWithoutReferredUsersInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -1428,6 +1427,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -1449,7 +1449,6 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -1458,6 +1457,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutReferredByMarketerInput = {
@@ -1506,7 +1506,6 @@ export type UserUpdateWithoutCreatedUsersInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -1515,6 +1514,7 @@ export type UserUpdateWithoutCreatedUsersInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedUsersInput = {
@@ -1537,7 +1537,6 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -1545,6 +1544,7 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -1581,7 +1581,6 @@ export type UserCreateWithoutSessionsInput = {
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1591,6 +1590,7 @@ export type UserCreateWithoutSessionsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1612,7 +1612,6 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1621,6 +1620,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1657,7 +1657,6 @@ export type UserUpdateWithoutSessionsInput = {
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -1667,6 +1666,7 @@ export type UserUpdateWithoutSessionsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1688,7 +1688,6 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -1697,6 +1696,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
@@ -1718,7 +1718,6 @@ export type UserCreateWithoutPasswordResetsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1727,6 +1726,7 @@ export type UserCreateWithoutPasswordResetsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
@@ -1749,7 +1749,6 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1757,6 +1756,7 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -1794,7 +1794,6 @@ export type UserUpdateWithoutPasswordResetsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -1803,6 +1802,7 @@ export type UserUpdateWithoutPasswordResetsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
@@ -1825,7 +1825,6 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -1833,6 +1832,7 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutKycApplicationsInput = {
@@ -1853,7 +1853,6 @@ export type UserCreateWithoutKycApplicationsInput = {
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1863,6 +1862,7 @@ export type UserCreateWithoutKycApplicationsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutKycApplicationsInput = {
@@ -1884,7 +1884,6 @@ export type UserUncheckedCreateWithoutKycApplicationsInput = {
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -1893,6 +1892,7 @@ export type UserUncheckedCreateWithoutKycApplicationsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutKycApplicationsInput = {
@@ -1929,7 +1929,6 @@ export type UserUpdateWithoutKycApplicationsInput = {
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -1939,6 +1938,7 @@ export type UserUpdateWithoutKycApplicationsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKycApplicationsInput = {
@@ -1960,7 +1960,6 @@ export type UserUncheckedUpdateWithoutKycApplicationsInput = {
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -1969,6 +1968,7 @@ export type UserUncheckedUpdateWithoutKycApplicationsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutKycAuditTrailsInput = {
@@ -1989,7 +1989,6 @@ export type UserCreateWithoutKycAuditTrailsInput = {
   referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -1999,6 +1998,7 @@ export type UserCreateWithoutKycAuditTrailsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
@@ -2020,7 +2020,6 @@ export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
   referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -2029,6 +2028,7 @@ export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutKycAuditTrailsInput = {
@@ -2065,7 +2065,6 @@ export type UserUpdateWithoutKycAuditTrailsInput = {
   referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -2075,6 +2074,7 @@ export type UserUpdateWithoutKycAuditTrailsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
@@ -2096,7 +2096,6 @@ export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
   referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -2105,9 +2104,10 @@ export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutInstallmentsInput = {
+export type UserCreateWithoutFinancingContractsInput = {
   id?: bigint | number
   userId?: string
   email: string
@@ -2137,7 +2137,7 @@ export type UserCreateWithoutInstallmentsInput = {
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
 }
 
-export type UserUncheckedCreateWithoutInstallmentsInput = {
+export type UserUncheckedCreateWithoutFinancingContractsInput = {
   id?: bigint | number
   userId?: string
   email: string
@@ -2167,23 +2167,23 @@ export type UserUncheckedCreateWithoutInstallmentsInput = {
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
 }
 
-export type UserCreateOrConnectWithoutInstallmentsInput = {
+export type UserCreateOrConnectWithoutFinancingContractsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutInstallmentsInput, Prisma.UserUncheckedCreateWithoutInstallmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFinancingContractsInput, Prisma.UserUncheckedCreateWithoutFinancingContractsInput>
 }
 
-export type UserUpsertWithoutInstallmentsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutInstallmentsInput, Prisma.UserUncheckedUpdateWithoutInstallmentsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutInstallmentsInput, Prisma.UserUncheckedCreateWithoutInstallmentsInput>
+export type UserUpsertWithoutFinancingContractsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFinancingContractsInput, Prisma.UserUncheckedUpdateWithoutFinancingContractsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFinancingContractsInput, Prisma.UserUncheckedCreateWithoutFinancingContractsInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutInstallmentsInput = {
+export type UserUpdateToOneWithWhereWithoutFinancingContractsInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutInstallmentsInput, Prisma.UserUncheckedUpdateWithoutInstallmentsInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFinancingContractsInput, Prisma.UserUncheckedUpdateWithoutFinancingContractsInput>
 }
 
-export type UserUpdateWithoutInstallmentsInput = {
+export type UserUpdateWithoutFinancingContractsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2213,7 +2213,7 @@ export type UserUpdateWithoutInstallmentsInput = {
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutInstallmentsInput = {
+export type UserUncheckedUpdateWithoutFinancingContractsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2262,7 +2262,6 @@ export type UserCreateWithoutCommissionsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2271,6 +2270,7 @@ export type UserCreateWithoutCommissionsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommissionsInput = {
@@ -2293,7 +2293,6 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2301,6 +2300,7 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommissionsInput = {
@@ -2338,7 +2338,6 @@ export type UserUpdateWithoutCommissionsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -2347,6 +2346,7 @@ export type UserUpdateWithoutCommissionsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommissionsInput = {
@@ -2369,7 +2369,6 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -2377,6 +2376,7 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -2398,7 +2398,6 @@ export type UserCreateWithoutTransactionsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -2407,6 +2406,7 @@ export type UserCreateWithoutTransactionsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -2429,7 +2429,6 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -2437,6 +2436,7 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -2474,7 +2474,6 @@ export type UserUpdateWithoutTransactionsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -2483,6 +2482,7 @@ export type UserUpdateWithoutTransactionsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -2505,7 +2505,6 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -2513,6 +2512,7 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferralsInput = {
@@ -2534,7 +2534,6 @@ export type UserCreateWithoutReferralsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2543,6 +2542,7 @@ export type UserCreateWithoutReferralsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralsInput = {
@@ -2565,7 +2565,6 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2573,6 +2572,7 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralsInput = {
@@ -2610,7 +2610,6 @@ export type UserUpdateWithoutReferralsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -2619,6 +2618,7 @@ export type UserUpdateWithoutReferralsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralsInput = {
@@ -2641,7 +2641,6 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -2649,6 +2648,7 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRequestedApprovalsInput = {
@@ -2670,7 +2670,6 @@ export type UserCreateWithoutRequestedApprovalsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -2679,6 +2678,7 @@ export type UserCreateWithoutRequestedApprovalsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
@@ -2701,7 +2701,6 @@ export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -2709,6 +2708,7 @@ export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRequestedApprovalsInput = {
@@ -2735,7 +2735,6 @@ export type UserCreateWithoutTargetedApprovalsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
@@ -2744,6 +2743,7 @@ export type UserCreateWithoutTargetedApprovalsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
@@ -2766,7 +2766,6 @@ export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
@@ -2774,6 +2773,7 @@ export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTargetedApprovalsInput = {
@@ -2811,7 +2811,6 @@ export type UserUpdateWithoutRequestedApprovalsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -2820,6 +2819,7 @@ export type UserUpdateWithoutRequestedApprovalsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
@@ -2842,7 +2842,6 @@ export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -2850,6 +2849,7 @@ export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTargetedApprovalsInput = {
@@ -2882,7 +2882,6 @@ export type UserUpdateWithoutTargetedApprovalsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -2891,6 +2890,7 @@ export type UserUpdateWithoutTargetedApprovalsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
@@ -2913,7 +2913,6 @@ export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -2921,6 +2920,7 @@ export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInternalNotificationsInput = {
@@ -2942,7 +2942,6 @@ export type UserCreateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2951,6 +2950,7 @@ export type UserCreateWithoutInternalNotificationsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInternalNotificationsInput = {
@@ -2973,7 +2973,6 @@ export type UserUncheckedCreateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
-  installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutUserInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2981,6 +2980,7 @@ export type UserUncheckedCreateWithoutInternalNotificationsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInternalNotificationsInput = {
@@ -3018,7 +3018,6 @@ export type UserUpdateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -3027,6 +3026,7 @@ export type UserUpdateWithoutInternalNotificationsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
@@ -3049,7 +3049,6 @@ export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -3057,6 +3056,7 @@ export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -3094,7 +3094,6 @@ export type UserUpdateWithoutCompanyInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -3104,6 +3103,7 @@ export type UserUpdateWithoutCompanyInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -3125,7 +3125,6 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -3134,6 +3133,7 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -3205,7 +3205,6 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -3215,6 +3214,7 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
@@ -3236,7 +3236,6 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -3245,6 +3244,7 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutReferredByMarketerInput = {
@@ -3283,7 +3283,6 @@ export type UserUpdateWithoutCreatorInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
@@ -3292,6 +3291,7 @@ export type UserUpdateWithoutCreatorInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatorInput = {
@@ -3313,7 +3313,6 @@ export type UserUncheckedUpdateWithoutCreatorInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
-  installments?: Prisma.InstallmentUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
@@ -3322,6 +3321,7 @@ export type UserUncheckedUpdateWithoutCreatorInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCreatorInput = {
@@ -3351,7 +3351,6 @@ export type UserCountOutputType = {
   sessions: number
   kycApplications: number
   kycAuditTrails: number
-  installments: number
   internalNotifications: number
   referrals: number
   commissions: number
@@ -3360,6 +3359,7 @@ export type UserCountOutputType = {
   createdUsers: number
   requestedApprovals: number
   targetedApprovals: number
+  financingContracts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3367,7 +3367,6 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   kycApplications?: boolean | UserCountOutputTypeCountKycApplicationsArgs
   kycAuditTrails?: boolean | UserCountOutputTypeCountKycAuditTrailsArgs
-  installments?: boolean | UserCountOutputTypeCountInstallmentsArgs
   internalNotifications?: boolean | UserCountOutputTypeCountInternalNotificationsArgs
   referrals?: boolean | UserCountOutputTypeCountReferralsArgs
   commissions?: boolean | UserCountOutputTypeCountCommissionsArgs
@@ -3376,6 +3375,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   createdUsers?: boolean | UserCountOutputTypeCountCreatedUsersArgs
   requestedApprovals?: boolean | UserCountOutputTypeCountRequestedApprovalsArgs
   targetedApprovals?: boolean | UserCountOutputTypeCountTargetedApprovalsArgs
+  financingContracts?: boolean | UserCountOutputTypeCountFinancingContractsArgs
 }
 
 /**
@@ -3414,13 +3414,6 @@ export type UserCountOutputTypeCountKycApplicationsArgs<ExtArgs extends runtime.
  */
 export type UserCountOutputTypeCountKycAuditTrailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.KycAuditTrailWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountInstallmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InstallmentWhereInput
 }
 
 /**
@@ -3479,6 +3472,13 @@ export type UserCountOutputTypeCountTargetedApprovalsArgs<ExtArgs extends runtim
   where?: Prisma.ApprovalRequestWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFinancingContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FinancingContractWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3502,7 +3502,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   kycApplications?: boolean | Prisma.User$kycApplicationsArgs<ExtArgs>
   kycAuditTrails?: boolean | Prisma.User$kycAuditTrailsArgs<ExtArgs>
-  installments?: boolean | Prisma.User$installmentsArgs<ExtArgs>
   internalNotifications?: boolean | Prisma.User$internalNotificationsArgs<ExtArgs>
   referrals?: boolean | Prisma.User$referralsArgs<ExtArgs>
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
@@ -3512,6 +3511,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdUsers?: boolean | Prisma.User$createdUsersArgs<ExtArgs>
   requestedApprovals?: boolean | Prisma.User$requestedApprovalsArgs<ExtArgs>
   targetedApprovals?: boolean | Prisma.User$targetedApprovalsArgs<ExtArgs>
+  financingContracts?: boolean | Prisma.User$financingContractsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3583,7 +3583,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   kycApplications?: boolean | Prisma.User$kycApplicationsArgs<ExtArgs>
   kycAuditTrails?: boolean | Prisma.User$kycAuditTrailsArgs<ExtArgs>
-  installments?: boolean | Prisma.User$installmentsArgs<ExtArgs>
   internalNotifications?: boolean | Prisma.User$internalNotificationsArgs<ExtArgs>
   referrals?: boolean | Prisma.User$referralsArgs<ExtArgs>
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
@@ -3593,6 +3592,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdUsers?: boolean | Prisma.User$createdUsersArgs<ExtArgs>
   requestedApprovals?: boolean | Prisma.User$requestedApprovalsArgs<ExtArgs>
   targetedApprovals?: boolean | Prisma.User$targetedApprovalsArgs<ExtArgs>
+  financingContracts?: boolean | Prisma.User$financingContractsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3615,7 +3615,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sessions: Prisma.$UserSessionPayload<ExtArgs>[]
     kycApplications: Prisma.$KycApplicationPayload<ExtArgs>[]
     kycAuditTrails: Prisma.$KycAuditTrailPayload<ExtArgs>[]
-    installments: Prisma.$InstallmentPayload<ExtArgs>[]
     internalNotifications: Prisma.$InternalNotificationPayload<ExtArgs>[]
     referrals: Prisma.$ReferralPayload<ExtArgs>[]
     commissions: Prisma.$CommissionPayload<ExtArgs>[]
@@ -3625,6 +3624,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdUsers: Prisma.$UserPayload<ExtArgs>[]
     requestedApprovals: Prisma.$ApprovalRequestPayload<ExtArgs>[]
     targetedApprovals: Prisma.$ApprovalRequestPayload<ExtArgs>[]
+    financingContracts: Prisma.$FinancingContractPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -4042,7 +4042,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kycApplications<T extends Prisma.User$kycApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$kycApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kycAuditTrails<T extends Prisma.User$kycAuditTrailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$kycAuditTrailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycAuditTrailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  installments<T extends Prisma.User$installmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$installmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   internalNotifications<T extends Prisma.User$internalNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$internalNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InternalNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   referrals<T extends Prisma.User$referralsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   commissions<T extends Prisma.User$commissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4052,6 +4051,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   createdUsers<T extends Prisma.User$createdUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   requestedApprovals<T extends Prisma.User$requestedApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$requestedApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   targetedApprovals<T extends Prisma.User$targetedApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$targetedApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financingContracts<T extends Prisma.User$financingContractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$financingContractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancingContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4631,30 +4631,6 @@ export type User$kycAuditTrailsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * User.installments
- */
-export type User$installmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Installment
-   */
-  select?: Prisma.InstallmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Installment
-   */
-  omit?: Prisma.InstallmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.InstallmentInclude<ExtArgs> | null
-  where?: Prisma.InstallmentWhereInput
-  orderBy?: Prisma.InstallmentOrderByWithRelationInput | Prisma.InstallmentOrderByWithRelationInput[]
-  cursor?: Prisma.InstallmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.InstallmentScalarFieldEnum | Prisma.InstallmentScalarFieldEnum[]
-}
-
-/**
  * User.internalNotifications
  */
 export type User$internalNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4863,6 +4839,30 @@ export type User$targetedApprovalsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ApprovalRequestScalarFieldEnum | Prisma.ApprovalRequestScalarFieldEnum[]
+}
+
+/**
+ * User.financingContracts
+ */
+export type User$financingContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancingContract
+   */
+  select?: Prisma.FinancingContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancingContract
+   */
+  omit?: Prisma.FinancingContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancingContractInclude<ExtArgs> | null
+  where?: Prisma.FinancingContractWhereInput
+  orderBy?: Prisma.FinancingContractOrderByWithRelationInput | Prisma.FinancingContractOrderByWithRelationInput[]
+  cursor?: Prisma.FinancingContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FinancingContractScalarFieldEnum | Prisma.FinancingContractScalarFieldEnum[]
 }
 
 /**

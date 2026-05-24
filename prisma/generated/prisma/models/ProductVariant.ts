@@ -265,6 +265,7 @@ export type ProductVariantWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ProductVariant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProductVariant"> | Date | string
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  financingContracts?: Prisma.FinancingContractListRelationFilter
 }
 
 export type ProductVariantOrderByWithRelationInput = {
@@ -280,6 +281,7 @@ export type ProductVariantOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   product?: Prisma.ProductOrderByWithRelationInput
+  financingContracts?: Prisma.FinancingContractOrderByRelationAggregateInput
 }
 
 export type ProductVariantWhereUniqueInput = Prisma.AtLeast<{
@@ -298,6 +300,7 @@ export type ProductVariantWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ProductVariant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProductVariant"> | Date | string
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  financingContracts?: Prisma.FinancingContractListRelationFilter
 }, "id" | "variantId" | "sku">
 
 export type ProductVariantOrderByWithAggregationInput = {
@@ -348,6 +351,7 @@ export type ProductVariantCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutVariantsInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutVariantInput
 }
 
 export type ProductVariantUncheckedCreateInput = {
@@ -362,6 +366,7 @@ export type ProductVariantUncheckedCreateInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ProductVariantUpdateInput = {
@@ -376,6 +381,7 @@ export type ProductVariantUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutVariantsNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutVariantNestedInput
 }
 
 export type ProductVariantUncheckedUpdateInput = {
@@ -390,6 +396,7 @@ export type ProductVariantUncheckedUpdateInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ProductVariantCreateManyInput = {
@@ -501,6 +508,11 @@ export type ProductVariantSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
 }
 
+export type ProductVariantNullableScalarRelationFilter = {
+  is?: Prisma.ProductVariantWhereInput | null
+  isNot?: Prisma.ProductVariantWhereInput | null
+}
+
 export type ProductVariantCreateNestedManyWithoutProductInput = {
   create?: Prisma.XOR<Prisma.ProductVariantCreateWithoutProductInput, Prisma.ProductVariantUncheckedCreateWithoutProductInput> | Prisma.ProductVariantCreateWithoutProductInput[] | Prisma.ProductVariantUncheckedCreateWithoutProductInput[]
   connectOrCreate?: Prisma.ProductVariantCreateOrConnectWithoutProductInput | Prisma.ProductVariantCreateOrConnectWithoutProductInput[]
@@ -561,6 +573,22 @@ export type ProductVariantUpdateimagesInput = {
   push?: string | string[]
 }
 
+export type ProductVariantCreateNestedOneWithoutFinancingContractsInput = {
+  create?: Prisma.XOR<Prisma.ProductVariantCreateWithoutFinancingContractsInput, Prisma.ProductVariantUncheckedCreateWithoutFinancingContractsInput>
+  connectOrCreate?: Prisma.ProductVariantCreateOrConnectWithoutFinancingContractsInput
+  connect?: Prisma.ProductVariantWhereUniqueInput
+}
+
+export type ProductVariantUpdateOneWithoutFinancingContractsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductVariantCreateWithoutFinancingContractsInput, Prisma.ProductVariantUncheckedCreateWithoutFinancingContractsInput>
+  connectOrCreate?: Prisma.ProductVariantCreateOrConnectWithoutFinancingContractsInput
+  upsert?: Prisma.ProductVariantUpsertWithoutFinancingContractsInput
+  disconnect?: Prisma.ProductVariantWhereInput | boolean
+  delete?: Prisma.ProductVariantWhereInput | boolean
+  connect?: Prisma.ProductVariantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductVariantUpdateToOneWithWhereWithoutFinancingContractsInput, Prisma.ProductVariantUpdateWithoutFinancingContractsInput>, Prisma.ProductVariantUncheckedUpdateWithoutFinancingContractsInput>
+}
+
 export type ProductVariantCreateWithoutProductInput = {
   id?: bigint | number
   variantId?: string
@@ -572,6 +600,7 @@ export type ProductVariantCreateWithoutProductInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutVariantInput
 }
 
 export type ProductVariantUncheckedCreateWithoutProductInput = {
@@ -585,6 +614,7 @@ export type ProductVariantUncheckedCreateWithoutProductInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ProductVariantCreateOrConnectWithoutProductInput = {
@@ -630,6 +660,78 @@ export type ProductVariantScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"ProductVariant"> | Date | string
 }
 
+export type ProductVariantCreateWithoutFinancingContractsInput = {
+  id?: bigint | number
+  variantId?: string
+  sku: string
+  size?: string | null
+  color?: Prisma.ProductVariantCreatecolorInput | string[]
+  images?: Prisma.ProductVariantCreateimagesInput | string[]
+  stockQuantity?: number
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  product: Prisma.ProductCreateNestedOneWithoutVariantsInput
+}
+
+export type ProductVariantUncheckedCreateWithoutFinancingContractsInput = {
+  id?: bigint | number
+  variantId?: string
+  productId: string
+  sku: string
+  size?: string | null
+  color?: Prisma.ProductVariantCreatecolorInput | string[]
+  images?: Prisma.ProductVariantCreateimagesInput | string[]
+  stockQuantity?: number
+  price?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProductVariantCreateOrConnectWithoutFinancingContractsInput = {
+  where: Prisma.ProductVariantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductVariantCreateWithoutFinancingContractsInput, Prisma.ProductVariantUncheckedCreateWithoutFinancingContractsInput>
+}
+
+export type ProductVariantUpsertWithoutFinancingContractsInput = {
+  update: Prisma.XOR<Prisma.ProductVariantUpdateWithoutFinancingContractsInput, Prisma.ProductVariantUncheckedUpdateWithoutFinancingContractsInput>
+  create: Prisma.XOR<Prisma.ProductVariantCreateWithoutFinancingContractsInput, Prisma.ProductVariantUncheckedCreateWithoutFinancingContractsInput>
+  where?: Prisma.ProductVariantWhereInput
+}
+
+export type ProductVariantUpdateToOneWithWhereWithoutFinancingContractsInput = {
+  where?: Prisma.ProductVariantWhereInput
+  data: Prisma.XOR<Prisma.ProductVariantUpdateWithoutFinancingContractsInput, Prisma.ProductVariantUncheckedUpdateWithoutFinancingContractsInput>
+}
+
+export type ProductVariantUpdateWithoutFinancingContractsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.ProductVariantUpdatecolorInput | string[]
+  images?: Prisma.ProductVariantUpdateimagesInput | string[]
+  stockQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  product?: Prisma.ProductUpdateOneRequiredWithoutVariantsNestedInput
+}
+
+export type ProductVariantUncheckedUpdateWithoutFinancingContractsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.ProductVariantUpdatecolorInput | string[]
+  images?: Prisma.ProductVariantUpdateimagesInput | string[]
+  stockQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type ProductVariantCreateManyProductInput = {
   id?: bigint | number
   variantId?: string
@@ -654,6 +756,7 @@ export type ProductVariantUpdateWithoutProductInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutVariantNestedInput
 }
 
 export type ProductVariantUncheckedUpdateWithoutProductInput = {
@@ -667,6 +770,7 @@ export type ProductVariantUncheckedUpdateWithoutProductInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ProductVariantUncheckedUpdateManyWithoutProductInput = {
@@ -683,6 +787,35 @@ export type ProductVariantUncheckedUpdateManyWithoutProductInput = {
 }
 
 
+/**
+ * Count Type ProductVariantCountOutputType
+ */
+
+export type ProductVariantCountOutputType = {
+  financingContracts: number
+}
+
+export type ProductVariantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  financingContracts?: boolean | ProductVariantCountOutputTypeCountFinancingContractsArgs
+}
+
+/**
+ * ProductVariantCountOutputType without action
+ */
+export type ProductVariantCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductVariantCountOutputType
+   */
+  select?: Prisma.ProductVariantCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ProductVariantCountOutputType without action
+ */
+export type ProductVariantCountOutputTypeCountFinancingContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FinancingContractWhereInput
+}
+
 
 export type ProductVariantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -697,6 +830,8 @@ export type ProductVariantSelect<ExtArgs extends runtime.Types.Extensions.Intern
   createdAt?: boolean
   updatedAt?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContracts?: boolean | Prisma.ProductVariant$financingContractsArgs<ExtArgs>
+  _count?: boolean | Prisma.ProductVariantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["productVariant"]>
 
 export type ProductVariantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -746,6 +881,8 @@ export type ProductVariantSelectScalar = {
 export type ProductVariantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "variantId" | "productId" | "sku" | "size" | "color" | "images" | "stockQuantity" | "price" | "createdAt" | "updatedAt", ExtArgs["result"]["productVariant"]>
 export type ProductVariantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContracts?: boolean | Prisma.ProductVariant$financingContractsArgs<ExtArgs>
+  _count?: boolean | Prisma.ProductVariantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductVariantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -758,6 +895,7 @@ export type $ProductVariantPayload<ExtArgs extends runtime.Types.Extensions.Inte
   name: "ProductVariant"
   objects: {
     product: Prisma.$ProductPayload<ExtArgs>
+    financingContracts: Prisma.$FinancingContractPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -1166,6 +1304,7 @@ readonly fields: ProductVariantFieldRefs;
 export interface Prisma__ProductVariantClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  financingContracts<T extends Prisma.ProductVariant$financingContractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductVariant$financingContractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancingContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1604,6 +1743,30 @@ export type ProductVariantDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many ProductVariants to delete.
    */
   limit?: number
+}
+
+/**
+ * ProductVariant.financingContracts
+ */
+export type ProductVariant$financingContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancingContract
+   */
+  select?: Prisma.FinancingContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancingContract
+   */
+  omit?: Prisma.FinancingContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancingContractInclude<ExtArgs> | null
+  where?: Prisma.FinancingContractWhereInput
+  orderBy?: Prisma.FinancingContractOrderByWithRelationInput | Prisma.FinancingContractOrderByWithRelationInput[]
+  cursor?: Prisma.FinancingContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FinancingContractScalarFieldEnum | Prisma.FinancingContractScalarFieldEnum[]
 }
 
 /**

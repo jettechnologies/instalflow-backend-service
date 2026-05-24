@@ -42,6 +42,7 @@ export type ProductInstallmentPlanMinAggregateOutputType = {
   id: bigint | null
   planId: string | null
   productId: string | null
+  kycApplicationId: string | null
   durationMonths: number | null
   interestPercentage: runtime.Decimal | null
   active: boolean | null
@@ -53,6 +54,7 @@ export type ProductInstallmentPlanMaxAggregateOutputType = {
   id: bigint | null
   planId: string | null
   productId: string | null
+  kycApplicationId: string | null
   durationMonths: number | null
   interestPercentage: runtime.Decimal | null
   active: boolean | null
@@ -64,6 +66,7 @@ export type ProductInstallmentPlanCountAggregateOutputType = {
   id: number
   planId: number
   productId: number
+  kycApplicationId: number
   durationMonths: number
   interestPercentage: number
   active: number
@@ -89,6 +92,7 @@ export type ProductInstallmentPlanMinAggregateInputType = {
   id?: true
   planId?: true
   productId?: true
+  kycApplicationId?: true
   durationMonths?: true
   interestPercentage?: true
   active?: true
@@ -100,6 +104,7 @@ export type ProductInstallmentPlanMaxAggregateInputType = {
   id?: true
   planId?: true
   productId?: true
+  kycApplicationId?: true
   durationMonths?: true
   interestPercentage?: true
   active?: true
@@ -111,6 +116,7 @@ export type ProductInstallmentPlanCountAggregateInputType = {
   id?: true
   planId?: true
   productId?: true
+  kycApplicationId?: true
   durationMonths?: true
   interestPercentage?: true
   active?: true
@@ -209,6 +215,7 @@ export type ProductInstallmentPlanGroupByOutputType = {
   id: bigint
   planId: string
   productId: string
+  kycApplicationId: string | null
   durationMonths: number
   interestPercentage: runtime.Decimal
   active: boolean
@@ -243,24 +250,28 @@ export type ProductInstallmentPlanWhereInput = {
   id?: Prisma.BigIntFilter<"ProductInstallmentPlan"> | bigint | number
   planId?: Prisma.StringFilter<"ProductInstallmentPlan"> | string
   productId?: Prisma.StringFilter<"ProductInstallmentPlan"> | string
+  kycApplicationId?: Prisma.StringNullableFilter<"ProductInstallmentPlan"> | string | null
   durationMonths?: Prisma.IntFilter<"ProductInstallmentPlan"> | number
   interestPercentage?: Prisma.DecimalFilter<"ProductInstallmentPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFilter<"ProductInstallmentPlan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ProductInstallmentPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProductInstallmentPlan"> | Date | string
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  kycApplications?: Prisma.KycApplicationListRelationFilter
 }
 
 export type ProductInstallmentPlanOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  kycApplicationId?: Prisma.SortOrderInput | Prisma.SortOrder
   durationMonths?: Prisma.SortOrder
   interestPercentage?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   product?: Prisma.ProductOrderByWithRelationInput
+  kycApplications?: Prisma.KycApplicationOrderByRelationAggregateInput
 }
 
 export type ProductInstallmentPlanWhereUniqueInput = Prisma.AtLeast<{
@@ -270,18 +281,21 @@ export type ProductInstallmentPlanWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ProductInstallmentPlanWhereInput[]
   NOT?: Prisma.ProductInstallmentPlanWhereInput | Prisma.ProductInstallmentPlanWhereInput[]
   productId?: Prisma.StringFilter<"ProductInstallmentPlan"> | string
+  kycApplicationId?: Prisma.StringNullableFilter<"ProductInstallmentPlan"> | string | null
   durationMonths?: Prisma.IntFilter<"ProductInstallmentPlan"> | number
   interestPercentage?: Prisma.DecimalFilter<"ProductInstallmentPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFilter<"ProductInstallmentPlan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ProductInstallmentPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProductInstallmentPlan"> | Date | string
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  kycApplications?: Prisma.KycApplicationListRelationFilter
 }, "id" | "planId">
 
 export type ProductInstallmentPlanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  kycApplicationId?: Prisma.SortOrderInput | Prisma.SortOrder
   durationMonths?: Prisma.SortOrder
   interestPercentage?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -301,6 +315,7 @@ export type ProductInstallmentPlanScalarWhereWithAggregatesInput = {
   id?: Prisma.BigIntWithAggregatesFilter<"ProductInstallmentPlan"> | bigint | number
   planId?: Prisma.StringWithAggregatesFilter<"ProductInstallmentPlan"> | string
   productId?: Prisma.StringWithAggregatesFilter<"ProductInstallmentPlan"> | string
+  kycApplicationId?: Prisma.StringNullableWithAggregatesFilter<"ProductInstallmentPlan"> | string | null
   durationMonths?: Prisma.IntWithAggregatesFilter<"ProductInstallmentPlan"> | number
   interestPercentage?: Prisma.DecimalWithAggregatesFilter<"ProductInstallmentPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolWithAggregatesFilter<"ProductInstallmentPlan"> | boolean
@@ -311,51 +326,60 @@ export type ProductInstallmentPlanScalarWhereWithAggregatesInput = {
 export type ProductInstallmentPlanCreateInput = {
   id?: bigint | number
   planId?: string
+  kycApplicationId?: string | null
   durationMonths: number
   interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutInstallmentPlansInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutInstallmentPlanInput
 }
 
 export type ProductInstallmentPlanUncheckedCreateInput = {
   id?: bigint | number
   planId?: string
   productId: string
+  kycApplicationId?: string | null
   durationMonths: number
   interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutInstallmentPlanInput
 }
 
 export type ProductInstallmentPlanUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
   interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutInstallmentPlansNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutInstallmentPlanNestedInput
 }
 
 export type ProductInstallmentPlanUncheckedUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
   interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutInstallmentPlanNestedInput
 }
 
 export type ProductInstallmentPlanCreateManyInput = {
   id?: bigint | number
   planId?: string
   productId: string
+  kycApplicationId?: string | null
   durationMonths: number
   interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: boolean
@@ -366,6 +390,7 @@ export type ProductInstallmentPlanCreateManyInput = {
 export type ProductInstallmentPlanUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
   interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -377,6 +402,7 @@ export type ProductInstallmentPlanUncheckedUpdateManyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
   interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -394,10 +420,16 @@ export type ProductInstallmentPlanOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ProductInstallmentPlanScalarRelationFilter = {
+  is?: Prisma.ProductInstallmentPlanWhereInput
+  isNot?: Prisma.ProductInstallmentPlanWhereInput
+}
+
 export type ProductInstallmentPlanCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  kycApplicationId?: Prisma.SortOrder
   durationMonths?: Prisma.SortOrder
   interestPercentage?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -415,6 +447,7 @@ export type ProductInstallmentPlanMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  kycApplicationId?: Prisma.SortOrder
   durationMonths?: Prisma.SortOrder
   interestPercentage?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -426,6 +459,7 @@ export type ProductInstallmentPlanMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   planId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
+  kycApplicationId?: Prisma.SortOrder
   durationMonths?: Prisma.SortOrder
   interestPercentage?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -481,24 +515,42 @@ export type ProductInstallmentPlanUncheckedUpdateManyWithoutProductNestedInput =
   deleteMany?: Prisma.ProductInstallmentPlanScalarWhereInput | Prisma.ProductInstallmentPlanScalarWhereInput[]
 }
 
+export type ProductInstallmentPlanCreateNestedOneWithoutKycApplicationsInput = {
+  create?: Prisma.XOR<Prisma.ProductInstallmentPlanCreateWithoutKycApplicationsInput, Prisma.ProductInstallmentPlanUncheckedCreateWithoutKycApplicationsInput>
+  connectOrCreate?: Prisma.ProductInstallmentPlanCreateOrConnectWithoutKycApplicationsInput
+  connect?: Prisma.ProductInstallmentPlanWhereUniqueInput
+}
+
+export type ProductInstallmentPlanUpdateOneRequiredWithoutKycApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductInstallmentPlanCreateWithoutKycApplicationsInput, Prisma.ProductInstallmentPlanUncheckedCreateWithoutKycApplicationsInput>
+  connectOrCreate?: Prisma.ProductInstallmentPlanCreateOrConnectWithoutKycApplicationsInput
+  upsert?: Prisma.ProductInstallmentPlanUpsertWithoutKycApplicationsInput
+  connect?: Prisma.ProductInstallmentPlanWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductInstallmentPlanUpdateToOneWithWhereWithoutKycApplicationsInput, Prisma.ProductInstallmentPlanUpdateWithoutKycApplicationsInput>, Prisma.ProductInstallmentPlanUncheckedUpdateWithoutKycApplicationsInput>
+}
+
 export type ProductInstallmentPlanCreateWithoutProductInput = {
   id?: bigint | number
   planId?: string
+  kycApplicationId?: string | null
   durationMonths: number
   interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutInstallmentPlanInput
 }
 
 export type ProductInstallmentPlanUncheckedCreateWithoutProductInput = {
   id?: bigint | number
   planId?: string
+  kycApplicationId?: string | null
   durationMonths: number
   interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutInstallmentPlanInput
 }
 
 export type ProductInstallmentPlanCreateOrConnectWithoutProductInput = {
@@ -534,6 +586,7 @@ export type ProductInstallmentPlanScalarWhereInput = {
   id?: Prisma.BigIntFilter<"ProductInstallmentPlan"> | bigint | number
   planId?: Prisma.StringFilter<"ProductInstallmentPlan"> | string
   productId?: Prisma.StringFilter<"ProductInstallmentPlan"> | string
+  kycApplicationId?: Prisma.StringNullableFilter<"ProductInstallmentPlan"> | string | null
   durationMonths?: Prisma.IntFilter<"ProductInstallmentPlan"> | number
   interestPercentage?: Prisma.DecimalFilter<"ProductInstallmentPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFilter<"ProductInstallmentPlan"> | boolean
@@ -541,9 +594,74 @@ export type ProductInstallmentPlanScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"ProductInstallmentPlan"> | Date | string
 }
 
+export type ProductInstallmentPlanCreateWithoutKycApplicationsInput = {
+  id?: bigint | number
+  planId?: string
+  kycApplicationId?: string | null
+  durationMonths: number
+  interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  product: Prisma.ProductCreateNestedOneWithoutInstallmentPlansInput
+}
+
+export type ProductInstallmentPlanUncheckedCreateWithoutKycApplicationsInput = {
+  id?: bigint | number
+  planId?: string
+  productId: string
+  kycApplicationId?: string | null
+  durationMonths: number
+  interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProductInstallmentPlanCreateOrConnectWithoutKycApplicationsInput = {
+  where: Prisma.ProductInstallmentPlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductInstallmentPlanCreateWithoutKycApplicationsInput, Prisma.ProductInstallmentPlanUncheckedCreateWithoutKycApplicationsInput>
+}
+
+export type ProductInstallmentPlanUpsertWithoutKycApplicationsInput = {
+  update: Prisma.XOR<Prisma.ProductInstallmentPlanUpdateWithoutKycApplicationsInput, Prisma.ProductInstallmentPlanUncheckedUpdateWithoutKycApplicationsInput>
+  create: Prisma.XOR<Prisma.ProductInstallmentPlanCreateWithoutKycApplicationsInput, Prisma.ProductInstallmentPlanUncheckedCreateWithoutKycApplicationsInput>
+  where?: Prisma.ProductInstallmentPlanWhereInput
+}
+
+export type ProductInstallmentPlanUpdateToOneWithWhereWithoutKycApplicationsInput = {
+  where?: Prisma.ProductInstallmentPlanWhereInput
+  data: Prisma.XOR<Prisma.ProductInstallmentPlanUpdateWithoutKycApplicationsInput, Prisma.ProductInstallmentPlanUncheckedUpdateWithoutKycApplicationsInput>
+}
+
+export type ProductInstallmentPlanUpdateWithoutKycApplicationsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
+  interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  product?: Prisma.ProductUpdateOneRequiredWithoutInstallmentPlansNestedInput
+}
+
+export type ProductInstallmentPlanUncheckedUpdateWithoutKycApplicationsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
+  interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type ProductInstallmentPlanCreateManyProductInput = {
   id?: bigint | number
   planId?: string
+  kycApplicationId?: string | null
   durationMonths: number
   interestPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: boolean
@@ -554,26 +672,31 @@ export type ProductInstallmentPlanCreateManyProductInput = {
 export type ProductInstallmentPlanUpdateWithoutProductInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
   interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutInstallmentPlanNestedInput
 }
 
 export type ProductInstallmentPlanUncheckedUpdateWithoutProductInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
   interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutInstallmentPlanNestedInput
 }
 
 export type ProductInstallmentPlanUncheckedUpdateManyWithoutProductInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  kycApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   durationMonths?: Prisma.IntFieldUpdateOperationsInput | number
   interestPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -581,24 +704,57 @@ export type ProductInstallmentPlanUncheckedUpdateManyWithoutProductInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type ProductInstallmentPlanCountOutputType
+ */
+
+export type ProductInstallmentPlanCountOutputType = {
+  kycApplications: number
+}
+
+export type ProductInstallmentPlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  kycApplications?: boolean | ProductInstallmentPlanCountOutputTypeCountKycApplicationsArgs
+}
+
+/**
+ * ProductInstallmentPlanCountOutputType without action
+ */
+export type ProductInstallmentPlanCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductInstallmentPlanCountOutputType
+   */
+  select?: Prisma.ProductInstallmentPlanCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ProductInstallmentPlanCountOutputType without action
+ */
+export type ProductInstallmentPlanCountOutputTypeCountKycApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KycApplicationWhereInput
+}
 
 
 export type ProductInstallmentPlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   planId?: boolean
   productId?: boolean
+  kycApplicationId?: boolean
   durationMonths?: boolean
   interestPercentage?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  kycApplications?: boolean | Prisma.ProductInstallmentPlan$kycApplicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.ProductInstallmentPlanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["productInstallmentPlan"]>
 
 export type ProductInstallmentPlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   planId?: boolean
   productId?: boolean
+  kycApplicationId?: boolean
   durationMonths?: boolean
   interestPercentage?: boolean
   active?: boolean
@@ -611,6 +767,7 @@ export type ProductInstallmentPlanSelectUpdateManyAndReturn<ExtArgs extends runt
   id?: boolean
   planId?: boolean
   productId?: boolean
+  kycApplicationId?: boolean
   durationMonths?: boolean
   interestPercentage?: boolean
   active?: boolean
@@ -623,6 +780,7 @@ export type ProductInstallmentPlanSelectScalar = {
   id?: boolean
   planId?: boolean
   productId?: boolean
+  kycApplicationId?: boolean
   durationMonths?: boolean
   interestPercentage?: boolean
   active?: boolean
@@ -630,9 +788,11 @@ export type ProductInstallmentPlanSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductInstallmentPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "planId" | "productId" | "durationMonths" | "interestPercentage" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["productInstallmentPlan"]>
+export type ProductInstallmentPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "planId" | "productId" | "kycApplicationId" | "durationMonths" | "interestPercentage" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["productInstallmentPlan"]>
 export type ProductInstallmentPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  kycApplications?: boolean | Prisma.ProductInstallmentPlan$kycApplicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.ProductInstallmentPlanCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductInstallmentPlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -645,11 +805,13 @@ export type $ProductInstallmentPlanPayload<ExtArgs extends runtime.Types.Extensi
   name: "ProductInstallmentPlan"
   objects: {
     product: Prisma.$ProductPayload<ExtArgs>
+    kycApplications: Prisma.$KycApplicationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     planId: string
     productId: string
+    kycApplicationId: string | null
     durationMonths: number
     interestPercentage: runtime.Decimal
     active: boolean
@@ -1050,6 +1212,7 @@ readonly fields: ProductInstallmentPlanFieldRefs;
 export interface Prisma__ProductInstallmentPlanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  kycApplications<T extends Prisma.ProductInstallmentPlan$kycApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductInstallmentPlan$kycApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1082,6 +1245,7 @@ export interface ProductInstallmentPlanFieldRefs {
   readonly id: Prisma.FieldRef<"ProductInstallmentPlan", 'BigInt'>
   readonly planId: Prisma.FieldRef<"ProductInstallmentPlan", 'String'>
   readonly productId: Prisma.FieldRef<"ProductInstallmentPlan", 'String'>
+  readonly kycApplicationId: Prisma.FieldRef<"ProductInstallmentPlan", 'String'>
   readonly durationMonths: Prisma.FieldRef<"ProductInstallmentPlan", 'Int'>
   readonly interestPercentage: Prisma.FieldRef<"ProductInstallmentPlan", 'Decimal'>
   readonly active: Prisma.FieldRef<"ProductInstallmentPlan", 'Boolean'>
@@ -1485,6 +1649,30 @@ export type ProductInstallmentPlanDeleteManyArgs<ExtArgs extends runtime.Types.E
    * Limit how many ProductInstallmentPlans to delete.
    */
   limit?: number
+}
+
+/**
+ * ProductInstallmentPlan.kycApplications
+ */
+export type ProductInstallmentPlan$kycApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the KycApplication
+   */
+  select?: Prisma.KycApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the KycApplication
+   */
+  omit?: Prisma.KycApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KycApplicationInclude<ExtArgs> | null
+  where?: Prisma.KycApplicationWhereInput
+  orderBy?: Prisma.KycApplicationOrderByWithRelationInput | Prisma.KycApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.KycApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KycApplicationScalarFieldEnum | Prisma.KycApplicationScalarFieldEnum[]
 }
 
 /**

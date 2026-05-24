@@ -29,21 +29,25 @@ export type AggregateInstallment = {
 export type InstallmentAvgAggregateOutputType = {
   id: number | null
   amount: runtime.Decimal | null
+  sequence: number | null
 }
 
 export type InstallmentSumAggregateOutputType = {
   id: bigint | null
   amount: runtime.Decimal | null
+  sequence: number | null
 }
 
 export type InstallmentMinAggregateOutputType = {
   id: bigint | null
   installmentId: string | null
-  userId: string | null
-  productId: string | null
-  amount: runtime.Decimal | null
+  financingContractId: string | null
   dueDate: Date | null
+  amount: runtime.Decimal | null
+  sequence: number | null
   status: $Enums.InstallmentStatus | null
+  paidAt: Date | null
+  overdueAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -51,11 +55,13 @@ export type InstallmentMinAggregateOutputType = {
 export type InstallmentMaxAggregateOutputType = {
   id: bigint | null
   installmentId: string | null
-  userId: string | null
-  productId: string | null
-  amount: runtime.Decimal | null
+  financingContractId: string | null
   dueDate: Date | null
+  amount: runtime.Decimal | null
+  sequence: number | null
   status: $Enums.InstallmentStatus | null
+  paidAt: Date | null
+  overdueAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -63,11 +69,13 @@ export type InstallmentMaxAggregateOutputType = {
 export type InstallmentCountAggregateOutputType = {
   id: number
   installmentId: number
-  userId: number
-  productId: number
-  amount: number
+  financingContractId: number
   dueDate: number
+  amount: number
+  sequence: number
   status: number
+  paidAt: number
+  overdueAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -77,21 +85,25 @@ export type InstallmentCountAggregateOutputType = {
 export type InstallmentAvgAggregateInputType = {
   id?: true
   amount?: true
+  sequence?: true
 }
 
 export type InstallmentSumAggregateInputType = {
   id?: true
   amount?: true
+  sequence?: true
 }
 
 export type InstallmentMinAggregateInputType = {
   id?: true
   installmentId?: true
-  userId?: true
-  productId?: true
-  amount?: true
+  financingContractId?: true
   dueDate?: true
+  amount?: true
+  sequence?: true
   status?: true
+  paidAt?: true
+  overdueAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -99,11 +111,13 @@ export type InstallmentMinAggregateInputType = {
 export type InstallmentMaxAggregateInputType = {
   id?: true
   installmentId?: true
-  userId?: true
-  productId?: true
-  amount?: true
+  financingContractId?: true
   dueDate?: true
+  amount?: true
+  sequence?: true
   status?: true
+  paidAt?: true
+  overdueAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -111,11 +125,13 @@ export type InstallmentMaxAggregateInputType = {
 export type InstallmentCountAggregateInputType = {
   id?: true
   installmentId?: true
-  userId?: true
-  productId?: true
-  amount?: true
+  financingContractId?: true
   dueDate?: true
+  amount?: true
+  sequence?: true
   status?: true
+  paidAt?: true
+  overdueAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -210,11 +226,13 @@ export type InstallmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type InstallmentGroupByOutputType = {
   id: bigint
   installmentId: string
-  userId: string
-  productId: string
-  amount: runtime.Decimal
+  financingContractId: string
   dueDate: Date
+  amount: runtime.Decimal
+  sequence: number
   status: $Enums.InstallmentStatus
+  paidAt: Date | null
+  overdueAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: InstallmentCountAggregateOutputType | null
@@ -245,59 +263,65 @@ export type InstallmentWhereInput = {
   NOT?: Prisma.InstallmentWhereInput | Prisma.InstallmentWhereInput[]
   id?: Prisma.BigIntFilter<"Installment"> | bigint | number
   installmentId?: Prisma.StringFilter<"Installment"> | string
-  userId?: Prisma.StringFilter<"Installment"> | string
-  productId?: Prisma.StringFilter<"Installment"> | string
-  amount?: Prisma.DecimalFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId?: Prisma.StringFilter<"Installment"> | string
   dueDate?: Prisma.DateTimeFilter<"Installment"> | Date | string
+  amount?: Prisma.DecimalFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFilter<"Installment"> | number
   status?: Prisma.EnumInstallmentStatusFilter<"Installment"> | $Enums.InstallmentStatus
+  paidAt?: Prisma.DateTimeNullableFilter<"Installment"> | Date | string | null
+  overdueAt?: Prisma.DateTimeNullableFilter<"Installment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  financingContract?: Prisma.XOR<Prisma.FinancingContractScalarRelationFilter, Prisma.FinancingContractWhereInput>
   payments?: Prisma.PaymentListRelationFilter
 }
 
 export type InstallmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   installmentId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
+  financingContractId?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  overdueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  product?: Prisma.ProductOrderByWithRelationInput
+  financingContract?: Prisma.FinancingContractOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type InstallmentWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   installmentId?: string
+  financingContractId_sequence?: Prisma.InstallmentFinancingContractIdSequenceCompoundUniqueInput
   AND?: Prisma.InstallmentWhereInput | Prisma.InstallmentWhereInput[]
   OR?: Prisma.InstallmentWhereInput[]
   NOT?: Prisma.InstallmentWhereInput | Prisma.InstallmentWhereInput[]
-  userId?: Prisma.StringFilter<"Installment"> | string
-  productId?: Prisma.StringFilter<"Installment"> | string
-  amount?: Prisma.DecimalFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId?: Prisma.StringFilter<"Installment"> | string
   dueDate?: Prisma.DateTimeFilter<"Installment"> | Date | string
+  amount?: Prisma.DecimalFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFilter<"Installment"> | number
   status?: Prisma.EnumInstallmentStatusFilter<"Installment"> | $Enums.InstallmentStatus
+  paidAt?: Prisma.DateTimeNullableFilter<"Installment"> | Date | string | null
+  overdueAt?: Prisma.DateTimeNullableFilter<"Installment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  financingContract?: Prisma.XOR<Prisma.FinancingContractScalarRelationFilter, Prisma.FinancingContractWhereInput>
   payments?: Prisma.PaymentListRelationFilter
-}, "id" | "installmentId">
+}, "id" | "installmentId" | "financingContractId_sequence">
 
 export type InstallmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   installmentId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
+  financingContractId?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  overdueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.InstallmentCountOrderByAggregateInput
@@ -313,11 +337,13 @@ export type InstallmentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.InstallmentScalarWhereWithAggregatesInput | Prisma.InstallmentScalarWhereWithAggregatesInput[]
   id?: Prisma.BigIntWithAggregatesFilter<"Installment"> | bigint | number
   installmentId?: Prisma.StringWithAggregatesFilter<"Installment"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"Installment"> | string
-  productId?: Prisma.StringWithAggregatesFilter<"Installment"> | string
-  amount?: Prisma.DecimalWithAggregatesFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId?: Prisma.StringWithAggregatesFilter<"Installment"> | string
   dueDate?: Prisma.DateTimeWithAggregatesFilter<"Installment"> | Date | string
+  amount?: Prisma.DecimalWithAggregatesFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntWithAggregatesFilter<"Installment"> | number
   status?: Prisma.EnumInstallmentStatusWithAggregatesFilter<"Installment"> | $Enums.InstallmentStatus
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Installment"> | Date | string | null
+  overdueAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Installment"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Installment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Installment"> | Date | string
 }
@@ -325,24 +351,28 @@ export type InstallmentScalarWhereWithAggregatesInput = {
 export type InstallmentCreateInput = {
   id?: bigint | number
   installmentId?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutInstallmentsInput
-  product: Prisma.ProductCreateNestedOneWithoutInstallmentsInput
+  financingContract: Prisma.FinancingContractCreateNestedOneWithoutInstallmentsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutInstallmentInput
 }
 
 export type InstallmentUncheckedCreateInput = {
   id?: bigint | number
   installmentId?: string
-  userId: string
-  productId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId: string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInstallmentInput
@@ -351,24 +381,28 @@ export type InstallmentUncheckedCreateInput = {
 export type InstallmentUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutInstallmentsNestedInput
-  product?: Prisma.ProductUpdateOneRequiredWithoutInstallmentsNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneRequiredWithoutInstallmentsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutInstallmentNestedInput
 }
 
 export type InstallmentUncheckedUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId?: Prisma.StringFieldUpdateOperationsInput | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutInstallmentNestedInput
@@ -377,11 +411,13 @@ export type InstallmentUncheckedUpdateInput = {
 export type InstallmentCreateManyInput = {
   id?: bigint | number
   installmentId?: string
-  userId: string
-  productId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId: string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -389,9 +425,12 @@ export type InstallmentCreateManyInput = {
 export type InstallmentUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,11 +438,13 @@ export type InstallmentUpdateManyMutationInput = {
 export type InstallmentUncheckedUpdateManyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId?: Prisma.StringFieldUpdateOperationsInput | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -418,14 +459,21 @@ export type InstallmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type InstallmentFinancingContractIdSequenceCompoundUniqueInput = {
+  financingContractId: string
+  sequence: number
+}
+
 export type InstallmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   installmentId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
+  financingContractId?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  overdueAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -433,16 +481,19 @@ export type InstallmentCountOrderByAggregateInput = {
 export type InstallmentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
 }
 
 export type InstallmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   installmentId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
+  financingContractId?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  overdueAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -450,11 +501,13 @@ export type InstallmentMaxOrderByAggregateInput = {
 export type InstallmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   installmentId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
+  financingContractId?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  overdueAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -462,6 +515,7 @@ export type InstallmentMinOrderByAggregateInput = {
 export type InstallmentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
 }
 
 export type InstallmentScalarRelationFilter = {
@@ -469,87 +523,45 @@ export type InstallmentScalarRelationFilter = {
   isNot?: Prisma.InstallmentWhereInput
 }
 
-export type InstallmentCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutUserInput, Prisma.InstallmentUncheckedCreateWithoutUserInput> | Prisma.InstallmentCreateWithoutUserInput[] | Prisma.InstallmentUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutUserInput | Prisma.InstallmentCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.InstallmentCreateManyUserInputEnvelope
+export type InstallmentCreateNestedManyWithoutFinancingContractInput = {
+  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutFinancingContractInput, Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput> | Prisma.InstallmentCreateWithoutFinancingContractInput[] | Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput[]
+  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput | Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput[]
+  createMany?: Prisma.InstallmentCreateManyFinancingContractInputEnvelope
   connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
 }
 
-export type InstallmentUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutUserInput, Prisma.InstallmentUncheckedCreateWithoutUserInput> | Prisma.InstallmentCreateWithoutUserInput[] | Prisma.InstallmentUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutUserInput | Prisma.InstallmentCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.InstallmentCreateManyUserInputEnvelope
+export type InstallmentUncheckedCreateNestedManyWithoutFinancingContractInput = {
+  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutFinancingContractInput, Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput> | Prisma.InstallmentCreateWithoutFinancingContractInput[] | Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput[]
+  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput | Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput[]
+  createMany?: Prisma.InstallmentCreateManyFinancingContractInputEnvelope
   connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
 }
 
-export type InstallmentUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutUserInput, Prisma.InstallmentUncheckedCreateWithoutUserInput> | Prisma.InstallmentCreateWithoutUserInput[] | Prisma.InstallmentUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutUserInput | Prisma.InstallmentCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.InstallmentUpsertWithWhereUniqueWithoutUserInput | Prisma.InstallmentUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.InstallmentCreateManyUserInputEnvelope
+export type InstallmentUpdateManyWithoutFinancingContractNestedInput = {
+  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutFinancingContractInput, Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput> | Prisma.InstallmentCreateWithoutFinancingContractInput[] | Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput[]
+  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput | Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput[]
+  upsert?: Prisma.InstallmentUpsertWithWhereUniqueWithoutFinancingContractInput | Prisma.InstallmentUpsertWithWhereUniqueWithoutFinancingContractInput[]
+  createMany?: Prisma.InstallmentCreateManyFinancingContractInputEnvelope
   set?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
   disconnect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
   delete?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
   connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  update?: Prisma.InstallmentUpdateWithWhereUniqueWithoutUserInput | Prisma.InstallmentUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.InstallmentUpdateManyWithWhereWithoutUserInput | Prisma.InstallmentUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.InstallmentUpdateWithWhereUniqueWithoutFinancingContractInput | Prisma.InstallmentUpdateWithWhereUniqueWithoutFinancingContractInput[]
+  updateMany?: Prisma.InstallmentUpdateManyWithWhereWithoutFinancingContractInput | Prisma.InstallmentUpdateManyWithWhereWithoutFinancingContractInput[]
   deleteMany?: Prisma.InstallmentScalarWhereInput | Prisma.InstallmentScalarWhereInput[]
 }
 
-export type InstallmentUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutUserInput, Prisma.InstallmentUncheckedCreateWithoutUserInput> | Prisma.InstallmentCreateWithoutUserInput[] | Prisma.InstallmentUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutUserInput | Prisma.InstallmentCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.InstallmentUpsertWithWhereUniqueWithoutUserInput | Prisma.InstallmentUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.InstallmentCreateManyUserInputEnvelope
+export type InstallmentUncheckedUpdateManyWithoutFinancingContractNestedInput = {
+  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutFinancingContractInput, Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput> | Prisma.InstallmentCreateWithoutFinancingContractInput[] | Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput[]
+  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput | Prisma.InstallmentCreateOrConnectWithoutFinancingContractInput[]
+  upsert?: Prisma.InstallmentUpsertWithWhereUniqueWithoutFinancingContractInput | Prisma.InstallmentUpsertWithWhereUniqueWithoutFinancingContractInput[]
+  createMany?: Prisma.InstallmentCreateManyFinancingContractInputEnvelope
   set?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
   disconnect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
   delete?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
   connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  update?: Prisma.InstallmentUpdateWithWhereUniqueWithoutUserInput | Prisma.InstallmentUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.InstallmentUpdateManyWithWhereWithoutUserInput | Prisma.InstallmentUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.InstallmentScalarWhereInput | Prisma.InstallmentScalarWhereInput[]
-}
-
-export type InstallmentCreateNestedManyWithoutProductInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutProductInput, Prisma.InstallmentUncheckedCreateWithoutProductInput> | Prisma.InstallmentCreateWithoutProductInput[] | Prisma.InstallmentUncheckedCreateWithoutProductInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutProductInput | Prisma.InstallmentCreateOrConnectWithoutProductInput[]
-  createMany?: Prisma.InstallmentCreateManyProductInputEnvelope
-  connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-}
-
-export type InstallmentUncheckedCreateNestedManyWithoutProductInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutProductInput, Prisma.InstallmentUncheckedCreateWithoutProductInput> | Prisma.InstallmentCreateWithoutProductInput[] | Prisma.InstallmentUncheckedCreateWithoutProductInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutProductInput | Prisma.InstallmentCreateOrConnectWithoutProductInput[]
-  createMany?: Prisma.InstallmentCreateManyProductInputEnvelope
-  connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-}
-
-export type InstallmentUpdateManyWithoutProductNestedInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutProductInput, Prisma.InstallmentUncheckedCreateWithoutProductInput> | Prisma.InstallmentCreateWithoutProductInput[] | Prisma.InstallmentUncheckedCreateWithoutProductInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutProductInput | Prisma.InstallmentCreateOrConnectWithoutProductInput[]
-  upsert?: Prisma.InstallmentUpsertWithWhereUniqueWithoutProductInput | Prisma.InstallmentUpsertWithWhereUniqueWithoutProductInput[]
-  createMany?: Prisma.InstallmentCreateManyProductInputEnvelope
-  set?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  disconnect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  delete?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  update?: Prisma.InstallmentUpdateWithWhereUniqueWithoutProductInput | Prisma.InstallmentUpdateWithWhereUniqueWithoutProductInput[]
-  updateMany?: Prisma.InstallmentUpdateManyWithWhereWithoutProductInput | Prisma.InstallmentUpdateManyWithWhereWithoutProductInput[]
-  deleteMany?: Prisma.InstallmentScalarWhereInput | Prisma.InstallmentScalarWhereInput[]
-}
-
-export type InstallmentUncheckedUpdateManyWithoutProductNestedInput = {
-  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutProductInput, Prisma.InstallmentUncheckedCreateWithoutProductInput> | Prisma.InstallmentCreateWithoutProductInput[] | Prisma.InstallmentUncheckedCreateWithoutProductInput[]
-  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutProductInput | Prisma.InstallmentCreateOrConnectWithoutProductInput[]
-  upsert?: Prisma.InstallmentUpsertWithWhereUniqueWithoutProductInput | Prisma.InstallmentUpsertWithWhereUniqueWithoutProductInput[]
-  createMany?: Prisma.InstallmentCreateManyProductInputEnvelope
-  set?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  disconnect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  delete?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  connect?: Prisma.InstallmentWhereUniqueInput | Prisma.InstallmentWhereUniqueInput[]
-  update?: Prisma.InstallmentUpdateWithWhereUniqueWithoutProductInput | Prisma.InstallmentUpdateWithWhereUniqueWithoutProductInput[]
-  updateMany?: Prisma.InstallmentUpdateManyWithWhereWithoutProductInput | Prisma.InstallmentUpdateManyWithWhereWithoutProductInput[]
+  update?: Prisma.InstallmentUpdateWithWhereUniqueWithoutFinancingContractInput | Prisma.InstallmentUpdateWithWhereUniqueWithoutFinancingContractInput[]
+  updateMany?: Prisma.InstallmentUpdateManyWithWhereWithoutFinancingContractInput | Prisma.InstallmentUpdateManyWithWhereWithoutFinancingContractInput[]
   deleteMany?: Prisma.InstallmentScalarWhereInput | Prisma.InstallmentScalarWhereInput[]
 }
 
@@ -571,54 +583,58 @@ export type InstallmentUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstallmentUpdateToOneWithWhereWithoutPaymentsInput, Prisma.InstallmentUpdateWithoutPaymentsInput>, Prisma.InstallmentUncheckedUpdateWithoutPaymentsInput>
 }
 
-export type InstallmentCreateWithoutUserInput = {
+export type InstallmentCreateWithoutFinancingContractInput = {
   id?: bigint | number
   installmentId?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  product: Prisma.ProductCreateNestedOneWithoutInstallmentsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutInstallmentInput
 }
 
-export type InstallmentUncheckedCreateWithoutUserInput = {
+export type InstallmentUncheckedCreateWithoutFinancingContractInput = {
   id?: bigint | number
   installmentId?: string
-  productId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInstallmentInput
 }
 
-export type InstallmentCreateOrConnectWithoutUserInput = {
+export type InstallmentCreateOrConnectWithoutFinancingContractInput = {
   where: Prisma.InstallmentWhereUniqueInput
-  create: Prisma.XOR<Prisma.InstallmentCreateWithoutUserInput, Prisma.InstallmentUncheckedCreateWithoutUserInput>
+  create: Prisma.XOR<Prisma.InstallmentCreateWithoutFinancingContractInput, Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput>
 }
 
-export type InstallmentCreateManyUserInputEnvelope = {
-  data: Prisma.InstallmentCreateManyUserInput | Prisma.InstallmentCreateManyUserInput[]
+export type InstallmentCreateManyFinancingContractInputEnvelope = {
+  data: Prisma.InstallmentCreateManyFinancingContractInput | Prisma.InstallmentCreateManyFinancingContractInput[]
   skipDuplicates?: boolean
 }
 
-export type InstallmentUpsertWithWhereUniqueWithoutUserInput = {
+export type InstallmentUpsertWithWhereUniqueWithoutFinancingContractInput = {
   where: Prisma.InstallmentWhereUniqueInput
-  update: Prisma.XOR<Prisma.InstallmentUpdateWithoutUserInput, Prisma.InstallmentUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.InstallmentCreateWithoutUserInput, Prisma.InstallmentUncheckedCreateWithoutUserInput>
+  update: Prisma.XOR<Prisma.InstallmentUpdateWithoutFinancingContractInput, Prisma.InstallmentUncheckedUpdateWithoutFinancingContractInput>
+  create: Prisma.XOR<Prisma.InstallmentCreateWithoutFinancingContractInput, Prisma.InstallmentUncheckedCreateWithoutFinancingContractInput>
 }
 
-export type InstallmentUpdateWithWhereUniqueWithoutUserInput = {
+export type InstallmentUpdateWithWhereUniqueWithoutFinancingContractInput = {
   where: Prisma.InstallmentWhereUniqueInput
-  data: Prisma.XOR<Prisma.InstallmentUpdateWithoutUserInput, Prisma.InstallmentUncheckedUpdateWithoutUserInput>
+  data: Prisma.XOR<Prisma.InstallmentUpdateWithoutFinancingContractInput, Prisma.InstallmentUncheckedUpdateWithoutFinancingContractInput>
 }
 
-export type InstallmentUpdateManyWithWhereWithoutUserInput = {
+export type InstallmentUpdateManyWithWhereWithoutFinancingContractInput = {
   where: Prisma.InstallmentScalarWhereInput
-  data: Prisma.XOR<Prisma.InstallmentUpdateManyMutationInput, Prisma.InstallmentUncheckedUpdateManyWithoutUserInput>
+  data: Prisma.XOR<Prisma.InstallmentUpdateManyMutationInput, Prisma.InstallmentUncheckedUpdateManyWithoutFinancingContractInput>
 }
 
 export type InstallmentScalarWhereInput = {
@@ -627,85 +643,41 @@ export type InstallmentScalarWhereInput = {
   NOT?: Prisma.InstallmentScalarWhereInput | Prisma.InstallmentScalarWhereInput[]
   id?: Prisma.BigIntFilter<"Installment"> | bigint | number
   installmentId?: Prisma.StringFilter<"Installment"> | string
-  userId?: Prisma.StringFilter<"Installment"> | string
-  productId?: Prisma.StringFilter<"Installment"> | string
-  amount?: Prisma.DecimalFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId?: Prisma.StringFilter<"Installment"> | string
   dueDate?: Prisma.DateTimeFilter<"Installment"> | Date | string
+  amount?: Prisma.DecimalFilter<"Installment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFilter<"Installment"> | number
   status?: Prisma.EnumInstallmentStatusFilter<"Installment"> | $Enums.InstallmentStatus
+  paidAt?: Prisma.DateTimeNullableFilter<"Installment"> | Date | string | null
+  overdueAt?: Prisma.DateTimeNullableFilter<"Installment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
-}
-
-export type InstallmentCreateWithoutProductInput = {
-  id?: bigint | number
-  installmentId?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  status?: $Enums.InstallmentStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutInstallmentsInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutInstallmentInput
-}
-
-export type InstallmentUncheckedCreateWithoutProductInput = {
-  id?: bigint | number
-  installmentId?: string
-  userId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  status?: $Enums.InstallmentStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInstallmentInput
-}
-
-export type InstallmentCreateOrConnectWithoutProductInput = {
-  where: Prisma.InstallmentWhereUniqueInput
-  create: Prisma.XOR<Prisma.InstallmentCreateWithoutProductInput, Prisma.InstallmentUncheckedCreateWithoutProductInput>
-}
-
-export type InstallmentCreateManyProductInputEnvelope = {
-  data: Prisma.InstallmentCreateManyProductInput | Prisma.InstallmentCreateManyProductInput[]
-  skipDuplicates?: boolean
-}
-
-export type InstallmentUpsertWithWhereUniqueWithoutProductInput = {
-  where: Prisma.InstallmentWhereUniqueInput
-  update: Prisma.XOR<Prisma.InstallmentUpdateWithoutProductInput, Prisma.InstallmentUncheckedUpdateWithoutProductInput>
-  create: Prisma.XOR<Prisma.InstallmentCreateWithoutProductInput, Prisma.InstallmentUncheckedCreateWithoutProductInput>
-}
-
-export type InstallmentUpdateWithWhereUniqueWithoutProductInput = {
-  where: Prisma.InstallmentWhereUniqueInput
-  data: Prisma.XOR<Prisma.InstallmentUpdateWithoutProductInput, Prisma.InstallmentUncheckedUpdateWithoutProductInput>
-}
-
-export type InstallmentUpdateManyWithWhereWithoutProductInput = {
-  where: Prisma.InstallmentScalarWhereInput
-  data: Prisma.XOR<Prisma.InstallmentUpdateManyMutationInput, Prisma.InstallmentUncheckedUpdateManyWithoutProductInput>
 }
 
 export type InstallmentCreateWithoutPaymentsInput = {
   id?: bigint | number
   installmentId?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutInstallmentsInput
-  product: Prisma.ProductCreateNestedOneWithoutInstallmentsInput
+  financingContract: Prisma.FinancingContractCreateNestedOneWithoutInstallmentsInput
 }
 
 export type InstallmentUncheckedCreateWithoutPaymentsInput = {
   id?: bigint | number
   installmentId?: string
-  userId: string
-  productId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId: string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -729,115 +701,81 @@ export type InstallmentUpdateToOneWithWhereWithoutPaymentsInput = {
 export type InstallmentUpdateWithoutPaymentsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutInstallmentsNestedInput
-  product?: Prisma.ProductUpdateOneRequiredWithoutInstallmentsNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneRequiredWithoutInstallmentsNestedInput
 }
 
 export type InstallmentUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  financingContractId?: Prisma.StringFieldUpdateOperationsInput | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type InstallmentCreateManyUserInput = {
+export type InstallmentCreateManyFinancingContractInput = {
   id?: bigint | number
   installmentId?: string
-  productId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
   status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type InstallmentUpdateWithoutUserInput = {
+export type InstallmentUpdateWithoutFinancingContractInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  product?: Prisma.ProductUpdateOneRequiredWithoutInstallmentsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutInstallmentNestedInput
 }
 
-export type InstallmentUncheckedUpdateWithoutUserInput = {
+export type InstallmentUncheckedUpdateWithoutFinancingContractInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutInstallmentNestedInput
 }
 
-export type InstallmentUncheckedUpdateManyWithoutUserInput = {
+export type InstallmentUncheckedUpdateManyWithoutFinancingContractInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type InstallmentCreateManyProductInput = {
-  id?: bigint | number
-  installmentId?: string
-  userId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  status?: $Enums.InstallmentStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type InstallmentUpdateWithoutProductInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  installmentId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutInstallmentsNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutInstallmentNestedInput
-}
-
-export type InstallmentUncheckedUpdateWithoutProductInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInstallmentNestedInput
-}
-
-export type InstallmentUncheckedUpdateManyWithoutProductInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  installmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -876,15 +814,16 @@ export type InstallmentCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.
 export type InstallmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   installmentId?: boolean
-  userId?: boolean
-  productId?: boolean
-  amount?: boolean
+  financingContractId?: boolean
   dueDate?: boolean
+  amount?: boolean
+  sequence?: boolean
   status?: boolean
+  paidAt?: boolean
+  overdueAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Installment$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.InstallmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["installment"]>
@@ -892,74 +831,76 @@ export type InstallmentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type InstallmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   installmentId?: boolean
-  userId?: boolean
-  productId?: boolean
-  amount?: boolean
+  financingContractId?: boolean
   dueDate?: boolean
+  amount?: boolean
+  sequence?: boolean
   status?: boolean
+  paidAt?: boolean
+  overdueAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["installment"]>
 
 export type InstallmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   installmentId?: boolean
-  userId?: boolean
-  productId?: boolean
-  amount?: boolean
+  financingContractId?: boolean
   dueDate?: boolean
+  amount?: boolean
+  sequence?: boolean
   status?: boolean
+  paidAt?: boolean
+  overdueAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["installment"]>
 
 export type InstallmentSelectScalar = {
   id?: boolean
   installmentId?: boolean
-  userId?: boolean
-  productId?: boolean
-  amount?: boolean
+  financingContractId?: boolean
   dueDate?: boolean
+  amount?: boolean
+  sequence?: boolean
   status?: boolean
+  paidAt?: boolean
+  overdueAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type InstallmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "installmentId" | "userId" | "productId" | "amount" | "dueDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["installment"]>
+export type InstallmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "installmentId" | "financingContractId" | "dueDate" | "amount" | "sequence" | "status" | "paidAt" | "overdueAt" | "createdAt" | "updatedAt", ExtArgs["result"]["installment"]>
 export type InstallmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Installment$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.InstallmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstallmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
 }
 export type InstallmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
 }
 
 export type $InstallmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Installment"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    product: Prisma.$ProductPayload<ExtArgs>
+    financingContract: Prisma.$FinancingContractPayload<ExtArgs>
     payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     installmentId: string
-    userId: string
-    productId: string
-    amount: runtime.Decimal
+    financingContractId: string
     dueDate: Date
+    amount: runtime.Decimal
+    sequence: number
     status: $Enums.InstallmentStatus
+    paidAt: Date | null
+    overdueAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["installment"]>
@@ -1356,8 +1297,7 @@ readonly fields: InstallmentFieldRefs;
  */
 export interface Prisma__InstallmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  financingContract<T extends Prisma.FinancingContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancingContractDefaultArgs<ExtArgs>>): Prisma.Prisma__FinancingContractClient<runtime.Types.Result.GetResult<Prisma.$FinancingContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.Installment$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Installment$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1390,11 +1330,13 @@ export interface Prisma__InstallmentClient<T, Null = never, ExtArgs extends runt
 export interface InstallmentFieldRefs {
   readonly id: Prisma.FieldRef<"Installment", 'BigInt'>
   readonly installmentId: Prisma.FieldRef<"Installment", 'String'>
-  readonly userId: Prisma.FieldRef<"Installment", 'String'>
-  readonly productId: Prisma.FieldRef<"Installment", 'String'>
-  readonly amount: Prisma.FieldRef<"Installment", 'Decimal'>
+  readonly financingContractId: Prisma.FieldRef<"Installment", 'String'>
   readonly dueDate: Prisma.FieldRef<"Installment", 'DateTime'>
+  readonly amount: Prisma.FieldRef<"Installment", 'Decimal'>
+  readonly sequence: Prisma.FieldRef<"Installment", 'Int'>
   readonly status: Prisma.FieldRef<"Installment", 'InstallmentStatus'>
+  readonly paidAt: Prisma.FieldRef<"Installment", 'DateTime'>
+  readonly overdueAt: Prisma.FieldRef<"Installment", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Installment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Installment", 'DateTime'>
 }

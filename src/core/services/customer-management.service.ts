@@ -131,20 +131,22 @@ export class CustomerManagementService {
   ) {
     await this.validateCustomerScoping(customerId, reviewerId, reviewerRole);
 
-    // Fetch unique products having installments assigned to this customer
-    const financedProducts = await prisma.installment.findMany({
+    const financingContracts = await prisma.financingContract.findMany({
       where: { userId: customerId },
-      distinct: ["productId"],
       include: {
-        product: {
-          select: {
-            productId: true,
-            name: true,
-            slug: true,
-            price: true,
-            images: {
+        kycApplication: {
+          include: {
+            product: {
               select: {
-                imageUrl: true,
+                productId: true,
+                name: true,
+                slug: true,
+                price: true,
+                images: {
+                  select: {
+                    imageUrl: true,
+                  },
+                },
               },
             },
           },
@@ -154,13 +156,10 @@ export class CustomerManagementService {
 
     // For each financed product, let's pre-compute the completion percentage
     const results = await Promise.all(
-      financedProducts.map(async (f) => {
-        const stats = await this.calculateProgressPercentage(
-          customerId,
-          f.productId,
-        );
+      financingContracts.map(async (f) => {
+        const stats = await this.calculateProgressPercentage(f.contractId);
         return {
-          product: f.product,
+          product: f.kycApplication.product,
           percentagePaid: stats.percentagePaid,
           totalFinanced: stats.totalFinanced,
           totalPaid: stats.totalPaid,
@@ -182,10 +181,29 @@ export class CustomerManagementService {
   ) {
     await this.validateCustomerScoping(customerId, reviewerId, reviewerRole);
 
-    const installments = await prisma.installment.findMany({
+    const financingContract = await prisma.financingContract.findFirst({
       where: {
         userId: customerId,
         productId,
+        status: {
+          in: ["ACTIVE", "PENDING_ACTIVATION"],
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        contractId: true,
+      },
+    });
+
+    if (!financingContract) {
+      throw new NotFoundError("Financing contract not found");
+    }
+
+    const installments = await prisma.installment.findMany({
+      where: {
+        financingContractId: financingContract.contractId,
       },
       orderBy: { dueDate: "asc" },
       include: {
@@ -194,7 +212,7 @@ export class CustomerManagementService {
             paymentId: true,
             amount: true,
             status: true,
-            gatewayRef: true,
+            providerReference: true,
             createdAt: true,
           },
         },
@@ -202,8 +220,7 @@ export class CustomerManagementService {
     });
 
     const progress = await this.calculateProgressPercentage(
-      customerId,
-      productId,
+      financingContract.contractId,
     );
 
     return {
@@ -224,17 +241,18 @@ export class CustomerManagementService {
    * Computes the payment progress percentage for a financed product.
    */
   private static async calculateProgressPercentage(
-    customerId: string,
-    productId: string,
+    financingContractId: string,
   ) {
     const installments = await prisma.installment.findMany({
       where: {
-        userId: customerId,
-        productId,
+        financingContractId,
       },
-      select: {
-        amount: true,
-        status: true,
+      include: {
+        financingContract: {
+          select: {
+            totalFinanced: true,
+          },
+        },
       },
     });
 
@@ -242,7 +260,7 @@ export class CustomerManagementService {
     let totalPaid = new Decimal(0);
 
     for (const inst of installments) {
-      totalFinanced = totalFinanced.plus(inst.amount);
+      totalFinanced = totalFinanced.plus(inst.financingContract.totalFinanced);
       if (inst.status === InstallmentStatus.PAID) {
         totalPaid = totalPaid.plus(inst.amount);
       }
@@ -272,20 +290,28 @@ export class CustomerManagementService {
     const payments = await prisma.payment.findMany({
       where: {
         installment: {
-          userId: customerId,
+          financingContract: {
+            userId: customerId,
+          },
         },
       },
-      orderBy: { createdAt: "desc" },
+
+      orderBy: {
+        createdAt: "desc",
+      },
+
       include: {
         installment: {
-          select: {
-            installmentId: true,
-            dueDate: true,
-            product: {
-              select: {
-                productId: true,
-                name: true,
-                slug: true,
+          include: {
+            financingContract: {
+              include: {
+                product: {
+                  select: {
+                    productId: true,
+                    name: true,
+                    slug: true,
+                  },
+                },
               },
             },
           },
@@ -297,12 +323,22 @@ export class CustomerManagementService {
       paymentId: p.paymentId,
       amount: p.amount,
       status: p.status,
-      gatewayRef: p.gatewayRef,
+      providerReference: p.providerReference,
       createdAt: p.createdAt,
-      product: p.installment.product,
+      product: {
+        productId: p.installment.financingContract.product.productId,
+        name: p.installment.financingContract.product.name,
+
+        slug: p.installment.financingContract.product.slug,
+      },
       installment: {
         installmentId: p.installment.installmentId,
+
         dueDate: p.installment.dueDate,
+
+        amount: p.installment.amount,
+
+        status: p.installment.status,
       },
     }));
   }

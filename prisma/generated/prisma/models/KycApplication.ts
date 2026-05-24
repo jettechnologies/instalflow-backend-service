@@ -39,8 +39,8 @@ export type KycApplicationMinAggregateOutputType = {
   kycApplicationId: string | null
   userId: string | null
   productId: string | null
-  variantId: string | null
   installmentPlanId: string | null
+  variantId: string | null
   idType: string | null
   idNumber: string | null
   status: string | null
@@ -60,8 +60,8 @@ export type KycApplicationMaxAggregateOutputType = {
   kycApplicationId: string | null
   userId: string | null
   productId: string | null
-  variantId: string | null
   installmentPlanId: string | null
+  variantId: string | null
   idType: string | null
   idNumber: string | null
   status: string | null
@@ -81,8 +81,8 @@ export type KycApplicationCountAggregateOutputType = {
   kycApplicationId: number
   userId: number
   productId: number
-  variantId: number
   installmentPlanId: number
+  variantId: number
   idType: number
   idNumber: number
   status: number
@@ -112,8 +112,8 @@ export type KycApplicationMinAggregateInputType = {
   kycApplicationId?: true
   userId?: true
   productId?: true
-  variantId?: true
   installmentPlanId?: true
+  variantId?: true
   idType?: true
   idNumber?: true
   status?: true
@@ -133,8 +133,8 @@ export type KycApplicationMaxAggregateInputType = {
   kycApplicationId?: true
   userId?: true
   productId?: true
-  variantId?: true
   installmentPlanId?: true
+  variantId?: true
   idType?: true
   idNumber?: true
   status?: true
@@ -154,8 +154,8 @@ export type KycApplicationCountAggregateInputType = {
   kycApplicationId?: true
   userId?: true
   productId?: true
-  variantId?: true
   installmentPlanId?: true
+  variantId?: true
   idType?: true
   idNumber?: true
   status?: true
@@ -262,8 +262,8 @@ export type KycApplicationGroupByOutputType = {
   kycApplicationId: string
   userId: string
   productId: string
-  variantId: string
   installmentPlanId: string
+  variantId: string
   idType: string
   idNumber: string
   status: string
@@ -306,8 +306,8 @@ export type KycApplicationWhereInput = {
   kycApplicationId?: Prisma.StringFilter<"KycApplication"> | string
   userId?: Prisma.StringFilter<"KycApplication"> | string
   productId?: Prisma.StringFilter<"KycApplication"> | string
-  variantId?: Prisma.StringFilter<"KycApplication"> | string
   installmentPlanId?: Prisma.StringFilter<"KycApplication"> | string
+  variantId?: Prisma.StringFilter<"KycApplication"> | string
   idType?: Prisma.StringFilter<"KycApplication"> | string
   idNumber?: Prisma.StringFilter<"KycApplication"> | string
   status?: Prisma.StringFilter<"KycApplication"> | string
@@ -321,8 +321,11 @@ export type KycApplicationWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"KycApplication"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KycApplication"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  installmentPlan?: Prisma.XOR<Prisma.ProductInstallmentPlanScalarRelationFilter, Prisma.ProductInstallmentPlanWhereInput>
   kycDocumentAssets?: Prisma.KycDocumentAssetListRelationFilter
   kycAuditTrails?: Prisma.KycAuditTrailListRelationFilter
+  financingContract?: Prisma.XOR<Prisma.FinancingContractNullableScalarRelationFilter, Prisma.FinancingContractWhereInput> | null
 }
 
 export type KycApplicationOrderByWithRelationInput = {
@@ -330,8 +333,8 @@ export type KycApplicationOrderByWithRelationInput = {
   kycApplicationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  variantId?: Prisma.SortOrder
   installmentPlanId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -345,8 +348,11 @@ export type KycApplicationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  product?: Prisma.ProductOrderByWithRelationInput
+  installmentPlan?: Prisma.ProductInstallmentPlanOrderByWithRelationInput
   kycDocumentAssets?: Prisma.KycDocumentAssetOrderByRelationAggregateInput
   kycAuditTrails?: Prisma.KycAuditTrailOrderByRelationAggregateInput
+  financingContract?: Prisma.FinancingContractOrderByWithRelationInput
 }
 
 export type KycApplicationWhereUniqueInput = Prisma.AtLeast<{
@@ -357,8 +363,8 @@ export type KycApplicationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.KycApplicationWhereInput | Prisma.KycApplicationWhereInput[]
   userId?: Prisma.StringFilter<"KycApplication"> | string
   productId?: Prisma.StringFilter<"KycApplication"> | string
-  variantId?: Prisma.StringFilter<"KycApplication"> | string
   installmentPlanId?: Prisma.StringFilter<"KycApplication"> | string
+  variantId?: Prisma.StringFilter<"KycApplication"> | string
   idType?: Prisma.StringFilter<"KycApplication"> | string
   idNumber?: Prisma.StringFilter<"KycApplication"> | string
   status?: Prisma.StringFilter<"KycApplication"> | string
@@ -372,8 +378,11 @@ export type KycApplicationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"KycApplication"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KycApplication"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
+  installmentPlan?: Prisma.XOR<Prisma.ProductInstallmentPlanScalarRelationFilter, Prisma.ProductInstallmentPlanWhereInput>
   kycDocumentAssets?: Prisma.KycDocumentAssetListRelationFilter
   kycAuditTrails?: Prisma.KycAuditTrailListRelationFilter
+  financingContract?: Prisma.XOR<Prisma.FinancingContractNullableScalarRelationFilter, Prisma.FinancingContractWhereInput> | null
 }, "id" | "kycApplicationId">
 
 export type KycApplicationOrderByWithAggregationInput = {
@@ -381,8 +390,8 @@ export type KycApplicationOrderByWithAggregationInput = {
   kycApplicationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  variantId?: Prisma.SortOrder
   installmentPlanId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -410,8 +419,8 @@ export type KycApplicationScalarWhereWithAggregatesInput = {
   kycApplicationId?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   userId?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   productId?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
-  variantId?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   installmentPlanId?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
+  variantId?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   idType?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   idNumber?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   status?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
@@ -429,9 +438,7 @@ export type KycApplicationScalarWhereWithAggregatesInput = {
 export type KycApplicationCreateInput = {
   id?: bigint | number
   kycApplicationId?: string
-  productId: string
   variantId: string
-  installmentPlanId: string
   idType: string
   idNumber: string
   status?: string
@@ -445,8 +452,11 @@ export type KycApplicationCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutKycApplicationsInput
+  product: Prisma.ProductCreateNestedOneWithoutKycApplicationsInput
+  installmentPlan: Prisma.ProductInstallmentPlanCreateNestedOneWithoutKycApplicationsInput
   kycDocumentAssets?: Prisma.KycDocumentAssetCreateNestedManyWithoutKycApplicationInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationUncheckedCreateInput = {
@@ -454,8 +464,8 @@ export type KycApplicationUncheckedCreateInput = {
   kycApplicationId?: string
   userId: string
   productId: string
-  variantId: string
   installmentPlanId: string
+  variantId: string
   idType: string
   idNumber: string
   status?: string
@@ -470,14 +480,13 @@ export type KycApplicationUncheckedCreateInput = {
   updatedAt?: Date | string
   kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedCreateNestedManyWithoutKycApplicationInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractUncheckedCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
-  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -491,8 +500,11 @@ export type KycApplicationUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutKycApplicationsNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutKycApplicationsNestedInput
+  installmentPlan?: Prisma.ProductInstallmentPlanUpdateOneRequiredWithoutKycApplicationsNestedInput
   kycDocumentAssets?: Prisma.KycDocumentAssetUpdateManyWithoutKycApplicationNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneWithoutKycApplicationNestedInput
 }
 
 export type KycApplicationUncheckedUpdateInput = {
@@ -500,8 +512,8 @@ export type KycApplicationUncheckedUpdateInput = {
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -516,6 +528,7 @@ export type KycApplicationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedUpdateManyWithoutKycApplicationNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUncheckedUpdateOneWithoutKycApplicationNestedInput
 }
 
 export type KycApplicationCreateManyInput = {
@@ -523,8 +536,8 @@ export type KycApplicationCreateManyInput = {
   kycApplicationId?: string
   userId: string
   productId: string
-  variantId: string
   installmentPlanId: string
+  variantId: string
   idType: string
   idNumber: string
   status?: string
@@ -542,9 +555,7 @@ export type KycApplicationCreateManyInput = {
 export type KycApplicationUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
-  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -564,8 +575,8 @@ export type KycApplicationUncheckedUpdateManyInput = {
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -595,8 +606,8 @@ export type KycApplicationCountOrderByAggregateInput = {
   kycApplicationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  variantId?: Prisma.SortOrder
   installmentPlanId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -620,8 +631,8 @@ export type KycApplicationMaxOrderByAggregateInput = {
   kycApplicationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  variantId?: Prisma.SortOrder
   installmentPlanId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -641,8 +652,8 @@ export type KycApplicationMinOrderByAggregateInput = {
   kycApplicationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  variantId?: Prisma.SortOrder
   installmentPlanId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -708,6 +719,48 @@ export type KycApplicationUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.KycApplicationScalarWhereInput | Prisma.KycApplicationScalarWhereInput[]
 }
 
+export type KycApplicationCreateNestedManyWithoutProductInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutProductInput, Prisma.KycApplicationUncheckedCreateWithoutProductInput> | Prisma.KycApplicationCreateWithoutProductInput[] | Prisma.KycApplicationUncheckedCreateWithoutProductInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutProductInput | Prisma.KycApplicationCreateOrConnectWithoutProductInput[]
+  createMany?: Prisma.KycApplicationCreateManyProductInputEnvelope
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+}
+
+export type KycApplicationUncheckedCreateNestedManyWithoutProductInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutProductInput, Prisma.KycApplicationUncheckedCreateWithoutProductInput> | Prisma.KycApplicationCreateWithoutProductInput[] | Prisma.KycApplicationUncheckedCreateWithoutProductInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutProductInput | Prisma.KycApplicationCreateOrConnectWithoutProductInput[]
+  createMany?: Prisma.KycApplicationCreateManyProductInputEnvelope
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+}
+
+export type KycApplicationUpdateManyWithoutProductNestedInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutProductInput, Prisma.KycApplicationUncheckedCreateWithoutProductInput> | Prisma.KycApplicationCreateWithoutProductInput[] | Prisma.KycApplicationUncheckedCreateWithoutProductInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutProductInput | Prisma.KycApplicationCreateOrConnectWithoutProductInput[]
+  upsert?: Prisma.KycApplicationUpsertWithWhereUniqueWithoutProductInput | Prisma.KycApplicationUpsertWithWhereUniqueWithoutProductInput[]
+  createMany?: Prisma.KycApplicationCreateManyProductInputEnvelope
+  set?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  disconnect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  delete?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  update?: Prisma.KycApplicationUpdateWithWhereUniqueWithoutProductInput | Prisma.KycApplicationUpdateWithWhereUniqueWithoutProductInput[]
+  updateMany?: Prisma.KycApplicationUpdateManyWithWhereWithoutProductInput | Prisma.KycApplicationUpdateManyWithWhereWithoutProductInput[]
+  deleteMany?: Prisma.KycApplicationScalarWhereInput | Prisma.KycApplicationScalarWhereInput[]
+}
+
+export type KycApplicationUncheckedUpdateManyWithoutProductNestedInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutProductInput, Prisma.KycApplicationUncheckedCreateWithoutProductInput> | Prisma.KycApplicationCreateWithoutProductInput[] | Prisma.KycApplicationUncheckedCreateWithoutProductInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutProductInput | Prisma.KycApplicationCreateOrConnectWithoutProductInput[]
+  upsert?: Prisma.KycApplicationUpsertWithWhereUniqueWithoutProductInput | Prisma.KycApplicationUpsertWithWhereUniqueWithoutProductInput[]
+  createMany?: Prisma.KycApplicationCreateManyProductInputEnvelope
+  set?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  disconnect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  delete?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  update?: Prisma.KycApplicationUpdateWithWhereUniqueWithoutProductInput | Prisma.KycApplicationUpdateWithWhereUniqueWithoutProductInput[]
+  updateMany?: Prisma.KycApplicationUpdateManyWithWhereWithoutProductInput | Prisma.KycApplicationUpdateManyWithWhereWithoutProductInput[]
+  deleteMany?: Prisma.KycApplicationScalarWhereInput | Prisma.KycApplicationScalarWhereInput[]
+}
+
 export type KycApplicationCreateNestedOneWithoutKycDocumentAssetsInput = {
   create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutKycDocumentAssetsInput, Prisma.KycApplicationUncheckedCreateWithoutKycDocumentAssetsInput>
   connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutKycDocumentAssetsInput
@@ -736,12 +789,66 @@ export type KycApplicationUpdateOneRequiredWithoutKycAuditTrailsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.KycApplicationUpdateToOneWithWhereWithoutKycAuditTrailsInput, Prisma.KycApplicationUpdateWithoutKycAuditTrailsInput>, Prisma.KycApplicationUncheckedUpdateWithoutKycAuditTrailsInput>
 }
 
+export type KycApplicationCreateNestedOneWithoutFinancingContractInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutFinancingContractInput, Prisma.KycApplicationUncheckedCreateWithoutFinancingContractInput>
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutFinancingContractInput
+  connect?: Prisma.KycApplicationWhereUniqueInput
+}
+
+export type KycApplicationUpdateOneRequiredWithoutFinancingContractNestedInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutFinancingContractInput, Prisma.KycApplicationUncheckedCreateWithoutFinancingContractInput>
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutFinancingContractInput
+  upsert?: Prisma.KycApplicationUpsertWithoutFinancingContractInput
+  connect?: Prisma.KycApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.KycApplicationUpdateToOneWithWhereWithoutFinancingContractInput, Prisma.KycApplicationUpdateWithoutFinancingContractInput>, Prisma.KycApplicationUncheckedUpdateWithoutFinancingContractInput>
+}
+
+export type KycApplicationCreateNestedManyWithoutInstallmentPlanInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput> | Prisma.KycApplicationCreateWithoutInstallmentPlanInput[] | Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput | Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput[]
+  createMany?: Prisma.KycApplicationCreateManyInstallmentPlanInputEnvelope
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+}
+
+export type KycApplicationUncheckedCreateNestedManyWithoutInstallmentPlanInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput> | Prisma.KycApplicationCreateWithoutInstallmentPlanInput[] | Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput | Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput[]
+  createMany?: Prisma.KycApplicationCreateManyInstallmentPlanInputEnvelope
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+}
+
+export type KycApplicationUpdateManyWithoutInstallmentPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput> | Prisma.KycApplicationCreateWithoutInstallmentPlanInput[] | Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput | Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput[]
+  upsert?: Prisma.KycApplicationUpsertWithWhereUniqueWithoutInstallmentPlanInput | Prisma.KycApplicationUpsertWithWhereUniqueWithoutInstallmentPlanInput[]
+  createMany?: Prisma.KycApplicationCreateManyInstallmentPlanInputEnvelope
+  set?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  disconnect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  delete?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  update?: Prisma.KycApplicationUpdateWithWhereUniqueWithoutInstallmentPlanInput | Prisma.KycApplicationUpdateWithWhereUniqueWithoutInstallmentPlanInput[]
+  updateMany?: Prisma.KycApplicationUpdateManyWithWhereWithoutInstallmentPlanInput | Prisma.KycApplicationUpdateManyWithWhereWithoutInstallmentPlanInput[]
+  deleteMany?: Prisma.KycApplicationScalarWhereInput | Prisma.KycApplicationScalarWhereInput[]
+}
+
+export type KycApplicationUncheckedUpdateManyWithoutInstallmentPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput> | Prisma.KycApplicationCreateWithoutInstallmentPlanInput[] | Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput[]
+  connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput | Prisma.KycApplicationCreateOrConnectWithoutInstallmentPlanInput[]
+  upsert?: Prisma.KycApplicationUpsertWithWhereUniqueWithoutInstallmentPlanInput | Prisma.KycApplicationUpsertWithWhereUniqueWithoutInstallmentPlanInput[]
+  createMany?: Prisma.KycApplicationCreateManyInstallmentPlanInputEnvelope
+  set?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  disconnect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  delete?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  connect?: Prisma.KycApplicationWhereUniqueInput | Prisma.KycApplicationWhereUniqueInput[]
+  update?: Prisma.KycApplicationUpdateWithWhereUniqueWithoutInstallmentPlanInput | Prisma.KycApplicationUpdateWithWhereUniqueWithoutInstallmentPlanInput[]
+  updateMany?: Prisma.KycApplicationUpdateManyWithWhereWithoutInstallmentPlanInput | Prisma.KycApplicationUpdateManyWithWhereWithoutInstallmentPlanInput[]
+  deleteMany?: Prisma.KycApplicationScalarWhereInput | Prisma.KycApplicationScalarWhereInput[]
+}
+
 export type KycApplicationCreateWithoutUserInput = {
   id?: bigint | number
   kycApplicationId?: string
-  productId: string
   variantId: string
-  installmentPlanId: string
   idType: string
   idNumber: string
   status?: string
@@ -754,16 +861,19 @@ export type KycApplicationCreateWithoutUserInput = {
   isUnderFraudReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  product: Prisma.ProductCreateNestedOneWithoutKycApplicationsInput
+  installmentPlan: Prisma.ProductInstallmentPlanCreateNestedOneWithoutKycApplicationsInput
   kycDocumentAssets?: Prisma.KycDocumentAssetCreateNestedManyWithoutKycApplicationInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationUncheckedCreateWithoutUserInput = {
   id?: bigint | number
   kycApplicationId?: string
   productId: string
-  variantId: string
   installmentPlanId: string
+  variantId: string
   idType: string
   idNumber: string
   status?: string
@@ -778,6 +888,7 @@ export type KycApplicationUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedCreateNestedManyWithoutKycApplicationInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractUncheckedCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationCreateOrConnectWithoutUserInput = {
@@ -814,8 +925,8 @@ export type KycApplicationScalarWhereInput = {
   kycApplicationId?: Prisma.StringFilter<"KycApplication"> | string
   userId?: Prisma.StringFilter<"KycApplication"> | string
   productId?: Prisma.StringFilter<"KycApplication"> | string
-  variantId?: Prisma.StringFilter<"KycApplication"> | string
   installmentPlanId?: Prisma.StringFilter<"KycApplication"> | string
+  variantId?: Prisma.StringFilter<"KycApplication"> | string
   idType?: Prisma.StringFilter<"KycApplication"> | string
   idNumber?: Prisma.StringFilter<"KycApplication"> | string
   status?: Prisma.StringFilter<"KycApplication"> | string
@@ -830,12 +941,10 @@ export type KycApplicationScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"KycApplication"> | Date | string
 }
 
-export type KycApplicationCreateWithoutKycDocumentAssetsInput = {
+export type KycApplicationCreateWithoutProductInput = {
   id?: bigint | number
   kycApplicationId?: string
-  productId: string
   variantId: string
-  installmentPlanId: string
   idType: string
   idNumber: string
   status?: string
@@ -849,7 +958,82 @@ export type KycApplicationCreateWithoutKycDocumentAssetsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutKycApplicationsInput
+  installmentPlan: Prisma.ProductInstallmentPlanCreateNestedOneWithoutKycApplicationsInput
+  kycDocumentAssets?: Prisma.KycDocumentAssetCreateNestedManyWithoutKycApplicationInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractCreateNestedOneWithoutKycApplicationInput
+}
+
+export type KycApplicationUncheckedCreateWithoutProductInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  userId: string
+  installmentPlanId: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedCreateNestedManyWithoutKycApplicationInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractUncheckedCreateNestedOneWithoutKycApplicationInput
+}
+
+export type KycApplicationCreateOrConnectWithoutProductInput = {
+  where: Prisma.KycApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.KycApplicationCreateWithoutProductInput, Prisma.KycApplicationUncheckedCreateWithoutProductInput>
+}
+
+export type KycApplicationCreateManyProductInputEnvelope = {
+  data: Prisma.KycApplicationCreateManyProductInput | Prisma.KycApplicationCreateManyProductInput[]
+  skipDuplicates?: boolean
+}
+
+export type KycApplicationUpsertWithWhereUniqueWithoutProductInput = {
+  where: Prisma.KycApplicationWhereUniqueInput
+  update: Prisma.XOR<Prisma.KycApplicationUpdateWithoutProductInput, Prisma.KycApplicationUncheckedUpdateWithoutProductInput>
+  create: Prisma.XOR<Prisma.KycApplicationCreateWithoutProductInput, Prisma.KycApplicationUncheckedCreateWithoutProductInput>
+}
+
+export type KycApplicationUpdateWithWhereUniqueWithoutProductInput = {
+  where: Prisma.KycApplicationWhereUniqueInput
+  data: Prisma.XOR<Prisma.KycApplicationUpdateWithoutProductInput, Prisma.KycApplicationUncheckedUpdateWithoutProductInput>
+}
+
+export type KycApplicationUpdateManyWithWhereWithoutProductInput = {
+  where: Prisma.KycApplicationScalarWhereInput
+  data: Prisma.XOR<Prisma.KycApplicationUpdateManyMutationInput, Prisma.KycApplicationUncheckedUpdateManyWithoutProductInput>
+}
+
+export type KycApplicationCreateWithoutKycDocumentAssetsInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutKycApplicationsInput
+  product: Prisma.ProductCreateNestedOneWithoutKycApplicationsInput
+  installmentPlan: Prisma.ProductInstallmentPlanCreateNestedOneWithoutKycApplicationsInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationUncheckedCreateWithoutKycDocumentAssetsInput = {
@@ -857,8 +1041,8 @@ export type KycApplicationUncheckedCreateWithoutKycDocumentAssetsInput = {
   kycApplicationId?: string
   userId: string
   productId: string
-  variantId: string
   installmentPlanId: string
+  variantId: string
   idType: string
   idNumber: string
   status?: string
@@ -872,6 +1056,7 @@ export type KycApplicationUncheckedCreateWithoutKycDocumentAssetsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractUncheckedCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationCreateOrConnectWithoutKycDocumentAssetsInput = {
@@ -893,9 +1078,7 @@ export type KycApplicationUpdateToOneWithWhereWithoutKycDocumentAssetsInput = {
 export type KycApplicationUpdateWithoutKycDocumentAssetsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
-  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -909,7 +1092,10 @@ export type KycApplicationUpdateWithoutKycDocumentAssetsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutKycApplicationsNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutKycApplicationsNestedInput
+  installmentPlan?: Prisma.ProductInstallmentPlanUpdateOneRequiredWithoutKycApplicationsNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneWithoutKycApplicationNestedInput
 }
 
 export type KycApplicationUncheckedUpdateWithoutKycDocumentAssetsInput = {
@@ -917,8 +1103,8 @@ export type KycApplicationUncheckedUpdateWithoutKycDocumentAssetsInput = {
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -932,14 +1118,13 @@ export type KycApplicationUncheckedUpdateWithoutKycDocumentAssetsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUncheckedUpdateOneWithoutKycApplicationNestedInput
 }
 
 export type KycApplicationCreateWithoutKycAuditTrailsInput = {
   id?: bigint | number
   kycApplicationId?: string
-  productId: string
   variantId: string
-  installmentPlanId: string
   idType: string
   idNumber: string
   status?: string
@@ -953,7 +1138,10 @@ export type KycApplicationCreateWithoutKycAuditTrailsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutKycApplicationsInput
+  product: Prisma.ProductCreateNestedOneWithoutKycApplicationsInput
+  installmentPlan: Prisma.ProductInstallmentPlanCreateNestedOneWithoutKycApplicationsInput
   kycDocumentAssets?: Prisma.KycDocumentAssetCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationUncheckedCreateWithoutKycAuditTrailsInput = {
@@ -961,8 +1149,8 @@ export type KycApplicationUncheckedCreateWithoutKycAuditTrailsInput = {
   kycApplicationId?: string
   userId: string
   productId: string
-  variantId: string
   installmentPlanId: string
+  variantId: string
   idType: string
   idNumber: string
   status?: string
@@ -976,6 +1164,7 @@ export type KycApplicationUncheckedCreateWithoutKycAuditTrailsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractUncheckedCreateNestedOneWithoutKycApplicationInput
 }
 
 export type KycApplicationCreateOrConnectWithoutKycAuditTrailsInput = {
@@ -997,9 +1186,7 @@ export type KycApplicationUpdateToOneWithWhereWithoutKycAuditTrailsInput = {
 export type KycApplicationUpdateWithoutKycAuditTrailsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
-  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1013,7 +1200,10 @@ export type KycApplicationUpdateWithoutKycAuditTrailsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutKycApplicationsNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutKycApplicationsNestedInput
+  installmentPlan?: Prisma.ProductInstallmentPlanUpdateOneRequiredWithoutKycApplicationsNestedInput
   kycDocumentAssets?: Prisma.KycDocumentAssetUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneWithoutKycApplicationNestedInput
 }
 
 export type KycApplicationUncheckedUpdateWithoutKycAuditTrailsInput = {
@@ -1021,8 +1211,8 @@ export type KycApplicationUncheckedUpdateWithoutKycAuditTrailsInput = {
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1036,14 +1226,195 @@ export type KycApplicationUncheckedUpdateWithoutKycAuditTrailsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUncheckedUpdateOneWithoutKycApplicationNestedInput
+}
+
+export type KycApplicationCreateWithoutFinancingContractInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutKycApplicationsInput
+  product: Prisma.ProductCreateNestedOneWithoutKycApplicationsInput
+  installmentPlan: Prisma.ProductInstallmentPlanCreateNestedOneWithoutKycApplicationsInput
+  kycDocumentAssets?: Prisma.KycDocumentAssetCreateNestedManyWithoutKycApplicationInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutKycApplicationInput
+}
+
+export type KycApplicationUncheckedCreateWithoutFinancingContractInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  userId: string
+  productId: string
+  installmentPlanId: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedCreateNestedManyWithoutKycApplicationInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutKycApplicationInput
+}
+
+export type KycApplicationCreateOrConnectWithoutFinancingContractInput = {
+  where: Prisma.KycApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.KycApplicationCreateWithoutFinancingContractInput, Prisma.KycApplicationUncheckedCreateWithoutFinancingContractInput>
+}
+
+export type KycApplicationUpsertWithoutFinancingContractInput = {
+  update: Prisma.XOR<Prisma.KycApplicationUpdateWithoutFinancingContractInput, Prisma.KycApplicationUncheckedUpdateWithoutFinancingContractInput>
+  create: Prisma.XOR<Prisma.KycApplicationCreateWithoutFinancingContractInput, Prisma.KycApplicationUncheckedCreateWithoutFinancingContractInput>
+  where?: Prisma.KycApplicationWhereInput
+}
+
+export type KycApplicationUpdateToOneWithWhereWithoutFinancingContractInput = {
+  where?: Prisma.KycApplicationWhereInput
+  data: Prisma.XOR<Prisma.KycApplicationUpdateWithoutFinancingContractInput, Prisma.KycApplicationUncheckedUpdateWithoutFinancingContractInput>
+}
+
+export type KycApplicationUpdateWithoutFinancingContractInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutKycApplicationsNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutKycApplicationsNestedInput
+  installmentPlan?: Prisma.ProductInstallmentPlanUpdateOneRequiredWithoutKycApplicationsNestedInput
+  kycDocumentAssets?: Prisma.KycDocumentAssetUpdateManyWithoutKycApplicationNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutKycApplicationNestedInput
+}
+
+export type KycApplicationUncheckedUpdateWithoutFinancingContractInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedUpdateManyWithoutKycApplicationNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutKycApplicationNestedInput
+}
+
+export type KycApplicationCreateWithoutInstallmentPlanInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutKycApplicationsInput
+  product: Prisma.ProductCreateNestedOneWithoutKycApplicationsInput
+  kycDocumentAssets?: Prisma.KycDocumentAssetCreateNestedManyWithoutKycApplicationInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractCreateNestedOneWithoutKycApplicationInput
+}
+
+export type KycApplicationUncheckedCreateWithoutInstallmentPlanInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  userId: string
+  productId: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedCreateNestedManyWithoutKycApplicationInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutKycApplicationInput
+  financingContract?: Prisma.FinancingContractUncheckedCreateNestedOneWithoutKycApplicationInput
+}
+
+export type KycApplicationCreateOrConnectWithoutInstallmentPlanInput = {
+  where: Prisma.KycApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.KycApplicationCreateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput>
+}
+
+export type KycApplicationCreateManyInstallmentPlanInputEnvelope = {
+  data: Prisma.KycApplicationCreateManyInstallmentPlanInput | Prisma.KycApplicationCreateManyInstallmentPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type KycApplicationUpsertWithWhereUniqueWithoutInstallmentPlanInput = {
+  where: Prisma.KycApplicationWhereUniqueInput
+  update: Prisma.XOR<Prisma.KycApplicationUpdateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedUpdateWithoutInstallmentPlanInput>
+  create: Prisma.XOR<Prisma.KycApplicationCreateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedCreateWithoutInstallmentPlanInput>
+}
+
+export type KycApplicationUpdateWithWhereUniqueWithoutInstallmentPlanInput = {
+  where: Prisma.KycApplicationWhereUniqueInput
+  data: Prisma.XOR<Prisma.KycApplicationUpdateWithoutInstallmentPlanInput, Prisma.KycApplicationUncheckedUpdateWithoutInstallmentPlanInput>
+}
+
+export type KycApplicationUpdateManyWithWhereWithoutInstallmentPlanInput = {
+  where: Prisma.KycApplicationScalarWhereInput
+  data: Prisma.XOR<Prisma.KycApplicationUpdateManyMutationInput, Prisma.KycApplicationUncheckedUpdateManyWithoutInstallmentPlanInput>
 }
 
 export type KycApplicationCreateManyUserInput = {
   id?: bigint | number
   kycApplicationId?: string
   productId: string
-  variantId: string
   installmentPlanId: string
+  variantId: string
   idType: string
   idNumber: string
   status?: string
@@ -1061,9 +1432,7 @@ export type KycApplicationCreateManyUserInput = {
 export type KycApplicationUpdateWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
-  productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
-  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1076,16 +1445,19 @@ export type KycApplicationUpdateWithoutUserInput = {
   isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  product?: Prisma.ProductUpdateOneRequiredWithoutKycApplicationsNestedInput
+  installmentPlan?: Prisma.ProductInstallmentPlanUpdateOneRequiredWithoutKycApplicationsNestedInput
   kycDocumentAssets?: Prisma.KycDocumentAssetUpdateManyWithoutKycApplicationNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneWithoutKycApplicationNestedInput
 }
 
 export type KycApplicationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1100,14 +1472,187 @@ export type KycApplicationUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedUpdateManyWithoutKycApplicationNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUncheckedUpdateOneWithoutKycApplicationNestedInput
 }
 
 export type KycApplicationUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type KycApplicationCreateManyProductInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  userId: string
+  installmentPlanId: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type KycApplicationUpdateWithoutProductInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutKycApplicationsNestedInput
+  installmentPlan?: Prisma.ProductInstallmentPlanUpdateOneRequiredWithoutKycApplicationsNestedInput
+  kycDocumentAssets?: Prisma.KycDocumentAssetUpdateManyWithoutKycApplicationNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneWithoutKycApplicationNestedInput
+}
+
+export type KycApplicationUncheckedUpdateWithoutProductInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedUpdateManyWithoutKycApplicationNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUncheckedUpdateOneWithoutKycApplicationNestedInput
+}
+
+export type KycApplicationUncheckedUpdateManyWithoutProductInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  installmentPlanId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type KycApplicationCreateManyInstallmentPlanInput = {
+  id?: bigint | number
+  kycApplicationId?: string
+  userId: string
+  productId: string
+  variantId: string
+  idType: string
+  idNumber: string
+  status?: string
+  marketerApproved?: boolean
+  marketerApprovedAt?: Date | string | null
+  adminApproved?: boolean
+  adminApprovedAt?: Date | string | null
+  rejectionReason?: string | null
+  legalHold?: boolean
+  isUnderFraudReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type KycApplicationUpdateWithoutInstallmentPlanInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutKycApplicationsNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutKycApplicationsNestedInput
+  kycDocumentAssets?: Prisma.KycDocumentAssetUpdateManyWithoutKycApplicationNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUpdateOneWithoutKycApplicationNestedInput
+}
+
+export type KycApplicationUncheckedUpdateWithoutInstallmentPlanInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  idType?: Prisma.StringFieldUpdateOperationsInput | string
+  idNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalHold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isUnderFraudReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycDocumentAssets?: Prisma.KycDocumentAssetUncheckedUpdateManyWithoutKycApplicationNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutKycApplicationNestedInput
+  financingContract?: Prisma.FinancingContractUncheckedUpdateOneWithoutKycApplicationNestedInput
+}
+
+export type KycApplicationUncheckedUpdateManyWithoutInstallmentPlanInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1167,8 +1712,8 @@ export type KycApplicationSelect<ExtArgs extends runtime.Types.Extensions.Intern
   kycApplicationId?: boolean
   userId?: boolean
   productId?: boolean
-  variantId?: boolean
   installmentPlanId?: boolean
+  variantId?: boolean
   idType?: boolean
   idNumber?: boolean
   status?: boolean
@@ -1182,8 +1727,11 @@ export type KycApplicationSelect<ExtArgs extends runtime.Types.Extensions.Intern
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  installmentPlan?: boolean | Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs>
   kycDocumentAssets?: boolean | Prisma.KycApplication$kycDocumentAssetsArgs<ExtArgs>
   kycAuditTrails?: boolean | Prisma.KycApplication$kycAuditTrailsArgs<ExtArgs>
+  financingContract?: boolean | Prisma.KycApplication$financingContractArgs<ExtArgs>
   _count?: boolean | Prisma.KycApplicationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["kycApplication"]>
 
@@ -1192,8 +1740,8 @@ export type KycApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   kycApplicationId?: boolean
   userId?: boolean
   productId?: boolean
-  variantId?: boolean
   installmentPlanId?: boolean
+  variantId?: boolean
   idType?: boolean
   idNumber?: boolean
   status?: boolean
@@ -1207,6 +1755,8 @@ export type KycApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  installmentPlan?: boolean | Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["kycApplication"]>
 
 export type KycApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1214,8 +1764,8 @@ export type KycApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   kycApplicationId?: boolean
   userId?: boolean
   productId?: boolean
-  variantId?: boolean
   installmentPlanId?: boolean
+  variantId?: boolean
   idType?: boolean
   idNumber?: boolean
   status?: boolean
@@ -1229,6 +1779,8 @@ export type KycApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  installmentPlan?: boolean | Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["kycApplication"]>
 
 export type KycApplicationSelectScalar = {
@@ -1236,8 +1788,8 @@ export type KycApplicationSelectScalar = {
   kycApplicationId?: boolean
   userId?: boolean
   productId?: boolean
-  variantId?: boolean
   installmentPlanId?: boolean
+  variantId?: boolean
   idType?: boolean
   idNumber?: boolean
   status?: boolean
@@ -1252,34 +1804,44 @@ export type KycApplicationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type KycApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "kycApplicationId" | "userId" | "productId" | "variantId" | "installmentPlanId" | "idType" | "idNumber" | "status" | "marketerApproved" | "marketerApprovedAt" | "adminApproved" | "adminApprovedAt" | "rejectionReason" | "legalHold" | "isUnderFraudReview" | "createdAt" | "updatedAt", ExtArgs["result"]["kycApplication"]>
+export type KycApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "kycApplicationId" | "userId" | "productId" | "installmentPlanId" | "variantId" | "idType" | "idNumber" | "status" | "marketerApproved" | "marketerApprovedAt" | "adminApproved" | "adminApprovedAt" | "rejectionReason" | "legalHold" | "isUnderFraudReview" | "createdAt" | "updatedAt", ExtArgs["result"]["kycApplication"]>
 export type KycApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  installmentPlan?: boolean | Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs>
   kycDocumentAssets?: boolean | Prisma.KycApplication$kycDocumentAssetsArgs<ExtArgs>
   kycAuditTrails?: boolean | Prisma.KycApplication$kycAuditTrailsArgs<ExtArgs>
+  financingContract?: boolean | Prisma.KycApplication$financingContractArgs<ExtArgs>
   _count?: boolean | Prisma.KycApplicationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type KycApplicationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  installmentPlan?: boolean | Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs>
 }
 export type KycApplicationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
+  installmentPlan?: boolean | Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs>
 }
 
 export type $KycApplicationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "KycApplication"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    product: Prisma.$ProductPayload<ExtArgs>
+    installmentPlan: Prisma.$ProductInstallmentPlanPayload<ExtArgs>
     kycDocumentAssets: Prisma.$KycDocumentAssetPayload<ExtArgs>[]
     kycAuditTrails: Prisma.$KycAuditTrailPayload<ExtArgs>[]
+    financingContract: Prisma.$FinancingContractPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     kycApplicationId: string
     userId: string
     productId: string
-    variantId: string
     installmentPlanId: string
+    variantId: string
     idType: string
     idNumber: string
     status: string
@@ -1687,8 +2249,11 @@ readonly fields: KycApplicationFieldRefs;
 export interface Prisma__KycApplicationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  installmentPlan<T extends Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductInstallmentPlanDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductInstallmentPlanClient<runtime.Types.Result.GetResult<Prisma.$ProductInstallmentPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   kycDocumentAssets<T extends Prisma.KycApplication$kycDocumentAssetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KycApplication$kycDocumentAssetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycDocumentAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kycAuditTrails<T extends Prisma.KycApplication$kycAuditTrailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KycApplication$kycAuditTrailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycAuditTrailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financingContract<T extends Prisma.KycApplication$financingContractArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KycApplication$financingContractArgs<ExtArgs>>): Prisma.Prisma__FinancingContractClient<runtime.Types.Result.GetResult<Prisma.$FinancingContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1722,8 +2287,8 @@ export interface KycApplicationFieldRefs {
   readonly kycApplicationId: Prisma.FieldRef<"KycApplication", 'String'>
   readonly userId: Prisma.FieldRef<"KycApplication", 'String'>
   readonly productId: Prisma.FieldRef<"KycApplication", 'String'>
-  readonly variantId: Prisma.FieldRef<"KycApplication", 'String'>
   readonly installmentPlanId: Prisma.FieldRef<"KycApplication", 'String'>
+  readonly variantId: Prisma.FieldRef<"KycApplication", 'String'>
   readonly idType: Prisma.FieldRef<"KycApplication", 'String'>
   readonly idNumber: Prisma.FieldRef<"KycApplication", 'String'>
   readonly status: Prisma.FieldRef<"KycApplication", 'String'>
@@ -2182,6 +2747,25 @@ export type KycApplication$kycAuditTrailsArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.KycAuditTrailScalarFieldEnum | Prisma.KycAuditTrailScalarFieldEnum[]
+}
+
+/**
+ * KycApplication.financingContract
+ */
+export type KycApplication$financingContractArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancingContract
+   */
+  select?: Prisma.FinancingContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancingContract
+   */
+  omit?: Prisma.FinancingContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancingContractInclude<ExtArgs> | null
+  where?: Prisma.FinancingContractWhereInput
 }
 
 /**

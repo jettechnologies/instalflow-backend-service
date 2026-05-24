@@ -73,6 +73,11 @@ export type KycDocumentAsset = Prisma.KycDocumentAssetModel
  */
 export type KycAuditTrail = Prisma.KycAuditTrailModel
 /**
+ * Model FinancingContract
+ * 
+ */
+export type FinancingContract = Prisma.FinancingContractModel
+/**
  * Model Installment
  * 
  */

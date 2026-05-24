@@ -62,6 +62,7 @@ export const ModelName = {
   KycApplication: 'KycApplication',
   KycDocumentAsset: 'KycDocumentAsset',
   KycAuditTrail: 'KycAuditTrail',
+  FinancingContract: 'FinancingContract',
   Installment: 'Installment',
   Payment: 'Payment',
   Commission: 'Commission',
@@ -221,8 +222,8 @@ export const KycApplicationScalarFieldEnum = {
   kycApplicationId: 'kycApplicationId',
   userId: 'userId',
   productId: 'productId',
-  variantId: 'variantId',
   installmentPlanId: 'installmentPlanId',
+  variantId: 'variantId',
   idType: 'idType',
   idNumber: 'idNumber',
   status: 'status',
@@ -274,14 +275,42 @@ export const KycAuditTrailScalarFieldEnum = {
 export type KycAuditTrailScalarFieldEnum = (typeof KycAuditTrailScalarFieldEnum)[keyof typeof KycAuditTrailScalarFieldEnum]
 
 
+export const FinancingContractScalarFieldEnum = {
+  id: 'id',
+  contractId: 'contractId',
+  userId: 'userId',
+  productId: 'productId',
+  variantId: 'variantId',
+  kycApplicationId: 'kycApplicationId',
+  approvedProductPrice: 'approvedProductPrice',
+  approvedInterestPercentage: 'approvedInterestPercentage',
+  approvedDurationMonths: 'approvedDurationMonths',
+  principal: 'principal',
+  interest: 'interest',
+  totalFinanced: 'totalFinanced',
+  status: 'status',
+  activatedAt: 'activatedAt',
+  completedAt: 'completedAt',
+  defaultedAt: 'defaultedAt',
+  cancelledAt: 'cancelledAt',
+  rejectedAt: 'rejectedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FinancingContractScalarFieldEnum = (typeof FinancingContractScalarFieldEnum)[keyof typeof FinancingContractScalarFieldEnum]
+
+
 export const InstallmentScalarFieldEnum = {
   id: 'id',
   installmentId: 'installmentId',
-  userId: 'userId',
-  productId: 'productId',
-  amount: 'amount',
+  financingContractId: 'financingContractId',
   dueDate: 'dueDate',
+  amount: 'amount',
+  sequence: 'sequence',
   status: 'status',
+  paidAt: 'paidAt',
+  overdueAt: 'overdueAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -295,9 +324,8 @@ export const PaymentScalarFieldEnum = {
   installmentId: 'installmentId',
   amount: 'amount',
   status: 'status',
-  gatewayRef: 'gatewayRef',
+  providerReference: 'providerReference',
   idempotencyKey: 'idempotencyKey',
-  webhookPayload: 'webhookPayload',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -462,6 +490,7 @@ export const ProductInstallmentPlanScalarFieldEnum = {
   id: 'id',
   planId: 'planId',
   productId: 'productId',
+  kycApplicationId: 'kycApplicationId',
   durationMonths: 'durationMonths',
   interestPercentage: 'interestPercentage',
   active: 'active',

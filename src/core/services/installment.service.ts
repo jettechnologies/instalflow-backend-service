@@ -1,46 +1,311 @@
-import { prisma } from "@/infrastructure/prisma";
+import {
+  prisma,
+  InstallmentStatus,
+  PaymentStatus,
+  Prisma,
+  FinancingStatus,
+} from "@/infrastructure/prisma";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from "@/shared/utils/AppError";
 
-/**
- * Theoretical Installment Schedule Generator
- * Calculates standard amortization across required months
- */
-export const generateInstallmentSchedule = async (
-  userId: string,
-  productId: string,
-  totalAmount: number,
-  months: number
-) => {
-  if (months <= 0) throw new Error("Months must be greater than 0");
+const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
-  const amountPerMonth = parseFloat((totalAmount / months).toFixed(2));
-  
-  const schedules = [];
-  
-  for (let i = 1; i <= months; i++) {
-    const dueDate = new Date();
-    dueDate.setMonth(dueDate.getMonth() + i);
-    
-    // Build the payload
-    schedules.push({
-      userId,
-      productId,
-      amount: amountPerMonth,
-      dueDate,
-      status: "PENDING" // Maps to InstallmentStatus.PENDING
+interface GenerateInstallmentScheduleParams {
+  financingContractId: string;
+  totalAmount: number;
+  months: number;
+}
+
+interface ProcessPaymentParams {
+  installmentId: string;
+  amount: number;
+  gatewayRef?: string;
+  idempotencyKey?: string;
+  webhookPayload?: any;
+}
+
+export class InstallmentService {
+  /**
+   * GENERATE INSTALLMENT SCHEDULE
+   */
+  static generateInstallmentSchedule({
+    financingContractId,
+    totalAmount,
+    months,
+  }: GenerateInstallmentScheduleParams) {
+    if (months <= 0) {
+      throw new Error("Months must be greater than 0");
+    }
+    const totalInCents = Math.round(totalAmount * 100);
+    const baseAmountInCents = Math.floor(totalInCents / months);
+    const remainder = totalInCents % months;
+
+    const schedules: Prisma.InstallmentCreateManyInput[] = [];
+
+    for (let i = 0; i < months; i++) {
+      const dueDate = new Date();
+      dueDate.setMonth(dueDate.getMonth() + (i + 1));
+      const installmentAmountInCents =
+        i === months - 1 ? baseAmountInCents + remainder : baseAmountInCents;
+
+      schedules.push({
+        financingContractId,
+        amount: new Prisma.Decimal(installmentAmountInCents / 100),
+        dueDate,
+        sequence: i + 1,
+        status: InstallmentStatus.PENDING,
+      });
+    }
+
+    return schedules;
+  }
+
+  /**
+   * =========================================
+   * GET CUSTOMER INSTALLMENTS
+   * =========================================
+   */
+  static async getCustomerInstallments(financingContractId: string) {
+    return prisma.installment.findMany({
+      where: {
+        financingContractId,
+      },
+      include: {
+        financingContract: {
+          select: {
+            contractId: true,
+            totalFinanced: true,
+            status: true,
+            kycApplication: {
+              include: {
+                product: true,
+                user: true,
+              },
+            },
+          },
+        },
+
+        payments: true,
+      },
+      orderBy: {
+        dueDate: "asc",
+      },
     });
   }
-  
-  // Note: in a production layer, you would use prisma.$transaction to insert all installments and bind them 
-  // to the respective Application/Purchase order ID securely.
-  
-  return schedules;
-};
 
-/**
- * Mark installment as paid and trigger commission calculation
- */
-export const processInstallmentPayment = async (installmentId: string) => {
-  // 1. Mark installment as PAID
-  // 2. Insert Payment record
-  // 3. Emit / Calculate Commission
-};
+  /**
+   * =========================================
+   * GET ACTIVE FINANCED PRODUCTS
+   * =========================================
+   */
+  static async getFinancedProducts(financingContractId: string) {
+    const financedProducts = await prisma.installment.findMany({
+      where: {
+        financingContractId,
+      },
+
+      distinct: ["financingContractId"],
+
+      include: {
+        financingContract: {
+          include: {
+            kycApplication: {
+              include: {
+                product: {
+                  select: {
+                    productId: true,
+                    name: true,
+                    slug: true,
+                    price: true,
+
+                    images: {
+                      select: {
+                        imageUrl: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return financedProducts;
+  }
+
+  /**
+   * =========================================
+   * CALCULATE PAYMENT PROGRESS
+   * =========================================
+   */
+  static async calculateProgressPercentage(financingContractId: string) {
+    const installments = await prisma.installment.findMany({
+      where: {
+        financingContractId,
+      },
+
+      include: {
+        financingContract: {
+          select: {
+            totalFinanced: true,
+          },
+        },
+      },
+    });
+
+    const totalFinanced = installments.reduce(
+      (sum, item) => sum + Number(item.financingContract.totalFinanced),
+      0,
+    );
+
+    const totalPaid = installments
+      .filter((i) => i.status === InstallmentStatus.PAID)
+      .reduce((sum, item) => sum + Number(item.amount), 0);
+
+    const percentagePaid =
+      totalFinanced === 0
+        ? 0
+        : Number(((totalPaid / totalFinanced) * 100).toFixed(2));
+
+    return {
+      totalFinanced,
+      totalPaid,
+      percentagePaid,
+    };
+  }
+
+  static async initializeInstallmentPayment(
+    installmentId: string,
+    customerId: string,
+  ) {
+    const installment = await prisma.installment.findUnique({
+      where: {
+        installmentId,
+      },
+
+      include: {
+        financingContract: {
+          include: {
+            user: true,
+            product: true,
+          },
+        },
+      },
+    });
+
+    if (!installment) {
+      throw new NotFoundError("Installment not found");
+    }
+
+    if (installment.financingContract.userId !== customerId) {
+      throw new UnauthorizedError(
+        "You are not authorized to pay for this installment",
+      );
+    }
+
+    /**
+     * Prevent repayment of settled installment
+     */
+    if (installment.status === InstallmentStatus.PAID) {
+      throw new BadRequestError("This installment has already been settled");
+    }
+
+    /**
+     * Prevent payments on inactive contracts
+     */
+    const contractStatus = installment.financingContract.status;
+
+    if (
+      contractStatus !== FinancingStatus.ACTIVE &&
+      contractStatus !== FinancingStatus.DEFAULTED
+    ) {
+      throw new BadRequestError(
+        `Payments are not allowed for contract status: ${contractStatus}`,
+      );
+    }
+
+    const customer = installment.financingContract.user;
+    const product = installment.financingContract.product;
+
+    /**
+     * Amount expected for this installment
+     */
+    const amount = Number(installment.amount);
+
+    /**
+     * Initialize Paystack transaction
+     */
+    const response = await fetch(
+      "https://api.paystack.co/transaction/initialize",
+      {
+        method: "POST",
+
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET}`,
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          email: customer.email,
+
+          amount: Math.round(amount * 100),
+
+          metadata: {
+            type: "installment",
+            installmentId: installment.installmentId,
+            financingContractId: installment.financingContractId,
+            customerId: customer.userId,
+            productId: product.productId,
+            sequence: installment.sequence,
+          },
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!data.status) {
+      throw new BadRequestError(data.message || "Failed to initialize payment");
+    }
+
+    /**
+     * Persist payment initialization reference
+     *
+     * No ledger movement here.
+     * No installment settlement here.
+     * Webhook + payment worker handles settlement.
+     */
+    await prisma.payment.create({
+      data: {
+        installmentId: installment.installmentId,
+
+        amount: installment.amount,
+
+        status: PaymentStatus.PENDING,
+
+        providerReference: data.data.reference,
+
+        idempotencyKey: data.data.reference,
+      },
+    });
+
+    return {
+      authorizationUrl: data.data.authorization_url,
+
+      accessCode: data.data.access_code,
+
+      reference: data.data.reference,
+
+      amount,
+
+      installmentId: installment.installmentId,
+
+      dueDate: installment.dueDate,
+    };
+  }
+}

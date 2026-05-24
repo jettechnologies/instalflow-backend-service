@@ -88,7 +88,7 @@ export interface DomainEventPayloads {
     customerName: string;
     productName: string;
     amountPaid: string | number;
-    dueDate: string;
+    nextDueDate: string;
     percentagePaid: number;
     dashboard_url?: string;
   };

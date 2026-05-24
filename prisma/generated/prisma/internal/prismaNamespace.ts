@@ -395,6 +395,7 @@ export const ModelName = {
   KycApplication: 'KycApplication',
   KycDocumentAsset: 'KycDocumentAsset',
   KycAuditTrail: 'KycAuditTrail',
+  FinancingContract: 'FinancingContract',
   Installment: 'Installment',
   Payment: 'Payment',
   Commission: 'Commission',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "internalNotification"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "internalNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1241,6 +1242,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.KycAuditTrailCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KycAuditTrailCountAggregateOutputType> | number
+        }
+      }
+    }
+    FinancingContract: {
+      payload: Prisma.$FinancingContractPayload<ExtArgs>
+      fields: Prisma.FinancingContractFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FinancingContractFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FinancingContractFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>
+        }
+        findFirst: {
+          args: Prisma.FinancingContractFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FinancingContractFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>
+        }
+        findMany: {
+          args: Prisma.FinancingContractFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>[]
+        }
+        create: {
+          args: Prisma.FinancingContractCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>
+        }
+        createMany: {
+          args: Prisma.FinancingContractCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FinancingContractCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>[]
+        }
+        delete: {
+          args: Prisma.FinancingContractDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>
+        }
+        update: {
+          args: Prisma.FinancingContractUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>
+        }
+        deleteMany: {
+          args: Prisma.FinancingContractDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FinancingContractUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FinancingContractUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>[]
+        }
+        upsert: {
+          args: Prisma.FinancingContractUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancingContractPayload>
+        }
+        aggregate: {
+          args: Prisma.FinancingContractAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFinancingContract>
+        }
+        groupBy: {
+          args: Prisma.FinancingContractGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FinancingContractGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FinancingContractCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FinancingContractCountAggregateOutputType> | number
         }
       }
     }
@@ -2592,8 +2667,8 @@ export const KycApplicationScalarFieldEnum = {
   kycApplicationId: 'kycApplicationId',
   userId: 'userId',
   productId: 'productId',
-  variantId: 'variantId',
   installmentPlanId: 'installmentPlanId',
+  variantId: 'variantId',
   idType: 'idType',
   idNumber: 'idNumber',
   status: 'status',
@@ -2645,14 +2720,42 @@ export const KycAuditTrailScalarFieldEnum = {
 export type KycAuditTrailScalarFieldEnum = (typeof KycAuditTrailScalarFieldEnum)[keyof typeof KycAuditTrailScalarFieldEnum]
 
 
+export const FinancingContractScalarFieldEnum = {
+  id: 'id',
+  contractId: 'contractId',
+  userId: 'userId',
+  productId: 'productId',
+  variantId: 'variantId',
+  kycApplicationId: 'kycApplicationId',
+  approvedProductPrice: 'approvedProductPrice',
+  approvedInterestPercentage: 'approvedInterestPercentage',
+  approvedDurationMonths: 'approvedDurationMonths',
+  principal: 'principal',
+  interest: 'interest',
+  totalFinanced: 'totalFinanced',
+  status: 'status',
+  activatedAt: 'activatedAt',
+  completedAt: 'completedAt',
+  defaultedAt: 'defaultedAt',
+  cancelledAt: 'cancelledAt',
+  rejectedAt: 'rejectedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FinancingContractScalarFieldEnum = (typeof FinancingContractScalarFieldEnum)[keyof typeof FinancingContractScalarFieldEnum]
+
+
 export const InstallmentScalarFieldEnum = {
   id: 'id',
   installmentId: 'installmentId',
-  userId: 'userId',
-  productId: 'productId',
-  amount: 'amount',
+  financingContractId: 'financingContractId',
   dueDate: 'dueDate',
+  amount: 'amount',
+  sequence: 'sequence',
   status: 'status',
+  paidAt: 'paidAt',
+  overdueAt: 'overdueAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2666,9 +2769,8 @@ export const PaymentScalarFieldEnum = {
   installmentId: 'installmentId',
   amount: 'amount',
   status: 'status',
-  gatewayRef: 'gatewayRef',
+  providerReference: 'providerReference',
   idempotencyKey: 'idempotencyKey',
-  webhookPayload: 'webhookPayload',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2833,6 +2935,7 @@ export const ProductInstallmentPlanScalarFieldEnum = {
   id: 'id',
   planId: 'planId',
   productId: 'productId',
+  kycApplicationId: 'kycApplicationId',
   durationMonths: 'durationMonths',
   interestPercentage: 'interestPercentage',
   active: 'active',
@@ -3030,6 +3133,20 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FinancingStatus'
+ */
+export type EnumFinancingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancingStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'FinancingStatus[]'
+ */
+export type ListEnumFinancingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancingStatus[]'>
     
 
 
@@ -3335,6 +3452,7 @@ export type GlobalOmitConfig = {
   kycApplication?: Prisma.KycApplicationOmit
   kycDocumentAsset?: Prisma.KycDocumentAssetOmit
   kycAuditTrail?: Prisma.KycAuditTrailOmit
+  financingContract?: Prisma.FinancingContractOmit
   installment?: Prisma.InstallmentOmit
   payment?: Prisma.PaymentOmit
   commission?: Prisma.CommissionOmit

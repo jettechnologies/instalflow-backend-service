@@ -134,6 +134,20 @@ export const InternalNotificationStatus = {
 export type InternalNotificationStatus = (typeof InternalNotificationStatus)[keyof typeof InternalNotificationStatus]
 
 
+export const FinancingStatus = {
+  PENDING_ACTIVATION: 'PENDING_ACTIVATION',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  DEFAULTED: 'DEFAULTED',
+  CANCELLED: 'CANCELLED',
+  REJECTED: 'REJECTED',
+  RESTRUCTURED: 'RESTRUCTURED',
+  WRITTEN_OFF: 'WRITTEN_OFF'
+} as const
+
+export type FinancingStatus = (typeof FinancingStatus)[keyof typeof FinancingStatus]
+
+
 export const OnboardingStatus = {
   PENDING: 'PENDING',
   PAYMENT_INITIALIZED: 'PAYMENT_INITIALIZED',

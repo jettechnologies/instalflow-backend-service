@@ -1,4 +1,4 @@
-import { prisma } from "@/infrastructure/prisma";
+import { FinancingStatus, Prisma, prisma } from "@/infrastructure/prisma";
 import crypto from "crypto";
 import { z } from "zod";
 import {
@@ -24,6 +24,7 @@ import path from "path";
 import fs from "fs";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
+import { InstallmentService } from "./installment.service";
 
 export class KycService {
   /**
@@ -160,20 +161,17 @@ export class KycService {
       throw new NotFoundError("Customer account not found.");
     }
 
-    // 1. Validate File Upload
     if (!file) {
       throw new BadRequestError("Bank statement PDF file is required.");
     }
 
-    // Check size limit: <= 10MB
-    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    const MAX_SIZE = 10 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
       throw new BadRequestError(
         "Bank statement size must be less than or equal to 10MB.",
       );
     }
 
-    // Verify PDF mime-type / extension
     const fileName = file.originalname || file.name || "";
     const filePath = file.path || file.tempFilePath || "";
 
@@ -182,7 +180,6 @@ export class KycService {
       throw new BadRequestError("Only PDF (.pdf) documents are accepted.");
     }
 
-    // 2. Upload PDF to Cloudinary as private documents (Bypass in test/mock environments)
     let uploadResult;
     if (filePath.includes("dummy.pdf") || process.env.NODE_ENV === "test") {
       uploadResult = {
@@ -199,10 +196,8 @@ export class KycService {
       if (fs.existsSync(filePath)) {
         fs.unlink(filePath, () => {});
       }
-      // uploadPdfToCloudinary already handles temp file cleanup internally
     }
 
-    // 3. Compute Cryptographic Checksum SHA-256
     const fileHash = this.getFileHash(filePath);
 
     // 4. Simulate External KYC Check
@@ -214,7 +209,61 @@ export class KycService {
     const bankNameVerified = true;
     const nameTallyStatus = "VERIFIED_MATCH";
 
-    // 5. Create KYC application + Document Asset + Audit Trail inside a single transaction
+    const existingApplication = await prisma.kycApplication.findFirst({
+      where: {
+        userId: customer.userId,
+        installmentPlanId: params.installmentPlanId,
+        productId: params.productId,
+        variantId: params.variantId,
+        status: {
+          in: ["PENDING", "APPROVED"],
+        },
+      },
+    });
+
+    if (existingApplication) {
+      throw new ConflictError("You have an existing KYC application.");
+    }
+
+    const productInstallmentPlan =
+      await prisma.productInstallmentPlan.findUnique({
+        where: {
+          planId: params.installmentPlanId,
+        },
+      });
+
+    if (!productInstallmentPlan) {
+      throw new NotFoundError("Installment plan not found.");
+    }
+
+    const productVariant = await prisma.productVariant.findUnique({
+      where: {
+        variantId: params.variantId,
+      },
+
+      include: {
+        product: true,
+      },
+    });
+
+    if (!productVariant) {
+      throw new NotFoundError("Product variant not found.");
+    }
+
+    if (productVariant.productId !== params.productId) {
+      throw new BadRequestError("Selected variant does not belong to product.");
+    }
+
+    const principal = new Prisma.Decimal(productVariant.price);
+
+    const approvedInterestPercentage = new Prisma.Decimal(
+      productInstallmentPlan.interestPercentage,
+    );
+
+    const interest = principal.mul(approvedInterestPercentage.div(100));
+
+    const totalFinanced = principal.plus(interest);
+
     const { application } = await prisma.$transaction(async (tx) => {
       const app = await tx.kycApplication.create({
         data: {
@@ -228,7 +277,26 @@ export class KycService {
         },
       });
 
-      // Transient KycDocumentAsset (Purged after decision or auto-deleted in 15 days)
+      await tx.financingContract.create({
+        data: {
+          userId: customer.userId,
+          productId: params.productId,
+          variantId: params.variantId,
+
+          kycApplicationId: app.kycApplicationId,
+
+          approvedProductPrice: principal,
+          approvedInterestPercentage: productInstallmentPlan.interestPercentage,
+          approvedDurationMonths: productInstallmentPlan.durationMonths,
+
+          principal,
+          interest,
+          totalFinanced,
+
+          status: FinancingStatus.PENDING_ACTIVATION,
+        },
+      });
+
       const retentionDays = 15;
       const scheduledDeletion = new Date();
       scheduledDeletion.setDate(scheduledDeletion.getDate() + retentionDays);
@@ -245,7 +313,6 @@ export class KycService {
         },
       });
 
-      // Immutable KycAuditTrail entry (Retained permanently)
       await tx.kycAuditTrail.create({
         data: {
           kycApplicationId: app.kycApplicationId,
@@ -268,8 +335,6 @@ export class KycService {
       return { application: app };
     });
 
-    // 6. Fire Customer Under-Review Welcome Email Event
-    // Kept strictly outside transaction boundary
     emitEvent(DomainEvent.USER_REGISTERED, {
       email: customer.email,
       name: customerName,
@@ -277,8 +342,6 @@ export class KycService {
       applicationUnderReview: true,
     });
 
-    // 7. Dispatch Internal Notification Alerts
-    // await this.dispatchInternalNotifications(customer, application);
     await NotificationOrchestrator.handle(
       NotificationEventType.KYC_APPLICATION_SUBMITTED,
       {
@@ -393,11 +456,41 @@ export class KycService {
         },
       });
 
-      // Promote application to APPROVED if BOTH marketer and admin approved
       if (updated.marketerApproved && updated.adminApproved) {
         const finalized = await tx.kycApplication.update({
           where: { kycApplicationId: applicationId },
           data: { status: "APPROVED" },
+        });
+
+        const contract = await tx.financingContract.findUnique({
+          where: {
+            kycApplicationId: applicationId,
+          },
+        });
+
+        if (!contract) {
+          throw new Error("Financing contract not found");
+        }
+
+        const installmentSchedules =
+          InstallmentService.generateInstallmentSchedule({
+            financingContractId: contract.contractId,
+            totalAmount: Number(contract.totalFinanced),
+            months: contract.approvedDurationMonths,
+          });
+
+        await tx.installment.createMany({
+          data: installmentSchedules,
+        });
+
+        await tx.financingContract.update({
+          where: {
+            contractId: contract.contractId,
+          },
+          data: {
+            status: FinancingStatus.ACTIVE,
+            activatedAt: new Date(),
+          },
         });
 
         // CBN/NDPR: Schedule physical asset deletion instantly (buffer 24 hours or immediate)
@@ -493,6 +586,16 @@ export class KycService {
         data: {
           status: "REJECTED",
           rejectionReason: reason,
+        },
+      });
+
+      await tx.financingContract.updateMany({
+        where: {
+          kycApplicationId: applicationId,
+        },
+        data: {
+          status: FinancingStatus.REJECTED,
+          rejectedAt: new Date(),
         },
       });
 

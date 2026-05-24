@@ -188,7 +188,7 @@ onEvent(DomainEvent.INSTALLMENT_PAID, async (payload) => {
       customerName: payload.customerName,
       productName: payload.productName,
       amountPaid: payload.amountPaid,
-      dueDate: payload.dueDate,
+      nextDueDate: payload.nextDueDate,
       percentagePaid: payload.percentagePaid,
       dashboard_url: process.env.FRONTEND_URL,
     },
