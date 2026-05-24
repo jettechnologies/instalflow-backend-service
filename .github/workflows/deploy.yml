@@ -28,7 +28,8 @@ jobs:
 
       - run: pnpm run db:generate
 
-      - run: pnpm run db:push
+      # - run: pnpm run db:push --accept-data-loss
+      - run: pnpm run db:migrate:deploy
 
       - run: pnpm run build
 
