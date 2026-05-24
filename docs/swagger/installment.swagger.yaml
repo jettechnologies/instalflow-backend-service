@@ -1,11 +1,11 @@
 tags:
-  - name: ["Installment Management"]
+  - name: Installment Management
     description: Financing contract installments, payment processing, and progress tracking
 
 paths:
   /installments/{contractId}:
     get:
-      tags: ["Installment Management"]
+      tags: [Installment Management]
       summary: Retrieve customer installment plan
       security:
         - bearerAuth: []
@@ -46,7 +46,7 @@ paths:
 
   /installments/{contractId}/products:
     get:
-      tags: ["Installment Management"]
+      tags: [Installment Management]
       summary: Retrieve financed products for a contract
       security:
         - bearerAuth: []
@@ -78,7 +78,7 @@ paths:
 
   /installments/{contractId}/progress:
     get:
-      tags: ["Installment Management"]
+      tags: [Installment Management]
       summary: Retrieve contract payment progress
       security:
         - bearerAuth: []
@@ -113,7 +113,7 @@ paths:
 
   /installments/{installmentId}/pay:
     post:
-      tags: ["Installment Management"]
+      tags: [Installment Management]
       summary: Initialize installment payment
       security:
         - bearerAuth: []
