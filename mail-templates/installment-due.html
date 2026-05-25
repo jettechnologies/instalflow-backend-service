@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Due Today - Instalflow</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap");
+
+      body {
+        font-family: "Jost", sans-serif;
+        background-color: #0b0f1a;
+        color: #9ca3af;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      }
+      .header {
+        padding: 2.5rem 1.5rem 1rem;
+        text-align: center;
+      }
+      .logo-text {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+      }
+      .logo-text span {
+        color: #7c3aed;
+      }
+      .icon-wrap {
+        width: 64px;
+        height: 64px;
+        margin: 1.5rem auto;
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 28px rgba(124, 58, 237, 0.5);
+      }
+      .content {
+        padding: 0 2.5rem 2.5rem;
+        text-align: center;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 1.6rem;
+        color: #f9fafb;
+        margin: 0.5rem 0 0.25rem;
+      }
+      .subtitle {
+        font-size: 0.95rem;
+        color: #9ca3af;
+        margin-bottom: 1.5rem;
+      }
+      .amount-badge {
+        display: inline-block;
+        margin: 1rem 0 1.5rem;
+        padding: 1.5rem 3rem;
+        background: #0b0f1a;
+        border: 1px solid #7c3aed;
+        border-radius: 16px;
+        box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+      }
+      .amount-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #a78bfa;
+        text-transform: uppercase;
+        letter-spacing: 0.1rem;
+      }
+      .amount-value {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #f9fafb;
+        margin-top: 0.25rem;
+      }
+      .data-grid {
+        background: #0b0f1a;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin: 0 0 1.5rem;
+        text-align: left;
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.65rem 0;
+        border-bottom: 1px solid #1f2937;
+      }
+      .data-row:last-child {
+        border-bottom: none;
+      }
+      .data-label {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      .data-value {
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .progress-wrap {
+        margin: 0 0 1.75rem;
+      }
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+      }
+      .progress-track {
+        background: #1f2937;
+        border-radius: 999px;
+        height: 10px;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #7c3aed, #a78bfa);
+        border-radius: 999px;
+      }
+      .cta-wrap {
+        margin-top: 0.5rem;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 1rem 3rem;
+        background: linear-gradient(135deg, #7c3aed, #6d28d9);
+        color: #f9fafb;
+        font-weight: 700;
+        font-size: 1.1rem;
+        border-radius: 14px;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        box-shadow: 0 6px 24px rgba(124, 58, 237, 0.4);
+      }
+      .cta-note {
+        margin-top: 0.75rem;
+        font-size: 0.8rem;
+        color: #6b7280;
+      }
+      .footer {
+        background-color: #0b0f1a;
+        border-top: 1px solid #1f2937;
+        padding: 1.75rem 2rem;
+        text-align: center;
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+      .footer .product-name {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo-text">Instal<span>flow</span></div>
+        <div class="icon-wrap">
+          <!-- Clock icon -->
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+        </div>
+        <h1 class="title">Your Payment is Due Today</h1>
+        <p class="subtitle">
+          Hi {{customerName}}, your installment payment is scheduled for today.
+        </p>
+      </div>
+
+      <div class="content">
+        <div class="amount-badge">
+          <div class="amount-label">Pay Now</div>
+          <div class="amount-value">{{amount}}</div>
+        </div>
+
+        <div class="data-grid">
+          <div class="data-row">
+            <span class="data-label">Product</span>
+            <span class="data-value"
+              >{{productName}}{{#if variantName}} — {{variantName}}{{/if}}</span
+            >
+          </div>
+          <div class="data-row">
+            <span class="data-label">Installment</span>
+            <span class="data-value">#{{sequence}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Due Date</span>
+            <span class="data-value" style="color: #a78bfa">{{dueDate}}</span>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span style="color: #9ca3af">Payment Progress</span>
+            <span style="color: #f9fafb; font-weight: 600"
+              >{{percentagePaid}}% completed</span
+            >
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar" style="width: {{percentagePaid}}%;"></div>
+          </div>
+        </div>
+
+        <div class="cta-wrap">
+          <a href="{{payment_url}}" class="cta-btn">Pay Now →</a>
+          <p class="cta-note">
+            Tap the button above to complete your payment securely.
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>The <span class="product-name">Instalflow</span> Team</p>
+        <p style="margin: 0; font-size: 0.75rem; color: #6b7280">
+          Paying on time keeps your installment plan in good standing.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

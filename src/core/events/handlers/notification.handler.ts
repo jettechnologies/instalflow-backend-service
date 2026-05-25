@@ -5,6 +5,12 @@ import { DomainEvent } from "@/core/events/event.types";
 import { NotificationService } from "@/core/notifications/notification.service";
 import { NotificationChannel } from "@/core/notifications/notification.type";
 import { EmailTemplate } from "@/core/services/email.service";
+import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
+import { NotificationRepository } from "@/infrastructure/internal_notification/notification.repository";
+import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
+
+const fmt = (amount: string | number) =>
+  typeof amount === "number" ? `₦${amount.toLocaleString()}` : amount;
 
 /**
  * USER REGISTERED
@@ -193,4 +199,201 @@ onEvent(DomainEvent.INSTALLMENT_PAID, async (payload) => {
       dashboard_url: process.env.FRONTEND_URL,
     },
   });
+});
+
+// ─── 1. 3 DAYS BEFORE DUE ────────────────────────────────────────────────────
+
+onEvent(DomainEvent.INSTALLMENT_REMINDER_3DAY, async (payload) => {
+  // Email
+  await NotificationService.send({
+    to: payload.customerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_REMINDER_3DAY,
+    subject: `⏰ Payment Reminder: ₦ due in 3 days`,
+    context: {
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  await NotificationOrchestrator.handle(
+    NotificationEventType.INSTALLMENT_REMINDER_3DAY,
+    {
+      customerId: payload.customerId,
+      customerEmail: payload.customerEmail,
+      customerName: payload.customerName,
+      installmentId: payload.installmentId,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url,
+      dashboard_url: payload.dashboard_url,
+    },
+  );
+});
+
+onEvent(DomainEvent.INSTALLMENT_DUE_TODAY, async (payload) => {
+  await NotificationService.send({
+    to: payload.customerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_DUE_TODAY,
+    subject: `🔔 Your Installment Payment is Due Today`,
+    context: {
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  await NotificationOrchestrator.handle(
+    NotificationEventType.INSTALLMENT_DUE_TODAY,
+    {
+      customerId: payload.customerId,
+      customerEmail: payload.customerEmail,
+      customerName: payload.customerName,
+      installmentId: payload.installmentId,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url,
+      dashboard_url: payload.dashboard_url,
+    },
+  );
+});
+
+onEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, async (payload) => {
+  await NotificationService.send({
+    to: payload.customerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_OVERDUE_3DAY_CUSTOMER,
+    subject: `⚠️ Overdue Payment: Action Required`,
+    context: {
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  await NotificationService.send({
+    to: payload.marketerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_OVERDUE_3DAY_MARKETER,
+    subject: `⚠️ Customer Payment Overdue (3 Days) — Action Needed`,
+    context: {
+      marketerName: payload.marketerName,
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+    },
+  });
+
+  await NotificationOrchestrator.handle(
+    NotificationEventType.INSTALLMENT_OVERDUE_3DAY,
+    {
+      customerId: payload.customerId,
+      customerEmail: payload.customerEmail,
+      customerName: payload.customerName,
+      installmentId: payload.installmentId,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      percentagePaid: payload.percentagePaid,
+      marketerId: payload.marketerId,
+      marketerEmail: payload.marketerEmail,
+      marketerName: payload.marketerName,
+      payment_url: payload.payment_url,
+    },
+  );
+});
+
+onEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, async (payload) => {
+  await NotificationService.send({
+    to: payload.customerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_OVERDUE_7DAY_CUSTOMER,
+    subject: `🚨 URGENT: Overdue Payment — Immediate Action Required`,
+    context: {
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  await NotificationService.send({
+    to: payload.adminEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_OVERDUE_7DAY_ADMIN,
+    subject: `🚨 Escalation: 7-Day Overdue Installment — ${payload.customerName}`,
+    context: {
+      adminName: payload.adminName,
+      marketerName: payload.marketerName,
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      expectedPaymentDate: payload.expectedPaymentDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  await NotificationOrchestrator.handle(
+    NotificationEventType.INSTALLMENT_OVERDUE_7DAY,
+    {
+      customerId: payload.customerId,
+      customerEmail: payload.customerEmail,
+      customerName: payload.customerName,
+      installmentId: payload.installmentId,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      expectedPaymentDate: payload.expectedPaymentDate,
+      amount: payload.amount,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      percentagePaid: payload.percentagePaid,
+      marketerId: payload.marketerId,
+      marketerEmail: payload.marketerEmail,
+      marketerName: payload.marketerName,
+      adminId: payload.adminId,
+      adminEmail: payload.adminEmail,
+      adminName: payload.adminName,
+      payment_url: payload.payment_url,
+      dashboard_url: payload.dashboard_url,
+    },
+  );
 });

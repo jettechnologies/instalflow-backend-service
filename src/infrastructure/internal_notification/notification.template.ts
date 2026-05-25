@@ -30,7 +30,31 @@ export class NotificationTemplates {
       case NotificationEventType.COMMISSION_TRANSFER_REQUEST:
         return {
           title: "Commission Withdrawal Request",
-          message: `${payload.marketerName} requested commission payout.`,
+          message: `${payload.marketerName} requested a commission payout of ${payload.amount}.`,
+        };
+
+      case NotificationEventType.INSTALLMENT_REMINDER_3DAY:
+        return {
+          title: "Payment Due in 3 Days",
+          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due on ${payload.dueDate}. Please ensure your payment is ready.`,
+        };
+
+      case NotificationEventType.INSTALLMENT_DUE_TODAY:
+        return {
+          title: "Your Payment is Due Today",
+          message: `Installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due today. Tap to pay now.`,
+        };
+
+      case NotificationEventType.INSTALLMENT_OVERDUE_3DAY:
+        return {
+          title: "⚠️ Payment Overdue",
+          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) was due on ${payload.dueDate} and remains unpaid. Please make payment immediately to avoid further escalation.`,
+        };
+
+      case NotificationEventType.INSTALLMENT_OVERDUE_7DAY:
+        return {
+          title: "🚨 URGENT: Overdue Payment",
+          message: `This is a final notice. Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is now 7 days overdue. This matter has been escalated to management. Pay immediately to avoid default status.`,
         };
 
       default:

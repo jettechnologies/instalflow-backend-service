@@ -181,3 +181,8 @@ export type ProductImage = Prisma.ProductImageModel
  * 
  */
 export type InternalNotification = Prisma.InternalNotificationModel
+/**
+ * Model CommissionPayoutRequest
+ * 
+ */
+export type CommissionPayoutRequest = Prisma.CommissionPayoutRequestModel

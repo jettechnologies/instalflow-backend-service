@@ -22,6 +22,12 @@ export enum EmailTemplate {
   COMPANY_ONBOARDING = "company-onboarding",
   INSTALLMENT_PAID = "installment-paid",
   PASSWORD_CHANGED = "password-changed",
+  INSTALLMENT_REMINDER_3DAY = "installment-3days-reminder",
+  INSTALLMENT_DUE_TODAY = "installment-due",
+  INSTALLMENT_OVERDUE_3DAY_CUSTOMER = "installment-overdue-3days-customer",
+  INSTALLMENT_OVERDUE_3DAY_MARKETER = "installment-overdue-3days-marketer",
+  INSTALLMENT_OVERDUE_7DAY_CUSTOMER = "installment-overdue-7days-customer",
+  INSTALLMENT_OVERDUE_7DAY_ADMIN = "installment-overdue-7days-admin",
 }
 
 interface SendEmailProps {

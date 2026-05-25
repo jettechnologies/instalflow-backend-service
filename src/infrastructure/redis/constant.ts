@@ -3,6 +3,7 @@ export const QueueNames = {
   PaymentQueue: "payment-queue",
   CommissionQueue: "commission-queue",
   KycRetentionQueue: "kyc-retention-queue",
+  InstallmentPaymentReminderQueue: "installment-payment-reminder-queue",
 };
 
 export const JobNames = {

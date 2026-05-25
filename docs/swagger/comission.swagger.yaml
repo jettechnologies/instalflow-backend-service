@@ -1,0 +1,101 @@
+openapi: 3.0.0
+
+info:
+  title: Commission API
+  version: 1.0.0
+
+paths:
+  /commissions/all-time:
+    get:
+      summary: Get all commissions
+      tags: [Commissions]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All commissions fetched
+
+  /commissions/per-customer:
+    get:
+      summary: Get commissions grouped by customer
+      tags: [Commissions]
+      security:
+        - bearerAuth: []
+
+  /commissions/per-product:
+    get:
+      summary: Get commissions grouped by product
+      tags: [Commissions]
+      security:
+        - bearerAuth: []
+
+  /commissions/request-payout:
+    post:
+      summary: Request commission payout
+      tags: [Commissions]
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - amount
+
+              properties:
+                amount:
+                  type: number
+
+      responses:
+        "201":
+          description: Payout request created
+
+  /commissions/payouts/{id}/admin-approve:
+    post:
+      summary: Admin approves payout
+      tags: [Commissions]
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: payoutId
+          required: true
+
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Admin approval successful
+
+  /commissions/payouts/{id}/company-approve:
+    post:
+      summary: Company approves payout
+      tags: [Commissions]
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: payoutId
+          required: true
+
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Company approval successful
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

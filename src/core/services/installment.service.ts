@@ -19,18 +19,15 @@ interface GenerateInstallmentScheduleParams {
   months: number;
 }
 
-interface ProcessPaymentParams {
-  installmentId: string;
-  amount: number;
-  gatewayRef?: string;
-  idempotencyKey?: string;
-  webhookPayload?: any;
-}
+// interface ProcessPaymentParams {
+//   installmentId: string;
+//   amount: number;
+//   gatewayRef?: string;
+//   idempotencyKey?: string;
+//   webhookPayload?: any;
+// }
 
 export class InstallmentService {
-  /**
-   * GENERATE INSTALLMENT SCHEDULE
-   */
   static generateInstallmentSchedule({
     financingContractId,
     totalAmount,
@@ -63,11 +60,6 @@ export class InstallmentService {
     return schedules;
   }
 
-  /**
-   * =========================================
-   * GET CUSTOMER INSTALLMENTS
-   * =========================================
-   */
   static async getCustomerInstallments(financingContractId: string) {
     return prisma.installment.findMany({
       where: {
@@ -96,11 +88,6 @@ export class InstallmentService {
     });
   }
 
-  /**
-   * =========================================
-   * GET ACTIVE FINANCED PRODUCTS
-   * =========================================
-   */
   static async getFinancedProducts(financingContractId: string) {
     const financedProducts = await prisma.installment.findMany({
       where: {
@@ -138,11 +125,6 @@ export class InstallmentService {
     return financedProducts;
   }
 
-  /**
-   * =========================================
-   * CALCULATE PAYMENT PROGRESS
-   * =========================================
-   */
   static async calculateProgressPercentage(financingContractId: string) {
     const installments = await prisma.installment.findMany({
       where: {
@@ -187,7 +169,6 @@ export class InstallmentService {
       where: {
         installmentId,
       },
-
       include: {
         financingContract: {
           include: {
@@ -208,16 +189,10 @@ export class InstallmentService {
       );
     }
 
-    /**
-     * Prevent repayment of settled installment
-     */
     if (installment.status === InstallmentStatus.PAID) {
       throw new BadRequestError("This installment has already been settled");
     }
 
-    /**
-     * Prevent payments on inactive contracts
-     */
     const contractStatus = installment.financingContract.status;
 
     if (
@@ -229,17 +204,22 @@ export class InstallmentService {
       );
     }
 
+    const associatedMarketer = await prisma.user.findUnique({
+      where: {
+        userId: installment.financingContract.user.referredByMarketerId!,
+      },
+      select: {
+        userId: true,
+        email: true,
+        name: true,
+      },
+    });
+
     const customer = installment.financingContract.user;
     const product = installment.financingContract.product;
 
-    /**
-     * Amount expected for this installment
-     */
     const amount = Number(installment.amount);
 
-    /**
-     * Initialize Paystack transaction
-     */
     const response = await fetch(
       "https://api.paystack.co/transaction/initialize",
       {
@@ -252,9 +232,7 @@ export class InstallmentService {
 
         body: JSON.stringify({
           email: customer.email,
-
           amount: Math.round(amount * 100),
-
           metadata: {
             type: "installment",
             installmentId: installment.installmentId,
@@ -273,38 +251,22 @@ export class InstallmentService {
       throw new BadRequestError(data.message || "Failed to initialize payment");
     }
 
-    /**
-     * Persist payment initialization reference
-     *
-     * No ledger movement here.
-     * No installment settlement here.
-     * Webhook + payment worker handles settlement.
-     */
     await prisma.payment.create({
       data: {
         installmentId: installment.installmentId,
-
         amount: installment.amount,
-
         status: PaymentStatus.PENDING,
-
         providerReference: data.data.reference,
-
         idempotencyKey: data.data.reference,
       },
     });
 
     return {
       authorizationUrl: data.data.authorization_url,
-
       accessCode: data.data.access_code,
-
       reference: data.data.reference,
-
       amount,
-
       installmentId: installment.installmentId,
-
       dueDate: installment.dueDate,
     };
   }

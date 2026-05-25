@@ -85,6 +85,10 @@ enum InternalNotificationType {
   PAYMENT_CONFIRMED
   COMMISSION_ACCRUED
   COMMISSION_TRANSFER_REQUEST
+  INSTALLMENT_REMINDER_3DAY
+  INSTALLMENT_DUE_TODAY
+  INSTALLMENT_OVERDUE_3DAY
+  INSTALLMENT_OVERDUE_7DAY
 }
 
 enum InternalNotificationStatus {
@@ -112,6 +116,14 @@ enum OnboardingStatus {
   FAILED
 }
 
+enum CommissionPayoutStatus {
+  PENDING_ADMIN_APPROVAL
+  PENDING_COMPANY_APPROVAL
+  APPROVED
+  REJECTED
+  PAID
+}
+
 model Company {
   id        BigInt   @id @default(autoincrement())
   companyId String   @unique @default(uuid())
@@ -121,11 +133,12 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users            User[]
-  products         Product[]
-  subscriptions    CompanySubscription[]
-  ledgerAccounts   LedgerAccount[]
-  approvalRequests ApprovalRequest[]
+  users                    User[]
+  products                 Product[]
+  subscriptions            CompanySubscription[]
+  ledgerAccounts           LedgerAccount[]
+  approvalRequests         ApprovalRequest[]
+  commissionPayoutRequests CommissionPayoutRequest[]
 }
 
 model User {
@@ -164,6 +177,12 @@ model User {
   requestedApprovals ApprovalRequest[]   @relation("RequestedApprovals")
   targetedApprovals  ApprovalRequest[]   @relation("TargetedApprovals")
   financingContracts FinancingContract[]
+
+  commissionPayoutRequests CommissionPayoutRequest[]
+
+  adminApprovedPayouts CommissionPayoutRequest[] @relation("CommissionAdminApprover")
+
+  companyApprovedPayouts CommissionPayoutRequest[] @relation("CommissionCompanyApprover")
 }
 
 model UserSession {
@@ -249,24 +268,6 @@ model ProductVariant {
   updatedAt          DateTime            @updatedAt
   financingContracts FinancingContract[]
 }
-
-// model FinancingContract {
-//   contractId String @id @default(uuid())
-
-//   userId           String
-//   productId        String
-//   kycApplicationId String
-
-//   principal     Decimal
-//   interest      Decimal
-//   totalFinanced Decimal
-
-//   status FinancingStatus
-
-//   installments Installment[]
-
-//   createdAt DateTime @default(now())
-// }
 
 model KycApplication {
   id                 BigInt                 @id @default(autoincrement())
@@ -402,14 +403,16 @@ model Payment {
   idempotencyKey    String?       @unique
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+  commissions       Commission[]
 }
 
 model Commission {
   id           BigInt           @id @default(autoincrement())
   commissionId String           @unique @default(uuid())
-  userId       String // Marketer
+  userId       String
   user         User             @relation(fields: [userId], references: [userId])
-  paymentId    String? // Associated payment
+  paymentId    String?
+  payment      Payment?         @relation(fields: [paymentId], references: [paymentId])
   amount       Decimal
   status       CommissionStatus @default(PENDING)
   createdAt    DateTime         @default(now())
@@ -598,4 +601,25 @@ model InternalNotification {
   @@index([userId, status])
   @@index([userId, createdAt(sort: Desc)])
   @@index([type])
+}
+
+model CommissionPayoutRequest {
+  id                  BigInt                 @id @default(autoincrement())
+  payoutId            String                 @unique @default(uuid())
+  userId              String
+  user                User                   @relation(fields: [userId], references: [userId])
+  companyId           String
+  company             Company                @relation(fields: [companyId], references: [companyId])
+  amount              Decimal
+  status              CommissionPayoutStatus @default(PENDING_ADMIN_APPROVAL)
+  requestedAt         DateTime               @default(now())
+  adminApprovedById   String?
+  adminApprovedBy     User?                  @relation("CommissionAdminApprover", fields: [adminApprovedById], references: [userId])
+  adminApprovedAt     DateTime?
+  companyApprovedById String?
+  companyApprovedBy   User?                  @relation("CommissionCompanyApprover", fields: [companyApprovedById], references: [userId])
+  companyApprovedAt   DateTime?
+  paidAt              DateTime?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
 }

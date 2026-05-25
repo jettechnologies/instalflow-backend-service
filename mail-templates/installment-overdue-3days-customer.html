@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overdue Payment Notice - Instalflow</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap");
+
+      body {
+        font-family: "Jost", sans-serif;
+        background-color: #0b0f1a;
+        color: #9ca3af;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      }
+      .header {
+        padding: 2.5rem 1.5rem 1rem;
+        text-align: center;
+      }
+      .logo-text {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+      }
+      .logo-text span {
+        color: #7c3aed;
+      }
+      .icon-wrap {
+        width: 64px;
+        height: 64px;
+        margin: 1.5rem auto;
+        background-color: #f59e0b;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 24px rgba(245, 158, 11, 0.35);
+      }
+      .overdue-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.12),
+          rgba(245, 158, 11, 0.04)
+        );
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin: 0 2.5rem 1.5rem;
+        text-align: center;
+      }
+      .overdue-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #f59e0b;
+        text-transform: uppercase;
+        letter-spacing: 0.12rem;
+      }
+      .overdue-days {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fcd34d;
+      }
+      .content {
+        padding: 0 2.5rem 2.5rem;
+        text-align: center;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+        margin: 0.5rem 0 0.25rem;
+      }
+      .subtitle {
+        font-size: 0.95rem;
+        color: #9ca3af;
+        margin-bottom: 1.5rem;
+      }
+      .amount-badge {
+        display: inline-block;
+        margin: 0.5rem 0 1.5rem;
+        padding: 1.25rem 2.5rem;
+        background: #0b0f1a;
+        border: 1px solid #f59e0b;
+        border-radius: 16px;
+      }
+      .amount-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #f59e0b;
+        text-transform: uppercase;
+        letter-spacing: 0.1rem;
+      }
+      .amount-value {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #f9fafb;
+        margin-top: 0.25rem;
+      }
+      .data-grid {
+        background: #0b0f1a;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin: 0 0 1.5rem;
+        text-align: left;
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.65rem 0;
+        border-bottom: 1px solid #1f2937;
+      }
+      .data-row:last-child {
+        border-bottom: none;
+      }
+      .data-label {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      .data-value {
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .progress-wrap {
+        margin: 0 0 1.5rem;
+      }
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+      }
+      .progress-track {
+        background: #1f2937;
+        border-radius: 999px;
+        height: 8px;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #f59e0b, #fcd34d);
+        border-radius: 999px;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 0.9rem 2.5rem;
+        background: #f59e0b;
+        color: #0b0f1a;
+        font-weight: 700;
+        font-size: 1rem;
+        border-radius: 12px;
+        text-decoration: none;
+      }
+      .footer {
+        background-color: #0b0f1a;
+        border-top: 1px solid #1f2937;
+        padding: 1.75rem 2rem;
+        text-align: center;
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+      .footer .product-name {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo-text">Instal<span>flow</span></div>
+        <div class="icon-wrap">
+          <!-- Warning triangle -->
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <h1 class="title">Payment Overdue</h1>
+        <p class="subtitle">
+          Hi {{customerName}}, your installment payment has not been received.
+        </p>
+      </div>
+
+      <div class="overdue-banner">
+        <div class="overdue-label">Overdue by</div>
+        <div class="overdue-days">3 Days</div>
+      </div>
+
+      <div class="content">
+        <div class="amount-badge">
+          <div class="amount-label">Amount Outstanding</div>
+          <div class="amount-value">{{amount}}</div>
+        </div>
+
+        <div class="data-grid">
+          <div class="data-row">
+            <span class="data-label">Product</span>
+            <span class="data-value"
+              >{{productName}}{{#if variantName}} — {{variantName}}{{/if}}</span
+            >
+          </div>
+          <div class="data-row">
+            <span class="data-label">Installment</span>
+            <span class="data-value">#{{sequence}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Was Due On</span>
+            <span class="data-value" style="color: #f59e0b">{{dueDate}}</span>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span style="color: #9ca3af">Overall Progress</span>
+            <span style="color: #f9fafb; font-weight: 600"
+              >{{percentagePaid}}% paid</span
+            >
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar" style="width: {{percentagePaid}}%;"></div>
+          </div>
+        </div>
+
+        <a href="{{payment_url}}" class="cta-btn">Pay Now to Catch Up →</a>
+      </div>
+
+      <div class="footer">
+        <p>The <span class="product-name">Instalflow</span> Team</p>
+        <p style="margin: 0; font-size: 0.75rem; color: #6b7280">
+          Continued non-payment may result in escalation. Please act promptly.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

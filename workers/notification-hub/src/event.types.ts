@@ -1,24 +1,21 @@
 // src/events/event.types.ts
 
 export enum DomainEvent {
-	// Auth / Identity
 	USER_REGISTERED = 'user.registered',
 	STAFF_CREATED = 'staff.created',
 	OTP_REQUESTED = 'auth.otp.requested',
 	PASSWORD_RESET_REQUESTED = 'auth.password.reset.requested',
 	PASSWORD_RESET_COMPLETED = 'auth.password.reset.completed',
 	PASSWORD_CHANGED = 'auth.password.changed',
-
-	// Orders
 	ORDER_CREATED = 'order.created',
 	ORDER_CANCELLED = 'order.cancelled',
 	ORDER_STATUS_UPDATED = 'order.status.updated',
-
-	// Company
 	COMPANY_ONBOARDED = 'company.onboarded',
-
-	// Installments
 	INSTALLMENT_PAID = 'installment.paid',
+	INSTALLMENT_REMINDER_3DAY = 'installment.reminder.3day',
+	INSTALLMENT_DUE_TODAY = 'installment.due.today',
+	INSTALLMENT_OVERDUE_3DAY = 'installment.overdue.3day',
+	INSTALLMENT_OVERDUE_7DAY = 'installment.overdue.7day',
 }
 
 export enum EventStatus {

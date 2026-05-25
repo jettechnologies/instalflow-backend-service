@@ -411,7 +411,8 @@ export const ModelName = {
   ApprovalRequest: 'ApprovalRequest',
   ProductInstallmentPlan: 'ProductInstallmentPlan',
   ProductImage: 'ProductImage',
-  InternalNotification: 'InternalNotification'
+  InternalNotification: 'InternalNotification',
+  CommissionPayoutRequest: 'CommissionPayoutRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -427,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "internalNotification"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "commission" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "internalNotification" | "commissionPayoutRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2503,6 +2504,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CommissionPayoutRequest: {
+      payload: Prisma.$CommissionPayoutRequestPayload<ExtArgs>
+      fields: Prisma.CommissionPayoutRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommissionPayoutRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommissionPayoutRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.CommissionPayoutRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommissionPayoutRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>
+        }
+        findMany: {
+          args: Prisma.CommissionPayoutRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>[]
+        }
+        create: {
+          args: Prisma.CommissionPayoutRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>
+        }
+        createMany: {
+          args: Prisma.CommissionPayoutRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CommissionPayoutRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.CommissionPayoutRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>
+        }
+        update: {
+          args: Prisma.CommissionPayoutRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.CommissionPayoutRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommissionPayoutRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CommissionPayoutRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.CommissionPayoutRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommissionPayoutRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.CommissionPayoutRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCommissionPayoutRequest>
+        }
+        groupBy: {
+          args: Prisma.CommissionPayoutRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommissionPayoutRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommissionPayoutRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommissionPayoutRequestCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2977,6 +3052,26 @@ export const InternalNotificationScalarFieldEnum = {
 export type InternalNotificationScalarFieldEnum = (typeof InternalNotificationScalarFieldEnum)[keyof typeof InternalNotificationScalarFieldEnum]
 
 
+export const CommissionPayoutRequestScalarFieldEnum = {
+  id: 'id',
+  payoutId: 'payoutId',
+  userId: 'userId',
+  companyId: 'companyId',
+  amount: 'amount',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  adminApprovedById: 'adminApprovedById',
+  adminApprovedAt: 'adminApprovedAt',
+  companyApprovedById: 'companyApprovedById',
+  companyApprovedAt: 'companyApprovedAt',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommissionPayoutRequestScalarFieldEnum = (typeof CommissionPayoutRequestScalarFieldEnum)[keyof typeof CommissionPayoutRequestScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3319,6 +3414,20 @@ export type ListEnumInternalNotificationStatusFieldRefInput<$PrismaModel> = Fiel
 
 
 /**
+ * Reference to a field of type 'CommissionPayoutStatus'
+ */
+export type EnumCommissionPayoutStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionPayoutStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'CommissionPayoutStatus[]'
+ */
+export type ListEnumCommissionPayoutStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionPayoutStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -3469,6 +3578,7 @@ export type GlobalOmitConfig = {
   productInstallmentPlan?: Prisma.ProductInstallmentPlanOmit
   productImage?: Prisma.ProductImageOmit
   internalNotification?: Prisma.InternalNotificationOmit
+  commissionPayoutRequest?: Prisma.CommissionPayoutRequestOmit
 }
 
 /* Types for Logging */

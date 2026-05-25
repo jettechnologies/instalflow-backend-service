@@ -15,14 +15,13 @@ export const kycRetentionQueue = new Queue(QueueNames.KycRetentionQueue, {
   },
 });
 
-// Register Repeatable Daily Cleanup Job at Midnight (0 0 * * *)
 kycRetentionQueue
   .add(
     "kyc-cleanup-cron",
     {},
     {
       repeat: {
-        pattern: "0 0 * * *", // Every day at midnight
+        pattern: "0 0 * * *",
       },
     },
   )

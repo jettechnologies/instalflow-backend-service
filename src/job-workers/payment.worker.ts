@@ -17,6 +17,8 @@ import { QueueNames } from "@/infrastructure/redis/constant";
 
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
+import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
+import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 
 export const paymentWorker = new Worker(
   QueueNames.PaymentQueue,
@@ -95,13 +97,9 @@ export const paymentWorker = new Worker(
         payment = await tx.payment.create({
           data: {
             installmentId: installment.installmentId,
-
             amount: new Prisma.Decimal(amount),
-
             status: PaymentStatus.SUCCESS,
-
             providerReference: gatewayRef || reference,
-
             idempotencyKey: reference,
           },
         });
@@ -119,6 +117,7 @@ export const paymentWorker = new Worker(
       });
 
       let commissionRecord = null;
+      let marketer = null;
 
       let commissionAmount = new Prisma.Decimal(0);
 
@@ -134,12 +133,20 @@ export const paymentWorker = new Worker(
         commissionRecord = await tx.commission.create({
           data: {
             userId: marketerId,
-
             paymentId: payment.paymentId,
-
             amount: commissionAmount,
-
             status: CommissionStatus.PENDING,
+          },
+        });
+
+        marketer = await tx.user.findUnique({
+          where: {
+            userId: marketerId,
+          },
+          select: {
+            userId: true,
+            name: true,
+            email: true,
           },
         });
 
@@ -151,9 +158,7 @@ export const paymentWorker = new Worker(
       await LedgerService.recordTransaction(
         {
           reference,
-
           description: `Installment payment for contract ${contract.contractId}`,
-
           companyId: contract.user.companyId || undefined,
 
           metadata: {
@@ -165,17 +170,13 @@ export const paymentWorker = new Worker(
           entries: [
             {
               accountName: "PAYSTACK_CLEARING",
-
               accountType: AccountType.ASSET,
-
               debit: installment.amount,
             },
 
             {
               accountName: "CUSTOMER_RECEIVABLE",
-
               accountType: AccountType.ASSET,
-
               credit: installment.amount,
             },
 
@@ -183,17 +184,13 @@ export const paymentWorker = new Worker(
               ? [
                   {
                     accountName: "COMMISSION_EXPENSE",
-
                     accountType: AccountType.EXPENSE,
-
                     debit: commissionAmount,
                   },
 
                   {
                     accountName: "COMMISSION_PAYABLE",
-
                     accountType: AccountType.LIABILITY,
-
                     credit: commissionAmount,
                   },
                 ]
@@ -267,8 +264,22 @@ export const paymentWorker = new Worker(
         percentagePaid,
         nextDueDate: nextPending?.dueDate || null,
         financingStatus: updatedContractStatus,
+        marketer,
       };
     });
+
+    if (result.commissionRecord && result.marketer) {
+      await NotificationOrchestrator.handle(
+        NotificationEventType.COMMISSION_ACCRUED,
+        {
+          commissionId: result.commissionRecord.commissionId,
+          marketerId: result.marketer.userId,
+          marketerEmail: result.marketer.email,
+          marketerName: result.marketer.name ?? "Marketer",
+          amount: Number(result.commissionRecord.amount),
+        },
+      );
+    }
 
     emitEvent(DomainEvent.INSTALLMENT_PAID, {
       email: contract.user.email,

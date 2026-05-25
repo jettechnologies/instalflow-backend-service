@@ -43,6 +43,22 @@ export class NotificationOrchestrator {
           return await this.handleCommissionTransferRequest(
             payload as NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_REQUEST],
           );
+        case NotificationEventType.INSTALLMENT_REMINDER_3DAY:
+          return await this.handleInstallmentReminder3Day(
+            payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_REMINDER_3DAY],
+          );
+        case NotificationEventType.INSTALLMENT_DUE_TODAY:
+          return await this.handleInstallmentDueToday(
+            payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_DUE_TODAY],
+          );
+        case NotificationEventType.INSTALLMENT_OVERDUE_3DAY:
+          return await this.handleInstallmentOverdue3Day(
+            payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_3DAY],
+          );
+        case NotificationEventType.INSTALLMENT_OVERDUE_7DAY:
+          return await this.handleInstallmentOverdue7Day(
+            payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_7DAY],
+          );
       }
     } catch (err: any) {
       // Notifications are non-critical — log and continue
@@ -214,5 +230,138 @@ export class NotificationOrchestrator {
     }
 
     return recipients;
+  }
+
+  private static async handleInstallmentReminder3Day(
+    payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_REMINDER_3DAY],
+  ) {
+    await NotificationRepository.create({
+      userId: payload.customerId,
+      type: NotificationEventType.INSTALLMENT_REMINDER_3DAY,
+      title: "Payment Due in 3 Days",
+      message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due on ${payload.dueDate}. Please ensure your payment is ready.`,
+      metadata: {
+        installmentId: payload.installmentId,
+        sequence: payload.sequence,
+        dueDate: payload.dueDate,
+        amount: payload.amount,
+      },
+      idempotencyKey: `reminder-3day-${payload.installmentId}`,
+    });
+  }
+
+  private static async handleInstallmentDueToday(
+    payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_DUE_TODAY],
+  ) {
+    await NotificationRepository.create({
+      userId: payload.customerId,
+      type: NotificationEventType.INSTALLMENT_DUE_TODAY,
+      title: "Your Payment is Due Today",
+      message: `Installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due today. Tap to pay now.`,
+      metadata: {
+        installmentId: payload.installmentId,
+        sequence: payload.sequence,
+        amount: payload.amount,
+        payment_url: payload.payment_url,
+      },
+      idempotencyKey: `due-today-${payload.installmentId}`,
+    });
+  }
+
+  private static async handleInstallmentOverdue3Day(
+    payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_3DAY],
+  ) {
+    await Promise.all([
+      NotificationRepository.create({
+        userId: payload.customerId,
+        type: NotificationEventType.INSTALLMENT_OVERDUE_3DAY,
+        title: "⚠️ Payment Overdue",
+        message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) was due on ${payload.dueDate} and remains unpaid. Please make payment immediately to avoid further escalation.`,
+        metadata: {
+          installmentId: payload.installmentId,
+          sequence: payload.sequence,
+          amount: payload.amount,
+          daysOverdue: 3,
+        },
+        idempotencyKey: `overdue-3day-customer-${payload.installmentId}`,
+      }),
+
+      payload.marketerId
+        ? NotificationRepository.create({
+            userId: payload.marketerId,
+            type: NotificationEventType.INSTALLMENT_OVERDUE_3DAY,
+            title: "Customer Payment Overdue",
+            message: `${payload.customerName} has not paid installment #${payload.sequence} for ${payload.productName}${payload.variantName ? ` (${payload.variantName})` : ""}. Amount: ${payload.amount}. Due date: ${payload.dueDate}. Progress so far: ${payload.percentagePaid}% paid.`,
+            metadata: {
+              installmentId: payload.installmentId,
+              customerId: payload.customerId,
+              customerName: payload.customerName,
+              sequence: payload.sequence,
+              percentagePaid: payload.percentagePaid,
+              daysOverdue: 3,
+            },
+            idempotencyKey: `overdue-3day-marketer-${payload.installmentId}`,
+          })
+        : Promise.resolve(),
+    ]);
+  }
+
+  private static async handleInstallmentOverdue7Day(
+    payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_7DAY],
+  ) {
+    const notifications = [
+      NotificationRepository.create({
+        userId: payload.customerId,
+        type: NotificationEventType.INSTALLMENT_OVERDUE_7DAY,
+        title: "🚨 URGENT: Overdue Payment",
+        message: `This is a final notice. Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is now 7 days overdue. This matter has been escalated to management. Pay immediately to avoid default status.`,
+        metadata: {
+          installmentId: payload.installmentId,
+          sequence: payload.sequence,
+          amount: payload.amount,
+          daysOverdue: 7,
+          escalated: true,
+        },
+        idempotencyKey: `overdue-7day-customer-${payload.installmentId}`,
+      }),
+
+      NotificationRepository.create({
+        userId: payload.adminId,
+        type: NotificationEventType.INSTALLMENT_OVERDUE_7DAY,
+        title: "Escalation: 7-Day Overdue Installment",
+        message: `Customer ${payload.customerName} (referred by marketer ${payload.marketerName}) has missed installment #${payload.sequence} for ${payload.productName}${payload.variantName ? ` — ${payload.variantName}` : ""}. Expected payment date: ${payload.expectedPaymentDate}. Amount: ${payload.amount}. Total progress: ${payload.percentagePaid}% paid. Immediate review recommended.`,
+        metadata: {
+          installmentId: payload.installmentId,
+          customerId: payload.customerId,
+          marketerId: payload.marketerId,
+          marketerName: payload.marketerName,
+          sequence: payload.sequence,
+          percentagePaid: payload.percentagePaid,
+          daysOverdue: 7,
+        },
+        idempotencyKey: `overdue-7day-admin-${payload.installmentId}`,
+      }),
+    ];
+
+    if (payload.marketerId) {
+      notifications.push(
+        NotificationRepository.create({
+          userId: payload.marketerId,
+          type: NotificationEventType.INSTALLMENT_OVERDUE_7DAY,
+          title: "Escalation Notice",
+          message: `The overdue payment for ${payload.customerName} (installment #${payload.sequence} — ${payload.productName}, ${payload.amount}) has now been escalated to your assigned admin. Management has been notified. Please follow up with the customer directly.`,
+          metadata: {
+            installmentId: payload.installmentId,
+            customerId: payload.customerId,
+            adminId: payload.adminId,
+            daysOverdue: 7,
+            escalated: true,
+          },
+          idempotencyKey: `overdue-7day-marketer-${payload.installmentId}`,
+        }),
+      );
+    }
+
+    await Promise.all(notifications);
   }
 }

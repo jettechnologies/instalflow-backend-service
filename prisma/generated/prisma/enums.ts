@@ -119,7 +119,11 @@ export const InternalNotificationType = {
   INSTALLMENT_OVERDUE: 'INSTALLMENT_OVERDUE',
   PAYMENT_CONFIRMED: 'PAYMENT_CONFIRMED',
   COMMISSION_ACCRUED: 'COMMISSION_ACCRUED',
-  COMMISSION_TRANSFER_REQUEST: 'COMMISSION_TRANSFER_REQUEST'
+  COMMISSION_TRANSFER_REQUEST: 'COMMISSION_TRANSFER_REQUEST',
+  INSTALLMENT_REMINDER_3DAY: 'INSTALLMENT_REMINDER_3DAY',
+  INSTALLMENT_DUE_TODAY: 'INSTALLMENT_DUE_TODAY',
+  INSTALLMENT_OVERDUE_3DAY: 'INSTALLMENT_OVERDUE_3DAY',
+  INSTALLMENT_OVERDUE_7DAY: 'INSTALLMENT_OVERDUE_7DAY'
 } as const
 
 export type InternalNotificationType = (typeof InternalNotificationType)[keyof typeof InternalNotificationType]
@@ -157,3 +161,14 @@ export const OnboardingStatus = {
 } as const
 
 export type OnboardingStatus = (typeof OnboardingStatus)[keyof typeof OnboardingStatus]
+
+
+export const CommissionPayoutStatus = {
+  PENDING_ADMIN_APPROVAL: 'PENDING_ADMIN_APPROVAL',
+  PENDING_COMPANY_APPROVAL: 'PENDING_COMPANY_APPROVAL',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  PAID: 'PAID'
+} as const
+
+export type CommissionPayoutStatus = (typeof CommissionPayoutStatus)[keyof typeof CommissionPayoutStatus]

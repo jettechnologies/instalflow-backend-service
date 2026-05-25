@@ -19,12 +19,53 @@ export enum DomainEvent {
 
   // Installments
   INSTALLMENT_PAID = "installment.paid",
+  INSTALLMENT_REMINDER_3DAY = "installment.reminder.3day",
+  INSTALLMENT_DUE_TODAY = "installment.due.today",
+  INSTALLMENT_OVERDUE_3DAY = "installment.overdue.3day",
+  INSTALLMENT_OVERDUE_7DAY = "installment.overdue.7day",
 }
 
 export enum EventStatus {
   PENDING = "pending",
   PROCESSED = "processed",
   FAILED = "failed",
+}
+
+export interface InstallmentReminderBase {
+  customerEmail: string;
+  customerName: string;
+  customerId: string;
+  installmentId: string;
+  sequence: number;
+  dueDate: string;
+  amount: string;
+  productName: string;
+  variantName?: string;
+  percentagePaid: number;
+  payment_url?: string;
+  dashboard_url?: string;
+}
+
+export interface Reminder3DayPayload extends InstallmentReminderBase {}
+
+export interface DueTodayPayload extends InstallmentReminderBase {}
+
+export interface Overdue3DayPayload extends InstallmentReminderBase {
+  marketerEmail: string;
+  marketerName: string;
+  marketerId: string;
+}
+
+export interface Overdue7DayPayload extends InstallmentReminderBase {
+  marketerEmail: string;
+  marketerName: string;
+  marketerId: string;
+
+  adminEmail: string;
+  adminName: string;
+  adminId: string;
+
+  expectedPaymentDate: string;
 }
 
 export interface DomainEventPayloads {
@@ -92,4 +133,8 @@ export interface DomainEventPayloads {
     percentagePaid: number;
     dashboard_url?: string;
   };
+  [DomainEvent.INSTALLMENT_REMINDER_3DAY]: Reminder3DayPayload;
+  [DomainEvent.INSTALLMENT_DUE_TODAY]: DueTodayPayload;
+  [DomainEvent.INSTALLMENT_OVERDUE_3DAY]: Overdue3DayPayload;
+  [DomainEvent.INSTALLMENT_OVERDUE_7DAY]: Overdue7DayPayload;
 }

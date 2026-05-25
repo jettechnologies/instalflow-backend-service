@@ -312,6 +312,9 @@ export type UserWhereInput = {
   requestedApprovals?: Prisma.ApprovalRequestListRelationFilter
   targetedApprovals?: Prisma.ApprovalRequestListRelationFilter
   financingContracts?: Prisma.FinancingContractListRelationFilter
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestListRelationFilter
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestListRelationFilter
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -346,6 +349,9 @@ export type UserOrderByWithRelationInput = {
   requestedApprovals?: Prisma.ApprovalRequestOrderByRelationAggregateInput
   targetedApprovals?: Prisma.ApprovalRequestOrderByRelationAggregateInput
   financingContracts?: Prisma.FinancingContractOrderByRelationAggregateInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestOrderByRelationAggregateInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestOrderByRelationAggregateInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -383,6 +389,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   requestedApprovals?: Prisma.ApprovalRequestListRelationFilter
   targetedApprovals?: Prisma.ApprovalRequestListRelationFilter
   financingContracts?: Prisma.FinancingContractListRelationFilter
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestListRelationFilter
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestListRelationFilter
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestListRelationFilter
 }, "id" | "userId" | "email" | "referralCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -458,6 +467,9 @@ export type UserCreateInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -489,6 +501,9 @@ export type UserUncheckedCreateInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUpdateInput = {
@@ -520,6 +535,9 @@ export type UserUpdateInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -551,6 +569,9 @@ export type UserUncheckedUpdateInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1012,6 +1033,52 @@ export type UserUpdateOneRequiredWithoutInternalNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInternalNotificationsInput, Prisma.UserUpdateWithoutInternalNotificationsInput>, Prisma.UserUncheckedUpdateWithoutInternalNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutCommissionPayoutRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCommissionPayoutRequestsInput, Prisma.UserUncheckedCreateWithoutCommissionPayoutRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCommissionPayoutRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutAdminApprovedPayoutsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutAdminApprovedPayoutsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminApprovedPayoutsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutCompanyApprovedPayoutsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCompanyApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutCompanyApprovedPayoutsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCompanyApprovedPayoutsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCommissionPayoutRequestsInput, Prisma.UserUncheckedCreateWithoutCommissionPayoutRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCommissionPayoutRequestsInput
+  upsert?: Prisma.UserUpsertWithoutCommissionPayoutRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCommissionPayoutRequestsInput, Prisma.UserUpdateWithoutCommissionPayoutRequestsInput>, Prisma.UserUncheckedUpdateWithoutCommissionPayoutRequestsInput>
+}
+
+export type UserUpdateOneWithoutAdminApprovedPayoutsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutAdminApprovedPayoutsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminApprovedPayoutsInput
+  upsert?: Prisma.UserUpsertWithoutAdminApprovedPayoutsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAdminApprovedPayoutsInput, Prisma.UserUpdateWithoutAdminApprovedPayoutsInput>, Prisma.UserUncheckedUpdateWithoutAdminApprovedPayoutsInput>
+}
+
+export type UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCompanyApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutCompanyApprovedPayoutsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCompanyApprovedPayoutsInput
+  upsert?: Prisma.UserUpsertWithoutCompanyApprovedPayoutsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCompanyApprovedPayoutsInput, Prisma.UserUpdateWithoutCompanyApprovedPayoutsInput>, Prisma.UserUncheckedUpdateWithoutCompanyApprovedPayoutsInput>
+}
+
 export type UserCreateWithoutCompanyInput = {
   id?: bigint | number
   userId?: string
@@ -1040,6 +1107,9 @@ export type UserCreateWithoutCompanyInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -1070,6 +1140,9 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -1147,6 +1220,9 @@ export type UserCreateWithoutReferredUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -1177,6 +1253,9 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -1212,6 +1291,9 @@ export type UserCreateWithoutReferredByMarketerInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutReferredByMarketerInput = {
@@ -1242,6 +1324,9 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutReferredByMarketerInput = {
@@ -1282,6 +1367,9 @@ export type UserCreateWithoutCreatedUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedUsersInput = {
@@ -1312,6 +1400,9 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedUsersInput = {
@@ -1347,6 +1438,9 @@ export type UserCreateWithoutCreatorInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatorInput = {
@@ -1377,6 +1471,9 @@ export type UserUncheckedCreateWithoutCreatorInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatorInput = {
@@ -1428,6 +1525,9 @@ export type UserUpdateWithoutReferredUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -1458,6 +1558,9 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutReferredByMarketerInput = {
@@ -1515,6 +1618,9 @@ export type UserUpdateWithoutCreatedUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedUsersInput = {
@@ -1545,6 +1651,9 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -1591,6 +1700,9 @@ export type UserCreateWithoutSessionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1621,6 +1733,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1667,6 +1782,9 @@ export type UserUpdateWithoutSessionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1697,6 +1815,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
@@ -1727,6 +1848,9 @@ export type UserCreateWithoutPasswordResetsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
@@ -1757,6 +1881,9 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -1803,6 +1930,9 @@ export type UserUpdateWithoutPasswordResetsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
@@ -1833,6 +1963,9 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutKycApplicationsInput = {
@@ -1863,6 +1996,9 @@ export type UserCreateWithoutKycApplicationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutKycApplicationsInput = {
@@ -1893,6 +2029,9 @@ export type UserUncheckedCreateWithoutKycApplicationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutKycApplicationsInput = {
@@ -1939,6 +2078,9 @@ export type UserUpdateWithoutKycApplicationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKycApplicationsInput = {
@@ -1969,6 +2111,9 @@ export type UserUncheckedUpdateWithoutKycApplicationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutKycAuditTrailsInput = {
@@ -1999,6 +2144,9 @@ export type UserCreateWithoutKycAuditTrailsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
@@ -2029,6 +2177,9 @@ export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutKycAuditTrailsInput = {
@@ -2075,6 +2226,9 @@ export type UserUpdateWithoutKycAuditTrailsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
@@ -2105,6 +2259,9 @@ export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutFinancingContractsInput = {
@@ -2135,6 +2292,9 @@ export type UserCreateWithoutFinancingContractsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutFinancingContractsInput = {
@@ -2165,6 +2325,9 @@ export type UserUncheckedCreateWithoutFinancingContractsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutFinancingContractsInput = {
@@ -2211,6 +2374,9 @@ export type UserUpdateWithoutFinancingContractsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFinancingContractsInput = {
@@ -2241,6 +2407,9 @@ export type UserUncheckedUpdateWithoutFinancingContractsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutCommissionsInput = {
@@ -2271,6 +2440,9 @@ export type UserCreateWithoutCommissionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutCommissionsInput = {
@@ -2301,6 +2473,9 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutCommissionsInput = {
@@ -2347,6 +2522,9 @@ export type UserUpdateWithoutCommissionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommissionsInput = {
@@ -2377,6 +2555,9 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -2407,6 +2588,9 @@ export type UserCreateWithoutTransactionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -2437,6 +2621,9 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -2483,6 +2670,9 @@ export type UserUpdateWithoutTransactionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -2513,6 +2703,9 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutReferralsInput = {
@@ -2543,6 +2736,9 @@ export type UserCreateWithoutReferralsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutReferralsInput = {
@@ -2573,6 +2769,9 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutReferralsInput = {
@@ -2619,6 +2818,9 @@ export type UserUpdateWithoutReferralsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralsInput = {
@@ -2649,6 +2851,9 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutRequestedApprovalsInput = {
@@ -2679,6 +2884,9 @@ export type UserCreateWithoutRequestedApprovalsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
@@ -2709,6 +2917,9 @@ export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutRequestedApprovalsInput = {
@@ -2744,6 +2955,9 @@ export type UserCreateWithoutTargetedApprovalsInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
@@ -2774,6 +2988,9 @@ export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutTargetedApprovalsInput = {
@@ -2820,6 +3037,9 @@ export type UserUpdateWithoutRequestedApprovalsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
@@ -2850,6 +3070,9 @@ export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUpsertWithoutTargetedApprovalsInput = {
@@ -2891,6 +3114,9 @@ export type UserUpdateWithoutTargetedApprovalsInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
@@ -2921,6 +3147,9 @@ export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserCreateWithoutInternalNotificationsInput = {
@@ -2951,6 +3180,9 @@ export type UserCreateWithoutInternalNotificationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserUncheckedCreateWithoutInternalNotificationsInput = {
@@ -2981,6 +3213,9 @@ export type UserUncheckedCreateWithoutInternalNotificationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
   financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
 }
 
 export type UserCreateOrConnectWithoutInternalNotificationsInput = {
@@ -3027,6 +3262,9 @@ export type UserUpdateWithoutInternalNotificationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
@@ -3057,6 +3295,453 @@ export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
+}
+
+export type UserCreateWithoutCommissionPayoutRequestsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
+}
+
+export type UserUncheckedCreateWithoutCommissionPayoutRequestsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
+}
+
+export type UserCreateOrConnectWithoutCommissionPayoutRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCommissionPayoutRequestsInput, Prisma.UserUncheckedCreateWithoutCommissionPayoutRequestsInput>
+}
+
+export type UserCreateWithoutAdminApprovedPayoutsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
+}
+
+export type UserUncheckedCreateWithoutAdminApprovedPayoutsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
+}
+
+export type UserCreateOrConnectWithoutAdminApprovedPayoutsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutAdminApprovedPayoutsInput>
+}
+
+export type UserCreateWithoutCompanyApprovedPayoutsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+}
+
+export type UserUncheckedCreateWithoutCompanyApprovedPayoutsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+}
+
+export type UserCreateOrConnectWithoutCompanyApprovedPayoutsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutCompanyApprovedPayoutsInput>
+}
+
+export type UserUpsertWithoutCommissionPayoutRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCommissionPayoutRequestsInput, Prisma.UserUncheckedUpdateWithoutCommissionPayoutRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCommissionPayoutRequestsInput, Prisma.UserUncheckedCreateWithoutCommissionPayoutRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCommissionPayoutRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCommissionPayoutRequestsInput, Prisma.UserUncheckedUpdateWithoutCommissionPayoutRequestsInput>
+}
+
+export type UserUpdateWithoutCommissionPayoutRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
+}
+
+export type UserUpsertWithoutAdminApprovedPayoutsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAdminApprovedPayoutsInput, Prisma.UserUncheckedUpdateWithoutAdminApprovedPayoutsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutAdminApprovedPayoutsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAdminApprovedPayoutsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAdminApprovedPayoutsInput, Prisma.UserUncheckedUpdateWithoutAdminApprovedPayoutsInput>
+}
+
+export type UserUpdateWithoutAdminApprovedPayoutsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAdminApprovedPayoutsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
+}
+
+export type UserUpsertWithoutCompanyApprovedPayoutsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCompanyApprovedPayoutsInput, Prisma.UserUncheckedUpdateWithoutCompanyApprovedPayoutsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyApprovedPayoutsInput, Prisma.UserUncheckedCreateWithoutCompanyApprovedPayoutsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCompanyApprovedPayoutsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCompanyApprovedPayoutsInput, Prisma.UserUncheckedUpdateWithoutCompanyApprovedPayoutsInput>
+}
+
+export type UserUpdateWithoutCompanyApprovedPayoutsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCompanyApprovedPayoutsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -3104,6 +3789,9 @@ export type UserUpdateWithoutCompanyInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -3134,6 +3822,9 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -3215,6 +3906,9 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
@@ -3245,6 +3939,9 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutReferredByMarketerInput = {
@@ -3292,6 +3989,9 @@ export type UserUpdateWithoutCreatorInput = {
   requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatorInput = {
@@ -3322,6 +4022,9 @@ export type UserUncheckedUpdateWithoutCreatorInput = {
   requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
   financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCreatorInput = {
@@ -3360,6 +4063,9 @@ export type UserCountOutputType = {
   requestedApprovals: number
   targetedApprovals: number
   financingContracts: number
+  commissionPayoutRequests: number
+  adminApprovedPayouts: number
+  companyApprovedPayouts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3376,6 +4082,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   requestedApprovals?: boolean | UserCountOutputTypeCountRequestedApprovalsArgs
   targetedApprovals?: boolean | UserCountOutputTypeCountTargetedApprovalsArgs
   financingContracts?: boolean | UserCountOutputTypeCountFinancingContractsArgs
+  commissionPayoutRequests?: boolean | UserCountOutputTypeCountCommissionPayoutRequestsArgs
+  adminApprovedPayouts?: boolean | UserCountOutputTypeCountAdminApprovedPayoutsArgs
+  companyApprovedPayouts?: boolean | UserCountOutputTypeCountCompanyApprovedPayoutsArgs
 }
 
 /**
@@ -3479,6 +4188,27 @@ export type UserCountOutputTypeCountFinancingContractsArgs<ExtArgs extends runti
   where?: Prisma.FinancingContractWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCommissionPayoutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissionPayoutRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAdminApprovedPayoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissionPayoutRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCompanyApprovedPayoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissionPayoutRequestWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3512,6 +4242,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   requestedApprovals?: boolean | Prisma.User$requestedApprovalsArgs<ExtArgs>
   targetedApprovals?: boolean | Prisma.User$targetedApprovalsArgs<ExtArgs>
   financingContracts?: boolean | Prisma.User$financingContractsArgs<ExtArgs>
+  commissionPayoutRequests?: boolean | Prisma.User$commissionPayoutRequestsArgs<ExtArgs>
+  adminApprovedPayouts?: boolean | Prisma.User$adminApprovedPayoutsArgs<ExtArgs>
+  companyApprovedPayouts?: boolean | Prisma.User$companyApprovedPayoutsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3593,6 +4326,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   requestedApprovals?: boolean | Prisma.User$requestedApprovalsArgs<ExtArgs>
   targetedApprovals?: boolean | Prisma.User$targetedApprovalsArgs<ExtArgs>
   financingContracts?: boolean | Prisma.User$financingContractsArgs<ExtArgs>
+  commissionPayoutRequests?: boolean | Prisma.User$commissionPayoutRequestsArgs<ExtArgs>
+  adminApprovedPayouts?: boolean | Prisma.User$adminApprovedPayoutsArgs<ExtArgs>
+  companyApprovedPayouts?: boolean | Prisma.User$companyApprovedPayoutsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3625,6 +4361,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     requestedApprovals: Prisma.$ApprovalRequestPayload<ExtArgs>[]
     targetedApprovals: Prisma.$ApprovalRequestPayload<ExtArgs>[]
     financingContracts: Prisma.$FinancingContractPayload<ExtArgs>[]
+    commissionPayoutRequests: Prisma.$CommissionPayoutRequestPayload<ExtArgs>[]
+    adminApprovedPayouts: Prisma.$CommissionPayoutRequestPayload<ExtArgs>[]
+    companyApprovedPayouts: Prisma.$CommissionPayoutRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -4052,6 +4791,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   requestedApprovals<T extends Prisma.User$requestedApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$requestedApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   targetedApprovals<T extends Prisma.User$targetedApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$targetedApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   financingContracts<T extends Prisma.User$financingContractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$financingContractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancingContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commissionPayoutRequests<T extends Prisma.User$commissionPayoutRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commissionPayoutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  adminApprovedPayouts<T extends Prisma.User$adminApprovedPayoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminApprovedPayoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  companyApprovedPayouts<T extends Prisma.User$companyApprovedPayoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyApprovedPayoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4863,6 +5605,78 @@ export type User$financingContractsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.FinancingContractScalarFieldEnum | Prisma.FinancingContractScalarFieldEnum[]
+}
+
+/**
+ * User.commissionPayoutRequests
+ */
+export type User$commissionPayoutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionPayoutRequest
+   */
+  select?: Prisma.CommissionPayoutRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissionPayoutRequest
+   */
+  omit?: Prisma.CommissionPayoutRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionPayoutRequestInclude<ExtArgs> | null
+  where?: Prisma.CommissionPayoutRequestWhereInput
+  orderBy?: Prisma.CommissionPayoutRequestOrderByWithRelationInput | Prisma.CommissionPayoutRequestOrderByWithRelationInput[]
+  cursor?: Prisma.CommissionPayoutRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissionPayoutRequestScalarFieldEnum | Prisma.CommissionPayoutRequestScalarFieldEnum[]
+}
+
+/**
+ * User.adminApprovedPayouts
+ */
+export type User$adminApprovedPayoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionPayoutRequest
+   */
+  select?: Prisma.CommissionPayoutRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissionPayoutRequest
+   */
+  omit?: Prisma.CommissionPayoutRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionPayoutRequestInclude<ExtArgs> | null
+  where?: Prisma.CommissionPayoutRequestWhereInput
+  orderBy?: Prisma.CommissionPayoutRequestOrderByWithRelationInput | Prisma.CommissionPayoutRequestOrderByWithRelationInput[]
+  cursor?: Prisma.CommissionPayoutRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissionPayoutRequestScalarFieldEnum | Prisma.CommissionPayoutRequestScalarFieldEnum[]
+}
+
+/**
+ * User.companyApprovedPayouts
+ */
+export type User$companyApprovedPayoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionPayoutRequest
+   */
+  select?: Prisma.CommissionPayoutRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissionPayoutRequest
+   */
+  omit?: Prisma.CommissionPayoutRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionPayoutRequestInclude<ExtArgs> | null
+  where?: Prisma.CommissionPayoutRequestWhereInput
+  orderBy?: Prisma.CommissionPayoutRequestOrderByWithRelationInput | Prisma.CommissionPayoutRequestOrderByWithRelationInput[]
+  cursor?: Prisma.CommissionPayoutRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissionPayoutRequestScalarFieldEnum | Prisma.CommissionPayoutRequestScalarFieldEnum[]
 }
 
 /**

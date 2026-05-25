@@ -78,7 +78,8 @@ export const ModelName = {
   ApprovalRequest: 'ApprovalRequest',
   ProductInstallmentPlan: 'ProductInstallmentPlan',
   ProductImage: 'ProductImage',
-  InternalNotification: 'InternalNotification'
+  InternalNotification: 'InternalNotification',
+  CommissionPayoutRequest: 'CommissionPayoutRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -530,6 +531,26 @@ export const InternalNotificationScalarFieldEnum = {
 } as const
 
 export type InternalNotificationScalarFieldEnum = (typeof InternalNotificationScalarFieldEnum)[keyof typeof InternalNotificationScalarFieldEnum]
+
+
+export const CommissionPayoutRequestScalarFieldEnum = {
+  id: 'id',
+  payoutId: 'payoutId',
+  userId: 'userId',
+  companyId: 'companyId',
+  amount: 'amount',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  adminApprovedById: 'adminApprovedById',
+  adminApprovedAt: 'adminApprovedAt',
+  companyApprovedById: 'companyApprovedById',
+  companyApprovedAt: 'companyApprovedAt',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommissionPayoutRequestScalarFieldEnum = (typeof CommissionPayoutRequestScalarFieldEnum)[keyof typeof CommissionPayoutRequestScalarFieldEnum]
 
 
 export const SortOrder = {
