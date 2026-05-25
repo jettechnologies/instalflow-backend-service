@@ -243,24 +243,30 @@ export class CustomerManagementService {
   private static async calculateProgressPercentage(
     financingContractId: string,
   ) {
-    const installments = await prisma.installment.findMany({
+    const financingContract = await prisma.financingContract.findFirst({
       where: {
-        financingContractId,
+        contractId: financingContractId,
       },
-      include: {
-        financingContract: {
+      select: {
+        totalFinanced: true,
+        installments: {
           select: {
-            totalFinanced: true,
+            amount: true,
+            status: true,
           },
         },
       },
     });
 
-    let totalFinanced = new Decimal(0);
+    if (!financingContract) {
+      throw new NotFoundError("Financing contract not found");
+    }
+
+    const totalFinanced = financingContract.totalFinanced;
+    const installments = financingContract.installments;
     let totalPaid = new Decimal(0);
 
     for (const inst of installments) {
-      totalFinanced = totalFinanced.plus(inst.financingContract.totalFinanced);
       if (inst.status === InstallmentStatus.PAID) {
         totalPaid = totalPaid.plus(inst.amount);
       }
