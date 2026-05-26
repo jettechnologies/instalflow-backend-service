@@ -472,11 +472,16 @@ export class KycService {
           throw new Error("Financing contract not found");
         }
 
+        const firstPaymentDate = new Date();
+
+        firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
+
         const installmentSchedules =
           InstallmentService.generateInstallmentSchedule({
             financingContractId: contract.contractId,
             totalAmount: Number(contract.totalFinanced),
             months: contract.approvedDurationMonths,
+            firstPaymentDate,
           });
 
         await tx.installment.createMany({

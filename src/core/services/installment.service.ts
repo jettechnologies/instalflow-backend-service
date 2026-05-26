@@ -17,6 +17,7 @@ interface GenerateInstallmentScheduleParams {
   financingContractId: string;
   totalAmount: number;
   months: number;
+  firstPaymentDate: Date;
 }
 
 // interface ProcessPaymentParams {
@@ -32,6 +33,7 @@ export class InstallmentService {
     financingContractId,
     totalAmount,
     months,
+    firstPaymentDate,
   }: GenerateInstallmentScheduleParams) {
     if (months <= 0) {
       throw new Error("Months must be greater than 0");
@@ -39,12 +41,13 @@ export class InstallmentService {
     const totalInCents = Math.round(totalAmount * 100);
     const baseAmountInCents = Math.floor(totalInCents / months);
     const remainder = totalInCents % months;
+    const anchorDate = new Date(firstPaymentDate);
 
     const schedules: Prisma.InstallmentCreateManyInput[] = [];
 
     for (let i = 0; i < months; i++) {
-      const dueDate = new Date();
-      dueDate.setMonth(dueDate.getMonth() + (i + 1));
+      const dueDate = new Date(anchorDate);
+      dueDate.setMonth(dueDate.getMonth() + i);
       const installmentAmountInCents =
         i === months - 1 ? baseAmountInCents + remainder : baseAmountInCents;
 
