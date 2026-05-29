@@ -21,7 +21,7 @@ kycRetentionQueue
     {},
     {
       repeat: {
-        pattern: "*/10 * * * *",
+        pattern: "0 * * * *",
       },
     },
   )
