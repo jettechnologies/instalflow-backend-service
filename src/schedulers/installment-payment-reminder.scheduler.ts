@@ -24,7 +24,7 @@ paymentReminderQueue
     {},
     {
       repeat: {
-        pattern: "0/10 * * * *",
+        pattern: "0 0 * * *",
       },
     },
   )
