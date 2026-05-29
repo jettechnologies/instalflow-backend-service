@@ -6,6 +6,7 @@ import cors from "cors";
 import { configureExpress } from "@/infrastructure/config/express";
 import { setupSwagger } from "@/infrastructure/config/swagger";
 import "@/infrastructure/logger/instruments";
+import "@/core/events/handlers/notification.handler";
 import router from "@/api/routes";
 import webhookRoutes from "@/api/routes/webhook.routes";
 import { errorHandler } from "@/api/middlewares/errorHandler";

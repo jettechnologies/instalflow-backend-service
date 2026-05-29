@@ -3,6 +3,7 @@
 
 import "dotenv/config";
 import "@/infrastructure/logger/instruments";
+import "@/core/events/handlers/notification.handler";
 import "@/job-workers/onboarding.worker";
 import "@/job-workers/kyc-retention.worker";
 import "@/job-workers/payment.worker";

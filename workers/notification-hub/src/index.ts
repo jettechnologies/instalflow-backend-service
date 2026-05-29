@@ -50,8 +50,15 @@ export default {
 				try {
 					if (channel === NotificationChannel.EMAIL) {
 						const resolvedTemplate = typeof rule.template === 'function' ? rule.template(payload) : rule.template;
+						const toEmail = rule.to ? rule.to(payload) : payload.email;
+
+						if (!toEmail) {
+							console.warn(`[hub] EMAIL rule for ${event} has no resolvable email address — skipping`);
+							continue;
+						}
+
 						const msg: EmailQueueMessage = {
-							to: payload.email,
+							to: toEmail,
 							subject: resolvedSubject,
 							template: resolvedTemplate,
 							context: resolvedContext,
@@ -59,7 +66,7 @@ export default {
 
 						await env.email_queue.send(msg);
 						dispatched.push(`email:${resolvedTemplate}`);
-						console.log(`[hub] → email_queue  template=${resolvedTemplate} to=${payload.email}`);
+						console.log(`[hub] → email_queue  template=${resolvedTemplate} to=${toEmail}`);
 					}
 
 					if (channel === NotificationChannel.SMS) {

@@ -8,6 +8,8 @@ export interface RoutedNotification {
 	context: ((p: any) => Record<string, any>) | Record<string, any>;
 	/** For SMS: resolve the phone number from the payload */
 	phone?: (p: any) => string;
+	/** For Email: resolve the recipient email from the payload */
+	to?: (p: any) => string;
 }
 
 /**
@@ -209,137 +211,111 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 	[DomainEvent.INSTALLMENT_REMINDER_3DAY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			template: 'installment-reminder-3day',
-			subject: (p) => `Reminder: Installment Due in 3 Days 🎉`,
+			to: (p) => p.customerEmail,
+			template: 'installment-3days-reminder',
+			subject: (p) => `⏰ Payment Reminder: ${p.amount} due in 3 days`,
 			context: (p) => ({
-				customerId: p.customerId,
-				customerEmail: p.customerEmail,
 				customerName: p.customerName,
-				installmentId: p.installmentId,
+				productName: p.productName,
+				variantName: p.variantName,
 				sequence: p.sequence,
 				dueDate: p.dueDate,
 				amount: p.amount,
-				productName: p.productName,
-				variantName: p.variantName,
 				percentagePaid: p.percentagePaid,
 				payment_url: p.payment_url,
 				dashboard_url: p.dashboard_url,
 			}),
 		},
-		// Uncomment when SMS is live:
-		// {
-		//   channels: [NotificationChannel.SMS],
-		//   template: 'installment-reminder-3day-sms',
-		//   subject: '',
-		//   phone: (p) => p.phone,
-		//   context: (p) => ({
-		//     message: `Hi ${p.customerName}, your installment for ${p.productName} is due in 3 days. Please clear the payment.`,
-		//   }),
-		// },
 	],
 
 	[DomainEvent.INSTALLMENT_DUE_TODAY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			template: 'installment-due-today',
-			subject: (p) => `Reminder: Installment Due Today 🎉`,
+			to: (p) => p.customerEmail,
+			template: 'installment-due',
+			subject: (p) => `🔔 Your Installment Payment is Due Today`,
 			context: (p) => ({
-				customerId: p.customerId,
-				customerEmail: p.customerEmail,
 				customerName: p.customerName,
-				installmentId: p.installmentId,
+				productName: p.productName,
+				variantName: p.variantName,
 				sequence: p.sequence,
 				dueDate: p.dueDate,
 				amount: p.amount,
-				productName: p.productName,
-				variantName: p.variantName,
 				percentagePaid: p.percentagePaid,
 				payment_url: p.payment_url,
-				dashboard_url: p.dashboard_url,
 			}),
 		},
-		// Uncomment when SMS is live:
-		// {
-		//   channels: [NotificationChannel.SMS],
-		//   template: 'installment-due-today-sms',
-		//   subject: '',
-		//   phone: (p) => p.phone,
-		//   context: (p) => ({
-		//     message: `Hi ${p.customerName}, your installment for ${p.productName} is due today. Please clear the payment.`,
-		//   }),
-		// },
 	],
 
 	[DomainEvent.INSTALLMENT_OVERDUE_3DAY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			template: 'installment-overdue-3day',
-			subject: (p) => `Reminder: Installment Overdue - 3 Days ⚠️`,
+			to: (p) => p.customerEmail,
+			template: 'installment-overdue-3days-customer',
+			subject: (p) => `⚠️ Overdue Payment: Action Required`,
 			context: (p) => ({
-				customerId: p.customerId,
-				customerEmail: p.customerEmail,
 				customerName: p.customerName,
-				installmentId: p.installmentId,
+				productName: p.productName,
+				variantName: p.variantName,
 				sequence: p.sequence,
 				dueDate: p.dueDate,
 				amount: p.amount,
-				productName: p.productName,
-				variantName: p.variantName,
 				percentagePaid: p.percentagePaid,
-				marketerId: p.marketerId,
-				marketerEmail: p.marketerEmail,
-				marketerName: p.marketerName,
 				payment_url: p.payment_url,
 			}),
 		},
-		// Uncomment when SMS is live:
-		// {
-		//   channels: [NotificationChannel.SMS],
-		//   template: 'installment-overdue-3day-sms',
-		//   subject: '',
-		//   phone: (p) => p.phone,
-		//   context: (p) => ({
-		//     message: `Hi ${p.customerName}, your installment for ${p.productName} is overdue by 3 days. Please clear the payment.`,
-		//   }),
-		// },
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.marketerEmail,
+			template: 'installment-overdue-3days-marketer',
+			subject: (p) => `⚠️ Customer Payment Overdue (3 Days) — Action Needed`,
+			context: (p) => ({
+				marketerName: p.marketerName,
+				customerName: p.customerName,
+				productName: p.productName,
+				variantName: p.variantName,
+				sequence: p.sequence,
+				dueDate: p.dueDate,
+				amount: p.amount,
+				percentagePaid: p.percentagePaid,
+			}),
+		},
 	],
 
 	[DomainEvent.INSTALLMENT_OVERDUE_7DAY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			template: 'installment-overdue-7day',
-			subject: (p) => `Reminder: Installment Overdue - 7 Days ⚠️`,
+			to: (p) => p.customerEmail,
+			template: 'installment-overdue-7days-customer',
+			subject: (p) => `🚨 URGENT: Overdue Payment — Immediate Action Required`,
 			context: (p) => ({
-				customerId: p.customerId,
-				customerEmail: p.customerEmail,
 				customerName: p.customerName,
-				installmentId: p.installmentId,
-				sequence: p.sequence,
-				dueDate: p.dueDate,
-				expectedPaymentDate: p.expectedPaymentDate,
-				amount: p.amount,
 				productName: p.productName,
 				variantName: p.variantName,
+				sequence: p.sequence,
+				dueDate: p.dueDate,
+				amount: p.amount,
 				percentagePaid: p.percentagePaid,
-				marketerId: p.marketerId,
-				marketerEmail: p.marketerEmail,
-				marketerName: p.marketerName,
-				adminId: p.adminId,
-				adminEmail: p.adminEmail,
-				adminName: p.adminName,
 				payment_url: p.payment_url,
+			}),
+		},
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.adminEmail,
+			template: 'installment-overdue-7days-admin',
+			subject: (p) => `🚨 Escalation: 7-Day Overdue Installment — ${p.customerName}`,
+			context: (p) => ({
+				adminName: p.adminName,
+				marketerName: p.marketerName,
+				customerName: p.customerName,
+				productName: p.productName,
+				variantName: p.variantName,
+				sequence: p.sequence,
+				expectedPaymentDate: p.expectedPaymentDate,
+				amount: p.amount,
+				percentagePaid: p.percentagePaid,
 				dashboard_url: p.dashboard_url,
 			}),
 		},
-		// Uncomment when SMS is live:
-		// {
-		//   channels: [NotificationChannel.SMS],
-		//   template: 'installment-overdue-7day-sms',
-		//   subject: '',
-		//   phone: (p) => p.phone,
-		//   context: (p) => ({
-		//     message: `Hi ${p.customerName}, your installment for ${p.productName} is overdue by 7 days. Please clear the payment.`,
-		//   }),
-		// },
 	],
 };
