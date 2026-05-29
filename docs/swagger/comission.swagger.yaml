@@ -21,6 +21,9 @@ paths:
       tags: [Commissions]
       security:
         - bearerAuth: []
+      responses:
+        "200":
+          description: All commissions fetched
 
   /commissions/per-product:
     get:
@@ -28,6 +31,9 @@ paths:
       tags: [Commissions]
       security:
         - bearerAuth: []
+      responses:
+        "200":
+          description: All commissions fetched
 
   /commissions/request-payout:
     post:
