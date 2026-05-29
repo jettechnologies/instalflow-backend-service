@@ -3,22 +3,38 @@ tags:
     description: Financing contract installments, payment processing, and progress tracking
 
 paths:
-  /installments/{contractId}:
+  /installments/customer:
     get:
-      tags: [Installment Management]
-      summary: Retrieve customer installment plan
+      tags:
+        - Installment Management
+      summary: Retrieve authenticated customer installments
+      description: >
+        Returns all installments belonging to the authenticated customer
+        with pagination support, financing contract details,
+        payment history, and related financed product information.
       security:
         - bearerAuth: []
+
       parameters:
-        - in: path
-          name: contractId
+        - in: query
+          name: page
+          required: false
           schema:
-            type: string
-          required: true
-          description: Financing Contract ID
+            type: integer
+            default: 1
+          description: Current pagination page
+
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Number of records per page
+
       responses:
         "200":
-          description: Success
+          description: Customer installments retrieved successfully
           content:
             application/json:
               schema:
@@ -27,38 +43,126 @@ paths:
                   success:
                     type: boolean
                     example: true
+
                   message:
                     type: string
-                    example: Customer installment plan retrieved successfully.
+                    example: Installments retrieved successfully
+
                   data:
                     type: object
                     properties:
-                      contract:
-                        $ref: "#/components/schemas/FinancingContract"
                       installments:
                         type: array
                         items:
-                          $ref: "#/components/schemas/Installment"
-                      overdueStatus:
-                        type: string
-                        enum: ["NORMAL", "OVERDUE", "PAID"]
-                        example: NORMAL
+                          allOf:
+                            - $ref: "#/components/schemas/Installment"
 
-  /installments/{contractId}/products:
+                            - type: object
+                              properties:
+                                financingContract:
+                                  type: object
+                                  properties:
+                                    contractId:
+                                      type: string
+                                      format: uuid
+
+                                    totalFinanced:
+                                      type: number
+                                      example: 450000
+
+                                    status:
+                                      type: string
+                                      enum:
+                                        - PENDING_ACTIVATION
+                                        - ACTIVE
+                                        - COMPLETED
+                                        - DEFAULTED
+                                        - CANCELLED
+                                        - REJECTED
+                                        - RESTRUCTURED
+                                        - WRITTEN_OFF
+
+                                    kycApplication:
+                                      type: object
+                                      properties:
+                                        product:
+                                          type: object
+                                          properties:
+                                            productId:
+                                              type: string
+                                              format: uuid
+
+                                            name:
+                                              type: string
+                                              example: iPhone 15 Pro Max
+
+                                            slug:
+                                              type: string
+                                              example: iphone-15-pro-max
+
+                                        user:
+                                          type: object
+                                          properties:
+                                            userId:
+                                              type: string
+                                              format: uuid
+
+                                            name:
+                                              type: string
+                                              example: John Doe
+
+                                            email:
+                                              type: string
+                                              format: email
+
+                                payments:
+                                  type: array
+                                  items:
+                                    $ref: "#/components/schemas/Payment"
+
+                      pagination:
+                        $ref: "#/components/schemas/Pagination"
+
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /installments/{contractId}:
     get:
-      tags: [Installment Management]
-      summary: Retrieve financed products for a contract
+      tags:
+        - Installment Management
+      summary: Retrieve customer installment plan
       security:
         - bearerAuth: []
+
       parameters:
         - in: path
           name: contractId
+          required: true
+          description: Financing Contract ID
           schema:
             type: string
-          required: true
+
       responses:
         "200":
-          description: Success
+          description: Customer installment plan retrieved successfully
           content:
             application/json:
               schema:
@@ -66,8 +170,62 @@ paths:
                 properties:
                   success:
                     type: boolean
+                    example: true
+
                   message:
                     type: string
+                    example: Customer installment plan retrieved successfully.
+
+                  data:
+                    type: object
+                    properties:
+                      contract:
+                        $ref: "#/components/schemas/FinancingContract"
+
+                      installments:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Installment"
+
+                      overdueStatus:
+                        type: string
+                        enum:
+                          - NORMAL
+                          - OVERDUE
+                          - PAID
+                        example: NORMAL
+
+  /installments/{contractId}/products:
+    get:
+      tags:
+        - Installment Management
+      summary: Retrieve financed products for a contract
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: contractId
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Financed products retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Financed products retrieved successfully
+
                   data:
                     type: object
                     properties:
@@ -78,19 +236,22 @@ paths:
 
   /installments/{contractId}/progress:
     get:
-      tags: [Installment Management]
+      tags:
+        - Installment Management
       summary: Retrieve contract payment progress
       security:
         - bearerAuth: []
+
       parameters:
         - in: path
           name: contractId
+          required: true
           schema:
             type: string
-          required: true
+
       responses:
         "200":
-          description: Success
+          description: Contract payment progress retrieved successfully
           content:
             application/json:
               schema:
@@ -98,31 +259,42 @@ paths:
                 properties:
                   success:
                     type: boolean
+                    example: true
+
                   message:
                     type: string
+                    example: Contract payment progress retrieved successfully
+
                   data:
                     type: object
                     properties:
                       percentagePaid:
                         type: number
                         example: 65.5
+
                       totalPaid:
                         type: number
+                        example: 250000
+
                       totalFinanced:
                         type: number
+                        example: 450000
 
   /installments/{installmentId}/pay:
     post:
-      tags: [Installment Management]
+      tags:
+        - Installment Management
       summary: Initialize installment payment
       security:
         - bearerAuth: []
+
       parameters:
         - in: path
           name: installmentId
+          required: true
           schema:
             type: string
-          required: true
+
       responses:
         "200":
           description: Payment initialized successfully
@@ -133,17 +305,38 @@ paths:
                 properties:
                   success:
                     type: boolean
+                    example: true
+
                   message:
                     type: string
+                    example: Payment initialized successfully
+
                   data:
                     type: object
                     properties:
                       authorizationUrl:
                         type: string
+                        example: https://checkout.paystack.com/xxxxxx
+
+                      accessCode:
+                        type: string
+                        example: ACCESS_CODE
+
                       reference:
                         type: string
+                        example: PSK_xxx_123
+
                       amount:
                         type: number
+                        example: 50000
+
+                      installmentId:
+                        type: string
+                        format: uuid
+
+                      dueDate:
+                        type: string
+                        format: date-time
 
 components:
   securitySchemes:
@@ -158,37 +351,48 @@ components:
       properties:
         contractId:
           type: string
+          format: uuid
 
         userId:
           type: string
+          format: uuid
 
         productId:
           type: string
+          format: uuid
 
         variantId:
           type: string
+          format: uuid
           nullable: true
 
         kycApplicationId:
           type: string
+          format: uuid
 
         approvedProductPrice:
           type: number
+          example: 300000
 
         approvedInterestPercentage:
           type: number
+          example: 15
 
         approvedDurationMonths:
           type: integer
+          example: 6
 
         principal:
           type: number
+          example: 300000
 
         interest:
           type: number
+          example: 45000
 
         totalFinanced:
           type: number
+          example: 345000
 
         status:
           type: string
@@ -198,6 +402,7 @@ components:
             - COMPLETED
             - DEFAULTED
             - CANCELLED
+            - REJECTED
             - RESTRUCTURED
             - WRITTEN_OFF
 
@@ -226,15 +431,19 @@ components:
       properties:
         installmentId:
           type: string
+          format: uuid
 
         financingContractId:
           type: string
+          format: uuid
 
         sequence:
           type: integer
+          example: 1
 
         amount:
           type: number
+          example: 50000
 
         dueDate:
           type: string
@@ -244,9 +453,10 @@ components:
           type: string
           enum:
             - PENDING
-            - PAID
+            - DUE
             - OVERDUE
             - DEFAULTED
+            - PAID
 
         paidAt:
           type: string
@@ -258,17 +468,94 @@ components:
           format: date-time
           nullable: true
 
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
     FinancedProduct:
       type: object
       properties:
         productId:
           type: string
+          format: uuid
+
         name:
           type: string
+          example: iPhone 15 Pro Max
+
         slug:
           type: string
+          example: iphone-15-pro-max
+
         price:
           type: number
+          example: 1200000
+
+    Payment:
+      type: object
+      properties:
+        paymentId:
+          type: string
+          format: uuid
+
+        installmentId:
+          type: string
+          format: uuid
+
+        amount:
+          type: number
+          example: 50000
+
+        status:
+          type: string
+          enum:
+            - PENDING
+            - SUCCESS
+            - FAILED
+
+        providerReference:
+          type: string
+          nullable: true
+          example: PSK_239393933
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 24
+
+        totalPages:
+          type: integer
+          example: 3
+
+        currentPage:
+          type: integer
+          example: 1
+
+        limit:
+          type: integer
+          example: 10
+
+        hasNextPage:
+          type: boolean
+          example: true
+
+        hasPreviousPage:
+          type: boolean
+          example: false
 
     ErrorResponse:
       type: object
@@ -279,16 +566,17 @@ components:
 
         message:
           type: string
+          example: Unauthorized
 
         errorType:
           type: string
           enum:
-            - "Bad Request"
-            - "Authentication Error"
-            - "Authorization Error"
-            - "Not Found"
-            - "Conflict Error"
-            - "Validation Error"
+            - Bad Request
+            - Authentication Error
+            - Authorization Error
+            - Not Found
+            - Conflict Error
+            - Validation Error
 
         statusCode:
           type: integer

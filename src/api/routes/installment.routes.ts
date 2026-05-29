@@ -8,8 +8,14 @@ const router = Router();
 router.use(requireAuth);
 
 router.get(
+  "/customer",
+  requireRole([Role.CUSTOMER]),
+  InstallmentController.getCustomerInstallments,
+);
+
+router.get(
   "/:contractId",
-  requireRole([Role.CUSTOMER, Role.ADMIN, Role.COMPANY, Role.SUPER_ADMIN]),
+  requireRole([Role.ADMIN, Role.COMPANY, Role.SUPER_ADMIN]),
   InstallmentController.getCustomerInstallments,
 );
 

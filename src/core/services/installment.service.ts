@@ -63,6 +63,82 @@ export class InstallmentService {
     return schedules;
   }
 
+  static async getRelatedCustomersInstallments(
+    userId: string,
+    params: {
+      page?: number;
+      limit?: number;
+    },
+  ) {
+    const { page = 1, limit = 10 } = params;
+    const skip = (page - 1) * limit;
+    const whereClause = {
+      financingContract: {
+        userId,
+      },
+    };
+
+    const [installments, total] = await prisma.$transaction([
+      prisma.installment.findMany({
+        where: whereClause,
+        skip,
+        take: limit,
+        orderBy: {
+          dueDate: "asc",
+        },
+        include: {
+          financingContract: {
+            select: {
+              contractId: true,
+              totalFinanced: true,
+              status: true,
+              activatedAt: true,
+              completedAt: true,
+              kycApplication: {
+                include: {
+                  product: {
+                    include: {
+                      images: true,
+                    },
+                  },
+                  user: {
+                    select: {
+                      userId: true,
+                      name: true,
+                      email: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          payments: {
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+        },
+      }),
+      prisma.installment.count({
+        where: whereClause,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      installments,
+      pagination: {
+        total,
+        totalPages,
+        currentPage: page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
+
   static async getCustomerInstallments(financingContractId: string) {
     return prisma.installment.findMany({
       where: {

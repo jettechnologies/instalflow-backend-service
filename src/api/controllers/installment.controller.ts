@@ -1,7 +1,36 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { InstallmentService } from "@/core/services/installment.service";
 
 export class InstallmentController {
+  static async getRelatedCustomersInstallments(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const userId = (req as any).user.userId;
+
+      const page = Number(req.query.page || 1);
+      const limit = Number(req.query.limit || 10);
+
+      const data = await InstallmentService.getRelatedCustomersInstallments(
+        userId,
+        {
+          page,
+          limit,
+        },
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: "Customer installments retrieved successfully",
+        data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   /**
    * GET /installments/:contractId
    */
