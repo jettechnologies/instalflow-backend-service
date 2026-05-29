@@ -1,6 +1,4 @@
-// src/core/events/handlers/notification.handler.ts
-
-import { onEvent } from "@/core/events/emitter-secondary";
+import { onEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 import { NotificationService } from "@/core/notifications/notification.service";
 import { NotificationChannel } from "@/core/notifications/notification.type";

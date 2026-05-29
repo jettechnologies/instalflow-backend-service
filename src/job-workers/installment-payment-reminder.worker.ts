@@ -7,7 +7,7 @@ export const installmentPaymentReminderBullWorker = new Worker(
   QueueNames.InstallmentPaymentReminderQueue,
   async (job) => {
     console.log(
-      `📥 [InstallmentPaymentReminderBullWorker] Processing job ${job.id ?? "manual"}`,
+      `📥 [InstallmentPaymentReminder] Processing job ${job.id ?? "manual"}`,
     );
     await PaymentReminderWorker.run();
     return { success: true, timestamp: new Date().toISOString() };
@@ -19,14 +19,12 @@ export const installmentPaymentReminderBullWorker = new Worker(
 );
 
 installmentPaymentReminderBullWorker.on("completed", (job) => {
-  console.log(
-    `✅ [installmentPaymentReminderBullWorker] Job ${job.id} completed.`,
-  );
+  console.log(`✅ [InstallmentPaymentReminder] Job ${job.id} completed.`);
 });
 
 installmentPaymentReminderBullWorker.on("failed", (job, err) => {
   console.error(
-    `❌ [PaymentReminderBullWorker] Job ${job?.id} failed:`,
+    `❌ [InstallmentPaymentReminder] Job ${job?.id} failed:`,
     err.message,
   );
 });

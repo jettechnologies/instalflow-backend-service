@@ -5,7 +5,7 @@ import {
   Role,
   Prisma,
 } from "@/infrastructure/prisma";
-import { emitEvent } from "@/core/events/emitter-secondary";
+import { emitEvent } from "@/core/events/emitter";
 import {
   DomainEvent,
   type Reminder3DayPayload,
@@ -71,7 +71,7 @@ async function calculateProgress(contractId: string) {
 
 export class PaymentReminderWorker {
   static async run(): Promise<void> {
-    console.log("🔔 [PaymentReminderWorker] Starting reminder scan...");
+    console.log("🔔 [InstallmentPaymentReminder] Starting reminder scan...");
     const now = new Date();
 
     await Promise.allSettled([
@@ -81,7 +81,7 @@ export class PaymentReminderWorker {
       this.process7DayOverdue(now),
     ]);
 
-    console.log("✅ [PaymentReminderWorker] Scan complete.");
+    console.log("✅ [InstallmentPaymentReminder] Scan complete.");
   }
 
   private static async process3DayReminders(): Promise<void> {
@@ -105,7 +105,7 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `📅 [PaymentReminderWorker] 3-day reminders: ${installments.length} installment(s)`,
+      `📅 [InstallmentPaymentReminder] 3-day reminders: ${installments.length} installment(s)`,
     );
 
     for (const inst of installments) {
@@ -134,7 +134,7 @@ export class PaymentReminderWorker {
         await emitEvent(DomainEvent.INSTALLMENT_REMINDER_3DAY, payload);
       } catch (err: any) {
         console.error(
-          `❌ [PaymentReminderWorker] 3-day reminder failed for installment ${inst.installmentId}:`,
+          `❌ [InstallmentPaymentReminder] 3-day reminder failed for installment ${inst.installmentId}:`,
           err.message,
         );
       }
@@ -162,7 +162,7 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `📅 [PaymentReminderWorker] Due-today reminders: ${installments.length} installment(s)`,
+      `📅 [InstallmentPaymentReminder] Due-today reminders: ${installments.length} installment(s)`,
     );
 
     for (const inst of installments) {
@@ -191,7 +191,7 @@ export class PaymentReminderWorker {
         await emitEvent(DomainEvent.INSTALLMENT_DUE_TODAY, payload);
       } catch (err: any) {
         console.error(
-          `❌ [PaymentReminderWorker] Due-today reminder failed for installment ${inst.installmentId}:`,
+          `❌ [InstallmentPaymentReminder] Due-today reminder failed for installment ${inst.installmentId}:`,
           err.message,
         );
       }
@@ -226,7 +226,7 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `🚨 [PaymentReminderWorker] 3-day overdue: ${installments.length} installment(s)`,
+      `🚨 [InstallmentPaymentReminder] 3-day overdue: ${installments.length} installment(s)`,
     );
 
     for (const inst of installments) {
@@ -236,7 +236,7 @@ export class PaymentReminderWorker {
 
         if (!customer.referredByMarketerId) {
           console.warn(
-            `[PaymentReminderWorker] Customer ${customer.userId} has no marketer — skipping marketer notification for installment ${inst.installmentId}`,
+            `[InstallmentPaymentReminder] Customer ${customer.userId} has no marketer — skipping marketer notification for installment ${inst.installmentId}`,
           );
         }
 
@@ -275,7 +275,7 @@ export class PaymentReminderWorker {
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, payload);
       } catch (err: any) {
         console.error(
-          `❌ [PaymentReminderWorker] 3-day overdue failed for installment ${inst.installmentId}:`,
+          `❌ [InstallmentPaymentReminder] 3-day overdue failed for installment ${inst.installmentId}:`,
           err.message,
         );
       }
@@ -310,7 +310,7 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `🚨 [PaymentReminderWorker] 7-day overdue: ${installments.length} installment(s)`,
+      `🚨 [InstallmentPaymentReminder] 7-day overdue: ${installments.length} installment(s)`,
     );
 
     for (const inst of installments) {
@@ -358,7 +358,7 @@ export class PaymentReminderWorker {
 
         if (!admin) {
           console.warn(
-            `[PaymentReminderWorker] No admin found for 7-day overdue on installment ${inst.installmentId}. Skipping.`,
+            `[InstallmentPaymentReminder] No admin found for 7-day overdue on installment ${inst.installmentId}. Skipping.`,
           );
           continue;
         }
@@ -391,7 +391,7 @@ export class PaymentReminderWorker {
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, payload);
       } catch (err: any) {
         console.error(
-          `❌ [PaymentReminderWorker] 7-day overdue failed for installment ${inst.installmentId}:`,
+          `❌ [InstallmentPaymentReminder] 7-day overdue failed for installment ${inst.installmentId}:`,
           err.message,
         );
       }
