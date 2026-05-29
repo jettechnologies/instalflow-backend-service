@@ -10,6 +10,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "@/shared/utils/AppError";
+import { MetadataType } from "@/shared/utils/helpers/misc";
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
@@ -172,9 +173,7 @@ export class InstallmentService {
       where: {
         financingContractId,
       },
-
       distinct: ["financingContractId"],
-
       include: {
         financingContract: {
           include: {
@@ -313,7 +312,7 @@ export class InstallmentService {
           email: customer.email,
           amount: Math.round(amount * 100),
           metadata: {
-            type: "installment",
+            type: MetadataType.installment_payment,
             installmentId: installment.installmentId,
             financingContractId: installment.financingContractId,
             customerId: customer.userId,

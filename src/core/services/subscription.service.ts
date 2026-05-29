@@ -2,6 +2,7 @@ import { prisma } from "@/infrastructure/prisma";
 import { BadRequestError, NotFoundError } from "@/shared/utils/AppError";
 import { LedgerService } from "./ledger.service";
 import { AccountType } from "@/infrastructure/prisma";
+import { MetadataType } from "@/shared/utils/helpers/misc";
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
@@ -46,8 +47,8 @@ export class SubscriptionService {
           email: intent.email,
           amount: Math.round(amount * 100),
           metadata: {
-            intentId: intent.intentId, // 🔥 KEY CHANGE
-            type: "onboarding",
+            intentId: intent.intentId,
+            type: MetadataType.onboarding_payment,
           },
         }),
       },
@@ -104,7 +105,7 @@ export class SubscriptionService {
           metadata: {
             companyId,
             planId,
-            type: "company_subscription",
+            type: MetadataType.company_subscription,
           },
         }),
       },

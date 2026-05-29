@@ -5,6 +5,7 @@ import { SubscriptionService } from "@/core/services/subscription.service";
 import { onboardingQueue } from "@/infrastructure/queues/onboarding.queue";
 import { paymentQueue } from "@/infrastructure/queues/payment.queue";
 import { PaystackService } from "@/core/services/paystack.service";
+import { MetadataType } from "@/shared/utils/helpers/misc";
 
 export class WebhookController {
   static async handlePaystack(req: Request, res: Response) {
@@ -177,14 +178,24 @@ export class WebhookController {
 
   private static async handleChargeSuccess(data: any) {
     const reference = data.reference;
-    const metadataType = data.metadata?.type;
+    const metadataType =
+      typeof data.metadata?.type === "string"
+        ? data.metadata.type.trim().toLowerCase()
+        : null;
+
+    logger.info("[webhook] metadata inspection", {
+      raw_metadata: data.metadata,
+      metadata_type: data.metadata?.type,
+      normalized_type: metadataType,
+      metadata_type_typeof: typeof data.metadata?.type,
+    });
 
     logger.webhook.paystack.chargeSuccess(reference, metadataType, {
       intent_id: data.metadata?.intentId,
     });
 
     switch (metadataType) {
-      case "onboarding": {
+      case MetadataType.onboarding_payment: {
         const intent = await prisma.onboardingIntent.findFirst({
           where: { paymentReference: reference },
         });
@@ -217,7 +228,7 @@ export class WebhookController {
         return;
       }
 
-      case "installment": {
+      case MetadataType.installment_payment: {
         const installmentId = data.metadata?.installmentId;
         if (!installmentId) {
           logger.error("No installmentId found in webhook metadata", {
@@ -249,9 +260,19 @@ export class WebhookController {
         return;
       }
 
-      default:
+      case MetadataType.company_subscription:
         logger.webhook.paystack.subscriptionFallback(reference);
         await SubscriptionService.verifySubscription(reference);
+        return;
+
+      default:
+        logger.warn("[webhook] Unknown metadata type", {
+          reference,
+          metadata: data.metadata,
+          metadataType,
+        });
+
+        return;
     }
   }
 }
