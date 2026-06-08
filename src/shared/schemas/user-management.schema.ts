@@ -13,3 +13,4 @@ export const ToggleStatusSchema = z.object({
 export const HandleApprovalSchema = z.object({
   status: z.enum([ApprovalStatus.APPROVED, ApprovalStatus.REJECTED]),
 });
+

@@ -10,7 +10,7 @@ router.use(requireAuth);
 router.get(
   "/customer",
   requireRole([Role.CUSTOMER]),
-  InstallmentController.getCustomerInstallments,
+  InstallmentController.getRelatedCustomersInstallments,
 );
 
 router.get(
