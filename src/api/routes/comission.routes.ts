@@ -31,6 +31,18 @@ router.post(
   CommissionController.requestPayout,
 );
 
+router.get(
+  "/payouts",
+  requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY]),
+  CommissionController.getPayoutRequests,
+);
+
+router.get(
+  "/payouts/:id",
+  requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY]),
+  CommissionController.getPayoutById,
+);
+
 router.post(
   "/payouts/:id/admin-approve",
   requireRole([Role.ADMIN]),
@@ -41,6 +53,18 @@ router.post(
   "/payouts/:id/company-approve",
   requireRole([Role.COMPANY]),
   CommissionController.companyApprove,
+);
+
+router.post(
+  "/payouts/:id/initiate-transfer",
+  requireRole([Role.COMPANY]),
+  CommissionController.initiateTransfer,
+);
+
+router.post(
+  "/payouts/bulk/initiate-transfer",
+  requireRole([Role.COMPANY]),
+  CommissionController.initiateBulkTransfer,
 );
 
 export default router;

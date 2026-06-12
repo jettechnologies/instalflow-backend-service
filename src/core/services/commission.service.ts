@@ -160,73 +160,242 @@ export class CommissionService {
     return Object.values(grouped);
   }
 
-  // static async requestPayout(userId: string, amount: number) {
-  //   const user = await prisma.user.findUnique({
-  //     where: {
-  //       userId,
-  //     },
-  //   });
+  static async getPayoutRequests(
+    userId: string,
+    role: Role,
+    params?: {
+      status?: CommissionPayoutStatus;
+      page?: number;
+      limit?: number;
+    },
+  ) {
+    const page = params?.page ?? 1;
+    const limit = params?.limit ?? 20;
 
-  //   if (!user) {
-  //     throw new NotFoundError("User not found");
-  //   }
+    const where: Prisma.CommissionPayoutRequestWhereInput = {};
 
-  //   if (!user.companyId) {
-  //     throw new BadRequestError("User has no associated company");
-  //   }
+    if (params?.status) {
+      where.status = params.status;
+    }
 
-  //   const activeCommissions = await prisma.commission.findMany({
-  //     where: {
-  //       userId,
-  //       status: CommissionStatus.ACTIVE,
-  //     },
-  //   });
+    const currentUser = await prisma.user.findUnique({
+      where: { userId },
+      select: {
+        companyId: true,
+      },
+    });
 
-  //   const totalAvailable = activeCommissions.reduce(
-  //     (acc, item) => acc.plus(item.amount),
-  //     new Prisma.Decimal(0),
-  //   );
+    if (!currentUser) {
+      throw new NotFoundError("User not found");
+    }
 
-  //   if (totalAvailable.lessThan(amount)) {
-  //     throw new BadRequestError("Insufficient approved commissions balance");
-  //   }
+    switch (role) {
+      case Role.MARKETER:
+        where.userId = userId;
+        break;
 
-  //   const existingPending = await prisma.commissionPayoutRequest.findFirst({
-  //     where: {
-  //       userId,
-  //       status: {
-  //         in: [
-  //           CommissionPayoutStatus.PENDING_ADMIN_APPROVAL,
-  //           CommissionPayoutStatus.PENDING_COMPANY_APPROVAL,
-  //           CommissionPayoutStatus.TRANSFER_INITIATED,
-  //         ],
-  //       },
-  //     },
-  //   });
+      case Role.COMPANY:
+        where.companyId = currentUser.companyId!;
+        break;
 
-  //   if (existingPending) {
-  //     throw new BadRequestError("You already have a pending payout request");
-  //   }
+      case Role.ADMIN:
+        break;
 
-  //   const request = await prisma.commissionPayoutRequest.create({
-  //     data: {
-  //       userId,
-  //       companyId: user.companyId,
-  //       amount: new Prisma.Decimal(amount),
-  //     },
-  //   });
+      default:
+        throw new ForbiddenError("Unauthorized");
+    }
 
-  //   await NotificationOrchestrator.handle(
-  //     NotificationEventType.COMMISSION_TRANSFER_REQUEST,
-  //     {
-  //       requestId: request.payoutId,
-  //       marketerName: user.name ?? "",
-  //       amount: formatCurrency(amount),
-  //     },
-  //   );
+    const [items, total] = await Promise.all([
+      prisma.commissionPayoutRequest.findMany({
+        where,
+        orderBy: {
+          requestedAt: "desc",
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        include: {
+          user: {
+            select: {
+              userId: true,
+              name: true,
+              email: true,
+            },
+          },
+          marketerBankAccount: {
+            select: {
+              bankName: true,
+              accountName: true,
+              accountNumber: true,
+            },
+          },
+          commissionAllocations: {
+            select: {
+              allocationId: true,
+              commissionId: true,
+              allocatedAmount: true,
+              status: true,
+            },
+          },
+        },
+      }),
+      prisma.commissionPayoutRequest.count({
+        where,
+      }),
+    ]);
 
-  //   return request;
-  // }
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      items: items.map((payout) => ({
+        payoutId: payout.payoutId,
+        marketer: {
+          userId: payout.user.userId,
+          name: payout.user.name,
+          email: payout.user.email,
+        },
+        amount: payout.amount,
+        status: payout.status,
+        transferCode: payout.transferCode,
+        requestedAt: payout.requestedAt,
+        paidAt: payout.paidAt,
+        transferInitiatedAt: payout.transferInitiatedAt,
+        transferCompletedAt: payout.transferCompletedAt,
+        transferFailedAt: payout.transferFailedAt,
+        transferFailReason: payout.transferFailReason,
+        bankAccount: payout.marketerBankAccount
+          ? {
+              bankName: payout.marketerBankAccount.bankName,
+              accountName: payout.marketerBankAccount.accountName,
+              accountNumber: maskAccountNumber(
+                payout.marketerBankAccount.accountNumber,
+              ),
+            }
+          : null,
+        allocationsCount: payout.commissionAllocations.length,
+      })),
+
+      pagination: {
+        currentPage: page,
+        limit,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
+
+  static async getPayoutById(payoutId: string) {
+    const payout = await prisma.commissionPayoutRequest.findUnique({
+      where: {
+        payoutId,
+      },
+      include: {
+        user: {
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+          },
+        },
+        company: {
+          select: {
+            companyId: true,
+            name: true,
+          },
+        },
+        adminApprovedBy: {
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+          },
+        },
+        companyApprovedBy: {
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+          },
+        },
+        transferInitiatedBy: {
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+          },
+        },
+        marketerBankAccount: true,
+        commissionAllocations: {
+          include: {
+            commission: {
+              select: {
+                commissionId: true,
+                amount: true,
+                reservedAmount: true,
+                status: true,
+                createdAt: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!payout) {
+      throw new NotFoundError("Payout request not found");
+    }
+
+    return {
+      payoutId: payout.payoutId,
+      amount: payout.amount,
+      status: payout.status,
+      transferCode: payout.transferCode,
+      requestedAt: payout.requestedAt,
+      paidAt: payout.paidAt,
+      transferInitiatedAt: payout.transferInitiatedAt,
+      transferCompletedAt: payout.transferCompletedAt,
+      transferFailedAt: payout.transferFailedAt,
+      transferFailReason: payout.transferFailReason,
+      marketer: payout.user,
+      company: payout.company,
+      approvals: {
+        adminApprovedAt: payout.adminApprovedAt,
+        adminApprovedBy: payout.adminApprovedBy,
+
+        companyApprovedAt: payout.companyApprovedAt,
+        companyApprovedBy: payout.companyApprovedBy,
+      },
+      transfer: {
+        initiatedAt: payout.transferInitiatedAt,
+        initiatedBy: payout.transferInitiatedBy,
+        completedAt: payout.transferCompletedAt,
+        transferCode: payout.transferCode,
+      },
+      bankAccount: payout.marketerBankAccount
+        ? {
+            bankName: payout.marketerBankAccount.bankName,
+            accountName: payout.marketerBankAccount.accountName,
+            accountNumber: maskAccountNumber(
+              payout.marketerBankAccount.accountNumber,
+            ),
+          }
+        : null,
+
+      allocations: payout.commissionAllocations.map((allocation) => ({
+        allocationId: allocation.allocationId,
+        allocatedAmount: allocation.allocatedAmount,
+        status: allocation.status,
+        commission: {
+          commissionId: allocation.commission.commissionId,
+          amount: allocation.commission.amount,
+          reservedAmount: allocation.commission.reservedAmount,
+          status: allocation.commission.status,
+          createdAt: allocation.commission.createdAt,
+        },
+      })),
+    };
+  }
 
   static async requestPayout(userId: string, amount: number) {
     // ── Guards outside the transaction ────────────────────────────────────────
@@ -1026,4 +1195,71 @@ export class CommissionService {
 //   }
 
 //   return { total: results.length, results };
+// }
+// static async requestPayout(userId: string, amount: number) {
+//   const user = await prisma.user.findUnique({
+//     where: {
+//       userId,
+//     },
+//   });
+
+//   if (!user) {
+//     throw new NotFoundError("User not found");
+//   }
+
+//   if (!user.companyId) {
+//     throw new BadRequestError("User has no associated company");
+//   }
+
+//   const activeCommissions = await prisma.commission.findMany({
+//     where: {
+//       userId,
+//       status: CommissionStatus.ACTIVE,
+//     },
+//   });
+
+//   const totalAvailable = activeCommissions.reduce(
+//     (acc, item) => acc.plus(item.amount),
+//     new Prisma.Decimal(0),
+//   );
+
+//   if (totalAvailable.lessThan(amount)) {
+//     throw new BadRequestError("Insufficient approved commissions balance");
+//   }
+
+//   const existingPending = await prisma.commissionPayoutRequest.findFirst({
+//     where: {
+//       userId,
+//       status: {
+//         in: [
+//           CommissionPayoutStatus.PENDING_ADMIN_APPROVAL,
+//           CommissionPayoutStatus.PENDING_COMPANY_APPROVAL,
+//           CommissionPayoutStatus.TRANSFER_INITIATED,
+//         ],
+//       },
+//     },
+//   });
+
+//   if (existingPending) {
+//     throw new BadRequestError("You already have a pending payout request");
+//   }
+
+//   const request = await prisma.commissionPayoutRequest.create({
+//     data: {
+//       userId,
+//       companyId: user.companyId,
+//       amount: new Prisma.Decimal(amount),
+//     },
+//   });
+
+//   await NotificationOrchestrator.handle(
+//     NotificationEventType.COMMISSION_TRANSFER_REQUEST,
+//     {
+//       requestId: request.payoutId,
+//       marketerName: user.name ?? "",
+//       amount: formatCurrency(amount),
+//     },
+//   );
+
+//   return request;
 // }

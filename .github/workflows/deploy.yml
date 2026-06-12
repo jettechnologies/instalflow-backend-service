@@ -27,7 +27,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm run db:generate
-      # - run: pnpm run db:cleanup
+      - run: pnpm run db:cleanup
 
       - run: pnpm run db:push
       # - run: pnpm run db:migrate:deploy

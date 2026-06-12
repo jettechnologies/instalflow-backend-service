@@ -84,4 +84,87 @@ export class CommissionController {
       next(error);
     }
   }
+
+  static async initiateTransfer(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const companyUserId = (req as any).user.userId;
+      const payoutId = req.params.id as string;
+
+      const result = await CommissionService.initiateTransfer(
+        payoutId,
+        companyUserId,
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Transfer queued successfully",
+        payload: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async initiateBulkTransfer(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const companyUserId = (req as any).user.userId;
+      const { payoutIds } = req.body;
+
+      const result = await CommissionService.initiateBulkTransfer(
+        payoutIds,
+        companyUserId,
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Bulk transfer processing started",
+        payload: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getPayoutRequests(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const userId = (req as any).user.userId;
+      const role = (req as any).user.role;
+
+      const result = await CommissionService.getPayoutRequests(userId, role);
+
+      res.status(200).json({
+        success: true,
+        payload: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getPayoutById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const payoutId = req.params.id as string;
+
+      const result = await CommissionService.getPayoutById(payoutId);
+
+      res.status(200).json({
+        success: true,
+        payload: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
