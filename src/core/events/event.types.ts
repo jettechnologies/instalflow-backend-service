@@ -16,6 +16,10 @@ export enum DomainEvent {
   INSTALLMENT_DUE_TODAY = "installment.due.today",
   INSTALLMENT_OVERDUE_3DAY = "installment.overdue.3day",
   INSTALLMENT_OVERDUE_7DAY = "installment.overdue.7day",
+  COMMISSION_TRANSFER_INITIATED = "commission.transfer.initiated",
+  COMMISSION_TRANSFER_SUCCESS = "commission.transfer.success",
+  COMMISSION_TRANSFER_FAILED = "commission.transfer.failed",
+  COMMISSION_TRANSFER_REVERSED = "commission.transfer.reversed",
 }
 
 export enum EventStatus {
@@ -36,6 +40,54 @@ export interface InstallmentReminderBase {
   variantName?: string;
   percentagePaid: number;
   payment_url?: string;
+  dashboard_url?: string;
+}
+
+export interface CommissionTransferInitiatedPayload {
+  marketerEmail: string;
+  marketerName: string;
+  marketerId: string;
+  amount: number; // naira
+  payoutId: string;
+  bankName: string;
+  maskedAccount: string; // "****1234"
+  dashboard_url?: string;
+}
+
+export interface CommissionTransferSuccessPayload {
+  marketerEmail: string;
+  marketerName: string;
+  marketerId: string;
+  amount: number;
+  payoutId: string;
+  transferCode: string;
+  bankName: string;
+  maskedAccount: string;
+  companyId: string;
+  companyEmails: string[];
+  dashboard_url?: string;
+}
+
+export interface CommissionTransferFailedPayload {
+  marketerEmail: string;
+  marketerName: string;
+  marketerId: string;
+  amount: number;
+  payoutId: string;
+  reason: string;
+  companyId: string;
+  companyEmails: string[];
+  dashboard_url?: string;
+}
+
+export interface CommissionTransferReversedPayload {
+  marketerEmail: string;
+  marketerName: string;
+  marketerId: string;
+  amount: number;
+  payoutId: string;
+  companyId: string;
+  companyEmails: string[];
   dashboard_url?: string;
 }
 
@@ -130,4 +182,8 @@ export interface DomainEventPayloads {
   [DomainEvent.INSTALLMENT_DUE_TODAY]: DueTodayPayload;
   [DomainEvent.INSTALLMENT_OVERDUE_3DAY]: Overdue3DayPayload;
   [DomainEvent.INSTALLMENT_OVERDUE_7DAY]: Overdue7DayPayload;
+  [DomainEvent.COMMISSION_TRANSFER_INITIATED]: CommissionTransferInitiatedPayload;
+  [DomainEvent.COMMISSION_TRANSFER_SUCCESS]: CommissionTransferSuccessPayload;
+  [DomainEvent.COMMISSION_TRANSFER_FAILED]: CommissionTransferFailedPayload;
+  [DomainEvent.COMMISSION_TRANSFER_REVERSED]: CommissionTransferReversedPayload;
 }

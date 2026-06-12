@@ -66,6 +66,9 @@ export const ModelName = {
   Installment: 'Installment',
   Payment: 'Payment',
   Commission: 'Commission',
+  CommissionAllocation: 'CommissionAllocation',
+  CommissionPayoutRequest: 'CommissionPayoutRequest',
+  MarketerBankAccount: 'MarketerBankAccount',
   LedgerTransaction: 'LedgerTransaction',
   Referral: 'Referral',
   SubscriptionPlan: 'SubscriptionPlan',
@@ -78,8 +81,7 @@ export const ModelName = {
   ApprovalRequest: 'ApprovalRequest',
   ProductInstallmentPlan: 'ProductInstallmentPlan',
   ProductImage: 'ProductImage',
-  InternalNotification: 'InternalNotification',
-  CommissionPayoutRequest: 'CommissionPayoutRequest'
+  InternalNotification: 'InternalNotification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -341,11 +343,70 @@ export const CommissionScalarFieldEnum = {
   paymentId: 'paymentId',
   amount: 'amount',
   status: 'status',
+  reservedAmount: 'reservedAmount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type CommissionScalarFieldEnum = (typeof CommissionScalarFieldEnum)[keyof typeof CommissionScalarFieldEnum]
+
+
+export const CommissionAllocationScalarFieldEnum = {
+  id: 'id',
+  allocationId: 'allocationId',
+  payoutId: 'payoutId',
+  commissionId: 'commissionId',
+  allocatedAmount: 'allocatedAmount',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type CommissionAllocationScalarFieldEnum = (typeof CommissionAllocationScalarFieldEnum)[keyof typeof CommissionAllocationScalarFieldEnum]
+
+
+export const CommissionPayoutRequestScalarFieldEnum = {
+  id: 'id',
+  payoutId: 'payoutId',
+  userId: 'userId',
+  companyId: 'companyId',
+  transferCode: 'transferCode',
+  amount: 'amount',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  adminApprovedById: 'adminApprovedById',
+  adminApprovedAt: 'adminApprovedAt',
+  companyApprovedById: 'companyApprovedById',
+  companyApprovedAt: 'companyApprovedAt',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  marketerBankAccountId: 'marketerBankAccountId',
+  transferInitiatedAt: 'transferInitiatedAt',
+  transferCompletedAt: 'transferCompletedAt',
+  transferFailedAt: 'transferFailedAt',
+  transferFailReason: 'transferFailReason',
+  transferInitiatedById: 'transferInitiatedById'
+} as const
+
+export type CommissionPayoutRequestScalarFieldEnum = (typeof CommissionPayoutRequestScalarFieldEnum)[keyof typeof CommissionPayoutRequestScalarFieldEnum]
+
+
+export const MarketerBankAccountScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  userId: 'userId',
+  bankName: 'bankName',
+  bankCode: 'bankCode',
+  accountName: 'accountName',
+  accountNumber: 'accountNumber',
+  isPrimary: 'isPrimary',
+  recipientCode: 'recipientCode',
+  isVerified: 'isVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MarketerBankAccountScalarFieldEnum = (typeof MarketerBankAccountScalarFieldEnum)[keyof typeof MarketerBankAccountScalarFieldEnum]
 
 
 export const LedgerTransactionScalarFieldEnum = {
@@ -531,26 +592,6 @@ export const InternalNotificationScalarFieldEnum = {
 } as const
 
 export type InternalNotificationScalarFieldEnum = (typeof InternalNotificationScalarFieldEnum)[keyof typeof InternalNotificationScalarFieldEnum]
-
-
-export const CommissionPayoutRequestScalarFieldEnum = {
-  id: 'id',
-  payoutId: 'payoutId',
-  userId: 'userId',
-  companyId: 'companyId',
-  amount: 'amount',
-  status: 'status',
-  requestedAt: 'requestedAt',
-  adminApprovedById: 'adminApprovedById',
-  adminApprovedAt: 'adminApprovedAt',
-  companyApprovedById: 'companyApprovedById',
-  companyApprovedAt: 'companyApprovedAt',
-  paidAt: 'paidAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CommissionPayoutRequestScalarFieldEnum = (typeof CommissionPayoutRequestScalarFieldEnum)[keyof typeof CommissionPayoutRequestScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -17,3 +17,17 @@ export const MetadataType = {
   installment_payment: "installment_payment",
   company_subscription: "company_subscription",
 } as const;
+
+export function maskAccountNumber(
+  accountNumber: string,
+  visibleDigits = 4,
+): string {
+  const digits = accountNumber.replace(/\D/g, "");
+
+  if (!digits) return "";
+
+  const visible = digits.slice(-visibleDigits);
+  const masked = "*".repeat(Math.max(digits.length - visible.length, 0));
+
+  return `${masked}${visible}`;
+}

@@ -497,6 +497,20 @@ export type CompanyUpdateOneWithoutProductsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutProductsInput, Prisma.CompanyUpdateWithoutProductsInput>, Prisma.CompanyUncheckedUpdateWithoutProductsInput>
 }
 
+export type CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput
+  upsert?: Prisma.CompanyUpsertWithoutCommissionPayoutRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCommissionPayoutRequestsInput, Prisma.CompanyUpdateWithoutCommissionPayoutRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput>
+}
+
 export type CompanyCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutSubscriptionsInput, Prisma.CompanyUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSubscriptionsInput
@@ -539,20 +553,6 @@ export type CompanyUpdateOneRequiredWithoutApprovalRequestsNestedInput = {
   upsert?: Prisma.CompanyUpsertWithoutApprovalRequestsInput
   connect?: Prisma.CompanyWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutApprovalRequestsInput, Prisma.CompanyUpdateWithoutApprovalRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutApprovalRequestsInput>
-}
-
-export type CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-}
-
-export type CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput
-  upsert?: Prisma.CompanyUpsertWithoutCommissionPayoutRequestsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCommissionPayoutRequestsInput, Prisma.CompanyUpdateWithoutCommissionPayoutRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput>
 }
 
 export type CompanyCreateWithoutUsersInput = {
@@ -705,6 +705,82 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
+}
+
+export type CompanyUpsertWithoutCommissionPayoutRequestsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutCommissionPayoutRequestsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput>
+}
+
+export type CompanyUpdateWithoutCommissionPayoutRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutSubscriptionsInput = {
@@ -933,82 +1009,6 @@ export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
-  id?: bigint | number
-  companyId?: string
-  name: string
-  plan?: string
-  logoUrl?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
-  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
-  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
-  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
-  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
-  id?: bigint | number
-  companyId?: string
-  name: string
-  plan?: string
-  logoUrl?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
-  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
-  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
-  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
-}
-
-export type CompanyUpsertWithoutCommissionPayoutRequestsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput>
-  where?: Prisma.CompanyWhereInput
-}
-
-export type CompanyUpdateToOneWithWhereWithoutCommissionPayoutRequestsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutCommissionPayoutRequestsInput, Prisma.CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput>
-}
-
-export type CompanyUpdateWithoutCommissionPayoutRequestsInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  plan?: Prisma.StringFieldUpdateOperationsInput | string
-  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
-  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
-  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
-  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
-  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  plan?: Prisma.StringFieldUpdateOperationsInput | string
-  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
-  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
-  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
-  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 

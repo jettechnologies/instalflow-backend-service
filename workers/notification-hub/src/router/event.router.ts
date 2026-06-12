@@ -318,4 +318,117 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			}),
 		},
 	],
+
+	[DomainEvent.COMMISSION_TRANSFER_INITIATED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.marketerEmail,
+			template: 'commission-transfer-initiated',
+			subject: 'Your Payout is Being Processed 🔄',
+			context: (p) => ({
+				marketerName: p.marketerName,
+				amount: p.amount,
+				payoutId: p.payoutId,
+				bankName: p.bankName,
+				maskedAccount: p.maskedAccount,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.COMMISSION_TRANSFER_SUCCESS]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.marketerEmail,
+			template: 'commission-transfer-success',
+			subject: 'Your Payout Has Been Sent! 💸',
+			context: (p) => ({
+				marketerName: p.marketerName,
+				amount: p.amount,
+				payoutId: p.payoutId,
+				transferCode: p.transferCode,
+				bankName: p.bankName,
+				maskedAccount: p.maskedAccount,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.COMMISSION_TRANSFER_SUCCESS_COMPANY]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'commission-transfer-success-company',
+			subject: (p) => `✅ Payout Confirmed — ${p.marketerName}`,
+			context: (p) => ({
+				marketerName: p.marketerName,
+				amount: p.amount,
+				payoutId: p.payoutId,
+				transferCode: p.transferCode,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.COMMISSION_TRANSFER_FAILED_MARKETER]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.marketerEmail,
+			template: 'commission-transfer-failed-marketer',
+			subject: "Payout Transfer Failed — We're Looking Into It",
+			context: (p) => ({
+				marketerName: p.marketerName,
+				amount: p.amount,
+				payoutId: p.payoutId,
+				reason: p.reason,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.COMMISSION_TRANSFER_FAILED_COMPANY]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'commission-transfer-failed-company',
+			subject: (p) => `⚠️ Payout Failed — ${p.marketerName} (Action Required)`,
+			context: (p) => ({
+				marketerName: p.marketerName,
+				amount: p.amount,
+				payoutId: p.payoutId,
+				reason: p.reason,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.COMMISSION_TRANSFER_REVERSED_MARKETER]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.marketerEmail,
+			template: 'commission-transfer-reversed-marketer',
+			subject: 'Your Payout Was Reversed — Commission Restored',
+			context: (p) => ({
+				marketerName: p.marketerName,
+				amount: p.amount,
+				payoutId: p.payoutId,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.COMMISSION_TRANSFER_REVERSED_COMPANY]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'commission-transfer-reversed-company',
+			subject: (p) => `⚠️ Transfer Reversed — ${p.marketerName}`,
+			context: (p) => ({
+				marketerName: p.marketerName,
+				amount: p.amount,
+				payoutId: p.payoutId,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
 };

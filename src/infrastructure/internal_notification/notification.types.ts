@@ -4,10 +4,15 @@ export enum NotificationEventType {
   PAYMENT_CONFIRMED = "PAYMENT_CONFIRMED",
   COMMISSION_ACCRUED = "COMMISSION_ACCRUED",
   COMMISSION_TRANSFER_REQUEST = "COMMISSION_TRANSFER_REQUEST",
+  COMMISSION_REQUEST_APPROVAL = "COMMISSION_REQUEST_APPROVAL",
   INSTALLMENT_REMINDER_3DAY = "INSTALLMENT_REMINDER_3DAY",
   INSTALLMENT_DUE_TODAY = "INSTALLMENT_DUE_TODAY",
   INSTALLMENT_OVERDUE_3DAY = "INSTALLMENT_OVERDUE_3DAY",
   INSTALLMENT_OVERDUE_7DAY = "INSTALLMENT_OVERDUE_7DAY",
+  COMMISSION_TRANSFER_INITIATED = "COMMISSION_TRANSFER_INITIATED",
+  COMMISSION_TRANSFER_SUCCESS = "COMMISSION_TRANSFER_SUCCESS",
+  COMMISSION_TRANSFER_FAILED = "COMMISSION_TRANSFER_FAILED",
+  COMMISSION_TRANSFER_REVERSED = "COMMISSION_TRANSFER_REVERSED",
 }
 
 export interface NotificationPayloadMap {
@@ -38,6 +43,13 @@ export interface NotificationPayloadMap {
     requestId: string;
     marketerName: string;
     amount: string;
+  };
+  [NotificationEventType.COMMISSION_REQUEST_APPROVAL]: {
+    requestId: string;
+    marketerId: string;
+    marketerName: string;
+    role: "ADMIN" | "COMPANY";
+    amount: number;
   };
   [NotificationEventType.INSTALLMENT_REMINDER_3DAY]: {
     customerId: string;
@@ -103,5 +115,42 @@ export interface NotificationPayloadMap {
     adminName: string;
     payment_url?: string;
     dashboard_url?: string;
+  };
+
+  [NotificationEventType.COMMISSION_TRANSFER_INITIATED]: {
+    payoutId: string;
+    marketerId: string;
+    marketerName: string;
+    amount: number;
+    bankName: string;
+    maskedAccount: string;
+  };
+
+  [NotificationEventType.COMMISSION_TRANSFER_SUCCESS]: {
+    payoutId: string;
+    marketerId: string;
+    marketerName: string;
+    amount: number;
+    transferCode: string;
+    bankName: string;
+    maskedAccount: string;
+    companyId: string;
+  };
+
+  [NotificationEventType.COMMISSION_TRANSFER_FAILED]: {
+    payoutId: string;
+    marketerId: string;
+    marketerName: string;
+    amount: number;
+    reason: string;
+    companyId: string;
+  };
+
+  [NotificationEventType.COMMISSION_TRANSFER_REVERSED]: {
+    payoutId: string;
+    marketerId: string;
+    marketerName: string;
+    amount: number;
+    companyId: string;
   };
 }

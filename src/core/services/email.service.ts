@@ -28,6 +28,13 @@ export enum EmailTemplate {
   INSTALLMENT_OVERDUE_3DAY_MARKETER = "installment-overdue-3days-marketer",
   INSTALLMENT_OVERDUE_7DAY_CUSTOMER = "installment-overdue-7days-customer",
   INSTALLMENT_OVERDUE_7DAY_ADMIN = "installment-overdue-7days-admin",
+  COMMISSION_TRANSFER_INITIATED = "commission-transfer-initiated",
+  COMMISSION_TRANSFER_SUCCESS = "commission-transfer-success",
+  COMMISSION_TRANSFER_SUCCESS_COMPANY = "commission-transfer-success-company",
+  COMMISSION_TRANSFER_FAILED_MARKETER = "commission-transfer-failed-marketer",
+  COMMISSION_TRANSFER_FAILED_COMPANY = "commission-transfer-failed-company",
+  COMMISSION_TRANSFER_REVERSED_MARKETER = "commission-transfer-reversed-marketer",
+  COMMISSION_TRANSFER_REVERSED_COMPANY = "commission-transfer-reversed-company",
 }
 
 interface SendEmailProps {

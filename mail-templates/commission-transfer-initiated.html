@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payout Processing - Instalflow</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap");
+
+      body {
+        font-family: "Jost", sans-serif;
+        background-color: #0b0f1a;
+        color: #9ca3af;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 24px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+      }
+      .header {
+        padding: 2.5rem 1.5rem 1rem;
+        text-align: center;
+      }
+      .logo-text {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+      }
+      .logo-text span {
+        color: #7c3aed;
+      }
+      .hero-icon {
+        width: 64px;
+        height: 64px;
+        margin: 1.5rem auto;
+        background-color: #4f46e5;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 24px rgba(79, 70, 229, 0.35);
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(79, 70, 229, 0.12);
+        border: 1px solid rgba(79, 70, 229, 0.3);
+        color: #818cf8;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+      }
+      .pulse-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #818cf8;
+      }
+      .content {
+        padding: 0 2.5rem 2.5rem;
+        text-align: center;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+        margin: 0.5rem 0 1rem;
+      }
+      .data-grid {
+        background: #0b0f1a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        text-align: left;
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #1f2937;
+      }
+      .data-row:last-child {
+        border-bottom: none;
+      }
+      .data-label {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      .data-value {
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .info-box {
+        background: rgba(79, 70, 229, 0.07);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        font-size: 0.8rem;
+        color: #a5b4fc;
+        text-align: left;
+        margin-top: 1.5rem;
+        line-height: 1.6;
+      }
+      .cta-btn {
+        display: inline-block;
+        margin-top: 1.75rem;
+        padding: 0.75rem 2rem;
+        background: #7c3aed;
+        color: #ffffff;
+        font-family: "Jost", sans-serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        text-decoration: none;
+      }
+      .footer {
+        background-color: #0b0f1a;
+        border-top: 1px solid #1f2937;
+        padding: 2rem;
+        text-align: center;
+      }
+      .signature {
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+      .signature .product-name {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo-text">Instal<span>flow</span></div>
+        <div class="hero-icon">
+          <!-- Hourglass / processing icon -->
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 22h14"></path>
+            <path d="M5 2h14"></path>
+            <path
+              d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"
+            ></path>
+            <path
+              d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"
+            ></path>
+          </svg>
+        </div>
+        <div class="status-badge">
+          <span class="pulse-dot"></span>
+          Processing
+        </div>
+        <h1 class="title">Your Payout is On Its Way</h1>
+      </div>
+
+      <div class="content">
+        <p>Hi <strong style="color: #f9fafb">{{marketerName}}</strong>,</p>
+        <p>
+          Great news — your commission payout has been approved and we've
+          initiated the bank transfer. Funds are currently in transit and
+          typically arrive within a few minutes.
+        </p>
+
+        <div class="data-grid">
+          <div class="data-row">
+            <span class="data-label">Payout Amount</span>
+            <span class="data-value" style="color: #818cf8">{{amount}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Destination Bank</span>
+            <span class="data-value">{{bankName}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Account</span>
+            <span class="data-value">{{maskedAccount}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Transfer Status</span>
+            <span class="data-value" style="color: #818cf8">Processing</span>
+          </div>
+        </div>
+
+        <div class="info-box">
+          ⏱ &nbsp;Bank transfers typically complete within
+          <strong>1–5 minutes</strong>. If the funds have not arrived after 30
+          minutes, please check your dashboard or contact support.
+        </div>
+
+        <a href="{{dashboard_url}}" class="cta-btn">View Dashboard</a>
+      </div>
+
+      <div class="footer">
+        <div class="signature">
+          <p>The <span class="product-name">Instalflow</span> Team</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

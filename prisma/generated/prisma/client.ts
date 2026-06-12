@@ -117,6 +117,21 @@ export type Payment = Prisma.PaymentModel
  */
 export type Commission = Prisma.CommissionModel
 /**
+ * Model CommissionAllocation
+ * 
+ */
+export type CommissionAllocation = Prisma.CommissionAllocationModel
+/**
+ * Model CommissionPayoutRequest
+ * 
+ */
+export type CommissionPayoutRequest = Prisma.CommissionPayoutRequestModel
+/**
+ * Model MarketerBankAccount
+ * 
+ */
+export type MarketerBankAccount = Prisma.MarketerBankAccountModel
+/**
  * Model LedgerTransaction
  * 
  */
@@ -181,8 +196,3 @@ export type ProductImage = Prisma.ProductImageModel
  * 
  */
 export type InternalNotification = Prisma.InternalNotificationModel
-/**
- * Model CommissionPayoutRequest
- * 
- */
-export type CommissionPayoutRequest = Prisma.CommissionPayoutRequestModel

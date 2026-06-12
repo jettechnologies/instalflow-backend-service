@@ -43,6 +43,10 @@ export class NotificationOrchestrator {
           return await this.handleCommissionTransferRequest(
             payload as NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_REQUEST],
           );
+        case NotificationEventType.COMMISSION_REQUEST_APPROVAL:
+          return await this.handleCommissionRequestApproval(
+            payload as NotificationPayloadMap[NotificationEventType.COMMISSION_REQUEST_APPROVAL],
+          );
         case NotificationEventType.INSTALLMENT_REMINDER_3DAY:
           return await this.handleInstallmentReminder3Day(
             payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_REMINDER_3DAY],
@@ -58,6 +62,22 @@ export class NotificationOrchestrator {
         case NotificationEventType.INSTALLMENT_OVERDUE_7DAY:
           return await this.handleInstallmentOverdue7Day(
             payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_7DAY],
+          );
+        case NotificationEventType.COMMISSION_TRANSFER_INITIATED:
+          return await this.handleCommissionTransferInitiated(
+            payload as NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_INITIATED],
+          );
+        case NotificationEventType.COMMISSION_TRANSFER_SUCCESS:
+          return await this.handleCommissionTransferSuccess(
+            payload as NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_SUCCESS],
+          );
+        case NotificationEventType.COMMISSION_TRANSFER_FAILED:
+          return await this.handleCommissionTransferFailed(
+            payload as NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_FAILED],
+          );
+        case NotificationEventType.COMMISSION_TRANSFER_REVERSED:
+          return await this.handleCommissionTransferReversed(
+            payload as NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_REVERSED],
           );
       }
     } catch (err: any) {
@@ -177,6 +197,56 @@ export class NotificationOrchestrator {
         }),
       ),
     );
+  }
+
+  private static async handleCommissionRequestApproval(
+    payload: NotificationPayloadMap[NotificationEventType.COMMISSION_REQUEST_APPROVAL],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.COMMISSION_REQUEST_APPROVAL,
+      payload,
+    );
+
+    // 1. ALWAYS notify marketer (single source of truth)
+    const marketer = await prisma.user.findUnique({
+      where: { userId: payload.marketerId },
+      select: { userId: true, companyId: true },
+    });
+
+    if (marketer) {
+      await NotificationRepository.create({
+        userId: marketer.userId,
+        type: NotificationEventType.COMMISSION_REQUEST_APPROVAL,
+        title: template.title,
+        message: template.message,
+        metadata: payload,
+        idempotencyKey: `commission-status-${payload.requestId}-${payload.role}`,
+      });
+    }
+
+    // 2. Only notify next approver group (NOT marketers again)
+    if (payload.role === "ADMIN") {
+      const companyApprovers = await prisma.user.findMany({
+        where: {
+          companyId: marketer?.companyId,
+          role: "COMPANY",
+        },
+        select: { userId: true },
+      });
+
+      await Promise.all(
+        companyApprovers.map((approver) =>
+          NotificationRepository.create({
+            userId: approver.userId,
+            type: NotificationEventType.COMMISSION_REQUEST_APPROVAL,
+            title: "Action Required: Commission Approval",
+            message: `${payload.marketerName}'s payout is awaiting your approval.`,
+            metadata: payload,
+            idempotencyKey: `commission-await-company-${payload.requestId}-${approver.userId}`,
+          }),
+        ),
+      );
+    }
   }
 
   private static async resolveKycRecipients(customer: {
@@ -363,5 +433,143 @@ export class NotificationOrchestrator {
     }
 
     await Promise.all(notifications);
+  }
+  private static async handleCommissionTransferInitiated(
+    payload: NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_INITIATED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.COMMISSION_TRANSFER_INITIATED,
+      payload,
+    );
+
+    await NotificationRepository.create({
+      userId: payload.marketerId,
+      type: NotificationEventType.COMMISSION_TRANSFER_INITIATED,
+      title: template.title,
+      message: template.message,
+      metadata: payload,
+      idempotencyKey: `transfer-initiated-${payload.payoutId}`,
+    });
+  }
+
+  private static async handleCommissionTransferSuccess(
+    payload: NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_SUCCESS],
+  ) {
+    const marketerTemplate = NotificationTemplates.build(
+      NotificationEventType.COMMISSION_TRANSFER_SUCCESS,
+      payload,
+    );
+
+    await NotificationRepository.create({
+      userId: payload.marketerId,
+      type: NotificationEventType.COMMISSION_TRANSFER_SUCCESS,
+      title: marketerTemplate.title,
+      message: marketerTemplate.message,
+      metadata: payload,
+      idempotencyKey: `transfer-success-marketer-${payload.payoutId}`,
+    });
+
+    const companyUsers = await prisma.user.findMany({
+      where: { companyId: payload.companyId, role: "COMPANY" },
+      select: { userId: true },
+    });
+
+    await Promise.all(
+      companyUsers.map((u) =>
+        NotificationRepository.create({
+          userId: u.userId,
+          type: NotificationEventType.COMMISSION_TRANSFER_SUCCESS,
+          title: `Transfer Confirmed — ${payload.marketerName}`,
+          message: `Payout of ₦${Number(payload.amount).toLocaleString()} to ${payload.marketerName} was successful. Ref: ${payload.transferCode}.`,
+          metadata: payload,
+          idempotencyKey: `transfer-success-company-${payload.payoutId}-${u.userId}`,
+        }),
+      ),
+    );
+  }
+
+  private static async handleCommissionTransferFailed(
+    payload: NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_FAILED],
+  ) {
+    const marketerTemplate = NotificationTemplates.build(
+      NotificationEventType.COMMISSION_TRANSFER_FAILED,
+      payload,
+    );
+
+    const companyTemplate = NotificationTemplates.buildCompanyTransferFailed({
+      marketerName: payload.marketerName,
+      amount: payload.amount,
+      reason: payload.reason,
+      payoutId: payload.payoutId,
+    });
+
+    await NotificationRepository.create({
+      userId: payload.marketerId,
+      type: NotificationEventType.COMMISSION_TRANSFER_FAILED,
+      title: marketerTemplate.title,
+      message: marketerTemplate.message,
+      metadata: payload,
+      idempotencyKey: `transfer-failed-marketer-${payload.payoutId}`,
+    });
+
+    const companyUsers = await prisma.user.findMany({
+      where: { companyId: payload.companyId, role: "COMPANY" },
+      select: { userId: true },
+    });
+
+    await Promise.all(
+      companyUsers.map((u) =>
+        NotificationRepository.create({
+          userId: u.userId,
+          type: NotificationEventType.COMMISSION_TRANSFER_FAILED,
+          title: companyTemplate.title,
+          message: companyTemplate.message,
+          metadata: payload,
+          idempotencyKey: `transfer-failed-company-${payload.payoutId}-${u.userId}`,
+        }),
+      ),
+    );
+  }
+
+  private static async handleCommissionTransferReversed(
+    payload: NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_REVERSED],
+  ) {
+    const marketerTemplate = NotificationTemplates.build(
+      NotificationEventType.COMMISSION_TRANSFER_REVERSED,
+      payload,
+    );
+
+    const companyTemplate = NotificationTemplates.buildCompanyTransferReversed({
+      marketerName: payload.marketerName,
+      amount: payload.amount,
+      payoutId: payload.payoutId,
+    });
+
+    await NotificationRepository.create({
+      userId: payload.marketerId,
+      type: NotificationEventType.COMMISSION_TRANSFER_REVERSED,
+      title: marketerTemplate.title,
+      message: marketerTemplate.message,
+      metadata: payload,
+      idempotencyKey: `transfer-reversed-marketer-${payload.payoutId}`,
+    });
+
+    const companyUsers = await prisma.user.findMany({
+      where: { companyId: payload.companyId, role: "COMPANY" },
+      select: { userId: true },
+    });
+
+    await Promise.all(
+      companyUsers.map((u) =>
+        NotificationRepository.create({
+          userId: u.userId,
+          type: NotificationEventType.COMMISSION_TRANSFER_REVERSED,
+          title: companyTemplate.title,
+          message: companyTemplate.message,
+          metadata: payload,
+          idempotencyKey: `transfer-reversed-company-${payload.payoutId}-${u.userId}`,
+        }),
+      ),
+    );
   }
 }

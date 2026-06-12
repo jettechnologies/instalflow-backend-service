@@ -29,11 +29,13 @@ export type AggregateCommission = {
 export type CommissionAvgAggregateOutputType = {
   id: number | null
   amount: runtime.Decimal | null
+  reservedAmount: runtime.Decimal | null
 }
 
 export type CommissionSumAggregateOutputType = {
   id: bigint | null
   amount: runtime.Decimal | null
+  reservedAmount: runtime.Decimal | null
 }
 
 export type CommissionMinAggregateOutputType = {
@@ -43,6 +45,7 @@ export type CommissionMinAggregateOutputType = {
   paymentId: string | null
   amount: runtime.Decimal | null
   status: $Enums.CommissionStatus | null
+  reservedAmount: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +57,7 @@ export type CommissionMaxAggregateOutputType = {
   paymentId: string | null
   amount: runtime.Decimal | null
   status: $Enums.CommissionStatus | null
+  reservedAmount: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,6 +69,7 @@ export type CommissionCountAggregateOutputType = {
   paymentId: number
   amount: number
   status: number
+  reservedAmount: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,11 +79,13 @@ export type CommissionCountAggregateOutputType = {
 export type CommissionAvgAggregateInputType = {
   id?: true
   amount?: true
+  reservedAmount?: true
 }
 
 export type CommissionSumAggregateInputType = {
   id?: true
   amount?: true
+  reservedAmount?: true
 }
 
 export type CommissionMinAggregateInputType = {
@@ -88,6 +95,7 @@ export type CommissionMinAggregateInputType = {
   paymentId?: true
   amount?: true
   status?: true
+  reservedAmount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -99,6 +107,7 @@ export type CommissionMaxAggregateInputType = {
   paymentId?: true
   amount?: true
   status?: true
+  reservedAmount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -110,6 +119,7 @@ export type CommissionCountAggregateInputType = {
   paymentId?: true
   amount?: true
   status?: true
+  reservedAmount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -208,6 +218,7 @@ export type CommissionGroupByOutputType = {
   paymentId: string | null
   amount: runtime.Decimal
   status: $Enums.CommissionStatus
+  reservedAmount: runtime.Decimal
   createdAt: Date
   updatedAt: Date
   _count: CommissionCountAggregateOutputType | null
@@ -242,10 +253,12 @@ export type CommissionWhereInput = {
   paymentId?: Prisma.StringNullableFilter<"Commission"> | string | null
   amount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  commissionAllocations?: Prisma.CommissionAllocationListRelationFilter
 }
 
 export type CommissionOrderByWithRelationInput = {
@@ -255,10 +268,12 @@ export type CommissionOrderByWithRelationInput = {
   paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reservedAmount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
+  commissionAllocations?: Prisma.CommissionAllocationOrderByRelationAggregateInput
 }
 
 export type CommissionWhereUniqueInput = Prisma.AtLeast<{
@@ -271,10 +286,12 @@ export type CommissionWhereUniqueInput = Prisma.AtLeast<{
   paymentId?: Prisma.StringNullableFilter<"Commission"> | string | null
   amount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  commissionAllocations?: Prisma.CommissionAllocationListRelationFilter
 }, "id" | "commissionId">
 
 export type CommissionOrderByWithAggregationInput = {
@@ -284,6 +301,7 @@ export type CommissionOrderByWithAggregationInput = {
   paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reservedAmount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CommissionCountOrderByAggregateInput
@@ -303,6 +321,7 @@ export type CommissionScalarWhereWithAggregatesInput = {
   paymentId?: Prisma.StringNullableWithAggregatesFilter<"Commission"> | string | null
   amount?: Prisma.DecimalWithAggregatesFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusWithAggregatesFilter<"Commission"> | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalWithAggregatesFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Commission"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Commission"> | Date | string
 }
@@ -312,10 +331,12 @@ export type CommissionCreateInput = {
   commissionId?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCommissionsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutCommissionsInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutCommissionInput
 }
 
 export type CommissionUncheckedCreateInput = {
@@ -325,8 +346,10 @@ export type CommissionUncheckedCreateInput = {
   paymentId?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutCommissionInput
 }
 
 export type CommissionUpdateInput = {
@@ -334,10 +357,12 @@ export type CommissionUpdateInput = {
   commissionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCommissionsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutCommissionsNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutCommissionNestedInput
 }
 
 export type CommissionUncheckedUpdateInput = {
@@ -347,8 +372,10 @@ export type CommissionUncheckedUpdateInput = {
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutCommissionNestedInput
 }
 
 export type CommissionCreateManyInput = {
@@ -358,6 +385,7 @@ export type CommissionCreateManyInput = {
   paymentId?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -367,6 +395,7 @@ export type CommissionUpdateManyMutationInput = {
   commissionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -378,6 +407,7 @@ export type CommissionUncheckedUpdateManyInput = {
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,6 +429,7 @@ export type CommissionCountOrderByAggregateInput = {
   paymentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reservedAmount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -406,6 +437,7 @@ export type CommissionCountOrderByAggregateInput = {
 export type CommissionAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  reservedAmount?: Prisma.SortOrder
 }
 
 export type CommissionMaxOrderByAggregateInput = {
@@ -415,6 +447,7 @@ export type CommissionMaxOrderByAggregateInput = {
   paymentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reservedAmount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -426,6 +459,7 @@ export type CommissionMinOrderByAggregateInput = {
   paymentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reservedAmount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -433,6 +467,12 @@ export type CommissionMinOrderByAggregateInput = {
 export type CommissionSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  reservedAmount?: Prisma.SortOrder
+}
+
+export type CommissionScalarRelationFilter = {
+  is?: Prisma.CommissionWhereInput
+  isNot?: Prisma.CommissionWhereInput
 }
 
 export type CommissionCreateNestedManyWithoutUserInput = {
@@ -523,14 +563,30 @@ export type EnumCommissionStatusFieldUpdateOperationsInput = {
   set?: $Enums.CommissionStatus
 }
 
+export type CommissionCreateNestedOneWithoutCommissionAllocationsInput = {
+  create?: Prisma.XOR<Prisma.CommissionCreateWithoutCommissionAllocationsInput, Prisma.CommissionUncheckedCreateWithoutCommissionAllocationsInput>
+  connectOrCreate?: Prisma.CommissionCreateOrConnectWithoutCommissionAllocationsInput
+  connect?: Prisma.CommissionWhereUniqueInput
+}
+
+export type CommissionUpdateOneRequiredWithoutCommissionAllocationsNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionCreateWithoutCommissionAllocationsInput, Prisma.CommissionUncheckedCreateWithoutCommissionAllocationsInput>
+  connectOrCreate?: Prisma.CommissionCreateOrConnectWithoutCommissionAllocationsInput
+  upsert?: Prisma.CommissionUpsertWithoutCommissionAllocationsInput
+  connect?: Prisma.CommissionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CommissionUpdateToOneWithWhereWithoutCommissionAllocationsInput, Prisma.CommissionUpdateWithoutCommissionAllocationsInput>, Prisma.CommissionUncheckedUpdateWithoutCommissionAllocationsInput>
+}
+
 export type CommissionCreateWithoutUserInput = {
   id?: bigint | number
   commissionId?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   payment?: Prisma.PaymentCreateNestedOneWithoutCommissionsInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutCommissionInput
 }
 
 export type CommissionUncheckedCreateWithoutUserInput = {
@@ -539,8 +595,10 @@ export type CommissionUncheckedCreateWithoutUserInput = {
   paymentId?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutCommissionInput
 }
 
 export type CommissionCreateOrConnectWithoutUserInput = {
@@ -579,6 +637,7 @@ export type CommissionScalarWhereInput = {
   paymentId?: Prisma.StringNullableFilter<"Commission"> | string | null
   amount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
 }
@@ -588,9 +647,11 @@ export type CommissionCreateWithoutPaymentInput = {
   commissionId?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCommissionsInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutCommissionInput
 }
 
 export type CommissionUncheckedCreateWithoutPaymentInput = {
@@ -599,8 +660,10 @@ export type CommissionUncheckedCreateWithoutPaymentInput = {
   userId: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutCommissionInput
 }
 
 export type CommissionCreateOrConnectWithoutPaymentInput = {
@@ -629,12 +692,77 @@ export type CommissionUpdateManyWithWhereWithoutPaymentInput = {
   data: Prisma.XOR<Prisma.CommissionUpdateManyMutationInput, Prisma.CommissionUncheckedUpdateManyWithoutPaymentInput>
 }
 
+export type CommissionCreateWithoutCommissionAllocationsInput = {
+  id?: bigint | number
+  commissionId?: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutCommissionsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutCommissionsInput
+}
+
+export type CommissionUncheckedCreateWithoutCommissionAllocationsInput = {
+  id?: bigint | number
+  commissionId?: string
+  userId: string
+  paymentId?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CommissionCreateOrConnectWithoutCommissionAllocationsInput = {
+  where: Prisma.CommissionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommissionCreateWithoutCommissionAllocationsInput, Prisma.CommissionUncheckedCreateWithoutCommissionAllocationsInput>
+}
+
+export type CommissionUpsertWithoutCommissionAllocationsInput = {
+  update: Prisma.XOR<Prisma.CommissionUpdateWithoutCommissionAllocationsInput, Prisma.CommissionUncheckedUpdateWithoutCommissionAllocationsInput>
+  create: Prisma.XOR<Prisma.CommissionCreateWithoutCommissionAllocationsInput, Prisma.CommissionUncheckedCreateWithoutCommissionAllocationsInput>
+  where?: Prisma.CommissionWhereInput
+}
+
+export type CommissionUpdateToOneWithWhereWithoutCommissionAllocationsInput = {
+  where?: Prisma.CommissionWhereInput
+  data: Prisma.XOR<Prisma.CommissionUpdateWithoutCommissionAllocationsInput, Prisma.CommissionUncheckedUpdateWithoutCommissionAllocationsInput>
+}
+
+export type CommissionUpdateWithoutCommissionAllocationsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  commissionId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutCommissionsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutCommissionsNestedInput
+}
+
+export type CommissionUncheckedUpdateWithoutCommissionAllocationsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  commissionId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type CommissionCreateManyUserInput = {
   id?: bigint | number
   commissionId?: string
   paymentId?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -644,9 +772,11 @@ export type CommissionUpdateWithoutUserInput = {
   commissionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payment?: Prisma.PaymentUpdateOneWithoutCommissionsNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutCommissionNestedInput
 }
 
 export type CommissionUncheckedUpdateWithoutUserInput = {
@@ -655,8 +785,10 @@ export type CommissionUncheckedUpdateWithoutUserInput = {
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutCommissionNestedInput
 }
 
 export type CommissionUncheckedUpdateManyWithoutUserInput = {
@@ -665,6 +797,7 @@ export type CommissionUncheckedUpdateManyWithoutUserInput = {
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -675,6 +808,7 @@ export type CommissionCreateManyPaymentInput = {
   userId: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  reservedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -684,9 +818,11 @@ export type CommissionUpdateWithoutPaymentInput = {
   commissionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCommissionsNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutCommissionNestedInput
 }
 
 export type CommissionUncheckedUpdateWithoutPaymentInput = {
@@ -695,8 +831,10 @@ export type CommissionUncheckedUpdateWithoutPaymentInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutCommissionNestedInput
 }
 
 export type CommissionUncheckedUpdateManyWithoutPaymentInput = {
@@ -705,10 +843,40 @@ export type CommissionUncheckedUpdateManyWithoutPaymentInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  reservedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type CommissionCountOutputType
+ */
+
+export type CommissionCountOutputType = {
+  commissionAllocations: number
+}
+
+export type CommissionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  commissionAllocations?: boolean | CommissionCountOutputTypeCountCommissionAllocationsArgs
+}
+
+/**
+ * CommissionCountOutputType without action
+ */
+export type CommissionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionCountOutputType
+   */
+  select?: Prisma.CommissionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CommissionCountOutputType without action
+ */
+export type CommissionCountOutputTypeCountCommissionAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissionAllocationWhereInput
+}
 
 
 export type CommissionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -718,10 +886,13 @@ export type CommissionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   paymentId?: boolean
   amount?: boolean
   status?: boolean
+  reservedAmount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Commission$paymentArgs<ExtArgs>
+  commissionAllocations?: boolean | Prisma.Commission$commissionAllocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.CommissionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["commission"]>
 
 export type CommissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -731,6 +902,7 @@ export type CommissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   paymentId?: boolean
   amount?: boolean
   status?: boolean
+  reservedAmount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -744,6 +916,7 @@ export type CommissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   paymentId?: boolean
   amount?: boolean
   status?: boolean
+  reservedAmount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -757,14 +930,17 @@ export type CommissionSelectScalar = {
   paymentId?: boolean
   amount?: boolean
   status?: boolean
+  reservedAmount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CommissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "commissionId" | "userId" | "paymentId" | "amount" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["commission"]>
+export type CommissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "commissionId" | "userId" | "paymentId" | "amount" | "status" | "reservedAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["commission"]>
 export type CommissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Commission$paymentArgs<ExtArgs>
+  commissionAllocations?: boolean | Prisma.Commission$commissionAllocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.CommissionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CommissionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -780,6 +956,7 @@ export type $CommissionPayload<ExtArgs extends runtime.Types.Extensions.Internal
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     payment: Prisma.$PaymentPayload<ExtArgs> | null
+    commissionAllocations: Prisma.$CommissionAllocationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -788,6 +965,7 @@ export type $CommissionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     paymentId: string | null
     amount: runtime.Decimal
     status: $Enums.CommissionStatus
+    reservedAmount: runtime.Decimal
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["commission"]>
@@ -1186,6 +1364,7 @@ export interface Prisma__CommissionClient<T, Null = never, ExtArgs extends runti
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.Commission$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Commission$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  commissionAllocations<T extends Prisma.Commission$commissionAllocationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Commission$commissionAllocationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionAllocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1221,6 +1400,7 @@ export interface CommissionFieldRefs {
   readonly paymentId: Prisma.FieldRef<"Commission", 'String'>
   readonly amount: Prisma.FieldRef<"Commission", 'Decimal'>
   readonly status: Prisma.FieldRef<"Commission", 'CommissionStatus'>
+  readonly reservedAmount: Prisma.FieldRef<"Commission", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"Commission", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Commission", 'DateTime'>
 }
@@ -1640,6 +1820,30 @@ export type Commission$paymentArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.PaymentInclude<ExtArgs> | null
   where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * Commission.commissionAllocations
+ */
+export type Commission$commissionAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionAllocation
+   */
+  select?: Prisma.CommissionAllocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissionAllocation
+   */
+  omit?: Prisma.CommissionAllocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionAllocationInclude<ExtArgs> | null
+  where?: Prisma.CommissionAllocationWhereInput
+  orderBy?: Prisma.CommissionAllocationOrderByWithRelationInput | Prisma.CommissionAllocationOrderByWithRelationInput[]
+  cursor?: Prisma.CommissionAllocationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissionAllocationScalarFieldEnum | Prisma.CommissionAllocationScalarFieldEnum[]
 }
 
 /**

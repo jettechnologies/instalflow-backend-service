@@ -50,13 +50,23 @@ export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
 export const CommissionStatus = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
+  ACTIVE: 'ACTIVE',
+  PARTIALLY_RESERVED: 'PARTIALLY_RESERVED',
+  RESERVED: 'RESERVED',
   PAID: 'PAID',
   FROZEN: 'FROZEN'
 } as const
 
 export type CommissionStatus = (typeof CommissionStatus)[keyof typeof CommissionStatus]
+
+
+export const CommissionAllocationStatus = {
+  RESERVED: 'RESERVED',
+  PAID: 'PAID',
+  RELEASED: 'RELEASED'
+} as const
+
+export type CommissionAllocationStatus = (typeof CommissionAllocationStatus)[keyof typeof CommissionAllocationStatus]
 
 
 export const TransactionType = {
@@ -120,10 +130,15 @@ export const InternalNotificationType = {
   PAYMENT_CONFIRMED: 'PAYMENT_CONFIRMED',
   COMMISSION_ACCRUED: 'COMMISSION_ACCRUED',
   COMMISSION_TRANSFER_REQUEST: 'COMMISSION_TRANSFER_REQUEST',
+  COMMISSION_REQUEST_APPROVAL: 'COMMISSION_REQUEST_APPROVAL',
   INSTALLMENT_REMINDER_3DAY: 'INSTALLMENT_REMINDER_3DAY',
   INSTALLMENT_DUE_TODAY: 'INSTALLMENT_DUE_TODAY',
   INSTALLMENT_OVERDUE_3DAY: 'INSTALLMENT_OVERDUE_3DAY',
-  INSTALLMENT_OVERDUE_7DAY: 'INSTALLMENT_OVERDUE_7DAY'
+  INSTALLMENT_OVERDUE_7DAY: 'INSTALLMENT_OVERDUE_7DAY',
+  COMMISSION_TRANSFER_INITIATED: 'COMMISSION_TRANSFER_INITIATED',
+  COMMISSION_TRANSFER_SUCCESS: 'COMMISSION_TRANSFER_SUCCESS',
+  COMMISSION_TRANSFER_FAILED: 'COMMISSION_TRANSFER_FAILED',
+  COMMISSION_TRANSFER_REVERSED: 'COMMISSION_TRANSFER_REVERSED'
 } as const
 
 export type InternalNotificationType = (typeof InternalNotificationType)[keyof typeof InternalNotificationType]
@@ -168,7 +183,10 @@ export const CommissionPayoutStatus = {
   PENDING_COMPANY_APPROVAL: 'PENDING_COMPANY_APPROVAL',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
-  PAID: 'PAID'
+  TRANSFER_INITIATED: 'TRANSFER_INITIATED',
+  PAID: 'PAID',
+  TRANSFER_FAILED: 'TRANSFER_FAILED',
+  TRANSFER_REVERSED: 'TRANSFER_REVERSED'
 } as const
 
 export type CommissionPayoutStatus = (typeof CommissionPayoutStatus)[keyof typeof CommissionPayoutStatus]

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payout Reversed - Instalflow</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap");
+      body {
+        font-family: "Jost", sans-serif;
+        background-color: #0b0f1a;
+        color: #9ca3af;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 24px;
+        overflow: hidden;
+      }
+      .header {
+        padding: 2.5rem 1.5rem 1rem;
+        text-align: center;
+      }
+      .logo-text {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+      }
+      .logo-text span {
+        color: #7c3aed;
+      }
+      .hero-icon {
+        width: 64px;
+        height: 64px;
+        margin: 1.5rem auto;
+        background-color: #f59e0b;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .content {
+        padding: 0 2.5rem 2.5rem;
+        text-align: center;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+        margin: 0.5rem 0;
+      }
+      .data-grid {
+        background: #0b0f1a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        text-align: left;
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #1f2937;
+      }
+      .data-row:last-child {
+        border-bottom: none;
+      }
+      .data-label {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      .data-value {
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .cta-button {
+        display: inline-block;
+        background: #7c3aed;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 0.875rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        margin-top: 1rem;
+      }
+      .footer {
+        background-color: #0b0f1a;
+        border-top: 1px solid #1f2937;
+        padding: 2rem;
+        text-align: center;
+      }
+      .signature {
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+      .signature .product-name {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo-text">Instal<span>flow</span></div>
+        <div class="hero-icon">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 12a9 9 0 1 0 9-9"></path>
+            <polyline points="3 3 3 9 9 9"></polyline>
+          </svg>
+        </div>
+        <h1 class="title">Commission Balance Restored</h1>
+      </div>
+      <div class="content">
+        <p>Hi <strong>{{marketerName}}</strong>,</p>
+        <p>
+          The previously initiated payout could not be completed and has been
+          reversed. Your commission balance has been fully restored inside
+          Instalflow.
+        </p>
+        <div class="data-grid">
+          <div class="data-row">
+            <span class="data-label">Restored Amount:</span
+            ><span class="data-value">₦{{amount}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Status:</span
+            ><span class="data-value" style="color: #f59e0b">Reversed</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Wallet Balance:</span
+            ><span class="data-value">Updated</span>
+          </div>
+        </div>
+        <p>You may request a new payout from your dashboard when ready.</p>
+        <a href="{{dashboard_url}}" class="cta-button">Open Dashboard</a>
+      </div>
+      <div class="footer">
+        <div class="signature">
+          <p>The <span class="product-name">Instalflow</span> Team</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

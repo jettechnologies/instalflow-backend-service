@@ -135,7 +135,7 @@ export const paymentWorker = new Worker(
             userId: marketerId,
             paymentId: payment.paymentId,
             amount: commissionAmount,
-            status: CommissionStatus.PENDING,
+            status: CommissionStatus.ACTIVE,
           },
         });
 
@@ -201,27 +201,75 @@ export const paymentWorker = new Worker(
         tx,
       );
 
-      const allInstallments = await tx.installment.findMany({
-        where: {
-          financingContractId: contract.contractId,
-        },
+      // const allInstallments = await tx.installment.findMany({
+      //   where: {
+      //     financingContractId: contract.contractId,
+      //   },
 
-        orderBy: {
-          sequence: "asc",
-        },
-      });
+      //   orderBy: {
+      //     sequence: "asc",
+      //   },
+      // });
 
-      let totalFinanced = new Prisma.Decimal(0);
+      // let totalFinanced = new Prisma.Decimal(0);
 
-      let totalPaid = new Prisma.Decimal(0);
+      // let totalPaid = new Prisma.Decimal(0);
 
-      for (const inst of allInstallments) {
-        totalFinanced = totalFinanced.plus(inst.amount);
+      // for (const inst of allInstallments) {
+      //   totalFinanced = totalFinanced.plus(inst.amount);
 
-        if (inst.status === InstallmentStatus.PAID) {
-          totalPaid = totalPaid.plus(inst.amount);
-        }
-      }
+      //   if (inst.status === InstallmentStatus.PAID) {
+      //     totalPaid = totalPaid.plus(inst.amount);
+      //   }
+      // }
+
+      // const aggregates = await tx.installment.aggregate({
+      //   where: {
+      //     financingContractId: contract.contractId,
+      //   },
+      //   _sum: {
+      //     amount: true,
+      //   },
+      // });
+
+      // const paidAggregates = await tx.installment.aggregate({
+      //   where: {
+      //     financingContractId: contract.contractId,
+      //     status: InstallmentStatus.PAID,
+      //   },
+      //   _sum: {
+      //     amount: true,
+      //   },
+      // });
+
+      // const percentagePaid = totalFinanced.isZero()
+      //   ? 0
+      //   : Number(totalPaid.div(totalFinanced).times(100).toFixed(2));
+
+      const [aggregates, paidAggregates] = await Promise.all([
+        tx.installment.aggregate({
+          where: {
+            financingContractId: contract.contractId,
+          },
+          _sum: {
+            amount: true,
+          },
+        }),
+
+        tx.installment.aggregate({
+          where: {
+            financingContractId: contract.contractId,
+            status: InstallmentStatus.PAID,
+          },
+          _sum: {
+            amount: true,
+          },
+        }),
+      ]);
+
+      const totalFinanced = aggregates._sum.amount || new Prisma.Decimal(0);
+
+      const totalPaid = paidAggregates._sum.amount || new Prisma.Decimal(0);
 
       const percentagePaid = totalFinanced.isZero()
         ? 0

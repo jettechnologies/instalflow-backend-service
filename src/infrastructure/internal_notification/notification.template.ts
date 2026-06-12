@@ -33,6 +33,21 @@ export class NotificationTemplates {
           message: `${payload.marketerName} requested a commission payout of ${payload.amount}.`,
         };
 
+      case NotificationEventType.COMMISSION_REQUEST_APPROVAL: {
+        const base = `Hello ${payload.marketerName}, your payout request (${payload.requestId}) for ₦${payload.amount.toLocaleString()}`;
+
+        if (payload.role === "ADMIN") {
+          return {
+            title: "Payout Approved by Admin",
+            message: `${base} has been approved by an administrator and is now awaiting company approval.`,
+          };
+        }
+
+        return {
+          title: "Payout Approved by Company",
+          message: `${base} has been approved by the company and is now awaiting transfer processing.`,
+        };
+      }
       case NotificationEventType.INSTALLMENT_REMINDER_3DAY:
         return {
           title: "Payment Due in 3 Days",
@@ -63,5 +78,27 @@ export class NotificationTemplates {
           message: "You have a new notification.",
         };
     }
+  }
+  static buildCompanyTransferFailed(payload: {
+    marketerName: string;
+    amount: number;
+    reason: string;
+    payoutId: string;
+  }) {
+    return {
+      title: "Commission Transfer Failed",
+      message: `The payout of ₦${Number(payload.amount).toLocaleString()} to ${payload.marketerName} failed. Reason: ${payload.reason}. Payout ID: ${payload.payoutId}. The commission liability has been restored and the payout can be retried.`,
+    };
+  }
+
+  static buildCompanyTransferReversed(payload: {
+    marketerName: string;
+    amount: number;
+    payoutId: string;
+  }) {
+    return {
+      title: "Commission Transfer Reversed",
+      message: `The payout of ₦${Number(payload.amount).toLocaleString()} to ${payload.marketerName} was reversed by Paystack. Payout ID: ${payload.payoutId}. Commission liability has been restored.`,
+    };
   }
 }

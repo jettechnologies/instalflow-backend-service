@@ -29,11 +29,13 @@ export type AggregateCommissionPayoutRequest = {
 export type CommissionPayoutRequestAvgAggregateOutputType = {
   id: number | null
   amount: runtime.Decimal | null
+  marketerBankAccountId: number | null
 }
 
 export type CommissionPayoutRequestSumAggregateOutputType = {
   id: bigint | null
   amount: runtime.Decimal | null
+  marketerBankAccountId: bigint | null
 }
 
 export type CommissionPayoutRequestMinAggregateOutputType = {
@@ -41,6 +43,7 @@ export type CommissionPayoutRequestMinAggregateOutputType = {
   payoutId: string | null
   userId: string | null
   companyId: string | null
+  transferCode: string | null
   amount: runtime.Decimal | null
   status: $Enums.CommissionPayoutStatus | null
   requestedAt: Date | null
@@ -51,6 +54,12 @@ export type CommissionPayoutRequestMinAggregateOutputType = {
   paidAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  marketerBankAccountId: bigint | null
+  transferInitiatedAt: Date | null
+  transferCompletedAt: Date | null
+  transferFailedAt: Date | null
+  transferFailReason: string | null
+  transferInitiatedById: string | null
 }
 
 export type CommissionPayoutRequestMaxAggregateOutputType = {
@@ -58,6 +67,7 @@ export type CommissionPayoutRequestMaxAggregateOutputType = {
   payoutId: string | null
   userId: string | null
   companyId: string | null
+  transferCode: string | null
   amount: runtime.Decimal | null
   status: $Enums.CommissionPayoutStatus | null
   requestedAt: Date | null
@@ -68,6 +78,12 @@ export type CommissionPayoutRequestMaxAggregateOutputType = {
   paidAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  marketerBankAccountId: bigint | null
+  transferInitiatedAt: Date | null
+  transferCompletedAt: Date | null
+  transferFailedAt: Date | null
+  transferFailReason: string | null
+  transferInitiatedById: string | null
 }
 
 export type CommissionPayoutRequestCountAggregateOutputType = {
@@ -75,6 +91,7 @@ export type CommissionPayoutRequestCountAggregateOutputType = {
   payoutId: number
   userId: number
   companyId: number
+  transferCode: number
   amount: number
   status: number
   requestedAt: number
@@ -85,6 +102,12 @@ export type CommissionPayoutRequestCountAggregateOutputType = {
   paidAt: number
   createdAt: number
   updatedAt: number
+  marketerBankAccountId: number
+  transferInitiatedAt: number
+  transferCompletedAt: number
+  transferFailedAt: number
+  transferFailReason: number
+  transferInitiatedById: number
   _all: number
 }
 
@@ -92,11 +115,13 @@ export type CommissionPayoutRequestCountAggregateOutputType = {
 export type CommissionPayoutRequestAvgAggregateInputType = {
   id?: true
   amount?: true
+  marketerBankAccountId?: true
 }
 
 export type CommissionPayoutRequestSumAggregateInputType = {
   id?: true
   amount?: true
+  marketerBankAccountId?: true
 }
 
 export type CommissionPayoutRequestMinAggregateInputType = {
@@ -104,6 +129,7 @@ export type CommissionPayoutRequestMinAggregateInputType = {
   payoutId?: true
   userId?: true
   companyId?: true
+  transferCode?: true
   amount?: true
   status?: true
   requestedAt?: true
@@ -114,6 +140,12 @@ export type CommissionPayoutRequestMinAggregateInputType = {
   paidAt?: true
   createdAt?: true
   updatedAt?: true
+  marketerBankAccountId?: true
+  transferInitiatedAt?: true
+  transferCompletedAt?: true
+  transferFailedAt?: true
+  transferFailReason?: true
+  transferInitiatedById?: true
 }
 
 export type CommissionPayoutRequestMaxAggregateInputType = {
@@ -121,6 +153,7 @@ export type CommissionPayoutRequestMaxAggregateInputType = {
   payoutId?: true
   userId?: true
   companyId?: true
+  transferCode?: true
   amount?: true
   status?: true
   requestedAt?: true
@@ -131,6 +164,12 @@ export type CommissionPayoutRequestMaxAggregateInputType = {
   paidAt?: true
   createdAt?: true
   updatedAt?: true
+  marketerBankAccountId?: true
+  transferInitiatedAt?: true
+  transferCompletedAt?: true
+  transferFailedAt?: true
+  transferFailReason?: true
+  transferInitiatedById?: true
 }
 
 export type CommissionPayoutRequestCountAggregateInputType = {
@@ -138,6 +177,7 @@ export type CommissionPayoutRequestCountAggregateInputType = {
   payoutId?: true
   userId?: true
   companyId?: true
+  transferCode?: true
   amount?: true
   status?: true
   requestedAt?: true
@@ -148,6 +188,12 @@ export type CommissionPayoutRequestCountAggregateInputType = {
   paidAt?: true
   createdAt?: true
   updatedAt?: true
+  marketerBankAccountId?: true
+  transferInitiatedAt?: true
+  transferCompletedAt?: true
+  transferFailedAt?: true
+  transferFailReason?: true
+  transferInitiatedById?: true
   _all?: true
 }
 
@@ -242,6 +288,7 @@ export type CommissionPayoutRequestGroupByOutputType = {
   payoutId: string
   userId: string
   companyId: string
+  transferCode: string | null
   amount: runtime.Decimal
   status: $Enums.CommissionPayoutStatus
   requestedAt: Date
@@ -252,6 +299,12 @@ export type CommissionPayoutRequestGroupByOutputType = {
   paidAt: Date | null
   createdAt: Date
   updatedAt: Date
+  marketerBankAccountId: bigint | null
+  transferInitiatedAt: Date | null
+  transferCompletedAt: Date | null
+  transferFailedAt: Date | null
+  transferFailReason: string | null
+  transferInitiatedById: string | null
   _count: CommissionPayoutRequestCountAggregateOutputType | null
   _avg: CommissionPayoutRequestAvgAggregateOutputType | null
   _sum: CommissionPayoutRequestSumAggregateOutputType | null
@@ -282,6 +335,7 @@ export type CommissionPayoutRequestWhereInput = {
   payoutId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
   userId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
   companyId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
+  transferCode?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
   amount?: Prisma.DecimalFilter<"CommissionPayoutRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFilter<"CommissionPayoutRequest"> | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
@@ -292,10 +346,19 @@ export type CommissionPayoutRequestWhereInput = {
   paidAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
+  marketerBankAccountId?: Prisma.BigIntNullableFilter<"CommissionPayoutRequest"> | bigint | number | null
+  transferInitiatedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferCompletedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailReason?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
+  transferInitiatedById?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   adminApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   companyApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  marketerBankAccount?: Prisma.XOR<Prisma.MarketerBankAccountNullableScalarRelationFilter, Prisma.MarketerBankAccountWhereInput> | null
+  transferInitiatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  commissionAllocations?: Prisma.CommissionAllocationListRelationFilter
 }
 
 export type CommissionPayoutRequestOrderByWithRelationInput = {
@@ -303,6 +366,7 @@ export type CommissionPayoutRequestOrderByWithRelationInput = {
   payoutId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  transferCode?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
@@ -313,10 +377,19 @@ export type CommissionPayoutRequestOrderByWithRelationInput = {
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  marketerBankAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferInitiatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferFailedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferFailReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferInitiatedById?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   company?: Prisma.CompanyOrderByWithRelationInput
   adminApprovedBy?: Prisma.UserOrderByWithRelationInput
   companyApprovedBy?: Prisma.UserOrderByWithRelationInput
+  marketerBankAccount?: Prisma.MarketerBankAccountOrderByWithRelationInput
+  transferInitiatedBy?: Prisma.UserOrderByWithRelationInput
+  commissionAllocations?: Prisma.CommissionAllocationOrderByRelationAggregateInput
 }
 
 export type CommissionPayoutRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -327,6 +400,7 @@ export type CommissionPayoutRequestWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CommissionPayoutRequestWhereInput | Prisma.CommissionPayoutRequestWhereInput[]
   userId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
   companyId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
+  transferCode?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
   amount?: Prisma.DecimalFilter<"CommissionPayoutRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFilter<"CommissionPayoutRequest"> | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
@@ -337,10 +411,19 @@ export type CommissionPayoutRequestWhereUniqueInput = Prisma.AtLeast<{
   paidAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
+  marketerBankAccountId?: Prisma.BigIntNullableFilter<"CommissionPayoutRequest"> | bigint | number | null
+  transferInitiatedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferCompletedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailReason?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
+  transferInitiatedById?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   adminApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   companyApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  marketerBankAccount?: Prisma.XOR<Prisma.MarketerBankAccountNullableScalarRelationFilter, Prisma.MarketerBankAccountWhereInput> | null
+  transferInitiatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  commissionAllocations?: Prisma.CommissionAllocationListRelationFilter
 }, "id" | "payoutId">
 
 export type CommissionPayoutRequestOrderByWithAggregationInput = {
@@ -348,6 +431,7 @@ export type CommissionPayoutRequestOrderByWithAggregationInput = {
   payoutId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  transferCode?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
@@ -358,6 +442,12 @@ export type CommissionPayoutRequestOrderByWithAggregationInput = {
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  marketerBankAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferInitiatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferFailedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferFailReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferInitiatedById?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CommissionPayoutRequestCountOrderByAggregateInput
   _avg?: Prisma.CommissionPayoutRequestAvgOrderByAggregateInput
   _max?: Prisma.CommissionPayoutRequestMaxOrderByAggregateInput
@@ -373,6 +463,7 @@ export type CommissionPayoutRequestScalarWhereWithAggregatesInput = {
   payoutId?: Prisma.StringWithAggregatesFilter<"CommissionPayoutRequest"> | string
   userId?: Prisma.StringWithAggregatesFilter<"CommissionPayoutRequest"> | string
   companyId?: Prisma.StringWithAggregatesFilter<"CommissionPayoutRequest"> | string
+  transferCode?: Prisma.StringNullableWithAggregatesFilter<"CommissionPayoutRequest"> | string | null
   amount?: Prisma.DecimalWithAggregatesFilter<"CommissionPayoutRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusWithAggregatesFilter<"CommissionPayoutRequest"> | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeWithAggregatesFilter<"CommissionPayoutRequest"> | Date | string
@@ -383,11 +474,18 @@ export type CommissionPayoutRequestScalarWhereWithAggregatesInput = {
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CommissionPayoutRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CommissionPayoutRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CommissionPayoutRequest"> | Date | string
+  marketerBankAccountId?: Prisma.BigIntNullableWithAggregatesFilter<"CommissionPayoutRequest"> | bigint | number | null
+  transferInitiatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailReason?: Prisma.StringNullableWithAggregatesFilter<"CommissionPayoutRequest"> | string | null
+  transferInitiatedById?: Prisma.StringNullableWithAggregatesFilter<"CommissionPayoutRequest"> | string | null
 }
 
 export type CommissionPayoutRequestCreateInput = {
   id?: bigint | number
   payoutId?: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -396,10 +494,17 @@ export type CommissionPayoutRequestCreateInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
   user: Prisma.UserCreateNestedOneWithoutCommissionPayoutRequestsInput
   company: Prisma.CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput
   adminApprovedBy?: Prisma.UserCreateNestedOneWithoutAdminApprovedPayoutsInput
   companyApprovedBy?: Prisma.UserCreateNestedOneWithoutCompanyApprovedPayoutsInput
+  marketerBankAccount?: Prisma.MarketerBankAccountCreateNestedOneWithoutPayoutRequestsInput
+  transferInitiatedBy?: Prisma.UserCreateNestedOneWithoutCommissionTransferInitiatorInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestUncheckedCreateInput = {
@@ -407,6 +512,7 @@ export type CommissionPayoutRequestUncheckedCreateInput = {
   payoutId?: string
   userId: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -417,11 +523,19 @@ export type CommissionPayoutRequestUncheckedCreateInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -430,10 +544,17 @@ export type CommissionPayoutRequestUpdateInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   adminApprovedBy?: Prisma.UserUpdateOneWithoutAdminApprovedPayoutsNestedInput
   companyApprovedBy?: Prisma.UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput
+  marketerBankAccount?: Prisma.MarketerBankAccountUpdateOneWithoutPayoutRequestsNestedInput
+  transferInitiatedBy?: Prisma.UserUpdateOneWithoutCommissionTransferInitiatorNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateInput = {
@@ -441,6 +562,7 @@ export type CommissionPayoutRequestUncheckedUpdateInput = {
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -451,6 +573,13 @@ export type CommissionPayoutRequestUncheckedUpdateInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestCreateManyInput = {
@@ -458,6 +587,7 @@ export type CommissionPayoutRequestCreateManyInput = {
   payoutId?: string
   userId: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -468,11 +598,18 @@ export type CommissionPayoutRequestCreateManyInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
 }
 
 export type CommissionPayoutRequestUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -481,6 +618,10 @@ export type CommissionPayoutRequestUpdateManyMutationInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CommissionPayoutRequestUncheckedUpdateManyInput = {
@@ -488,6 +629,7 @@ export type CommissionPayoutRequestUncheckedUpdateManyInput = {
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -498,6 +640,12 @@ export type CommissionPayoutRequestUncheckedUpdateManyInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CommissionPayoutRequestListRelationFilter = {
@@ -510,11 +658,17 @@ export type CommissionPayoutRequestOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CommissionPayoutRequestScalarRelationFilter = {
+  is?: Prisma.CommissionPayoutRequestWhereInput
+  isNot?: Prisma.CommissionPayoutRequestWhereInput
+}
+
 export type CommissionPayoutRequestCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   payoutId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  transferCode?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
@@ -525,11 +679,18 @@ export type CommissionPayoutRequestCountOrderByAggregateInput = {
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  marketerBankAccountId?: Prisma.SortOrder
+  transferInitiatedAt?: Prisma.SortOrder
+  transferCompletedAt?: Prisma.SortOrder
+  transferFailedAt?: Prisma.SortOrder
+  transferFailReason?: Prisma.SortOrder
+  transferInitiatedById?: Prisma.SortOrder
 }
 
 export type CommissionPayoutRequestAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  marketerBankAccountId?: Prisma.SortOrder
 }
 
 export type CommissionPayoutRequestMaxOrderByAggregateInput = {
@@ -537,6 +698,7 @@ export type CommissionPayoutRequestMaxOrderByAggregateInput = {
   payoutId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  transferCode?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
@@ -547,6 +709,12 @@ export type CommissionPayoutRequestMaxOrderByAggregateInput = {
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  marketerBankAccountId?: Prisma.SortOrder
+  transferInitiatedAt?: Prisma.SortOrder
+  transferCompletedAt?: Prisma.SortOrder
+  transferFailedAt?: Prisma.SortOrder
+  transferFailReason?: Prisma.SortOrder
+  transferInitiatedById?: Prisma.SortOrder
 }
 
 export type CommissionPayoutRequestMinOrderByAggregateInput = {
@@ -554,6 +722,7 @@ export type CommissionPayoutRequestMinOrderByAggregateInput = {
   payoutId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  transferCode?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
@@ -564,11 +733,18 @@ export type CommissionPayoutRequestMinOrderByAggregateInput = {
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  marketerBankAccountId?: Prisma.SortOrder
+  transferInitiatedAt?: Prisma.SortOrder
+  transferCompletedAt?: Prisma.SortOrder
+  transferFailedAt?: Prisma.SortOrder
+  transferFailReason?: Prisma.SortOrder
+  transferInitiatedById?: Prisma.SortOrder
 }
 
 export type CommissionPayoutRequestSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  marketerBankAccountId?: Prisma.SortOrder
 }
 
 export type CommissionPayoutRequestCreateNestedManyWithoutCompanyInput = {
@@ -634,6 +810,13 @@ export type CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
 }
 
+export type CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput> | Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyTransferInitiatedByInputEnvelope
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+}
+
 export type CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutUserInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutUserInput> | Prisma.CommissionPayoutRequestCreateWithoutUserInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutUserInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutUserInput[]
@@ -652,6 +835,13 @@ export type CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprov
   create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutCompanyApprovedByInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutCompanyApprovedByInput> | Prisma.CommissionPayoutRequestCreateWithoutCompanyApprovedByInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutCompanyApprovedByInput[]
   connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutCompanyApprovedByInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutCompanyApprovedByInput[]
   createMany?: Prisma.CommissionPayoutRequestCreateManyCompanyApprovedByInputEnvelope
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+}
+
+export type CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput> | Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyTransferInitiatedByInputEnvelope
   connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
 }
 
@@ -697,6 +887,20 @@ export type CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   deleteMany?: Prisma.CommissionPayoutRequestScalarWhereInput | Prisma.CommissionPayoutRequestScalarWhereInput[]
 }
 
+export type CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput> | Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput[]
+  upsert?: Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutTransferInitiatedByInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyTransferInitiatedByInputEnvelope
+  set?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  disconnect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  delete?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  update?: Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutTransferInitiatedByInput[]
+  updateMany?: Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutTransferInitiatedByInput[]
+  deleteMany?: Prisma.CommissionPayoutRequestScalarWhereInput | Prisma.CommissionPayoutRequestScalarWhereInput[]
+}
+
 export type CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutUserInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutUserInput> | Prisma.CommissionPayoutRequestCreateWithoutUserInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutUserInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutUserInput[]
@@ -739,13 +943,92 @@ export type CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNe
   deleteMany?: Prisma.CommissionPayoutRequestScalarWhereInput | Prisma.CommissionPayoutRequestScalarWhereInput[]
 }
 
+export type CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput> | Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput[]
+  upsert?: Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutTransferInitiatedByInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyTransferInitiatedByInputEnvelope
+  set?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  disconnect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  delete?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  update?: Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutTransferInitiatedByInput[]
+  updateMany?: Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutTransferInitiatedByInput | Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutTransferInitiatedByInput[]
+  deleteMany?: Prisma.CommissionPayoutRequestScalarWhereInput | Prisma.CommissionPayoutRequestScalarWhereInput[]
+}
+
+export type CommissionPayoutRequestCreateNestedOneWithoutCommissionAllocationsInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutCommissionAllocationsInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutCommissionAllocationsInput>
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutCommissionAllocationsInput
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput
+}
+
+export type CommissionPayoutRequestUpdateOneRequiredWithoutCommissionAllocationsNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutCommissionAllocationsInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutCommissionAllocationsInput>
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutCommissionAllocationsInput
+  upsert?: Prisma.CommissionPayoutRequestUpsertWithoutCommissionAllocationsInput
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CommissionPayoutRequestUpdateToOneWithWhereWithoutCommissionAllocationsInput, Prisma.CommissionPayoutRequestUpdateWithoutCommissionAllocationsInput>, Prisma.CommissionPayoutRequestUncheckedUpdateWithoutCommissionAllocationsInput>
+}
+
 export type EnumCommissionPayoutStatusFieldUpdateOperationsInput = {
   set?: $Enums.CommissionPayoutStatus
+}
+
+export type NullableBigIntFieldUpdateOperationsInput = {
+  set?: bigint | number | null
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
+export type CommissionPayoutRequestCreateNestedManyWithoutMarketerBankAccountInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput> | Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyMarketerBankAccountInputEnvelope
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+}
+
+export type CommissionPayoutRequestUncheckedCreateNestedManyWithoutMarketerBankAccountInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput> | Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyMarketerBankAccountInputEnvelope
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+}
+
+export type CommissionPayoutRequestUpdateManyWithoutMarketerBankAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput> | Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput[]
+  upsert?: Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutMarketerBankAccountInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyMarketerBankAccountInputEnvelope
+  set?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  disconnect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  delete?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  update?: Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutMarketerBankAccountInput[]
+  updateMany?: Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutMarketerBankAccountInput[]
+  deleteMany?: Prisma.CommissionPayoutRequestScalarWhereInput | Prisma.CommissionPayoutRequestScalarWhereInput[]
+}
+
+export type CommissionPayoutRequestUncheckedUpdateManyWithoutMarketerBankAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput> | Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput[] | Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput[]
+  connectOrCreate?: Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput[]
+  upsert?: Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestUpsertWithWhereUniqueWithoutMarketerBankAccountInput[]
+  createMany?: Prisma.CommissionPayoutRequestCreateManyMarketerBankAccountInputEnvelope
+  set?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  disconnect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  delete?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  connect?: Prisma.CommissionPayoutRequestWhereUniqueInput | Prisma.CommissionPayoutRequestWhereUniqueInput[]
+  update?: Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestUpdateWithWhereUniqueWithoutMarketerBankAccountInput[]
+  updateMany?: Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutMarketerBankAccountInput | Prisma.CommissionPayoutRequestUpdateManyWithWhereWithoutMarketerBankAccountInput[]
+  deleteMany?: Prisma.CommissionPayoutRequestScalarWhereInput | Prisma.CommissionPayoutRequestScalarWhereInput[]
 }
 
 export type CommissionPayoutRequestCreateWithoutCompanyInput = {
   id?: bigint | number
   payoutId?: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -754,15 +1037,23 @@ export type CommissionPayoutRequestCreateWithoutCompanyInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
   user: Prisma.UserCreateNestedOneWithoutCommissionPayoutRequestsInput
   adminApprovedBy?: Prisma.UserCreateNestedOneWithoutAdminApprovedPayoutsInput
   companyApprovedBy?: Prisma.UserCreateNestedOneWithoutCompanyApprovedPayoutsInput
+  marketerBankAccount?: Prisma.MarketerBankAccountCreateNestedOneWithoutPayoutRequestsInput
+  transferInitiatedBy?: Prisma.UserCreateNestedOneWithoutCommissionTransferInitiatorInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestUncheckedCreateWithoutCompanyInput = {
   id?: bigint | number
   payoutId?: string
   userId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -773,6 +1064,13 @@ export type CommissionPayoutRequestUncheckedCreateWithoutCompanyInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestCreateOrConnectWithoutCompanyInput = {
@@ -809,6 +1107,7 @@ export type CommissionPayoutRequestScalarWhereInput = {
   payoutId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
   userId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
   companyId?: Prisma.StringFilter<"CommissionPayoutRequest"> | string
+  transferCode?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
   amount?: Prisma.DecimalFilter<"CommissionPayoutRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFilter<"CommissionPayoutRequest"> | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
@@ -819,11 +1118,18 @@ export type CommissionPayoutRequestScalarWhereInput = {
   paidAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CommissionPayoutRequest"> | Date | string
+  marketerBankAccountId?: Prisma.BigIntNullableFilter<"CommissionPayoutRequest"> | bigint | number | null
+  transferInitiatedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferCompletedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailedAt?: Prisma.DateTimeNullableFilter<"CommissionPayoutRequest"> | Date | string | null
+  transferFailReason?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
+  transferInitiatedById?: Prisma.StringNullableFilter<"CommissionPayoutRequest"> | string | null
 }
 
 export type CommissionPayoutRequestCreateWithoutUserInput = {
   id?: bigint | number
   payoutId?: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -832,15 +1138,23 @@ export type CommissionPayoutRequestCreateWithoutUserInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput
   adminApprovedBy?: Prisma.UserCreateNestedOneWithoutAdminApprovedPayoutsInput
   companyApprovedBy?: Prisma.UserCreateNestedOneWithoutCompanyApprovedPayoutsInput
+  marketerBankAccount?: Prisma.MarketerBankAccountCreateNestedOneWithoutPayoutRequestsInput
+  transferInitiatedBy?: Prisma.UserCreateNestedOneWithoutCommissionTransferInitiatorInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestUncheckedCreateWithoutUserInput = {
   id?: bigint | number
   payoutId?: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -851,6 +1165,13 @@ export type CommissionPayoutRequestUncheckedCreateWithoutUserInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestCreateOrConnectWithoutUserInput = {
@@ -866,6 +1187,7 @@ export type CommissionPayoutRequestCreateManyUserInputEnvelope = {
 export type CommissionPayoutRequestCreateWithoutAdminApprovedByInput = {
   id?: bigint | number
   payoutId?: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -874,9 +1196,16 @@ export type CommissionPayoutRequestCreateWithoutAdminApprovedByInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
   user: Prisma.UserCreateNestedOneWithoutCommissionPayoutRequestsInput
   company: Prisma.CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput
   companyApprovedBy?: Prisma.UserCreateNestedOneWithoutCompanyApprovedPayoutsInput
+  marketerBankAccount?: Prisma.MarketerBankAccountCreateNestedOneWithoutPayoutRequestsInput
+  transferInitiatedBy?: Prisma.UserCreateNestedOneWithoutCommissionTransferInitiatorInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestUncheckedCreateWithoutAdminApprovedByInput = {
@@ -884,6 +1213,7 @@ export type CommissionPayoutRequestUncheckedCreateWithoutAdminApprovedByInput = 
   payoutId?: string
   userId: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -893,6 +1223,13 @@ export type CommissionPayoutRequestUncheckedCreateWithoutAdminApprovedByInput = 
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestCreateOrConnectWithoutAdminApprovedByInput = {
@@ -908,6 +1245,7 @@ export type CommissionPayoutRequestCreateManyAdminApprovedByInputEnvelope = {
 export type CommissionPayoutRequestCreateWithoutCompanyApprovedByInput = {
   id?: bigint | number
   payoutId?: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -916,9 +1254,16 @@ export type CommissionPayoutRequestCreateWithoutCompanyApprovedByInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
   user: Prisma.UserCreateNestedOneWithoutCommissionPayoutRequestsInput
   company: Prisma.CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput
   adminApprovedBy?: Prisma.UserCreateNestedOneWithoutAdminApprovedPayoutsInput
+  marketerBankAccount?: Prisma.MarketerBankAccountCreateNestedOneWithoutPayoutRequestsInput
+  transferInitiatedBy?: Prisma.UserCreateNestedOneWithoutCommissionTransferInitiatorInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestUncheckedCreateWithoutCompanyApprovedByInput = {
@@ -926,6 +1271,7 @@ export type CommissionPayoutRequestUncheckedCreateWithoutCompanyApprovedByInput 
   payoutId?: string
   userId: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -935,6 +1281,13 @@ export type CommissionPayoutRequestUncheckedCreateWithoutCompanyApprovedByInput 
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutPayoutInput
 }
 
 export type CommissionPayoutRequestCreateOrConnectWithoutCompanyApprovedByInput = {
@@ -944,6 +1297,64 @@ export type CommissionPayoutRequestCreateOrConnectWithoutCompanyApprovedByInput 
 
 export type CommissionPayoutRequestCreateManyCompanyApprovedByInputEnvelope = {
   data: Prisma.CommissionPayoutRequestCreateManyCompanyApprovedByInput | Prisma.CommissionPayoutRequestCreateManyCompanyApprovedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type CommissionPayoutRequestCreateWithoutTransferInitiatedByInput = {
+  id?: bigint | number
+  payoutId?: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedAt?: Date | string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  user: Prisma.UserCreateNestedOneWithoutCommissionPayoutRequestsInput
+  company: Prisma.CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput
+  adminApprovedBy?: Prisma.UserCreateNestedOneWithoutAdminApprovedPayoutsInput
+  companyApprovedBy?: Prisma.UserCreateNestedOneWithoutCompanyApprovedPayoutsInput
+  marketerBankAccount?: Prisma.MarketerBankAccountCreateNestedOneWithoutPayoutRequestsInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutPayoutInput
+}
+
+export type CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput = {
+  id?: bigint | number
+  payoutId?: string
+  userId: string
+  companyId: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedById?: string | null
+  adminApprovedAt?: Date | string | null
+  companyApprovedById?: string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutPayoutInput
+}
+
+export type CommissionPayoutRequestCreateOrConnectWithoutTransferInitiatedByInput = {
+  where: Prisma.CommissionPayoutRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput>
+}
+
+export type CommissionPayoutRequestCreateManyTransferInitiatedByInputEnvelope = {
+  data: Prisma.CommissionPayoutRequestCreateManyTransferInitiatedByInput | Prisma.CommissionPayoutRequestCreateManyTransferInitiatedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -995,10 +1406,52 @@ export type CommissionPayoutRequestUpdateManyWithWhereWithoutCompanyApprovedByIn
   data: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateManyMutationInput, Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByInput>
 }
 
-export type CommissionPayoutRequestCreateManyCompanyInput = {
+export type CommissionPayoutRequestUpsertWithWhereUniqueWithoutTransferInitiatedByInput = {
+  where: Prisma.CommissionPayoutRequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedUpdateWithoutTransferInitiatedByInput>
+  create: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutTransferInitiatedByInput>
+}
+
+export type CommissionPayoutRequestUpdateWithWhereUniqueWithoutTransferInitiatedByInput = {
+  where: Prisma.CommissionPayoutRequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateWithoutTransferInitiatedByInput, Prisma.CommissionPayoutRequestUncheckedUpdateWithoutTransferInitiatedByInput>
+}
+
+export type CommissionPayoutRequestUpdateManyWithWhereWithoutTransferInitiatedByInput = {
+  where: Prisma.CommissionPayoutRequestScalarWhereInput
+  data: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateManyMutationInput, Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByInput>
+}
+
+export type CommissionPayoutRequestCreateWithoutCommissionAllocationsInput = {
+  id?: bigint | number
+  payoutId?: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedAt?: Date | string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  user: Prisma.UserCreateNestedOneWithoutCommissionPayoutRequestsInput
+  company: Prisma.CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput
+  adminApprovedBy?: Prisma.UserCreateNestedOneWithoutAdminApprovedPayoutsInput
+  companyApprovedBy?: Prisma.UserCreateNestedOneWithoutCompanyApprovedPayoutsInput
+  marketerBankAccount?: Prisma.MarketerBankAccountCreateNestedOneWithoutPayoutRequestsInput
+  transferInitiatedBy?: Prisma.UserCreateNestedOneWithoutCommissionTransferInitiatorInput
+}
+
+export type CommissionPayoutRequestUncheckedCreateWithoutCommissionAllocationsInput = {
   id?: bigint | number
   payoutId?: string
   userId: string
+  companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -1009,11 +1462,34 @@ export type CommissionPayoutRequestCreateManyCompanyInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
 }
 
-export type CommissionPayoutRequestUpdateWithoutCompanyInput = {
+export type CommissionPayoutRequestCreateOrConnectWithoutCommissionAllocationsInput = {
+  where: Prisma.CommissionPayoutRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutCommissionAllocationsInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutCommissionAllocationsInput>
+}
+
+export type CommissionPayoutRequestUpsertWithoutCommissionAllocationsInput = {
+  update: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateWithoutCommissionAllocationsInput, Prisma.CommissionPayoutRequestUncheckedUpdateWithoutCommissionAllocationsInput>
+  create: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutCommissionAllocationsInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutCommissionAllocationsInput>
+  where?: Prisma.CommissionPayoutRequestWhereInput
+}
+
+export type CommissionPayoutRequestUpdateToOneWithWhereWithoutCommissionAllocationsInput = {
+  where?: Prisma.CommissionPayoutRequestWhereInput
+  data: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateWithoutCommissionAllocationsInput, Prisma.CommissionPayoutRequestUncheckedUpdateWithoutCommissionAllocationsInput>
+}
+
+export type CommissionPayoutRequestUpdateWithoutCommissionAllocationsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1022,15 +1498,168 @@ export type CommissionPayoutRequestUpdateWithoutCompanyInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
+  company?: Prisma.CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
+  adminApprovedBy?: Prisma.UserUpdateOneWithoutAdminApprovedPayoutsNestedInput
+  companyApprovedBy?: Prisma.UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput
+  marketerBankAccount?: Prisma.MarketerBankAccountUpdateOneWithoutPayoutRequestsNestedInput
+  transferInitiatedBy?: Prisma.UserUpdateOneWithoutCommissionTransferInitiatorNestedInput
+}
+
+export type CommissionPayoutRequestUncheckedUpdateWithoutCommissionAllocationsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CommissionPayoutRequestCreateWithoutMarketerBankAccountInput = {
+  id?: bigint | number
+  payoutId?: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedAt?: Date | string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  user: Prisma.UserCreateNestedOneWithoutCommissionPayoutRequestsInput
+  company: Prisma.CompanyCreateNestedOneWithoutCommissionPayoutRequestsInput
+  adminApprovedBy?: Prisma.UserCreateNestedOneWithoutAdminApprovedPayoutsInput
+  companyApprovedBy?: Prisma.UserCreateNestedOneWithoutCompanyApprovedPayoutsInput
+  transferInitiatedBy?: Prisma.UserCreateNestedOneWithoutCommissionTransferInitiatorInput
+  commissionAllocations?: Prisma.CommissionAllocationCreateNestedManyWithoutPayoutInput
+}
+
+export type CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput = {
+  id?: bigint | number
+  payoutId?: string
+  userId: string
+  companyId: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedById?: string | null
+  adminApprovedAt?: Date | string | null
+  companyApprovedById?: string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedCreateNestedManyWithoutPayoutInput
+}
+
+export type CommissionPayoutRequestCreateOrConnectWithoutMarketerBankAccountInput = {
+  where: Prisma.CommissionPayoutRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput>
+}
+
+export type CommissionPayoutRequestCreateManyMarketerBankAccountInputEnvelope = {
+  data: Prisma.CommissionPayoutRequestCreateManyMarketerBankAccountInput | Prisma.CommissionPayoutRequestCreateManyMarketerBankAccountInput[]
+  skipDuplicates?: boolean
+}
+
+export type CommissionPayoutRequestUpsertWithWhereUniqueWithoutMarketerBankAccountInput = {
+  where: Prisma.CommissionPayoutRequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedUpdateWithoutMarketerBankAccountInput>
+  create: Prisma.XOR<Prisma.CommissionPayoutRequestCreateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedCreateWithoutMarketerBankAccountInput>
+}
+
+export type CommissionPayoutRequestUpdateWithWhereUniqueWithoutMarketerBankAccountInput = {
+  where: Prisma.CommissionPayoutRequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateWithoutMarketerBankAccountInput, Prisma.CommissionPayoutRequestUncheckedUpdateWithoutMarketerBankAccountInput>
+}
+
+export type CommissionPayoutRequestUpdateManyWithWhereWithoutMarketerBankAccountInput = {
+  where: Prisma.CommissionPayoutRequestScalarWhereInput
+  data: Prisma.XOR<Prisma.CommissionPayoutRequestUpdateManyMutationInput, Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutMarketerBankAccountInput>
+}
+
+export type CommissionPayoutRequestCreateManyCompanyInput = {
+  id?: bigint | number
+  payoutId?: string
+  userId: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedById?: string | null
+  adminApprovedAt?: Date | string | null
+  companyApprovedById?: string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+}
+
+export type CommissionPayoutRequestUpdateWithoutCompanyInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   adminApprovedBy?: Prisma.UserUpdateOneWithoutAdminApprovedPayoutsNestedInput
   companyApprovedBy?: Prisma.UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput
+  marketerBankAccount?: Prisma.MarketerBankAccountUpdateOneWithoutPayoutRequestsNestedInput
+  transferInitiatedBy?: Prisma.UserUpdateOneWithoutCommissionTransferInitiatorNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1041,12 +1670,20 @@ export type CommissionPayoutRequestUncheckedUpdateWithoutCompanyInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1057,12 +1694,19 @@ export type CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CommissionPayoutRequestCreateManyUserInput = {
   id?: bigint | number
   payoutId?: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -1073,6 +1717,12 @@ export type CommissionPayoutRequestCreateManyUserInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
 }
 
 export type CommissionPayoutRequestCreateManyAdminApprovedByInput = {
@@ -1080,6 +1730,7 @@ export type CommissionPayoutRequestCreateManyAdminApprovedByInput = {
   payoutId?: string
   userId: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -1089,6 +1740,12 @@ export type CommissionPayoutRequestCreateManyAdminApprovedByInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
 }
 
 export type CommissionPayoutRequestCreateManyCompanyApprovedByInput = {
@@ -1096,6 +1753,7 @@ export type CommissionPayoutRequestCreateManyCompanyApprovedByInput = {
   payoutId?: string
   userId: string
   companyId: string
+  transferCode?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionPayoutStatus
   requestedAt?: Date | string
@@ -1105,11 +1763,41 @@ export type CommissionPayoutRequestCreateManyCompanyApprovedByInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+}
+
+export type CommissionPayoutRequestCreateManyTransferInitiatedByInput = {
+  id?: bigint | number
+  payoutId?: string
+  userId: string
+  companyId: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedById?: string | null
+  adminApprovedAt?: Date | string | null
+  companyApprovedById?: string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  marketerBankAccountId?: bigint | number | null
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
 }
 
 export type CommissionPayoutRequestUpdateWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1118,15 +1806,23 @@ export type CommissionPayoutRequestUpdateWithoutUserInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   adminApprovedBy?: Prisma.UserUpdateOneWithoutAdminApprovedPayoutsNestedInput
   companyApprovedBy?: Prisma.UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput
+  marketerBankAccount?: Prisma.MarketerBankAccountUpdateOneWithoutPayoutRequestsNestedInput
+  transferInitiatedBy?: Prisma.UserUpdateOneWithoutCommissionTransferInitiatorNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1137,12 +1833,20 @@ export type CommissionPayoutRequestUncheckedUpdateWithoutUserInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1153,11 +1857,18 @@ export type CommissionPayoutRequestUncheckedUpdateManyWithoutUserInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CommissionPayoutRequestUpdateWithoutAdminApprovedByInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1166,9 +1877,16 @@ export type CommissionPayoutRequestUpdateWithoutAdminApprovedByInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   companyApprovedBy?: Prisma.UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput
+  marketerBankAccount?: Prisma.MarketerBankAccountUpdateOneWithoutPayoutRequestsNestedInput
+  transferInitiatedBy?: Prisma.UserUpdateOneWithoutCommissionTransferInitiatorNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateWithoutAdminApprovedByInput = {
@@ -1176,6 +1894,7 @@ export type CommissionPayoutRequestUncheckedUpdateWithoutAdminApprovedByInput = 
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1185,6 +1904,13 @@ export type CommissionPayoutRequestUncheckedUpdateWithoutAdminApprovedByInput = 
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByInput = {
@@ -1192,6 +1918,7 @@ export type CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByInpu
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1201,11 +1928,18 @@ export type CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByInpu
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CommissionPayoutRequestUpdateWithoutCompanyApprovedByInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1214,9 +1948,16 @@ export type CommissionPayoutRequestUpdateWithoutCompanyApprovedByInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
   adminApprovedBy?: Prisma.UserUpdateOneWithoutAdminApprovedPayoutsNestedInput
+  marketerBankAccount?: Prisma.MarketerBankAccountUpdateOneWithoutPayoutRequestsNestedInput
+  transferInitiatedBy?: Prisma.UserUpdateOneWithoutCommissionTransferInitiatorNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateWithoutCompanyApprovedByInput = {
@@ -1224,6 +1965,7 @@ export type CommissionPayoutRequestUncheckedUpdateWithoutCompanyApprovedByInput 
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1233,6 +1975,13 @@ export type CommissionPayoutRequestUncheckedUpdateWithoutCompanyApprovedByInput 
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutPayoutNestedInput
 }
 
 export type CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByInput = {
@@ -1240,6 +1989,7 @@ export type CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByIn
   payoutId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1249,8 +1999,208 @@ export type CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByIn
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type CommissionPayoutRequestUpdateWithoutTransferInitiatedByInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
+  company?: Prisma.CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
+  adminApprovedBy?: Prisma.UserUpdateOneWithoutAdminApprovedPayoutsNestedInput
+  companyApprovedBy?: Prisma.UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput
+  marketerBankAccount?: Prisma.MarketerBankAccountUpdateOneWithoutPayoutRequestsNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutPayoutNestedInput
+}
+
+export type CommissionPayoutRequestUncheckedUpdateWithoutTransferInitiatedByInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutPayoutNestedInput
+}
+
+export type CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  marketerBankAccountId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CommissionPayoutRequestCreateManyMarketerBankAccountInput = {
+  id?: bigint | number
+  payoutId?: string
+  userId: string
+  companyId: string
+  transferCode?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionPayoutStatus
+  requestedAt?: Date | string
+  adminApprovedById?: string | null
+  adminApprovedAt?: Date | string | null
+  companyApprovedById?: string | null
+  companyApprovedAt?: Date | string | null
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transferInitiatedAt?: Date | string | null
+  transferCompletedAt?: Date | string | null
+  transferFailedAt?: Date | string | null
+  transferFailReason?: string | null
+  transferInitiatedById?: string | null
+}
+
+export type CommissionPayoutRequestUpdateWithoutMarketerBankAccountInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
+  company?: Prisma.CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput
+  adminApprovedBy?: Prisma.UserUpdateOneWithoutAdminApprovedPayoutsNestedInput
+  companyApprovedBy?: Prisma.UserUpdateOneWithoutCompanyApprovedPayoutsNestedInput
+  transferInitiatedBy?: Prisma.UserUpdateOneWithoutCommissionTransferInitiatorNestedInput
+  commissionAllocations?: Prisma.CommissionAllocationUpdateManyWithoutPayoutNestedInput
+}
+
+export type CommissionPayoutRequestUncheckedUpdateWithoutMarketerBankAccountInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionAllocations?: Prisma.CommissionAllocationUncheckedUpdateManyWithoutPayoutNestedInput
+}
+
+export type CommissionPayoutRequestUncheckedUpdateManyWithoutMarketerBankAccountInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  transferCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionPayoutStatusFieldUpdateOperationsInput | $Enums.CommissionPayoutStatus
+  requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adminApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  companyApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transferInitiatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferFailReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferInitiatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+
+/**
+ * Count Type CommissionPayoutRequestCountOutputType
+ */
+
+export type CommissionPayoutRequestCountOutputType = {
+  commissionAllocations: number
+}
+
+export type CommissionPayoutRequestCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  commissionAllocations?: boolean | CommissionPayoutRequestCountOutputTypeCountCommissionAllocationsArgs
+}
+
+/**
+ * CommissionPayoutRequestCountOutputType without action
+ */
+export type CommissionPayoutRequestCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionPayoutRequestCountOutputType
+   */
+  select?: Prisma.CommissionPayoutRequestCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CommissionPayoutRequestCountOutputType without action
+ */
+export type CommissionPayoutRequestCountOutputTypeCountCommissionAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissionAllocationWhereInput
+}
 
 
 export type CommissionPayoutRequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1258,6 +2208,7 @@ export type CommissionPayoutRequestSelect<ExtArgs extends runtime.Types.Extensio
   payoutId?: boolean
   userId?: boolean
   companyId?: boolean
+  transferCode?: boolean
   amount?: boolean
   status?: boolean
   requestedAt?: boolean
@@ -1268,10 +2219,20 @@ export type CommissionPayoutRequestSelect<ExtArgs extends runtime.Types.Extensio
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  marketerBankAccountId?: boolean
+  transferInitiatedAt?: boolean
+  transferCompletedAt?: boolean
+  transferFailedAt?: boolean
+  transferFailReason?: boolean
+  transferInitiatedById?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   adminApprovedBy?: boolean | Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs>
   companyApprovedBy?: boolean | Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs>
+  marketerBankAccount?: boolean | Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs>
+  transferInitiatedBy?: boolean | Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs>
+  commissionAllocations?: boolean | Prisma.CommissionPayoutRequest$commissionAllocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.CommissionPayoutRequestCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["commissionPayoutRequest"]>
 
 export type CommissionPayoutRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1279,6 +2240,7 @@ export type CommissionPayoutRequestSelectCreateManyAndReturn<ExtArgs extends run
   payoutId?: boolean
   userId?: boolean
   companyId?: boolean
+  transferCode?: boolean
   amount?: boolean
   status?: boolean
   requestedAt?: boolean
@@ -1289,10 +2251,18 @@ export type CommissionPayoutRequestSelectCreateManyAndReturn<ExtArgs extends run
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  marketerBankAccountId?: boolean
+  transferInitiatedAt?: boolean
+  transferCompletedAt?: boolean
+  transferFailedAt?: boolean
+  transferFailReason?: boolean
+  transferInitiatedById?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   adminApprovedBy?: boolean | Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs>
   companyApprovedBy?: boolean | Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs>
+  marketerBankAccount?: boolean | Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs>
+  transferInitiatedBy?: boolean | Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs>
 }, ExtArgs["result"]["commissionPayoutRequest"]>
 
 export type CommissionPayoutRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1300,6 +2270,7 @@ export type CommissionPayoutRequestSelectUpdateManyAndReturn<ExtArgs extends run
   payoutId?: boolean
   userId?: boolean
   companyId?: boolean
+  transferCode?: boolean
   amount?: boolean
   status?: boolean
   requestedAt?: boolean
@@ -1310,10 +2281,18 @@ export type CommissionPayoutRequestSelectUpdateManyAndReturn<ExtArgs extends run
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  marketerBankAccountId?: boolean
+  transferInitiatedAt?: boolean
+  transferCompletedAt?: boolean
+  transferFailedAt?: boolean
+  transferFailReason?: boolean
+  transferInitiatedById?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   adminApprovedBy?: boolean | Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs>
   companyApprovedBy?: boolean | Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs>
+  marketerBankAccount?: boolean | Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs>
+  transferInitiatedBy?: boolean | Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs>
 }, ExtArgs["result"]["commissionPayoutRequest"]>
 
 export type CommissionPayoutRequestSelectScalar = {
@@ -1321,6 +2300,7 @@ export type CommissionPayoutRequestSelectScalar = {
   payoutId?: boolean
   userId?: boolean
   companyId?: boolean
+  transferCode?: boolean
   amount?: boolean
   status?: boolean
   requestedAt?: boolean
@@ -1331,26 +2311,40 @@ export type CommissionPayoutRequestSelectScalar = {
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  marketerBankAccountId?: boolean
+  transferInitiatedAt?: boolean
+  transferCompletedAt?: boolean
+  transferFailedAt?: boolean
+  transferFailReason?: boolean
+  transferInitiatedById?: boolean
 }
 
-export type CommissionPayoutRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payoutId" | "userId" | "companyId" | "amount" | "status" | "requestedAt" | "adminApprovedById" | "adminApprovedAt" | "companyApprovedById" | "companyApprovedAt" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["commissionPayoutRequest"]>
+export type CommissionPayoutRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payoutId" | "userId" | "companyId" | "transferCode" | "amount" | "status" | "requestedAt" | "adminApprovedById" | "adminApprovedAt" | "companyApprovedById" | "companyApprovedAt" | "paidAt" | "createdAt" | "updatedAt" | "marketerBankAccountId" | "transferInitiatedAt" | "transferCompletedAt" | "transferFailedAt" | "transferFailReason" | "transferInitiatedById", ExtArgs["result"]["commissionPayoutRequest"]>
 export type CommissionPayoutRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   adminApprovedBy?: boolean | Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs>
   companyApprovedBy?: boolean | Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs>
+  marketerBankAccount?: boolean | Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs>
+  transferInitiatedBy?: boolean | Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs>
+  commissionAllocations?: boolean | Prisma.CommissionPayoutRequest$commissionAllocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.CommissionPayoutRequestCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CommissionPayoutRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   adminApprovedBy?: boolean | Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs>
   companyApprovedBy?: boolean | Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs>
+  marketerBankAccount?: boolean | Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs>
+  transferInitiatedBy?: boolean | Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs>
 }
 export type CommissionPayoutRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   adminApprovedBy?: boolean | Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs>
   companyApprovedBy?: boolean | Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs>
+  marketerBankAccount?: boolean | Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs>
+  transferInitiatedBy?: boolean | Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs>
 }
 
 export type $CommissionPayoutRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1360,12 +2354,16 @@ export type $CommissionPayoutRequestPayload<ExtArgs extends runtime.Types.Extens
     company: Prisma.$CompanyPayload<ExtArgs>
     adminApprovedBy: Prisma.$UserPayload<ExtArgs> | null
     companyApprovedBy: Prisma.$UserPayload<ExtArgs> | null
+    marketerBankAccount: Prisma.$MarketerBankAccountPayload<ExtArgs> | null
+    transferInitiatedBy: Prisma.$UserPayload<ExtArgs> | null
+    commissionAllocations: Prisma.$CommissionAllocationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     payoutId: string
     userId: string
     companyId: string
+    transferCode: string | null
     amount: runtime.Decimal
     status: $Enums.CommissionPayoutStatus
     requestedAt: Date
@@ -1376,6 +2374,12 @@ export type $CommissionPayoutRequestPayload<ExtArgs extends runtime.Types.Extens
     paidAt: Date | null
     createdAt: Date
     updatedAt: Date
+    marketerBankAccountId: bigint | null
+    transferInitiatedAt: Date | null
+    transferCompletedAt: Date | null
+    transferFailedAt: Date | null
+    transferFailReason: string | null
+    transferInitiatedById: string | null
   }, ExtArgs["result"]["commissionPayoutRequest"]>
   composites: {}
 }
@@ -1774,6 +2778,9 @@ export interface Prisma__CommissionPayoutRequestClient<T, Null = never, ExtArgs 
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   adminApprovedBy<T extends Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommissionPayoutRequest$adminApprovedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   companyApprovedBy<T extends Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommissionPayoutRequest$companyApprovedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  marketerBankAccount<T extends Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs>>): Prisma.Prisma__MarketerBankAccountClient<runtime.Types.Result.GetResult<Prisma.$MarketerBankAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  transferInitiatedBy<T extends Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  commissionAllocations<T extends Prisma.CommissionPayoutRequest$commissionAllocationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommissionPayoutRequest$commissionAllocationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionAllocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1807,6 +2814,7 @@ export interface CommissionPayoutRequestFieldRefs {
   readonly payoutId: Prisma.FieldRef<"CommissionPayoutRequest", 'String'>
   readonly userId: Prisma.FieldRef<"CommissionPayoutRequest", 'String'>
   readonly companyId: Prisma.FieldRef<"CommissionPayoutRequest", 'String'>
+  readonly transferCode: Prisma.FieldRef<"CommissionPayoutRequest", 'String'>
   readonly amount: Prisma.FieldRef<"CommissionPayoutRequest", 'Decimal'>
   readonly status: Prisma.FieldRef<"CommissionPayoutRequest", 'CommissionPayoutStatus'>
   readonly requestedAt: Prisma.FieldRef<"CommissionPayoutRequest", 'DateTime'>
@@ -1817,6 +2825,12 @@ export interface CommissionPayoutRequestFieldRefs {
   readonly paidAt: Prisma.FieldRef<"CommissionPayoutRequest", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"CommissionPayoutRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CommissionPayoutRequest", 'DateTime'>
+  readonly marketerBankAccountId: Prisma.FieldRef<"CommissionPayoutRequest", 'BigInt'>
+  readonly transferInitiatedAt: Prisma.FieldRef<"CommissionPayoutRequest", 'DateTime'>
+  readonly transferCompletedAt: Prisma.FieldRef<"CommissionPayoutRequest", 'DateTime'>
+  readonly transferFailedAt: Prisma.FieldRef<"CommissionPayoutRequest", 'DateTime'>
+  readonly transferFailReason: Prisma.FieldRef<"CommissionPayoutRequest", 'String'>
+  readonly transferInitiatedById: Prisma.FieldRef<"CommissionPayoutRequest", 'String'>
 }
     
 
@@ -2253,6 +3267,68 @@ export type CommissionPayoutRequest$companyApprovedByArgs<ExtArgs extends runtim
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * CommissionPayoutRequest.marketerBankAccount
+ */
+export type CommissionPayoutRequest$marketerBankAccountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MarketerBankAccount
+   */
+  select?: Prisma.MarketerBankAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MarketerBankAccount
+   */
+  omit?: Prisma.MarketerBankAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MarketerBankAccountInclude<ExtArgs> | null
+  where?: Prisma.MarketerBankAccountWhereInput
+}
+
+/**
+ * CommissionPayoutRequest.transferInitiatedBy
+ */
+export type CommissionPayoutRequest$transferInitiatedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * CommissionPayoutRequest.commissionAllocations
+ */
+export type CommissionPayoutRequest$commissionAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionAllocation
+   */
+  select?: Prisma.CommissionAllocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissionAllocation
+   */
+  omit?: Prisma.CommissionAllocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionAllocationInclude<ExtArgs> | null
+  where?: Prisma.CommissionAllocationWhereInput
+  orderBy?: Prisma.CommissionAllocationOrderByWithRelationInput | Prisma.CommissionAllocationOrderByWithRelationInput[]
+  cursor?: Prisma.CommissionAllocationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissionAllocationScalarFieldEnum | Prisma.CommissionAllocationScalarFieldEnum[]
 }
 
 /**

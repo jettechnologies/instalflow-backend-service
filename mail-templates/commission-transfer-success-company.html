@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transfer Confirmed - Instalflow</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap");
+
+      body {
+        font-family: "Jost", sans-serif;
+        background-color: #0b0f1a;
+        color: #9ca3af;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 24px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+      }
+      .header {
+        padding: 2.5rem 1.5rem 1rem;
+        text-align: center;
+      }
+      .logo-text {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+      }
+      .logo-text span {
+        color: #7c3aed;
+      }
+      .hero-icon {
+        width: 64px;
+        height: 64px;
+        margin: 1.5rem auto;
+        background-color: #065f46;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(6, 95, 70, 0.4);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+      }
+      .status-badge {
+        display: inline-block;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+      }
+      .content {
+        padding: 0 2.5rem 2.5rem;
+        text-align: center;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #f9fafb;
+        margin: 0.5rem 0 1rem;
+      }
+      .data-grid {
+        background: #0b0f1a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        text-align: left;
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #1f2937;
+      }
+      .data-row:last-child {
+        border-bottom: none;
+      }
+      .data-label {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      .data-value {
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .ref-chip {
+        display: inline-block;
+        background: #1f2937;
+        color: #9ca3af;
+        font-size: 0.7rem;
+        font-family: "Courier New", monospace;
+        padding: 3px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.04em;
+      }
+      .ledger-note {
+        background: rgba(16, 185, 129, 0.05);
+        border-left: 3px solid #10b981;
+        border-radius: 0 8px 8px 0;
+        padding: 0.9rem 1.25rem;
+        font-size: 0.8rem;
+        color: #6ee7b7;
+        text-align: left;
+        margin-top: 1.5rem;
+      }
+      .cta-btn {
+        display: inline-block;
+        margin-top: 1.75rem;
+        padding: 0.75rem 2rem;
+        background: #1f2937;
+        color: #f9fafb;
+        border: 1px solid #374151;
+        font-family: "Jost", sans-serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        text-decoration: none;
+      }
+      .footer {
+        background-color: #0b0f1a;
+        border-top: 1px solid #1f2937;
+        padding: 2rem;
+        text-align: center;
+      }
+      .signature {
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+      .signature .product-name {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo-text">Instal<span>flow</span></div>
+        <div class="hero-icon">
+          <!-- Double check / confirmed -->
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#10b981"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 6 7 17l-5-5"></path>
+            <path d="m22 10-7.5 7.5L13 16"></path>
+          </svg>
+        </div>
+        <div class="status-badge">Transfer Confirmed</div>
+        <h1 class="title">Payout Successfully Processed</h1>
+      </div>
+
+      <div class="content">
+        <p>
+          This is a confirmation that the commission payout for
+          <strong style="color: #f9fafb">{{marketerName}}</strong> has been
+          successfully transferred. The ledger has been updated accordingly.
+        </p>
+
+        <div class="data-grid">
+          <div class="data-row">
+            <span class="data-label">Marketer</span>
+            <span class="data-value">{{marketerName}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Amount Transferred</span>
+            <span class="data-value" style="color: #10b981">{{amount}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Transfer Reference</span>
+            <span class="data-value">
+              <span class="ref-chip">{{transferCode}}</span>
+            </span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Ledger Status</span>
+            <span class="data-value" style="color: #10b981"
+              >Payouts_In_Transit → Settled</span
+            >
+          </div>
+        </div>
+
+        <div class="ledger-note">
+          📒 &nbsp;Commission records for this marketer have been marked
+          <strong>PAID</strong>. The Payouts_In_Transit account has been cleared
+          and Bank_Settled debited.
+        </div>
+
+        <a href="{{dashboard_url}}" class="cta-btn">View Payout Records</a>
+      </div>
+
+      <div class="footer">
+        <div class="signature">
+          <p>The <span class="product-name">Instalflow</span> Team</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

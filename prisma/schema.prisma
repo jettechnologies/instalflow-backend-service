@@ -36,10 +36,17 @@ enum PaymentStatus {
 }
 
 enum CommissionStatus {
-  PENDING
-  APPROVED
+  ACTIVE
+  PARTIALLY_RESERVED
+  RESERVED
   PAID
   FROZEN
+}
+
+enum CommissionAllocationStatus {
+  RESERVED
+  PAID
+  RELEASED
 }
 
 enum TransactionType {
@@ -85,10 +92,15 @@ enum InternalNotificationType {
   PAYMENT_CONFIRMED
   COMMISSION_ACCRUED
   COMMISSION_TRANSFER_REQUEST
+  COMMISSION_REQUEST_APPROVAL
   INSTALLMENT_REMINDER_3DAY
   INSTALLMENT_DUE_TODAY
   INSTALLMENT_OVERDUE_3DAY
   INSTALLMENT_OVERDUE_7DAY
+  COMMISSION_TRANSFER_INITIATED
+  COMMISSION_TRANSFER_SUCCESS
+  COMMISSION_TRANSFER_FAILED
+  COMMISSION_TRANSFER_REVERSED
 }
 
 enum InternalNotificationStatus {
@@ -121,7 +133,10 @@ enum CommissionPayoutStatus {
   PENDING_COMPANY_APPROVAL
   APPROVED
   REJECTED
+  TRANSFER_INITIATED
   PAID
+  TRANSFER_FAILED
+  TRANSFER_REVERSED
 }
 
 model Company {
@@ -182,7 +197,9 @@ model User {
 
   adminApprovedPayouts CommissionPayoutRequest[] @relation("CommissionAdminApprover")
 
-  companyApprovedPayouts CommissionPayoutRequest[] @relation("CommissionCompanyApprover")
+  companyApprovedPayouts      CommissionPayoutRequest[] @relation("CommissionCompanyApprover")
+  marketerBankAccounts        MarketerBankAccount[]
+  commissionTransferInitiator CommissionPayoutRequest[] @relation("TransferInitiator")
 }
 
 model UserSession {
@@ -407,16 +424,85 @@ model Payment {
 }
 
 model Commission {
-  id           BigInt           @id @default(autoincrement())
-  commissionId String           @unique @default(uuid())
-  userId       String
-  user         User             @relation(fields: [userId], references: [userId])
-  paymentId    String?
-  payment      Payment?         @relation(fields: [paymentId], references: [paymentId])
-  amount       Decimal
-  status       CommissionStatus @default(PENDING)
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  id                    BigInt                 @id @default(autoincrement())
+  commissionId          String                 @unique @default(uuid())
+  userId                String
+  user                  User                   @relation(fields: [userId], references: [userId])
+  paymentId             String?
+  payment               Payment?               @relation(fields: [paymentId], references: [paymentId])
+  amount                Decimal
+  status                CommissionStatus       @default(ACTIVE)
+  reservedAmount        Decimal                @default(0) @map("reserved_amount")
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  commissionAllocations CommissionAllocation[]
+}
+
+model CommissionAllocation {
+  id              BigInt                     @id @default(autoincrement())
+  allocationId    String                     @unique @default(uuid())
+  payoutId        String
+  payout          CommissionPayoutRequest    @relation(fields: [payoutId], references: [payoutId])
+  commissionId    String
+  commission      Commission                 @relation(fields: [commissionId], references: [commissionId])
+  allocatedAmount Decimal                    @map("allocated_amount")
+  status          CommissionAllocationStatus @default(RESERVED)
+  createdAt       DateTime                   @default(now())
+
+  @@unique([payoutId, commissionId])
+  @@index([commissionId, status])
+}
+
+model CommissionPayoutRequest {
+  id                    BigInt                 @id @default(autoincrement())
+  payoutId              String                 @unique @default(uuid())
+  userId                String
+  user                  User                   @relation(fields: [userId], references: [userId])
+  companyId             String
+  transferCode          String?
+  company               Company                @relation(fields: [companyId], references: [companyId])
+  amount                Decimal
+  status                CommissionPayoutStatus @default(PENDING_ADMIN_APPROVAL)
+  requestedAt           DateTime               @default(now())
+  adminApprovedById     String?
+  adminApprovedBy       User?                  @relation("CommissionAdminApprover", fields: [adminApprovedById], references: [userId])
+  adminApprovedAt       DateTime?
+  companyApprovedById   String?
+  companyApprovedBy     User?                  @relation("CommissionCompanyApprover", fields: [companyApprovedById], references: [userId])
+  companyApprovedAt     DateTime?
+  paidAt                DateTime?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  marketerBankAccount   MarketerBankAccount?   @relation(fields: [marketerBankAccountId], references: [id])
+  marketerBankAccountId BigInt?
+  transferInitiatedAt   DateTime?              @map("transfer_initiated_at")
+  transferCompletedAt   DateTime?              @map("transfer_completed_at")
+  transferFailedAt      DateTime?              @map("transfer_failed_at")
+  transferFailReason    String?                @map("transfer_fail_reason")
+  transferInitiatedById String?                @map("transfer_initiated_by_id")
+  transferInitiatedBy   User?                  @relation("TransferInitiator", fields: [transferInitiatedById], references: [userId])
+  commissionAllocations CommissionAllocation[]
+}
+
+model MarketerBankAccount {
+  id            BigInt   @id @default(autoincrement())
+  accountId     String   @unique @default(uuid()) @map("account_id")
+  userId        String   @map("user_id")
+  user          User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  bankName      String   @map("bank_name")
+  bankCode      String   @map("bank_code")
+  accountName   String   @map("account_name")
+  accountNumber String   @map("account_number")
+  isPrimary     Boolean  @default(false) @map("is_primary")
+  recipientCode String?  @map("recipient_code")
+  isVerified    Boolean  @default(false) @map("is_verified")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  payoutRequests CommissionPayoutRequest[]
+
+  @@unique([userId, accountNumber])
+  @@index([userId])
 }
 
 model LedgerTransaction {
@@ -601,25 +687,4 @@ model InternalNotification {
   @@index([userId, status])
   @@index([userId, createdAt(sort: Desc)])
   @@index([type])
-}
-
-model CommissionPayoutRequest {
-  id                  BigInt                 @id @default(autoincrement())
-  payoutId            String                 @unique @default(uuid())
-  userId              String
-  user                User                   @relation(fields: [userId], references: [userId])
-  companyId           String
-  company             Company                @relation(fields: [companyId], references: [companyId])
-  amount              Decimal
-  status              CommissionPayoutStatus @default(PENDING_ADMIN_APPROVAL)
-  requestedAt         DateTime               @default(now())
-  adminApprovedById   String?
-  adminApprovedBy     User?                  @relation("CommissionAdminApprover", fields: [adminApprovedById], references: [userId])
-  adminApprovedAt     DateTime?
-  companyApprovedById String?
-  companyApprovedBy   User?                  @relation("CommissionCompanyApprover", fields: [companyApprovedById], references: [userId])
-  companyApprovedAt   DateTime?
-  paidAt              DateTime?
-  createdAt           DateTime               @default(now())
-  updatedAt           DateTime               @updatedAt
 }

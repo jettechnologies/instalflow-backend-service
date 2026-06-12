@@ -395,3 +395,196 @@ onEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, async (payload) => {
     },
   );
 });
+// ─────────────────────────────────────────────────────────────────────────────
+// COMMISSION TRANSFER INITIATED
+// Called from: transfer.worker after PaystackService.initiateTransfer succeeds
+// ─────────────────────────────────────────────────────────────────────────────
+
+onEvent(DomainEvent.COMMISSION_TRANSFER_INITIATED, async (payload) => {
+  // External email → marketer only
+  await NotificationService.send({
+    to: payload.marketerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.COMMISSION_TRANSFER_INITIATED,
+    subject: `Your Payout is Being Processed 🔄`,
+    context: {
+      marketerName: payload.marketerName,
+      amount: fmt(payload.amount),
+      bankName: payload.bankName,
+      maskedAccount: payload.maskedAccount,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  // Internal notification → marketer
+  await NotificationOrchestrator.handle(
+    NotificationEventType.COMMISSION_TRANSFER_INITIATED,
+    {
+      payoutId: payload.payoutId,
+      marketerId: payload.marketerId,
+      marketerName: payload.marketerName,
+      amount: payload.amount,
+      bankName: payload.bankName,
+      maskedAccount: payload.maskedAccount,
+    },
+  );
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMMISSION TRANSFER SUCCESS
+// Called from: webhook handleTransferSuccess after ledger is committed
+// ─────────────────────────────────────────────────────────────────────────────
+
+onEvent(DomainEvent.COMMISSION_TRANSFER_SUCCESS, async (payload) => {
+  // External email → marketer
+  await NotificationService.send({
+    to: payload.marketerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.COMMISSION_TRANSFER_SUCCESS,
+    subject: `Your Payout Has Been Sent! 💸`,
+    context: {
+      marketerName: payload.marketerName,
+      amount: fmt(payload.amount),
+      transferCode: payload.transferCode,
+      bankName: payload.bankName,
+      maskedAccount: payload.maskedAccount,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  // External email → each company approver (audit/confirmation copy)
+  await Promise.all(
+    payload.companyEmails.map((email) =>
+      NotificationService.send({
+        to: email,
+        channel: NotificationChannel.EMAIL,
+        template: EmailTemplate.COMMISSION_TRANSFER_SUCCESS_COMPANY,
+        subject: `✅ Payout Confirmed — ${payload.marketerName}`,
+        context: {
+          marketerName: payload.marketerName,
+          amount: fmt(payload.amount),
+          transferCode: payload.transferCode,
+          dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+        },
+      }),
+    ),
+  );
+
+  // Internal notifications → marketer + company users
+  await NotificationOrchestrator.handle(
+    NotificationEventType.COMMISSION_TRANSFER_SUCCESS,
+    {
+      payoutId: payload.payoutId,
+      marketerId: payload.marketerId,
+      marketerName: payload.marketerName,
+      amount: payload.amount,
+      transferCode: payload.transferCode,
+      bankName: payload.bankName,
+      maskedAccount: payload.maskedAccount,
+      companyId: payload.companyId,
+    },
+  );
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMMISSION TRANSFER FAILED
+// Called from: webhook handleTransferFailed after ledger reversal is committed
+// ─────────────────────────────────────────────────────────────────────────────
+
+onEvent(DomainEvent.COMMISSION_TRANSFER_FAILED, async (payload) => {
+  // External email → marketer
+  await NotificationService.send({
+    to: payload.marketerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.COMMISSION_TRANSFER_FAILED_MARKETER,
+    subject: `Payout Transfer Failed — We're Looking Into It`,
+    context: {
+      marketerName: payload.marketerName,
+      amount: fmt(payload.amount),
+      reason: payload.reason,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  // External email → each company approver (action required: retry)
+  await Promise.all(
+    payload.companyEmails.map((email) =>
+      NotificationService.send({
+        to: email,
+        channel: NotificationChannel.EMAIL,
+        template: EmailTemplate.COMMISSION_TRANSFER_FAILED_COMPANY,
+        subject: `⚠️ Payout Failed — ${payload.marketerName} (Action Required)`,
+        context: {
+          marketerName: payload.marketerName,
+          amount: fmt(payload.amount),
+          reason: payload.reason,
+          payoutId: payload.payoutId,
+          dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+        },
+      }),
+    ),
+  );
+
+  // Internal notifications → marketer + company users
+  await NotificationOrchestrator.handle(
+    NotificationEventType.COMMISSION_TRANSFER_FAILED,
+    {
+      payoutId: payload.payoutId,
+      marketerId: payload.marketerId,
+      marketerName: payload.marketerName,
+      amount: payload.amount,
+      reason: payload.reason,
+      companyId: payload.companyId,
+    },
+  );
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMMISSION TRANSFER REVERSED
+// Called from: webhook handleTransferReversed after ledger reversal is committed
+// ─────────────────────────────────────────────────────────────────────────────
+
+onEvent(DomainEvent.COMMISSION_TRANSFER_REVERSED, async (payload) => {
+  // External email → marketer
+  await NotificationService.send({
+    to: payload.marketerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.COMMISSION_TRANSFER_REVERSED_MARKETER,
+    subject: `Your Payout Was Reversed — Commission Restored`,
+    context: {
+      marketerName: payload.marketerName,
+      amount: fmt(payload.amount),
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  // External email → each company approver
+  await Promise.all(
+    payload.companyEmails.map((email) =>
+      NotificationService.send({
+        to: email,
+        channel: NotificationChannel.EMAIL,
+        template: EmailTemplate.COMMISSION_TRANSFER_REVERSED_COMPANY,
+        subject: `⚠️ Transfer Reversed — ${payload.marketerName}`,
+        context: {
+          marketerName: payload.marketerName,
+          amount: fmt(payload.amount),
+          payoutId: payload.payoutId,
+          dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+        },
+      }),
+    ),
+  );
+
+  // Internal notifications → marketer + company users
+  await NotificationOrchestrator.handle(
+    NotificationEventType.COMMISSION_TRANSFER_REVERSED,
+    {
+      payoutId: payload.payoutId,
+      marketerId: payload.marketerId,
+      marketerName: payload.marketerName,
+      amount: payload.amount,
+      companyId: payload.companyId,
+    },
+  );
+});
