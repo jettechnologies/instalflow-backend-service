@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import logger from "@/infrastructure/logger/logger";
 import { hashToken, safeCompare } from "@/shared/utils/helpers/csrf.helper";
+import { request } from "node:http";
 
 const skipCsrf = (req: Request): boolean => {
   const path = req.originalUrl.split("?")[0];
@@ -16,6 +17,8 @@ const skipCsrf = (req: Request): boolean => {
 };
 
 const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.cookies, "request cookies");
+
   if (skipCsrf(req)) return next();
 
   if (!["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
@@ -24,6 +27,8 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
   const clientToken = req.headers["x-csrf-token"] as string;
   const storedHash = req.cookies?.csrf_hash;
+
+  console.log(storedHash, "stored hash");
 
   if (!clientToken || !storedHash) {
     logger.warn("CSRF missing token or hash");

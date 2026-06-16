@@ -11,7 +11,7 @@ export class CsrfController {
 
       const cookieOptions = {
         httpOnly: true,
-        sameSite: "lax" as const,
+        sameSite: "none" as const,
         secure: process.env.NODE_ENV === "production",
         path: "/",
         maxAge: 3 * 24 * 60 * 60 * 1000,
