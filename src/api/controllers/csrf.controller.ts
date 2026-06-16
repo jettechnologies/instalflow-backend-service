@@ -22,7 +22,7 @@ export class CsrfController {
       // Store the HASH in a HttpOnly cookie (verification source)
       res.cookie("csrf_hash", hashed, {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });
@@ -30,7 +30,7 @@ export class CsrfController {
       // Expose the RAW token via a readable cookie (client source)
       res.cookie("csrf_token", rawToken, {
         httpOnly: false,
-        sameSite: "strict",
+        sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });

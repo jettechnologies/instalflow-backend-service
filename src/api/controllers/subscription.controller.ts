@@ -47,14 +47,6 @@ export class SubscriptionController {
     // We expect intentId from the body
     const { intentId } = req.body;
 
-    console.log("[debug] initializeOnboarding request headers:", {
-      origin: req.headers.origin,
-      referer: req.headers.referer,
-      "x-csrf-token": req.headers["x-csrf-token"],
-      cookies: req.headers.cookie,
-    });
-    console.log("[debug] initializeOnboarding body:", req.body);
-
     if (!intentId) {
       return ApiResponse.badRequest(res, "Onboarding Intent ID is required");
     }
@@ -69,8 +61,6 @@ export class SubscriptionController {
         data,
       );
     } catch (error: any) {
-      console.log(error, "error message");
-
       if (error.name === "NotFoundError") {
         return ApiResponse.notFound(res, error.message);
       }
