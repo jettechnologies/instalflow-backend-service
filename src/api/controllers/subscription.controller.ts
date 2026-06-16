@@ -61,8 +61,9 @@ export class SubscriptionController {
         data,
       );
     } catch (error: any) {
+      console.log(error, "error message");
+
       if (error.name === "NotFoundError") {
-        console.log(error, "error message");
         return ApiResponse.notFound(res, error.message);
       }
       return ApiResponse.internalServerError(
