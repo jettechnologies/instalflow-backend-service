@@ -1,3 +1,4 @@
+// making use of csrf token hash instead
 import type { Request, Response } from "express";
 import logger from "@/infrastructure/logger/logger";
 import { createCsrfToken, hashToken } from "@/shared/utils/helpers/csrf.helper";
@@ -9,22 +10,18 @@ export class CsrfController {
       const hashed = hashToken(rawToken);
 
       const cookieOptions = {
-        httpOnly: false,
+        httpOnly: true,
         sameSite: "lax" as const,
         secure: process.env.NODE_ENV === "production",
         path: "/",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       };
 
-      res.cookie("csrf_token", rawToken, cookieOptions);
-
-      res.cookie("csrf_hash", hashed, {
-        ...cookieOptions,
-        httpOnly: true,
-      });
+      res.cookie("csrf_hash", hashed, cookieOptions);
 
       return res.status(200).json({
         status: "success",
+
         csrfToken: rawToken,
       });
     } catch (error) {
@@ -33,6 +30,42 @@ export class CsrfController {
     }
   }
 }
+
+// import type { Request, Response } from "express";
+// import logger from "@/infrastructure/logger/logger";
+// import { createCsrfToken, hashToken } from "@/shared/utils/helpers/csrf.helper";
+
+// export class CsrfController {
+//   static async generateToken(req: Request, res: Response) {
+//     try {
+//       const rawToken = createCsrfToken();
+//       const hashed = hashToken(rawToken);
+
+//       const cookieOptions = {
+//         httpOnly: false,
+//         sameSite: "lax" as const,
+//         secure: process.env.NODE_ENV === "production",
+//         path: "/",
+//         maxAge: 3 * 24 * 60 * 60 * 1000,
+//       };
+
+//       res.cookie("csrf_token", rawToken, cookieOptions);
+
+//       res.cookie("csrf_hash", hashed, {
+//         ...cookieOptions,
+//         httpOnly: true,
+//       });
+
+//       return res.status(200).json({
+//         status: "success",
+//         csrfToken: rawToken,
+//       });
+//     } catch (error) {
+//       logger.error("CSRF generation failed", { error });
+//       return res.status(500).json({ error: "CSRF generation failed" });
+//     }
+//   }
+// }
 
 // import type { Request, Response } from "express";
 // import crypto from "crypto";
