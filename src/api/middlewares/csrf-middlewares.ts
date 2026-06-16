@@ -17,8 +17,6 @@ const skipCsrf = (req: Request): boolean => {
 };
 
 const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.cookies, "request cookies");
-
   if (skipCsrf(req)) return next();
 
   if (!["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
@@ -27,8 +25,6 @@ const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
   const clientToken = req.headers["x-csrf-token"] as string;
   const storedHash = req.cookies?.csrf_hash;
-
-  console.log(storedHash, "stored hash");
 
   if (!clientToken || !storedHash) {
     logger.warn("CSRF missing token or hash");
