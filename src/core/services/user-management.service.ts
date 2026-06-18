@@ -22,6 +22,176 @@ import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 
 export class UserManagementService {
+  static async getAssociatedAdmins(params: {
+    companyId: string;
+    page?: number;
+    limit?: number;
+    sortOrder?: "asc" | "desc";
+  }) {
+    const { companyId, page = 1, limit = 10, sortOrder = "desc" } = params;
+
+    const skip = (page - 1) * limit;
+
+    const whereClause: Prisma.UserWhereInput = {
+      companyId,
+      role: Role.ADMIN,
+      deletedAt: null,
+    };
+
+    const [admins, total] = await prisma.$transaction([
+      prisma.user.findMany({
+        where: whereClause,
+
+        skip,
+        take: limit,
+
+        orderBy: {
+          createdAt: sortOrder,
+        },
+
+        select: {
+          userId: true,
+          name: true,
+          email: true,
+          role: true,
+          active: true,
+          createdAt: true,
+          updatedAt: true,
+
+          _count: {
+            select: {
+              createdUsers: {
+                where: {
+                  role: Role.MARKETER,
+                  deletedAt: null,
+                },
+              },
+              requestedApprovals: true,
+            },
+          },
+        },
+      }),
+
+      prisma.user.count({
+        where: whereClause,
+      }),
+    ]);
+
+    const transformedAdmins = admins.map((admin) => ({
+      ...admin,
+      marketerCount: admin._count.createdUsers,
+    }));
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      admins: transformedAdmins,
+
+      pagination: {
+        total,
+        totalPages,
+        currentPage: page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
+
+  static async getAdminDetails(companyId: string, adminId: string) {
+    const admin = await prisma.user.findFirst({
+      where: {
+        userId: adminId,
+        companyId,
+        role: Role.ADMIN,
+        deletedAt: null,
+      },
+
+      select: {
+        userId: true,
+        name: true,
+        email: true,
+        role: true,
+        active: true,
+        createdAt: true,
+        updatedAt: true,
+
+        createdUsers: {
+          where: {
+            role: Role.MARKETER,
+            deletedAt: null,
+          },
+
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+            active: true,
+            referralCode: true,
+            createdAt: true,
+
+            _count: {
+              select: {
+                referredUsers: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!admin) {
+      throw new NotFoundError("Admin not found");
+    }
+    const marketerIds = admin.createdUsers.map((marketer) => marketer.userId);
+
+    const [customerCount, financingContractCount, commissionStats] =
+      await prisma.$transaction([
+        prisma.user.count({
+          where: {
+            referredByMarketerId: {
+              in: marketerIds,
+            },
+          },
+        }),
+
+        prisma.financingContract.count({
+          where: {
+            user: {
+              referredByMarketerId: {
+                in: marketerIds,
+              },
+            },
+          },
+        }),
+
+        prisma.commission.aggregate({
+          where: {
+            userId: {
+              in: marketerIds,
+            },
+          },
+
+          _sum: {
+            amount: true,
+          },
+
+          _count: true,
+        }),
+      ]);
+
+    return {
+      ...admin,
+      stats: {
+        marketerCount: admin.createdUsers.length,
+        customerCount,
+        financingContractCount,
+        totalCommissionGenerated: Number(commissionStats._sum.amount || 0),
+        totalCommissionRecords: commissionStats._count,
+      },
+    };
+  }
+
   static async createAdmin(
     companyId: string,
     creatorId: string,

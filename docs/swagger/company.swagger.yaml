@@ -1,27 +1,87 @@
 tags:
   - name: Company Administration
-    description: Endpoints for company owners to manage admins and handle maker-checker approvals.
+    description: Endpoints for company owners to manage admins, marketers, and maker-checker approvals.
 
 paths:
   /company/admins:
+    get:
+      summary: Retrieve all associated admins
+      description: Returns all admins belonging to the authenticated company with pagination support.
+      tags: [Company Administration]
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+
+      responses:
+        "200":
+          description: Admins retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Admins retrieved successfully
+
+                  data:
+                    type: object
+                    properties:
+                      admins:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/AdminSummary"
+
+                      pagination:
+                        $ref: "#/components/schemas/Pagination"
+
     post:
       summary: Create an Admin User
       tags: [Company Administration]
       security:
         - bearerAuth: []
         - csrfToken: []
+
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [name, email]
+              required:
+                - name
+                - email
               properties:
                 name:
                   type: string
+
                 email:
                   type: string
+                  format: email
+
       responses:
         "201":
           description: Admin created successfully
@@ -30,61 +90,177 @@ paths:
               schema:
                 type: object
                 properties:
-                  status: { type: string, example: "success" }
+                  success:
+                    type: boolean
+
                   message:
-                    { type: string, example: "Admin created successfully" }
+                    type: string
+                    example: Admin created successfully
+
                   data:
                     type: object
                     properties:
-                      user: { type: object }
-                      tempPassword: { type: string }
-                      instructions: { type: string }
+                      user:
+                        $ref: "#/components/schemas/AdminSummary"
 
-  /company/admins/{id}/status:
-    patch:
-      summary: Toggle an Admin's Active Status
+                      tempPassword:
+                        type: string
+
+                      instructions:
+                        type: string
+
+  /company/admins/{adminId}:
+    get:
+      summary: View single admin details
+      description: Retrieves a single admin and all related statistics.
       tags: [Company Administration]
       security:
         - bearerAuth: []
-        - csrfToken: []
+
       parameters:
         - in: path
-          name: id
+          name: adminId
           required: true
           schema:
             type: string
-          description: User ID of the admin
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [active]
-              properties:
-                active:
-                  type: boolean
+            format: uuid
+
       responses:
         "200":
-          description: Admin status updated
+          description: Admin details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
 
-  /company/admins/{id}:
+                  message:
+                    type: string
+                    example: Admin details retrieved successfully
+
+                  data:
+                    $ref: "#/components/schemas/AdminDetails"
+
+        "404":
+          description: Admin not found
+
     delete:
       summary: Soft Delete an Admin
       tags: [Company Administration]
       security:
         - bearerAuth: []
         - csrfToken: []
+
       parameters:
         - in: path
-          name: id
+          name: adminId
           required: true
           schema:
             type: string
-          description: User ID of the admin
+
       responses:
         "200":
           description: Admin deleted successfully
+
+  /company/admins/{adminId}/status:
+    patch:
+      summary: Toggle an Admin's Active Status
+      tags: [Company Administration]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+
+      parameters:
+        - in: path
+          name: adminId
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - active
+              properties:
+                active:
+                  type: boolean
+
+      responses:
+        "200":
+          description: Admin status updated successfully
+
+  /company/admins/{adminId}/marketers:
+    get:
+      summary: Retrieve marketers managed by an admin
+      description: Returns all marketers created by the specified admin.
+      tags: [Company Administration]
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: adminId
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+
+      responses:
+        "200":
+          description: Marketers fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+                  message:
+                    type: string
+                    example: Marketers fetched successfully
+
+                  data:
+                    type: object
+                    properties:
+                      marketers:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/MarketerSummary"
+
+                      pagination:
+                        $ref: "#/components/schemas/Pagination"
+
+        "403":
+          description: You are not allowed to access these marketers
+
+        "404":
+          description: Admin not found
 
   /company/approvals:
     get:
@@ -92,6 +268,7 @@ paths:
       tags: [Company Administration]
       security:
         - bearerAuth: []
+
       responses:
         "200":
           description: List of pending approval requests
@@ -103,23 +280,176 @@ paths:
       security:
         - bearerAuth: []
         - csrfToken: []
+
       parameters:
         - in: path
           name: requestId
           required: true
           schema:
             type: string
+
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [status]
+              required:
+                - status
               properties:
                 status:
                   type: string
-                  enum: [APPROVED, REJECTED]
+                  enum:
+                    - APPROVED
+                    - REJECTED
+
       responses:
         "200":
           description: Request handled successfully
+
+components:
+  schemas:
+    AdminSummary:
+      type: object
+      properties:
+        userId:
+          type: string
+
+        name:
+          type: string
+
+        email:
+          type: string
+          format: email
+
+        role:
+          type: string
+          example: ADMIN
+
+        active:
+          type: boolean
+
+        marketerCount:
+          type: integer
+          example: 12
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+    MarketerSummary:
+      type: object
+      properties:
+        userId:
+          type: string
+
+        name:
+          type: string
+
+        email:
+          type: string
+          format: email
+
+        role:
+          type: string
+          example: MARKETER
+
+        active:
+          type: boolean
+
+        referralCode:
+          type: string
+          nullable: true
+
+        referredCustomerCount:
+          type: integer
+          example: 25
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+    AdminDetails:
+      type: object
+      properties:
+        userId:
+          type: string
+
+        name:
+          type: string
+
+        email:
+          type: string
+          format: email
+
+        role:
+          type: string
+          example: ADMIN
+
+        active:
+          type: boolean
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+        createdUsers:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketerSummary"
+
+        stats:
+          type: object
+          properties:
+            marketerCount:
+              type: integer
+              example: 8
+
+            customerCount:
+              type: integer
+              example: 120
+
+            financingContractCount:
+              type: integer
+              example: 95
+
+            totalCommissionGenerated:
+              type: number
+              example: 450000
+
+            totalCommissionRecords:
+              type: integer
+              example: 180
+
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+
+        totalPages:
+          type: integer
+
+        currentPage:
+          type: integer
+
+        limit:
+          type: integer
+
+        hasNextPage:
+          type: boolean
+
+        hasPreviousPage:
+          type: boolean

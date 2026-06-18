@@ -398,8 +398,12 @@ export class CommissionService {
   }
 
   static async requestPayout(userId: string, amount: number) {
-    // ── Guards outside the transaction ────────────────────────────────────────
-    const user = await prisma.user.findUnique({ where: { userId } });
+    const user = await prisma.user.findUnique({
+      where: { userId },
+      include: {
+        creator: true,
+      },
+    });
     if (!user) throw new NotFoundError("User not found");
     if (!user.companyId)
       throw new BadRequestError("User has no associated company");
@@ -431,9 +435,15 @@ export class CommissionService {
       );
     }
 
-    // ── Atomic allocation + payout creation ───────────────────────────────────
+    const creatorRole = user.creator?.role;
+
+    if (!creatorRole) {
+      throw new BadRequestError(
+        "Marketer has no creator relationship configured",
+      );
+    }
+
     const payoutRequest = await prisma.$transaction(async (tx) => {
-      // Fetch non-paid, non-frozen commissions — FIFO order
       const commissions = await tx.commission.findMany({
         where: {
           userId,
@@ -442,7 +452,6 @@ export class CommissionService {
         orderBy: { createdAt: "asc" },
       });
 
-      // Available = amount - reservedAmount per commission
       const totalAvailable = commissions.reduce(
         (acc, c) => acc.plus(c.amount.minus(c.reservedAmount)),
         new Prisma.Decimal(0),
@@ -455,7 +464,6 @@ export class CommissionService {
         );
       }
 
-      // ── FIFO allocation plan ─────────────────────────────────────────────
       type AllocationEntry = {
         commissionId: string;
         toAllocate: Prisma.Decimal;
@@ -482,16 +490,23 @@ export class CommissionService {
         remaining = remaining.minus(toAllocate);
       }
 
-      // ── Create payout request ────────────────────────────────────────────
+      const status =
+        creatorRole === Role.COMPANY
+          ? CommissionPayoutStatus.PENDING_COMPANY_APPROVAL
+          : CommissionPayoutStatus.PENDING_ADMIN_APPROVAL;
+
       const request = await tx.commissionPayoutRequest.create({
         data: {
           userId,
           companyId: user.companyId!,
           amount: requestedAmount,
+          status,
+        },
+        include: {
+          user: true,
         },
       });
 
-      // ── Create allocations + update commission reserved amounts ──────────
       for (const entry of plan) {
         await tx.commissionAllocation.create({
           data: {
@@ -519,15 +534,27 @@ export class CommissionService {
       return request;
     });
 
-    // ── Notify admins (fire-and-forget, outside transaction) ──────────────────
-    await NotificationOrchestrator.handle(
-      NotificationEventType.COMMISSION_TRANSFER_REQUEST,
-      {
-        requestId: payoutRequest.payoutId,
-        marketerName: user.name ?? "",
-        amount: formatCurrency(amount),
-      },
-    );
+    if (creatorRole === Role.COMPANY) {
+      await NotificationOrchestrator.handle(
+        NotificationEventType.COMMISSION_REQUEST_APPROVAL,
+        {
+          requestId: payoutRequest.payoutId,
+          marketerId: payoutRequest.user.userId,
+          marketerName: payoutRequest.user.name ?? "Marketer",
+          role: Role.ADMIN,
+          amount: formatCurrency(amount),
+        },
+      );
+    } else {
+      await NotificationOrchestrator.handle(
+        NotificationEventType.COMMISSION_TRANSFER_REQUEST,
+        {
+          requestId: payoutRequest.payoutId,
+          marketerName: user.name ?? "",
+          amount: formatCurrency(amount),
+        },
+      );
+    }
 
     return payoutRequest;
   }
@@ -546,6 +573,7 @@ export class CommissionService {
     const payout = await prisma.commissionPayoutRequest.findUnique({
       where: {
         payoutId,
+        status: CommissionPayoutStatus.PENDING_ADMIN_APPROVAL,
       },
       include: { user: true },
     });
@@ -573,7 +601,7 @@ export class CommissionService {
         marketerId: payout.user.userId,
         marketerName: payout.user.name ?? "Marketer",
         role: admin.role,
-        amount: Number(payout.amount),
+        amount: formatCurrency(Number(payout.amount)),
       },
     );
 
@@ -618,7 +646,7 @@ export class CommissionService {
         marketerId: payout.user.userId,
         marketerName: payout.user.name ?? "Marketer",
         role: approver.role,
-        amount: Number(payout.amount),
+        amount: formatCurrency(Number(payout.amount)),
       },
     );
 

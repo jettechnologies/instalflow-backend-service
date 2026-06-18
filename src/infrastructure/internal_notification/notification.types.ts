@@ -49,7 +49,7 @@ export interface NotificationPayloadMap {
     marketerId: string;
     marketerName: string;
     role: "ADMIN" | "COMPANY";
-    amount: number;
+    amount: string;
   };
   [NotificationEventType.INSTALLMENT_REMINDER_3DAY]: {
     customerId: string;

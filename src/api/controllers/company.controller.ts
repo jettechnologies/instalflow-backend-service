@@ -8,12 +8,68 @@ import {
 } from "@/shared/schemas/user-management.schema";
 
 export class CompanyController {
+  static async getAssociatedAdmins(req: Request, res: Response) {
+    const companyId = req.user!.companyId!;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const sortOrder = req.query.sortOrder === "asc" ? "asc" : "desc";
+
+    const data = await UserManagementService.getAssociatedAdmins({
+      companyId,
+      page,
+      limit,
+      sortOrder,
+    });
+    return ApiResponse.success(res, 200, "Admins retrieved successfully", data);
+  }
+
+  static async getAdminDetails(req: Request, res: Response) {
+    const companyId = req.user!.companyId!;
+    const adminId = req.params.adminId as string;
+
+    const data = await UserManagementService.getAdminDetails(
+      companyId,
+      adminId,
+    );
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Admin details retrieved successfully",
+      data,
+    );
+  }
+
+  static async getAdminMarketers(req: Request, res: Response) {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const adminId = req.params.adminId as string;
+    const companyId = req.user!.companyId!;
+
+    const sortOrder = req.query.sortOrder === "asc" ? "asc" : "desc";
+
+    const result = await UserManagementService.getAdminMarketers({
+      adminId,
+      companyId,
+      page,
+      limit,
+      sortOrder,
+    });
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Marketers fetched successfully",
+      result,
+    );
+  }
+
   static async createAdmin(req: Request, res: Response) {
     const payload = CreateAdminSchema.parse(req.body);
     const { user, tempPassword } = await UserManagementService.createAdmin(
       req.user!.companyId!,
       req.user!.userId!,
-      payload
+      payload,
     );
 
     return ApiResponse.success(res, 201, "Admin created successfully", {
@@ -30,7 +86,7 @@ export class CompanyController {
     const updated = await UserManagementService.toggleAdminStatus(
       req.user!.companyId!,
       adminId,
-      payload
+      payload,
     );
 
     return ApiResponse.success(res, 200, "Admin status updated", updated);
@@ -41,7 +97,7 @@ export class CompanyController {
 
     const deleted = await UserManagementService.softDeleteAdmin(
       req.user!.companyId!,
-      adminId
+      adminId,
     );
 
     return ApiResponse.success(res, 200, "Admin deleted successfully", deleted);
@@ -49,7 +105,7 @@ export class CompanyController {
 
   static async getApprovals(req: Request, res: Response) {
     const approvals = await UserManagementService.getPendingApprovals(
-      req.user!.companyId!
+      req.user!.companyId!,
     );
     return ApiResponse.success(res, 200, "Pending approvals", approvals);
   }
@@ -61,7 +117,7 @@ export class CompanyController {
     const result = await UserManagementService.handleApprovalRequest(
       req.user!.companyId!,
       requestId,
-      payload
+      payload,
     );
 
     return ApiResponse.success(res, 200, result.message);

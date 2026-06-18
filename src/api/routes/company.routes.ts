@@ -10,6 +10,9 @@ router.use(requireAuth);
 router.use(requireRole([Role.COMPANY]));
 
 // Admin Management
+router.get("/admins", CompanyController.getAssociatedAdmins);
+router.get("/admins/:adminId", CompanyController.getAdminDetails);
+router.get("/admins/:adminId/marketers", CompanyController.getAdminMarketers);
 router.post("/admins", CompanyController.createAdmin);
 router.patch("/admins/:id/status", CompanyController.toggleAdmin);
 router.delete("/admins/:id", CompanyController.deleteAdmin);
