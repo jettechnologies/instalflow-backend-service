@@ -13,6 +13,12 @@ export enum NotificationEventType {
   COMMISSION_TRANSFER_SUCCESS = "COMMISSION_TRANSFER_SUCCESS",
   COMMISSION_TRANSFER_FAILED = "COMMISSION_TRANSFER_FAILED",
   COMMISSION_TRANSFER_REVERSED = "COMMISSION_TRANSFER_REVERSED",
+  MARKETER_TOGGLE_REQUEST = "MARKETER_TOGGLE_REQUEST",
+  MARKETER_DELETE_REQUEST = "MARKETER_DELETE_REQUEST",
+  MARKETER_TOGGLE_APPROVED = "MARKETER_TOGGLE_APPROVED",
+  MARKETER_TOGGLE_REJECTED = "MARKETER_TOGGLE_REJECTED",
+  MARKETER_DELETE_APPROVED = "MARKETER_DELETE_APPROVED",
+  MARKETER_DELETE_REJECTED = "MARKETER_DELETE_REJECTED",
 }
 
 export interface NotificationPayloadMap {
@@ -152,5 +158,44 @@ export interface NotificationPayloadMap {
     marketerName: string;
     amount: number;
     companyId: string;
+  };
+  [NotificationEventType.MARKETER_TOGGLE_REQUEST]: {
+    requestId: string;
+    companyId: string;
+    marketerId: string;
+    marketerName: string;
+    requestedBy: string;
+  };
+
+  [NotificationEventType.MARKETER_DELETE_REQUEST]: {
+    requestId: string;
+    companyId: string;
+    marketerId: string;
+    marketerName: string;
+    requestedBy: string;
+  };
+
+  [NotificationEventType.MARKETER_TOGGLE_APPROVED]: {
+    requestId: string;
+    marketerId: string;
+    marketerName: string;
+  };
+
+  [NotificationEventType.MARKETER_TOGGLE_REJECTED]: {
+    requestId: string;
+    marketerId: string;
+    marketerName: string;
+  };
+
+  [NotificationEventType.MARKETER_DELETE_APPROVED]: {
+    requestId: string;
+    marketerId: string;
+    marketerName: string;
+  };
+
+  [NotificationEventType.MARKETER_DELETE_REJECTED]: {
+    requestId: string;
+    marketerId: string;
+    marketerName: string;
   };
 }

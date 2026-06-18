@@ -4,7 +4,7 @@ import {
   NotificationEventType,
   NotificationPayloadMap,
 } from "./notification.types";
-import { prisma } from "../prisma";
+import { prisma, Role } from "../prisma";
 
 export class NotificationOrchestrator {
   /**
@@ -78,6 +78,35 @@ export class NotificationOrchestrator {
         case NotificationEventType.COMMISSION_TRANSFER_REVERSED:
           return await this.handleCommissionTransferReversed(
             payload as NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_REVERSED],
+          );
+        case NotificationEventType.MARKETER_TOGGLE_REQUEST:
+          return await this.handleMarketerToggleRequest(
+            payload as NotificationPayloadMap[NotificationEventType.MARKETER_TOGGLE_REQUEST],
+          );
+
+        case NotificationEventType.MARKETER_DELETE_REQUEST:
+          return await this.handleMarketerDeleteRequest(
+            payload as NotificationPayloadMap[NotificationEventType.MARKETER_DELETE_REQUEST],
+          );
+
+        case NotificationEventType.MARKETER_TOGGLE_APPROVED:
+          return await this.handleMarketerToggleApproved(
+            payload as NotificationPayloadMap[NotificationEventType.MARKETER_TOGGLE_APPROVED],
+          );
+
+        case NotificationEventType.MARKETER_TOGGLE_REJECTED:
+          return await this.handleMarketerToggleRejected(
+            payload as NotificationPayloadMap[NotificationEventType.MARKETER_TOGGLE_REJECTED],
+          );
+
+        case NotificationEventType.MARKETER_DELETE_APPROVED:
+          return await this.handleMarketerDeleteApproved(
+            payload as NotificationPayloadMap[NotificationEventType.MARKETER_DELETE_APPROVED],
+          );
+
+        case NotificationEventType.MARKETER_DELETE_REJECTED:
+          return await this.handleMarketerDeleteRejected(
+            payload as NotificationPayloadMap[NotificationEventType.MARKETER_DELETE_REJECTED],
           );
       }
     } catch (err: any) {
@@ -571,5 +600,191 @@ export class NotificationOrchestrator {
         }),
       ),
     );
+  }
+
+  private static async handleMarketerToggleRequest(
+    payload: NotificationPayloadMap[NotificationEventType.MARKETER_TOGGLE_REQUEST],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.MARKETER_TOGGLE_REQUEST,
+      payload,
+    );
+
+    const companyUsers = await prisma.user.findMany({
+      where: {
+        companyId: payload.companyId,
+        role: Role.COMPANY,
+      },
+
+      select: {
+        userId: true,
+      },
+    });
+
+    await Promise.all(
+      companyUsers.map((companyUser) =>
+        NotificationRepository.create({
+          userId: companyUser.userId,
+          type: NotificationEventType.MARKETER_TOGGLE_REQUEST,
+          title: template.title,
+          message: template.message,
+          metadata: payload,
+          idempotencyKey: `marketer-toggle-request-${payload.requestId}-${companyUser.userId}`,
+        }),
+      ),
+    );
+  }
+
+  private static async handleMarketerDeleteRequest(
+    payload: NotificationPayloadMap[NotificationEventType.MARKETER_DELETE_REQUEST],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.MARKETER_DELETE_REQUEST,
+      payload,
+    );
+
+    const companyUsers = await prisma.user.findMany({
+      where: {
+        companyId: payload.companyId,
+        role: Role.COMPANY,
+      },
+
+      select: {
+        userId: true,
+      },
+    });
+
+    await Promise.all(
+      companyUsers.map((companyUser) =>
+        NotificationRepository.create({
+          userId: companyUser.userId,
+          type: NotificationEventType.MARKETER_DELETE_REQUEST,
+          title: template.title,
+          message: template.message,
+          metadata: payload,
+          idempotencyKey: `marketer-delete-request-${payload.requestId}-${companyUser.userId}`,
+        }),
+      ),
+    );
+  }
+
+  private static async handleMarketerToggleApproved(
+    payload: NotificationPayloadMap[NotificationEventType.MARKETER_TOGGLE_APPROVED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.MARKETER_TOGGLE_APPROVED,
+      payload,
+    );
+
+    const request = await prisma.approvalRequest.findUnique({
+      where: {
+        requestId: payload.requestId,
+      },
+
+      select: {
+        requestedById: true,
+      },
+    });
+
+    if (!request) return;
+
+    await NotificationRepository.create({
+      userId: request.requestedById,
+      type: NotificationEventType.MARKETER_TOGGLE_APPROVED,
+      title: template.title,
+      message: template.message,
+      metadata: payload,
+      idempotencyKey: `marketer-toggle-approved-${payload.requestId}`,
+    });
+  }
+
+  private static async handleMarketerToggleRejected(
+    payload: NotificationPayloadMap[NotificationEventType.MARKETER_TOGGLE_REJECTED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.MARKETER_TOGGLE_REJECTED,
+      payload,
+    );
+
+    const request = await prisma.approvalRequest.findUnique({
+      where: {
+        requestId: payload.requestId,
+      },
+
+      select: {
+        requestedById: true,
+      },
+    });
+
+    if (!request) return;
+
+    await NotificationRepository.create({
+      userId: request.requestedById,
+      type: NotificationEventType.MARKETER_TOGGLE_REJECTED,
+      title: template.title,
+      message: template.message,
+      metadata: payload,
+      idempotencyKey: `marketer-toggle-rejected-${payload.requestId}`,
+    });
+  }
+
+  private static async handleMarketerDeleteApproved(
+    payload: NotificationPayloadMap[NotificationEventType.MARKETER_DELETE_APPROVED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.MARKETER_DELETE_APPROVED,
+      payload,
+    );
+
+    const request = await prisma.approvalRequest.findUnique({
+      where: {
+        requestId: payload.requestId,
+      },
+
+      select: {
+        requestedById: true,
+      },
+    });
+
+    if (!request) return;
+
+    await NotificationRepository.create({
+      userId: request.requestedById,
+      type: NotificationEventType.MARKETER_DELETE_APPROVED,
+      title: template.title,
+      message: template.message,
+      metadata: payload,
+      idempotencyKey: `marketer-delete-approved-${payload.requestId}`,
+    });
+  }
+
+  private static async handleMarketerDeleteRejected(
+    payload: NotificationPayloadMap[NotificationEventType.MARKETER_DELETE_REJECTED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.MARKETER_DELETE_REJECTED,
+      payload,
+    );
+
+    const request = await prisma.approvalRequest.findUnique({
+      where: {
+        requestId: payload.requestId,
+      },
+
+      select: {
+        requestedById: true,
+      },
+    });
+
+    if (!request) return;
+
+    await NotificationRepository.create({
+      userId: request.requestedById,
+      type: NotificationEventType.MARKETER_DELETE_REJECTED,
+      title: template.title,
+      message: template.message,
+      metadata: payload,
+      idempotencyKey: `marketer-delete-rejected-${payload.requestId}`,
+    });
   }
 }

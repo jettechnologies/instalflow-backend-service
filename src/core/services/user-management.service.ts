@@ -20,6 +20,9 @@ import {
 } from "@/shared/schemas/user-management.schema";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
+import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
+import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
+import { parseISO, format } from "date-fns";
 
 export class UserManagementService {
   static async getAssociatedAdmins(params: {
@@ -275,6 +278,186 @@ export class UserManagementService {
     return updated;
   }
 
+  static async getPendingApprovals(companyId: string, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+
+    const [requests, total] = await prisma.$transaction([
+      prisma.approvalRequest.findMany({
+        where: {
+          companyId,
+          status: ApprovalStatus.PENDING,
+        },
+
+        skip,
+        take: limit,
+
+        orderBy: {
+          createdAt: "desc",
+        },
+
+        include: {
+          requestedBy: {
+            select: {
+              userId: true,
+              name: true,
+              email: true,
+            },
+          },
+
+          targetUser: {
+            select: {
+              userId: true,
+              name: true,
+              email: true,
+              active: true,
+            },
+          },
+        },
+      }),
+
+      prisma.approvalRequest.count({
+        where: {
+          companyId,
+          status: ApprovalStatus.PENDING,
+        },
+      }),
+    ]);
+
+    return {
+      requests,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        limit,
+      },
+    };
+  }
+
+  static async toggleCompanyMarketerStatus(
+    companyId: string,
+    companyUserId: string,
+    marketerId: string,
+  ) {
+    const marketer = await prisma.user.findFirst({
+      where: {
+        userId: marketerId,
+        role: Role.MARKETER,
+        companyId,
+        createdById: companyUserId,
+        deletedAt: null,
+      },
+    });
+    if (!marketer) {
+      throw new NotFoundError(
+        "Marketer not found or you do not have permission to manage this marketer",
+      );
+    }
+    const updatedMarketer = await prisma.$transaction(async (tx) => {
+      const updated = await tx.user.update({
+        where: {
+          userId: marketerId,
+        },
+        data: {
+          active: !marketer.active,
+        },
+      });
+
+      if (!updated.active) {
+        await tx.userSession.updateMany({
+          where: {
+            user: {
+              userId: marketerId,
+            },
+            revoked: false,
+          },
+          data: {
+            revoked: true,
+          },
+        });
+      }
+
+      return updated;
+    });
+
+    emitEvent(DomainEvent.MARKETER_TOGGLE_STATUS, {
+      marketerId: updatedMarketer.userId,
+      marketerEmail: updatedMarketer.email,
+      marketerName: updatedMarketer.name!,
+      requestedBy: "Company Administrator",
+      processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
+      status: updatedMarketer.active ? "ACTIVE" : "SUSPENDED",
+      dashboard_url: process.env.FRONTEND_URL,
+    });
+
+    return {
+      message: updatedMarketer.active
+        ? "Marketer activated successfully"
+        : "Marketer suspended successfully",
+
+      active: updatedMarketer.active,
+    };
+  }
+
+  static async deleteCompanyMarketer(
+    companyId: string,
+    companyUserId: string,
+    marketerId: string,
+  ) {
+    const marketer = await prisma.user.findFirst({
+      where: {
+        userId: marketerId,
+        role: Role.MARKETER,
+        companyId,
+        createdById: companyUserId,
+        deletedAt: null,
+      },
+    });
+
+    if (!marketer) {
+      throw new NotFoundError(
+        "Marketer not found or you do not have permission to manage this marketer",
+      );
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: {
+          userId: marketerId,
+        },
+        data: {
+          deletedAt: new Date(),
+          active: false,
+        },
+      });
+
+      await tx.userSession.updateMany({
+        where: {
+          user: {
+            userId: marketerId,
+          },
+          revoked: false,
+        },
+        data: {
+          revoked: true,
+        },
+      });
+    });
+
+    emitEvent(DomainEvent.MARKETER_ACCOUNT_DELETED, {
+      marketerEmail: marketer.email,
+      marketerName: marketer.name!,
+      requestedBy: "Company Administrator",
+      marketerId: marketer.userId,
+      processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
+      dashboard_url: process.env.FRONTEND_URL,
+    });
+
+    return {
+      message: "Marketer deleted successfully",
+    };
+  }
+
   static async handleApprovalRequest(
     companyId: string,
     requestId: string,
@@ -282,20 +465,46 @@ export class UserManagementService {
   ) {
     const request = await prisma.approvalRequest.findFirst({
       where: { requestId, companyId, status: ApprovalStatus.PENDING },
-      include: { targetUser: true },
+      include: { targetUser: true, requestedBy: true },
     });
     if (!request) throw new NotFoundError("Pending approval request not found");
+
+    const requestAction = request.action;
+    const marketerName = request.targetUser.name;
+    const marketerId = request.targetUserId;
+    const requestBy = request.requestedBy;
 
     if (data.status === ApprovalStatus.REJECTED) {
       await prisma.approvalRequest.update({
         where: { id: request.id },
         data: { status: ApprovalStatus.REJECTED },
       });
+
+      if (requestAction === ApprovalAction.TOGGLE_ACTIVE) {
+        await NotificationOrchestrator.handle(
+          NotificationEventType.MARKETER_TOGGLE_REJECTED,
+          {
+            requestId: request.requestId,
+            marketerId,
+            marketerName: marketerName ?? "Marketer",
+          },
+        );
+      } else if (requestAction === ApprovalAction.SOFT_DELETE) {
+        await NotificationOrchestrator.handle(
+          NotificationEventType.MARKETER_DELETE_REJECTED,
+          {
+            requestId: request.requestId,
+            marketerId: request.targetUserId,
+            marketerName: request.targetUser.name ?? "Marketer",
+          },
+        );
+      }
+
       return { message: "Request rejected" };
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.approvalRequest.update({
+    const requestUpdated = await prisma.$transaction(async (tx) => {
+      const updatedRequest = await tx.approvalRequest.update({
         where: { id: request.id },
         data: { status: ApprovalStatus.APPROVED },
       });
@@ -316,22 +525,34 @@ export class UserManagementService {
           data: { revoked: true },
         });
       }
+
+      return updatedRequest;
     });
+
+    if (request.action === ApprovalAction.SOFT_DELETE) {
+      emitEvent(DomainEvent.MARKETER_ACCOUNT_DELETED, {
+        marketerEmail: request.targetUser.email,
+        marketerName: request.targetUser.name!,
+        requestedBy: requestBy.name!,
+        requestId: requestBy.userId,
+        marketerId: request.targetUserId,
+        processedAt: format(requestUpdated.updatedAt, "yyyy-MM-dd"),
+        dashboard_url: process.env.FRONTEND_URL,
+      });
+    } else {
+      emitEvent(DomainEvent.MARKETER_TOGGLE_STATUS, {
+        marketerEmail: request.targetUser.email,
+        marketerName: request.targetUser.name!,
+        status: request.targetUser.active ? "ACTIVE" : "SUSPENDED",
+        requestedBy: requestBy.name!,
+        requestId: requestBy.userId,
+        marketerId: request.targetUserId,
+        processedAt: format(requestUpdated.updatedAt, "yyyy-MM-dd"),
+        dashboard_url: process.env.FRONTEND_URL,
+      });
+    }
 
     return { message: "Request approved and action executed" };
-  }
-
-  static async getPendingApprovals(companyId: string) {
-    return prisma.approvalRequest.findMany({
-      where: { companyId, status: ApprovalStatus.PENDING },
-      include: {
-        requestedBy: { select: { name: true, email: true } },
-        targetUser: {
-          select: { name: true, email: true, role: true, active: true },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    });
   }
 
   private static async ensureAdminCanManageMarketer(
@@ -364,7 +585,8 @@ export class UserManagementService {
     companyId: string,
     marketerId: string,
   ) {
-    await this.ensureAdminCanManageMarketer(companyId, marketerId);
+    const { name: marketerName, creator: requestedBy } =
+      await this.ensureAdminCanManageMarketer(companyId, marketerId);
 
     const existing = await prisma.approvalRequest.findFirst({
       where: {
@@ -394,6 +616,17 @@ export class UserManagementService {
       },
     });
 
+    await NotificationOrchestrator.handle(
+      NotificationEventType.MARKETER_TOGGLE_REQUEST,
+      {
+        requestId: request.requestId,
+        marketerId,
+        companyId,
+        marketerName: marketerName ?? "Marketer",
+        requestedBy: requestedBy?.name || "Admin",
+      },
+    );
+
     return request;
   }
 
@@ -402,7 +635,8 @@ export class UserManagementService {
     companyId: string,
     marketerId: string,
   ) {
-    await this.ensureAdminCanManageMarketer(companyId, marketerId);
+    const { name: marketerName, creator: requestedBy } =
+      await this.ensureAdminCanManageMarketer(companyId, marketerId);
 
     const existing = await prisma.approvalRequest.findFirst({
       where: {
@@ -431,6 +665,17 @@ export class UserManagementService {
         createdAt: true,
       },
     });
+
+    await NotificationOrchestrator.handle(
+      NotificationEventType.MARKETER_DELETE_REQUEST,
+      {
+        requestId: request.requestId,
+        marketerId,
+        companyId,
+        marketerName: marketerName ?? "Marketer",
+        requestedBy: requestedBy?.name || "Admin",
+      },
+    );
 
     return request;
   }

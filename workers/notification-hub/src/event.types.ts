@@ -23,6 +23,7 @@ export enum DomainEvent {
 	COMMISSION_TRANSFER_FAILED_COMPANY = 'commission-transfer-failed-company',
 	COMMISSION_TRANSFER_REVERSED_MARKETER = 'commission-transfer-reversed-marketer',
 	COMMISSION_TRANSFER_REVERSED_COMPANY = 'commission-transfer-reversed-company',
+	MARKETER_ACCOUNT_DELETED = 'marketer-account-deleted',
 }
 
 export enum EventStatus {

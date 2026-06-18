@@ -588,3 +588,70 @@ onEvent(DomainEvent.COMMISSION_TRANSFER_REVERSED, async (payload) => {
     },
   );
 });
+
+onEvent(DomainEvent.MARKETER_ACCOUNT_DELETED, async (payload) => {
+  await NotificationService.send({
+    to: payload.marketerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.MARKETER_ACCOUNT_DELETED,
+    subject: `Account Closure: ${payload.marketerName}`,
+    context: {
+      marketerName: payload.marketerName,
+      reqestedBy: payload.requestedBy,
+      processedAt: payload.processedAt,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  if (payload.requestId) {
+    await NotificationOrchestrator.handle(
+      NotificationEventType.MARKETER_DELETE_APPROVED,
+      {
+        requestId: payload.requestId,
+        marketerId: payload.marketerId,
+        marketerName: payload.marketerName,
+      },
+    );
+  }
+});
+
+onEvent(DomainEvent.MARKETER_TOGGLE_STATUS, async (payload) => {
+  await NotificationService.send({
+    to: payload.marketerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.MARKETER_TOGGLE_STATUS,
+    subject:
+      payload.status === "ACTIVE" ? "Account Reactivated" : "Account Suspended",
+    context: {
+      marketerName: payload.marketerName,
+      requestedBy: payload.requestedBy,
+      processedAt: payload.processedAt,
+      status: payload.status,
+      statusColor: payload.status === "ACTIVE" ? "#22c55e" : "#f59e0b",
+      statusBg:
+        payload.status === "ACTIVE"
+          ? "rgba(34,197,94,0.12)"
+          : "rgba(245,158,11,0.12)",
+      title:
+        payload.status === "ACTIVE"
+          ? "Account Reactivated"
+          : "Account Suspended",
+      note:
+        payload.status === "ACTIVE"
+          ? "Good news — your account has been reactivated and you can now continue using the platform."
+          : "Your account has been suspended due to administrative action. Access has been temporarily disabled.",
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  if (payload.requestId) {
+    await NotificationOrchestrator.handle(
+      NotificationEventType.MARKETER_TOGGLE_APPROVED,
+      {
+        requestId: payload.requestId,
+        marketerId: payload.marketerId,
+        marketerName: payload.marketerName,
+      },
+    );
+  }
+});

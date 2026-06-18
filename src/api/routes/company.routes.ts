@@ -16,9 +16,17 @@ router.get("/admins/:adminId/marketers", CompanyController.getAdminMarketers);
 router.post("/admins", CompanyController.createAdmin);
 router.patch("/admins/:id/status", CompanyController.toggleAdmin);
 router.delete("/admins/:id", CompanyController.deleteAdmin);
+router.patch(
+  "/marketers/:marketerId/toggle-status",
+  CompanyController.toggleCompanyMarketerStatus,
+);
+router.delete(
+  "/marketers/:marketerId",
+  CompanyController.toggleCompanyMarketerStatus,
+);
 
 // Maker-Checker Approvals
-router.get("/approvals", CompanyController.getApprovals);
+router.get("/approvals", CompanyController.getPendingApprovals);
 router.post("/approvals/:requestId", CompanyController.handleApproval);
 
 export default router;

@@ -307,6 +307,108 @@ paths:
         "200":
           description: Request handled successfully
 
+    /company/marketers/{marketerId}/toggle-status:
+    patch:
+      summary: Toggle Marketer Active Status
+      description: |
+        Directly activate or suspend a marketer account created by the authenticated company user.
+        The marketer must:
+          - Belong to the same company
+          - Have role MARKETER
+          - Be created by the authenticated company user
+          - Not be soft deleted
+      tags: [Company Administration]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+
+      parameters:
+        - in: path
+          name: marketerId
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Marketer status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Marketer suspended successfully
+
+                  data:
+                    type: object
+                    properties:
+                      active:
+                        type: boolean
+                        example: false
+
+        "404":
+          description: Marketer not found or permission denied
+
+        "401":
+          description: Unauthorized
+
+  /company/marketers/{marketerId}:
+    delete:
+      summary: Soft Delete Marketer
+      description: |
+        Permanently disables a marketer account through soft deletion.
+        The marketer must:
+          - Belong to the same company
+          - Have role MARKETER
+          - Be created by the authenticated company user
+          - Not already be deleted
+
+        This operation:
+          - Sets deletedAt
+          - Sets active = false
+          - Revokes all active sessions
+          - Sends notifications and email alerts
+
+      tags: [Company Administration]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+
+      parameters:
+        - in: path
+          name: marketerId
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Marketer deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Marketer deleted successfully
+
+        "404":
+          description: Marketer not found or permission denied
+
+        "401":
+          description: Unauthorized
+
 components:
   schemas:
     AdminSummary:
@@ -453,3 +555,21 @@ components:
 
         hasPreviousPage:
           type: boolean
+
+    MarketerStatusResponse:
+      type: object
+      properties:
+        active:
+          type: boolean
+          example: false
+
+    SuccessMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+
+        message:
+          type: string
+          example: Operation completed successfully

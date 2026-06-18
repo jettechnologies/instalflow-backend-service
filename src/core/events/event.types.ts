@@ -20,6 +20,8 @@ export enum DomainEvent {
   COMMISSION_TRANSFER_SUCCESS = "commission.transfer.success",
   COMMISSION_TRANSFER_FAILED = "commission.transfer.failed",
   COMMISSION_TRANSFER_REVERSED = "commission.transfer.reversed",
+  MARKETER_ACCOUNT_DELETED = "marketer.account.deleted",
+  MARKETER_TOGGLE_STATUS = "marketer.toggle.status",
 }
 
 export enum EventStatus {
@@ -176,6 +178,26 @@ export interface DomainEventPayloads {
     amountPaid: string | number;
     nextDueDate: string;
     percentagePaid: number;
+    dashboard_url?: string;
+  };
+  [DomainEvent.MARKETER_ACCOUNT_DELETED]: {
+    marketerEmail: string;
+    marketerName: string;
+    requestId?: string;
+    requestedBy: string;
+    marketerId: string;
+    processedAt: string;
+    dashboard_url?: string;
+  };
+
+  [DomainEvent.MARKETER_TOGGLE_STATUS]: {
+    marketerEmail: string;
+    marketerName: string;
+    requestId?: string;
+    requestedBy: string;
+    marketerId: string;
+    status: "ACTIVE" | "SUSPENDED";
+    processedAt: string;
     dashboard_url?: string;
   };
   [DomainEvent.INSTALLMENT_REMINDER_3DAY]: Reminder3DayPayload;

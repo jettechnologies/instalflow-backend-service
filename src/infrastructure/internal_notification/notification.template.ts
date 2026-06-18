@@ -72,6 +72,42 @@ export class NotificationTemplates {
           message: `This is a final notice. Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is now 7 days overdue. This matter has been escalated to management. Pay immediately to avoid default status.`,
         };
 
+      case NotificationEventType.MARKETER_TOGGLE_REQUEST:
+        return {
+          title: "Marketer Status Change Request",
+          message: `${payload.requestedBy} requested to change the active status of marketer "${payload.marketerName}". Approval is required.`,
+        };
+
+      case NotificationEventType.MARKETER_DELETE_REQUEST:
+        return {
+          title: "Marketer Deletion Request",
+          message: `${payload.requestedBy} requested to delete marketer "${payload.marketerName}". Approval is required.`,
+        };
+
+      case NotificationEventType.MARKETER_TOGGLE_APPROVED:
+        return {
+          title: "Marketer Status Updated",
+          message: `Your request to change the status of marketer "${payload.marketerName}" has been approved and executed.`,
+        };
+
+      case NotificationEventType.MARKETER_TOGGLE_REJECTED:
+        return {
+          title: "Marketer Status Request Rejected",
+          message: `Your request to change the status of marketer "${payload.marketerName}" was rejected.`,
+        };
+
+      case NotificationEventType.MARKETER_DELETE_APPROVED:
+        return {
+          title: "Marketer Deleted",
+          message: `Your request to delete marketer "${payload.marketerName}" has been approved and completed.`,
+        };
+
+      case NotificationEventType.MARKETER_DELETE_REJECTED:
+        return {
+          title: "Marketer Deletion Request Rejected",
+          message: `Your request to delete marketer "${payload.marketerName}" was rejected.`,
+        };
+
       default:
         return {
           title: "Notification",

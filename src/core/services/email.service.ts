@@ -35,6 +35,8 @@ export enum EmailTemplate {
   COMMISSION_TRANSFER_FAILED_COMPANY = "commission-transfer-failed-company",
   COMMISSION_TRANSFER_REVERSED_MARKETER = "commission-transfer-reversed-marketer",
   COMMISSION_TRANSFER_REVERSED_COMPANY = "commission-transfer-reversed-company",
+  MARKETER_ACCOUNT_DELETED = "marketer-account-deleted",
+  MARKETER_TOGGLE_STATUS = "marketer-account-toggle",
 }
 
 interface SendEmailProps {
