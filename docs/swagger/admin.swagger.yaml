@@ -7,28 +7,25 @@ paths:
     get:
       summary: Get all marketers created by the authenticated admin
       tags: [Admin Operations]
+
       security:
         - bearerAuth: []
-        - csrfToken: []
 
       parameters:
         - in: query
           name: page
-          required: false
           schema:
             type: integer
             default: 1
 
         - in: query
           name: limit
-          required: false
           schema:
             type: integer
             default: 10
 
         - in: query
           name: sortOrder
-          required: false
           schema:
             type: string
             enum: [asc, desc]
@@ -41,6 +38,7 @@ paths:
             application/json:
               schema:
                 type: object
+
                 properties:
                   success:
                     type: boolean
@@ -56,87 +54,81 @@ paths:
                     properties:
                       marketers:
                         type: array
-
                         items:
-                          type: object
-
-                          properties:
-                            userId:
-                              type: string
-                              example: 9f2f5f7c-bab1-4d6f-a3bb-6c4d8d87b120
-
-                            name:
-                              type: string
-                              example: John Doe
-
-                            email:
-                              type: string
-                              example: john@example.com
-
-                            role:
-                              type: string
-                              example: MARKETER
-
-                            active:
-                              type: boolean
-                              example: true
-
-                            referralCode:
-                              type: string
-                              nullable: true
-                              example: REF12345
-
-                            createdAt:
-                              type: string
-                              format: date-time
-
-                            updatedAt:
-                              type: string
-                              format: date-time
-
-                            _count:
-                              type: object
-
-                              properties:
-                                referredUsers:
-                                  type: integer
-                                  example: 12
+                          $ref: "#/components/schemas/MarketerSummary"
 
                       pagination:
-                        type: object
+                        $ref: "#/components/schemas/Pagination"
 
-                        properties:
-                          total:
-                            type: integer
-                            example: 100
+  /admin/marketers/{marketerId}:
+    get:
+      summary: Get marketer details
+      description: |
+        Retrieves detailed information about a marketer including:
 
-                          totalPages:
-                            type: integer
-                            example: 10
+        - Profile information
+        - Referral statistics
+        - Financing performance
+        - Commission statistics
+        - Payout history
+        - Bank accounts
+        - Recently referred customers
 
-                          currentPage:
-                            type: integer
-                            example: 1
+      tags: [Admin Operations]
 
-                          limit:
-                            type: integer
-                            example: 10
+      security:
+        - bearerAuth: []
 
-                          hasNextPage:
-                            type: boolean
-                            example: true
+      parameters:
+        - in: path
+          name: marketerId
+          required: true
+          schema:
+            type: string
+            format: uuid
 
-                          hasPreviousPage:
-                            type: boolean
-                            example: false
+      responses:
+        "200":
+          description: Marketer details retrieved successfully
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Marketer details retrieved successfully
+
+                  data:
+                    $ref: "#/components/schemas/MarketerDetails"
+
+        "403":
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "404":
+          description: Marketer not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /admin/marketers/{id}/request-toggle:
     post:
       summary: Request to toggle a marketer's active status
       tags: [Admin Operations]
+
       security:
         - bearerAuth: []
-        - csrfToken: []
 
       parameters:
         - in: path
@@ -144,7 +136,6 @@ paths:
           required: true
           schema:
             type: string
-          description: User ID of the marketer
 
       responses:
         "201":
@@ -154,9 +145,9 @@ paths:
     post:
       summary: Request to soft delete a marketer
       tags: [Admin Operations]
+
       security:
         - bearerAuth: []
-        - csrfToken: []
 
       parameters:
         - in: path
@@ -164,11 +155,289 @@ paths:
           required: true
           schema:
             type: string
-          description: User ID of the marketer
 
       responses:
         "201":
           description: Delete request submitted for approval
+
+components:
+  schemas:
+    MarketerSummary:
+      type: object
+
+      properties:
+        userId:
+          type: string
+          format: uuid
+
+        name:
+          type: string
+          nullable: true
+          example: John Doe
+
+        email:
+          type: string
+          format: email
+          example: john@example.com
+
+        role:
+          type: string
+          example: MARKETER
+
+        active:
+          type: boolean
+          example: true
+
+        referralCode:
+          type: string
+          nullable: true
+          example: REF12345
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+        _count:
+          type: object
+
+          properties:
+            referredUsers:
+              type: integer
+              example: 15
+
+    MarketerCreator:
+      type: object
+
+      properties:
+        userId:
+          type: string
+          format: uuid
+
+        name:
+          type: string
+          example: Company Admin
+
+        email:
+          type: string
+          format: email
+
+        role:
+          type: string
+          example: ADMIN
+
+    MarketerBankAccount:
+      type: object
+
+      properties:
+        accountId:
+          type: string
+          format: uuid
+
+        bankName:
+          type: string
+          example: Access Bank
+
+        accountName:
+          type: string
+          example: John Doe
+
+        accountNumber:
+          type: string
+          example: "0123456789"
+
+        isPrimary:
+          type: boolean
+          example: true
+
+        isVerified:
+          type: boolean
+          example: true
+
+    MarketerStats:
+      type: object
+
+      properties:
+        referredCustomers:
+          type: integer
+          example: 45
+
+        approvedKycApplications:
+          type: integer
+          example: 31
+
+        financingContracts:
+          type: integer
+          example: 22
+
+        totalFinancedVolume:
+          type: number
+          example: 12500000
+
+        totalCommissionGenerated:
+          type: number
+          example: 450000
+
+        totalCommissionRecords:
+          type: integer
+          example: 85
+
+        totalPayoutRequested:
+          type: number
+          example: 250000
+
+        totalPayoutRequests:
+          type: integer
+          example: 8
+
+    ReferredCustomer:
+      type: object
+
+      properties:
+        userId:
+          type: string
+          format: uuid
+
+        name:
+          type: string
+          nullable: true
+
+        email:
+          type: string
+          format: email
+
+        createdAt:
+          type: string
+          format: date-time
+
+    RecentPayoutRequest:
+      type: object
+
+      properties:
+        payoutId:
+          type: string
+          format: uuid
+
+        amount:
+          type: number
+          example: 50000
+
+        status:
+          type: string
+          enum:
+            - PENDING_ADMIN_APPROVAL
+            - PENDING_COMPANY_APPROVAL
+            - APPROVED
+            - REJECTED
+            - TRANSFER_PENDING
+            - PAID
+            - FAILED
+
+        requestedAt:
+          type: string
+          format: date-time
+
+    MarketerDetails:
+      type: object
+
+      properties:
+        userId:
+          type: string
+          format: uuid
+
+        name:
+          type: string
+          nullable: true
+
+        email:
+          type: string
+          format: email
+
+        role:
+          type: string
+          example: MARKETER
+
+        active:
+          type: boolean
+
+        referralCode:
+          type: string
+          nullable: true
+
+        createdAt:
+          type: string
+          format: date-time
+
+        updatedAt:
+          type: string
+          format: date-time
+
+        creator:
+          $ref: "#/components/schemas/MarketerCreator"
+
+        marketerBankAccounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketerBankAccount"
+
+        stats:
+          $ref: "#/components/schemas/MarketerStats"
+
+        recentCustomers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReferredCustomer"
+
+        recentPayoutRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecentPayoutRequest"
+
+    Pagination:
+      type: object
+
+      properties:
+        total:
+          type: integer
+          example: 100
+
+        totalPages:
+          type: integer
+          example: 10
+
+        currentPage:
+          type: integer
+          example: 1
+
+        limit:
+          type: integer
+          example: 10
+
+        hasNextPage:
+          type: boolean
+          example: true
+
+        hasPreviousPage:
+          type: boolean
+          example: false
+
+    ErrorResponse:
+      type: object
+
+      properties:
+        success:
+          type: boolean
+          example: false
+
+        message:
+          type: string
+
+        statusCode:
+          type: integer
+          example: 404
 
 # tags:
 #   - name: Admin Operations

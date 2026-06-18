@@ -58,4 +58,23 @@ export class AdminController {
       result,
     );
   }
+
+  static async getMarketerDetails(req: Request, res: Response) {
+    const companyId = req.user!.companyId!;
+    const adminId = req.user!.userId!;
+    const marketerId = req.params.marketerId as string;
+
+    const data = await UserManagementService.getMarketerDetails({
+      companyId,
+      adminId,
+      marketerId,
+    });
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Marketer details retrieved successfully",
+      data,
+    );
+  }
 }

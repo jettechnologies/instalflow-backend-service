@@ -15,6 +15,12 @@ router.get(
   AdminController.getAdminMarketers,
 );
 
+router.get(
+  "/marketers/:marketerId",
+  requireRole([Role.ADMIN, Role.COMPANY]),
+  AdminController.getMarketerDetails,
+);
+
 router.use(requireRole([Role.ADMIN]));
 
 // Maker-Checker Requests

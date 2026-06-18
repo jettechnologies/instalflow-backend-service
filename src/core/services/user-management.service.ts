@@ -531,4 +531,203 @@ export class UserManagementService {
       pagination,
     };
   }
+
+  static async getMarketerDetails(params: {
+    companyId: string;
+    adminId: string;
+    marketerId: string;
+  }) {
+    const { companyId, adminId, marketerId } = params;
+
+    // Ensure admin belongs to company
+    const admin = await prisma.user.findFirst({
+      where: {
+        userId: adminId,
+        companyId,
+        role: {
+          in: [Role.ADMIN, Role.COMPANY],
+        },
+        deletedAt: null,
+        OR: [{ createdById: adminId }, { creator: { role: Role.COMPANY } }],
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    if (!admin) {
+      throw new ForbiddenError("You are not allowed to access this marketer.");
+    }
+
+    const marketer = await prisma.user.findFirst({
+      where: {
+        userId: marketerId,
+        companyId,
+        role: Role.MARKETER,
+        deletedAt: null,
+      },
+
+      select: {
+        userId: true,
+        name: true,
+        email: true,
+        role: true,
+        active: true,
+        referralCode: true,
+        createdAt: true,
+        updatedAt: true,
+
+        creator: {
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+
+        marketerBankAccounts: {
+          orderBy: {
+            createdAt: "desc",
+          },
+
+          select: {
+            accountId: true,
+            bankName: true,
+            accountName: true,
+            accountNumber: true,
+            isPrimary: true,
+            isVerified: true,
+          },
+        },
+
+        _count: {
+          select: {
+            referredUsers: true,
+          },
+        },
+      },
+    });
+
+    if (!marketer) {
+      throw new NotFoundError("Marketer not found");
+    }
+
+    const [
+      approvedKycCount,
+      financingContractCount,
+      financedVolume,
+      commissionStats,
+      payoutStats,
+      recentCustomers,
+      recentPayoutRequests,
+    ] = await prisma.$transaction([
+      prisma.kycApplication.count({
+        where: {
+          user: {
+            referredByMarketerId: marketerId,
+          },
+          status: "APPROVED",
+        },
+      }),
+
+      prisma.financingContract.count({
+        where: {
+          user: {
+            referredByMarketerId: marketerId,
+          },
+        },
+      }),
+
+      prisma.financingContract.aggregate({
+        where: {
+          user: {
+            referredByMarketerId: marketerId,
+          },
+        },
+
+        _sum: {
+          totalFinanced: true,
+        },
+      }),
+
+      prisma.commission.aggregate({
+        where: {
+          userId: marketerId,
+        },
+
+        _sum: {
+          amount: true,
+        },
+
+        _count: true,
+      }),
+
+      prisma.commissionPayoutRequest.aggregate({
+        where: {
+          userId: marketerId,
+        },
+
+        _sum: {
+          amount: true,
+        },
+
+        _count: true,
+      }),
+
+      prisma.user.findMany({
+        where: {
+          referredByMarketerId: marketerId,
+        },
+
+        take: 5,
+
+        orderBy: {
+          createdAt: "desc",
+        },
+
+        select: {
+          userId: true,
+          name: true,
+          email: true,
+          createdAt: true,
+        },
+      }),
+
+      prisma.commissionPayoutRequest.findMany({
+        where: {
+          userId: marketerId,
+        },
+
+        take: 5,
+
+        orderBy: {
+          requestedAt: "desc",
+        },
+
+        select: {
+          payoutId: true,
+          amount: true,
+          status: true,
+          requestedAt: true,
+        },
+      }),
+    ]);
+
+    return {
+      ...marketer,
+      stats: {
+        referredCustomers: marketer._count.referredUsers,
+        approvedKycApplications: approvedKycCount,
+        financingContracts: financingContractCount,
+        totalFinancedVolume: Number(financedVolume._sum.totalFinanced || 0),
+        totalCommissionGenerated: Number(commissionStats._sum.amount || 0),
+        totalCommissionRecords: commissionStats._count,
+        totalPayoutRequested: Number(payoutStats._sum.amount || 0),
+        totalPayoutRequests: payoutStats._count,
+      },
+      recentCustomers,
+      recentPayoutRequests,
+    };
+  }
 }
