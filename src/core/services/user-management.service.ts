@@ -709,6 +709,7 @@ export class UserManagementService {
       },
 
       select: {
+        role: true,
         userId: true,
       },
     });
@@ -720,10 +721,12 @@ export class UserManagementService {
     }
 
     const whereClause: Prisma.UserWhereInput = {
-      createdById: adminId,
       companyId,
       role: Role.MARKETER,
       deletedAt: null,
+      ...(admin.role === Role.ADMIN && {
+        createdById: admin.userId,
+      }),
     };
 
     const [marketers, total] = await prisma.$transaction([
@@ -793,9 +796,9 @@ export class UserManagementService {
           in: [Role.ADMIN, Role.COMPANY],
         },
         deletedAt: null,
-        OR: [{ createdById: adminId }, { creator: { role: Role.COMPANY } }],
       },
       select: {
+        role: true,
         userId: true,
       },
     });
@@ -810,6 +813,9 @@ export class UserManagementService {
         companyId,
         role: Role.MARKETER,
         deletedAt: null,
+        ...(admin.role === Role.ADMIN && {
+          createdById: admin.userId,
+        }),
       },
 
       select: {
