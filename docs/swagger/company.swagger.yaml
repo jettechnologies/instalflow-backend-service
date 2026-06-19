@@ -307,7 +307,7 @@ paths:
         "200":
           description: Request handled successfully
 
-    /company/marketers/{marketerId}/toggle-status:
+  /company/marketers/{marketerId}/toggle-status:
     patch:
       summary: Toggle Marketer Active Status
       description: |
