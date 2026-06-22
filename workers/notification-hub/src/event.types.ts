@@ -16,14 +16,12 @@ export enum DomainEvent {
 	INSTALLMENT_DUE_TODAY = 'installment.due.today',
 	INSTALLMENT_OVERDUE_3DAY = 'installment.overdue.3day',
 	INSTALLMENT_OVERDUE_7DAY = 'installment.overdue.7day',
-	COMMISSION_TRANSFER_INITIATED = 'commission-transfer-initiated',
-	COMMISSION_TRANSFER_SUCCESS = 'commission-transfer-success',
-	COMMISSION_TRANSFER_SUCCESS_COMPANY = 'commission-transfer-success-company',
-	COMMISSION_TRANSFER_FAILED_MARKETER = 'commission-transfer-failed-marketer',
-	COMMISSION_TRANSFER_FAILED_COMPANY = 'commission-transfer-failed-company',
-	COMMISSION_TRANSFER_REVERSED_MARKETER = 'commission-transfer-reversed-marketer',
-	COMMISSION_TRANSFER_REVERSED_COMPANY = 'commission-transfer-reversed-company',
-	MARKETER_ACCOUNT_DELETED = 'marketer-account-deleted',
+	COMMISSION_TRANSFER_INITIATED = 'commission.transfer.initiated',
+	COMMISSION_TRANSFER_SUCCESS = 'commission.transfer.success',
+	COMMISSION_TRANSFER_FAILED = 'commission.transfer.failed',
+	COMMISSION_TRANSFER_REVERSED = 'commission.transfer.reversed',
+	MARKETER_ACCOUNT_DELETED = 'marketer.account.deleted',
+	MARKETER_TOGGLE_STATUS = 'marketer.toggle.status',
 }
 
 export enum EventStatus {

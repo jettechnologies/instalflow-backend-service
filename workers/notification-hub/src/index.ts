@@ -57,16 +57,19 @@ export default {
 							continue;
 						}
 
-						const msg: EmailQueueMessage = {
-							to: toEmail,
-							subject: resolvedSubject,
-							template: resolvedTemplate,
-							context: resolvedContext,
-						};
+						const emails = Array.isArray(toEmail) ? toEmail : [toEmail];
+						for (const email of emails) {
+							const msg: EmailQueueMessage = {
+								to: email,
+								subject: resolvedSubject,
+								template: resolvedTemplate,
+								context: resolvedContext,
+							};
 
-						await env.email_queue.send(msg);
-						dispatched.push(`email:${resolvedTemplate}`);
-						console.log(`[hub] → email_queue  template=${resolvedTemplate} to=${toEmail}`);
+							await env.email_queue.send(msg);
+							dispatched.push(`email:${resolvedTemplate}`);
+							console.log(`[hub] → email_queue  template=${resolvedTemplate} to=${email}`);
+						}
 					}
 
 					if (channel === NotificationChannel.SMS) {

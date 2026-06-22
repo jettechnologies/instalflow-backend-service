@@ -6,6 +6,12 @@ export class NotificationService {
   static async send(notification: NotificationPayload) {
     switch (notification.channel) {
       case NotificationChannel.EMAIL:
+        if (process.env.NOTIFICATION_HUB_URL) {
+          console.log(
+            `[NotificationService] NOTIFICATION_HUB_URL is configured — skipping local email delivery to ${notification.to} (delegating to hub)`
+          );
+          return { success: true, skipped: true };
+        }
         return EmailChannel.send(notification);
 
       default:

@@ -352,9 +352,6 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dashboard_url: p.dashboard_url,
 			}),
 		},
-	],
-
-	[DomainEvent.COMMISSION_TRANSFER_SUCCESS_COMPANY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.companyEmails,
@@ -370,7 +367,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		},
 	],
 
-	[DomainEvent.COMMISSION_TRANSFER_FAILED_MARKETER]: [
+	[DomainEvent.COMMISSION_TRANSFER_FAILED]: [
 		{
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.marketerEmail,
@@ -384,9 +381,6 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dashboard_url: p.dashboard_url,
 			}),
 		},
-	],
-
-	[DomainEvent.COMMISSION_TRANSFER_FAILED_COMPANY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.companyEmails,
@@ -402,7 +396,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		},
 	],
 
-	[DomainEvent.COMMISSION_TRANSFER_REVERSED_MARKETER]: [
+	[DomainEvent.COMMISSION_TRANSFER_REVERSED]: [
 		{
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.marketerEmail,
@@ -415,9 +409,6 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dashboard_url: p.dashboard_url,
 			}),
 		},
-	],
-
-	[DomainEvent.COMMISSION_TRANSFER_REVERSED_COMPANY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.companyEmails,
@@ -431,10 +422,11 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			}),
 		},
 	],
+
 	[DomainEvent.MARKETER_ACCOUNT_DELETED]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			to: (p) => p.companyEmails,
+			to: (p) => p.marketerEmail,
 			template: 'marketer-account-deleted',
 			subject: (p) => `Account Closure: ${p.marketerName}`,
 			context: (p) => ({
@@ -449,8 +441,8 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 	[DomainEvent.MARKETER_TOGGLE_STATUS]: [
 		{
 			channels: [NotificationChannel.EMAIL],
-			to: (p) => p.companyEmails,
-			template: 'marketer-account-deleted',
+			to: (p) => p.marketerEmail,
+			template: 'marketer-account-toggle',
 			subject: (p) => (p.status === 'ACTIVE' ? 'Account Reactivated' : 'Account Suspended'),
 			context: (p) => ({
 				marketerName: p.marketerName,
