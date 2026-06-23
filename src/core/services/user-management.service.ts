@@ -249,10 +249,44 @@ export class UserManagementService {
     });
     if (!admin) throw new NotFoundError("Admin not found or deleted");
 
-    const updated = await prisma.user.update({
-      where: { userId: adminId },
-      data: { active: data.active },
-      select: { userId: true, name: true, active: true },
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedUser = await tx.user.update({
+        where: {
+          userId: adminId,
+        },
+        data: {
+          active: data.active,
+        },
+        select: {
+          userId: true,
+          name: true,
+          active: true,
+          email: true,
+        },
+      });
+
+      if (!updatedUser.active) {
+        await tx.userSession.updateMany({
+          where: {
+            user: { userId: adminId },
+            revoked: false,
+          },
+          data: {
+            revoked: true,
+          },
+        });
+      }
+
+      emitEvent(DomainEvent.ADMIN_TOGGLE_STATUS, {
+        adminEmail: updated.email,
+        adminName: updated.name!,
+        requestedBy: "Company Administrator",
+        processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
+        status: updated.active ? "ACTIVE" : "SUSPENDED",
+        dashboard_url: process.env.FRONTEND_URL,
+      });
+
+      return updatedUser;
     });
 
     return updated;
@@ -264,15 +298,38 @@ export class UserManagementService {
     });
     if (!admin) throw new NotFoundError("Admin not found or already deleted");
 
-    const updated = await prisma.user.update({
-      where: { userId: adminId },
-      data: { deletedAt: new Date(), active: false },
-      select: { userId: true, name: true, deletedAt: true },
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedUser = await tx.user.update({
+        where: {
+          userId: adminId,
+        },
+        data: {
+          deletedAt: new Date(),
+          active: false,
+        },
+        select: {
+          userId: true,
+          name: true,
+          active: true,
+          email: true,
+        },
+      });
+
+      await tx.userSession.updateMany({
+        where: { user: { userId: adminId }, revoked: false },
+        data: { revoked: true },
+      });
+
+      return updatedUser;
     });
 
-    await prisma.userSession.updateMany({
-      where: { user: { userId: adminId }, revoked: false },
-      data: { revoked: true },
+    emitEvent(DomainEvent.ADMIN_ACCOUNT_DELETED, {
+      adminEmail: updated.email,
+      adminName: updated.name!,
+      requestedBy: "Company Administrator",
+      adminId: updated.userId,
+      processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
+      dashboard_url: process.env.FRONTEND_URL,
     });
 
     return updated;

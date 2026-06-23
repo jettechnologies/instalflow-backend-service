@@ -22,6 +22,8 @@ export enum DomainEvent {
   COMMISSION_TRANSFER_REVERSED = "commission.transfer.reversed",
   MARKETER_ACCOUNT_DELETED = "marketer.account.deleted",
   MARKETER_TOGGLE_STATUS = "marketer.toggle.status",
+  ADMIN_TOGGLE_STATUS = "admin.toggle.status",
+  ADMIN_ACCOUNT_DELETED = "admin.account.deleted",
 }
 
 export enum EventStatus {
@@ -200,6 +202,25 @@ export interface DomainEventPayloads {
     processedAt: string;
     dashboard_url?: string;
   };
+
+  [DomainEvent.ADMIN_ACCOUNT_DELETED]: {
+    adminEmail: string;
+    adminName: string;
+    requestedBy: string;
+    adminId: string;
+    processedAt: string;
+    dashboard_url?: string;
+  };
+
+  [DomainEvent.ADMIN_TOGGLE_STATUS]: {
+    adminEmail: string;
+    adminName: string;
+    requestedBy: string;
+    status: "ACTIVE" | "SUSPENDED";
+    processedAt: string;
+    dashboard_url?: string;
+  };
+
   [DomainEvent.INSTALLMENT_REMINDER_3DAY]: Reminder3DayPayload;
   [DomainEvent.INSTALLMENT_DUE_TODAY]: DueTodayPayload;
   [DomainEvent.INSTALLMENT_OVERDUE_3DAY]: Overdue3DayPayload;

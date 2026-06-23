@@ -460,4 +460,41 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			}),
 		},
 	],
+	[DomainEvent.ADMIN_ACCOUNT_DELETED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.adminEmail,
+			template: 'marketer-account-deleted',
+			subject: (p) => `Account Closure: ${p.adminName}`,
+			context: (p) => ({
+				marketerName: p.adminName,
+				reqestedBy: p.requestedBy,
+				processedAt: p.processedAt,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.ADMIN_TOGGLE_STATUS]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.adminEmail,
+			template: 'marketer-account-toggle',
+			subject: (p) => (p.status === 'ACTIVE' ? 'Account Reactivated' : 'Account Suspended'),
+			context: (p) => ({
+				marketerName: p.adminName,
+				requestedBy: p.requestedBy,
+				processedAt: p.processedAt,
+				status: p.status,
+				statusColor: p.status === 'ACTIVE' ? '#22c55e' : '#f59e0b',
+				statusBg: p.status === 'ACTIVE' ? 'rgba(34,197,94,0.12)' : 'rgba(245,158,11,0.12)',
+				title: p.status === 'ACTIVE' ? 'Account Reactivated' : 'Account Suspended',
+				note:
+					p.status === 'ACTIVE'
+						? 'Good news — your account has been reactivated and you can now continue using the platform.'
+						: 'Your account has been suspended due to administrative action. Access has been temporarily disabled.',
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
 };

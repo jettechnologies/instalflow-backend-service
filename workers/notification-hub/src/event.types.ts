@@ -22,6 +22,8 @@ export enum DomainEvent {
 	COMMISSION_TRANSFER_REVERSED = 'commission.transfer.reversed',
 	MARKETER_ACCOUNT_DELETED = 'marketer.account.deleted',
 	MARKETER_TOGGLE_STATUS = 'marketer.toggle.status',
+	ADMIN_TOGGLE_STATUS = 'admin.toggle.status',
+	ADMIN_ACCOUNT_DELETED = 'admin.account.deleted',
 }
 
 export enum EventStatus {
