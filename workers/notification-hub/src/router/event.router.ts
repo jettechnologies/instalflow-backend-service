@@ -464,7 +464,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		{
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.adminEmail,
-			template: 'marketer-account-deleted',
+			template: 'admin-account-deleted',
 			subject: (p) => `Account Closure: ${p.adminName}`,
 			context: (p) => ({
 				marketerName: p.adminName,
@@ -479,7 +479,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		{
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.adminEmail,
-			template: 'marketer-account-toggle',
+			template: 'admin-account-toggle',
 			subject: (p) => (p.status === 'ACTIVE' ? 'Account Reactivated' : 'Account Suspended'),
 			context: (p) => ({
 				marketerName: p.adminName,
