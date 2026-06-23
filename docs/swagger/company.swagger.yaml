@@ -179,18 +179,6 @@ paths:
           schema:
             type: string
 
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - active
-              properties:
-                active:
-                  type: boolean
-
       responses:
         "200":
           description: Admin status updated successfully

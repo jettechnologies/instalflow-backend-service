@@ -81,12 +81,10 @@ export class CompanyController {
 
   static async toggleAdmin(req: Request, res: Response) {
     const adminId = req.params.id as string;
-    const payload = ToggleStatusSchema.parse(req.body);
 
     const updated = await UserManagementService.toggleAdminStatus(
       req.user!.companyId!,
       adminId,
-      payload,
     );
 
     return ApiResponse.success(res, 200, "Admin status updated", updated);

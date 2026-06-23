@@ -239,11 +239,7 @@ export class UserManagementService {
     return { user, tempPassword };
   }
 
-  static async toggleAdminStatus(
-    companyId: string,
-    adminId: string,
-    data: z.infer<typeof ToggleStatusSchema>,
-  ) {
+  static async toggleAdminStatus(companyId: string, adminId: string) {
     const admin = await prisma.user.findFirst({
       where: { userId: adminId, companyId, role: Role.ADMIN, deletedAt: null },
     });
@@ -255,7 +251,7 @@ export class UserManagementService {
           userId: adminId,
         },
         data: {
-          active: data.active,
+          active: !admin.active,
         },
         select: {
           userId: true,
