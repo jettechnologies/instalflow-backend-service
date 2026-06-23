@@ -12,6 +12,7 @@ import {
   ConflictError,
   NotFoundError,
   ForbiddenError,
+  BadRequestError,
 } from "@/shared/utils/AppError";
 import {
   CreateAdminSchema,
@@ -239,32 +240,102 @@ export class UserManagementService {
     return { user, tempPassword };
   }
 
+  // static async toggleAdminStatus(companyId: string, adminId: string) {
+  //   const admin = await prisma.user.findFirst({
+  //     where: { userId: adminId, companyId, role: Role.ADMIN, deletedAt: null },
+  //   });
+  //   if (!admin) throw new NotFoundError("Admin not found or deleted");
+
+  //   const updated = await prisma.$transaction(async (tx) => {
+  //     const updatedUser = await tx.user.update({
+  //       where: {
+  //         userId: adminId,
+  //       },
+  //       data: {
+  //         active: !admin.active,
+  //       },
+  //       select: {
+  //         userId: true,
+  //         name: true,
+  //         active: true,
+  //         email: true,
+  //       },
+  //     });
+
+  //     if (!updatedUser.active) {
+  //       await tx.userSession.updateMany({
+  //         where: {
+  //           user: { userId: adminId },
+  //           revoked: false,
+  //         },
+  //         data: {
+  //           revoked: true,
+  //         },
+  //       });
+  //     }
+
+  //     emitEvent(DomainEvent.ADMIN_TOGGLE_STATUS, {
+  //       adminEmail: updated.email,
+  //       adminName: updated.name!,
+  //       requestedBy: "Company Administrator",
+  //       processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
+  //       status: updated.active ? "ACTIVE" : "SUSPENDED",
+  //       dashboard_url: process.env.FRONTEND_URL,
+  //     });
+
+  //     return updatedUser;
+  //   });
+
+  //   return updated;
+  // }
+
   static async toggleAdminStatus(companyId: string, adminId: string) {
     const admin = await prisma.user.findFirst({
-      where: { userId: adminId, companyId, role: Role.ADMIN, deletedAt: null },
+      where: {
+        userId: adminId,
+        companyId,
+        role: Role.ADMIN,
+        deletedAt: null,
+      },
     });
-    if (!admin) throw new NotFoundError("Admin not found or deleted");
 
-    const updated = await prisma.$transaction(async (tx) => {
-      const updatedUser = await tx.user.update({
+    if (!admin) {
+      throw new NotFoundError(
+        "Admin not found or you do not have permission to manage this admin",
+      );
+    }
+
+    if (admin.active) {
+      const activeAdminsCount = await prisma.user.count({
+        where: {
+          companyId,
+          role: Role.ADMIN,
+          active: true,
+          deletedAt: null,
+        },
+      });
+
+      if (activeAdminsCount <= 1) {
+        throw new BadRequestError("You cannot suspend the last active admin.");
+      }
+    }
+
+    const updatedAdmin = await prisma.$transaction(async (tx) => {
+      const updated = await tx.user.update({
         where: {
           userId: adminId,
         },
         data: {
           active: !admin.active,
         },
-        select: {
-          userId: true,
-          name: true,
-          active: true,
-          email: true,
-        },
       });
 
-      if (!updatedUser.active) {
+      if (!updated.active) {
         await tx.userSession.updateMany({
           where: {
-            user: { userId: adminId },
+            user: {
+              userId: adminId,
+            },
             revoked: false,
           },
           data: {
@@ -273,19 +344,25 @@ export class UserManagementService {
         });
       }
 
-      emitEvent(DomainEvent.ADMIN_TOGGLE_STATUS, {
-        adminEmail: updated.email,
-        adminName: updated.name!,
-        requestedBy: "Company Administrator",
-        processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
-        status: updated.active ? "ACTIVE" : "SUSPENDED",
-        dashboard_url: process.env.FRONTEND_URL,
-      });
-
-      return updatedUser;
+      return updated;
     });
 
-    return updated;
+    emitEvent(DomainEvent.ADMIN_TOGGLE_STATUS, {
+      adminEmail: updatedAdmin.email,
+      adminName: updatedAdmin.name!,
+      requestedBy: "Company Administrator",
+      processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
+      status: updatedAdmin.active ? "ACTIVE" : "SUSPENDED",
+      dashboard_url: process.env.FRONTEND_URL,
+    });
+
+    return {
+      message: updatedAdmin.active
+        ? "Admin activated successfully"
+        : "Admin suspended successfully",
+
+      active: updatedAdmin.active,
+    };
   }
 
   static async softDeleteAdmin(companyId: string, adminId: string) {

@@ -87,7 +87,7 @@ export class CompanyController {
       adminId,
     );
 
-    return ApiResponse.success(res, 200, "Admin status updated", updated);
+    return ApiResponse.success(res, 200, updated.message, updated.active);
   }
 
   static async deleteAdmin(req: Request, res: Response) {
