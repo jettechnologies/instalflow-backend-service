@@ -22,12 +22,14 @@ import {
   MarketerCreateSchema,
   ForgotPasswordSchema,
   ResetPasswordSchema,
+  ForcePasswordChangeSchema,
 } from "@/shared/schemas/auth.schema";
 import { SubscriptionService } from "./subscription.service";
 import { LedgerService } from "./ledger.service";
 import { AccountType } from "@/infrastructure/prisma";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
+import { generateTempPassword } from "@/shared/utils/helpers/misc";
 
 export class AuthService {
   /**
@@ -157,7 +159,7 @@ export class AuthService {
     });
     if (existing) throw new ConflictError("Marketer email already in use");
 
-    const tempPassword = `IFL_${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
+    const tempPassword = generateTempPassword("MRK");
     const hashedPassword = await bcryptHash(tempPassword);
 
     const cleanName = data.name.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
@@ -510,5 +512,42 @@ export class AuthService {
     });
 
     return { message: "Password changed successfully" };
+  }
+
+  static async forcePasswordChange(
+    userId: string,
+    data: z.infer<typeof ForcePasswordChangeSchema>,
+  ) {
+    const user = await prisma.user.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    if (!user.forcePasswordChange) {
+      throw new BadRequestError(
+        "Password change is not required for this account",
+      );
+    }
+
+    const hashedPassword = await bcryptHash(data.newPassword);
+
+    await prisma.user.update({
+      where: {
+        userId,
+      },
+      data: {
+        password: hashedPassword,
+        forcePasswordChange: false,
+      },
+    });
+
+    return {
+      message: "Password updated successfully",
+    };
   }
 }

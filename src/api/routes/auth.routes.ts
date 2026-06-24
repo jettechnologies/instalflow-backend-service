@@ -33,4 +33,11 @@ router.post(
   AuthController.createMarketer,
 );
 
+router.post(
+  "/force-password-change",
+  requireAuth,
+  requireRole(["MARKETER", "ADMIN"]),
+  AuthController.forcePasswordChange,
+);
+
 export default router;

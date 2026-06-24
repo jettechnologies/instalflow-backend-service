@@ -24,6 +24,7 @@ import { DomainEvent } from "@/core/events/event.types";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 import { parseISO, format } from "date-fns";
+import { generateTempPassword } from "@/shared/utils/helpers/misc";
 
 export class UserManagementService {
   static async getAssociatedAdmins(params: {
@@ -206,7 +207,7 @@ export class UserManagementService {
     });
     if (existing) throw new ConflictError("Email already in use");
 
-    const tempPassword = `IFL_ADM_${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
+    const tempPassword = generateTempPassword("ADM");
     const hashedPassword = await bcryptHash(tempPassword);
 
     const user = await prisma.user.create({

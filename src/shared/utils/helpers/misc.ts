@@ -1,3 +1,6 @@
+import crypto from "crypto";
+import { number } from "zod";
+
 export const formatCurrency = (
   value: number,
   currency = "NGN",
@@ -31,3 +34,29 @@ export function maskAccountNumber(
 
   return `${masked}${visible}`;
 }
+
+export const generateTempPassword = (type: "MRK" | "ADM"): string => {
+  const lowercase = "abcdefghijklmnopqrstuvwxyz";
+  const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
+  const special = "!@#$%^&*";
+
+  const random = (chars: string) =>
+    chars[Math.floor(Math.random() * chars.length)];
+
+  const password = [
+    random(lowercase),
+    random(uppercase),
+    random(numbers),
+    random(special),
+    ...crypto
+      .randomBytes(6)
+      .toString("base64")
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .slice(0, 6),
+  ];
+
+  const suffix = password.sort(() => Math.random() - 0.5).join("");
+
+  return `IFL_${type}_${suffix}`;
+};

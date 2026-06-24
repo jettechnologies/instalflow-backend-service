@@ -337,3 +337,50 @@ paths:
           description: "Forbidden: Only company admins can create marketers."
         409:
           description: Marketer email already in use.
+
+  /auth/force-password-change:
+  post:
+    tags:
+      - Authentication
+    summary: Force password change for newly created accounts
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - newPassword
+              - confirmPassword
+            properties:
+              newPassword:
+                type: string
+                example: StrongPassword123!
+              confirmPassword:
+                type: string
+                example: StrongPassword123!
+    responses:
+      "200":
+        description: Password updated successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: Password updated successfully
+
+      "400":
+        description: Validation error
+
+      "401":
+        description: Unauthorized
+
+      "404":
+        description: User not found

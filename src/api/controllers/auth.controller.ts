@@ -7,6 +7,7 @@ import {
   ChangePasswordSchema,
   CompanyRegisterSchema,
   MarketerCreateSchema,
+  ForcePasswordChangeSchema,
 } from "@/shared/schemas/auth.schema";
 import { AuthService } from "@/core/services/auth.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
@@ -142,5 +143,13 @@ export class AuthController {
     const result = await AuthService.changePassword(userId, payload);
 
     return ApiResponse.success(res, 200, result.message);
+  }
+
+  static async forcePasswordChange(req: Request, res: Response) {
+    const payload = ForcePasswordChangeSchema.parse(req.body);
+    const userId = (req as any).user.userId;
+    const result = await AuthService.forcePasswordChange(userId, payload);
+
+    return ApiResponse.success(res, 200, result.message, null);
   }
 }
