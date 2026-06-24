@@ -26,6 +26,7 @@ router.delete(
 );
 
 // Maker-Checker Approvals
+router.get("/pending-approvals", CompanyController.getPendingApprovals);
 router.get("/approvals", CompanyController.getPendingApprovals);
 router.post("/approvals/:requestId", CompanyController.handleApproval);
 

@@ -6,6 +6,7 @@ import {
   ToggleStatusSchema,
   HandleApprovalSchema,
 } from "@/shared/schemas/user-management.schema";
+import { ApprovalStatus } from "@/prisma/client";
 
 export class CompanyController {
   static async getAssociatedAdmins(req: Request, res: Response) {
@@ -109,6 +110,33 @@ export class CompanyController {
 
     const data = await UserManagementService.getPendingApprovals(
       companyId,
+      page,
+      limit,
+    );
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Approval requests retrieved successfully",
+      data,
+    );
+  }
+
+  static async getApprovalsByStatus(req: Request, res: Response) {
+    const companyId = req.user!.companyId!;
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const rawStatus = (req.query.status as string)?.toUpperCase();
+    const status: ApprovalStatus =
+      rawStatus && rawStatus in ApprovalStatus
+        ? (rawStatus as ApprovalStatus)
+        : ApprovalStatus.PENDING;
+
+    const data = await UserManagementService.getApprovalsByStatus(
+      companyId,
+      status,
       page,
       limit,
     );

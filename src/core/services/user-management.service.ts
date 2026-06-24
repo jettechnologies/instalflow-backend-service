@@ -465,6 +465,45 @@ export class UserManagementService {
     };
   }
 
+  static async getApprovalsByStatus(
+    companyId: string,
+    status: ApprovalStatus,
+    page = 1,
+    limit = 10,
+  ) {
+    const skip = (page - 1) * limit;
+
+    const where = { companyId, status };
+
+    const [requests, total] = await prisma.$transaction([
+      prisma.approvalRequest.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: {
+          requestedBy: {
+            select: { userId: true, name: true, email: true },
+          },
+          targetUser: {
+            select: { userId: true, name: true, email: true, active: true },
+          },
+        },
+      }),
+      prisma.approvalRequest.count({ where }),
+    ]);
+
+    return {
+      requests,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        limit,
+      },
+    };
+  }
+
   static async toggleCompanyMarketerStatus(
     companyId: string,
     companyUserId: string,
