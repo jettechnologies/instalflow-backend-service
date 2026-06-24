@@ -340,8 +340,7 @@ paths:
 
   /auth/force-password-change:
   post:
-    tags:
-      - Authentication
+    tags: [Auth]
     summary: Force password change for newly created accounts
     security:
       - bearerAuth: []
