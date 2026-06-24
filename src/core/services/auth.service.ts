@@ -206,8 +206,6 @@ export class AuthService {
       where: { email: data.email },
     });
 
-    console.log(user, "user object");
-
     if (!user) throw new UnauthorizedError("Invalid credentials");
 
     if (!user.active) {
@@ -217,7 +215,6 @@ export class AuthService {
     }
 
     const validPassword = await bcryptCompare(data.password, user.password);
-    console.log(validPassword, "is valid password");
     if (!validPassword) throw new UnauthorizedError("Invalid credentials");
 
     const refreshToken = generateRefreshToken({
