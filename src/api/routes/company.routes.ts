@@ -27,7 +27,7 @@ router.delete(
 
 // Maker-Checker Approvals
 router.get("/pending-approvals", CompanyController.getPendingApprovals);
-router.get("/approvals", CompanyController.getPendingApprovals);
+router.get("/approvals", CompanyController.getApprovalsByStatus);
 router.post("/approvals/:requestId", CompanyController.handleApproval);
 
 export default router;
