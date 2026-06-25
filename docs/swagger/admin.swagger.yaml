@@ -182,6 +182,19 @@ paths:
           schema:
             type: string
 
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reason
+              properties:
+                reason:
+                  type: string
+                  example: This marketer account need closing!
+
       responses:
         "201":
           description: Delete request submitted for approval
