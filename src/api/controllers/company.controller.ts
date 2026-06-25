@@ -137,7 +137,9 @@ export class CompanyController {
       throw new BadRequestError("Invalid approval status");
     }
 
-    const status = (rawStatus as ApprovalStatus) ?? ApprovalStatus.PENDING;
+    const status = (rawStatus as ApprovalStatus) || ApprovalStatus.PENDING;
+
+    console.log(status, "status within approval by status");
 
     const data = await UserManagementService.getApprovalsByStatus(
       companyId,
