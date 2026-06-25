@@ -7,6 +7,7 @@ import {
   HandleApprovalSchema,
 } from "@/shared/schemas/user-management.schema";
 import { ApprovalStatus } from "@/prisma/client";
+import { BadRequestError } from "@/shared/utils/AppError";
 
 export class CompanyController {
   static async getAssociatedAdmins(req: Request, res: Response) {
@@ -129,10 +130,14 @@ export class CompanyController {
     const limit = Number(req.query.limit) || 10;
 
     const rawStatus = (req.query.status as string)?.toUpperCase();
-    const status: ApprovalStatus =
-      rawStatus && rawStatus in ApprovalStatus
-        ? (rawStatus as ApprovalStatus)
-        : ApprovalStatus.PENDING;
+    if (
+      rawStatus &&
+      !Object.values(ApprovalStatus).includes(rawStatus as ApprovalStatus)
+    ) {
+      throw new BadRequestError("Invalid approval status");
+    }
+
+    const status = (rawStatus as ApprovalStatus) ?? ApprovalStatus.PENDING;
 
     const data = await UserManagementService.getApprovalsByStatus(
       companyId,
