@@ -538,8 +538,11 @@ export const ApprovalRequestScalarFieldEnum = {
   requestId: 'requestId',
   companyId: 'companyId',
   requestedById: 'requestedById',
+  reviewReason: 'reviewReason',
+  reviewedAt: 'reviewedAt',
   targetUserId: 'targetUserId',
   action: 'action',
+  reason: 'reason',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

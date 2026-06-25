@@ -1,16 +1,20 @@
 import type { Request, Response } from "express";
 import { UserManagementService } from "@/core/services/user-management.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
+import { CreateApprovalRequestSchema } from "@/shared/schemas/customer-management.schema";
 
 export class AdminController {
   static async requestToggleMarketer(req: Request, res: Response) {
     const marketerId = req.params.id as string;
 
-    const request = await UserManagementService.requestMarketerToggle(
-      req.user!.userId!,
-      req.user!.companyId!,
-      marketerId,
-    );
+    const data = CreateApprovalRequestSchema.parse(req.body);
+
+    const request = await UserManagementService.requestMarketerToggle({
+      adminId: req.user!.userId!,
+      companyId: req.user!.companyId!,
+      marketerId: marketerId,
+      data,
+    });
 
     return ApiResponse.success(
       res,
@@ -23,11 +27,14 @@ export class AdminController {
   static async requestDeleteMarketer(req: Request, res: Response) {
     const marketerId = req.params.id as string;
 
-    const request = await UserManagementService.requestMarketerDeletion(
-      req.user!.userId!,
-      req.user!.companyId!,
-      marketerId,
-    );
+    const data = CreateApprovalRequestSchema.parse(req.body);
+
+    const request = await UserManagementService.requestMarketerDeletion({
+      adminId: req.user!.userId!,
+      companyId: req.user!.companyId!,
+      marketerId: marketerId,
+      data,
+    });
 
     return ApiResponse.success(
       res,

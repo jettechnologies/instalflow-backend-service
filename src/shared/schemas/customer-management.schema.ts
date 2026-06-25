@@ -1,3 +1,4 @@
+import { ApprovalStatus } from "@/prisma/client";
 import { z } from "zod";
 
 export const CustomerQuerySchema = z.object({
@@ -7,3 +8,15 @@ export const CustomerQuerySchema = z.object({
 });
 
 export type CustomerQueryInput = z.infer<typeof CustomerQuerySchema>;
+
+export const CreateApprovalRequestSchema = z.object({
+  reason: z
+    .string()
+    .trim()
+    .min(10, "Reason must be at least 10 characters")
+    .max(500, "Reason cannot exceed 500 characters"),
+});
+
+export type CreateApprovalRequestInput = z.infer<
+  typeof CreateApprovalRequestSchema
+>;

@@ -250,17 +250,6 @@ paths:
         "404":
           description: Admin not found
 
-  # /company/pending-approvals:
-  #   get:
-  #     summary: List Pending Approvals
-  #     tags: [Company Administration]
-  #     security:
-  #       - bearerAuth: []
-
-  #     responses:
-  #       "200":
-  #         description: List of pending approval requests
-
   /company/pending-approvals:
     get:
       summary: List Pending Approvals
@@ -519,12 +508,16 @@ paths:
               type: object
               required:
                 - status
+                - reviewReason
               properties:
                 status:
                   type: string
                   enum:
                     - APPROVED
                     - REJECTED
+                reviewReason:
+                  type: string
+                  example: "Reason for rejection"
 
       responses:
         "200":

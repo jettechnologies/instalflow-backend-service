@@ -165,6 +165,7 @@ export interface NotificationPayloadMap {
     marketerId: string;
     marketerName: string;
     requestedBy: string;
+    reason?: string;
   };
 
   [NotificationEventType.MARKETER_DELETE_REQUEST]: {
@@ -173,6 +174,7 @@ export interface NotificationPayloadMap {
     marketerId: string;
     marketerName: string;
     requestedBy: string;
+    reason?: string;
   };
 
   [NotificationEventType.MARKETER_TOGGLE_APPROVED]: {
@@ -185,6 +187,7 @@ export interface NotificationPayloadMap {
     requestId: string;
     marketerId: string;
     marketerName: string;
+    reviewReason?: string;
   };
 
   [NotificationEventType.MARKETER_DELETE_APPROVED]: {
@@ -197,5 +200,6 @@ export interface NotificationPayloadMap {
     requestId: string;
     marketerId: string;
     marketerName: string;
+    reviewReason?: string;
   };
 }

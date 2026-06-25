@@ -25,6 +25,14 @@ import { NotificationOrchestrator } from "@/infrastructure/internal_notification
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 import { parseISO, format } from "date-fns";
 import { generateTempPassword } from "@/shared/utils/helpers/misc";
+import { CreateApprovalRequestInput } from "@/shared/schemas/customer-management.schema";
+
+interface CreateApprovalRequest {
+  adminId: string;
+  companyId: string;
+  marketerId: string;
+  data: CreateApprovalRequestInput;
+}
 
 export class UserManagementService {
   static async getAssociatedAdmins(params: {
@@ -240,55 +248,6 @@ export class UserManagementService {
 
     return { user, tempPassword };
   }
-
-  // static async toggleAdminStatus(companyId: string, adminId: string) {
-  //   const admin = await prisma.user.findFirst({
-  //     where: { userId: adminId, companyId, role: Role.ADMIN, deletedAt: null },
-  //   });
-  //   if (!admin) throw new NotFoundError("Admin not found or deleted");
-
-  //   const updated = await prisma.$transaction(async (tx) => {
-  //     const updatedUser = await tx.user.update({
-  //       where: {
-  //         userId: adminId,
-  //       },
-  //       data: {
-  //         active: !admin.active,
-  //       },
-  //       select: {
-  //         userId: true,
-  //         name: true,
-  //         active: true,
-  //         email: true,
-  //       },
-  //     });
-
-  //     if (!updatedUser.active) {
-  //       await tx.userSession.updateMany({
-  //         where: {
-  //           user: { userId: adminId },
-  //           revoked: false,
-  //         },
-  //         data: {
-  //           revoked: true,
-  //         },
-  //       });
-  //     }
-
-  //     emitEvent(DomainEvent.ADMIN_TOGGLE_STATUS, {
-  //       adminEmail: updated.email,
-  //       adminName: updated.name!,
-  //       requestedBy: "Company Administrator",
-  //       processedAt: format(parseISO(new Date().toISOString()), "yyyy-MM-dd"),
-  //       status: updated.active ? "ACTIVE" : "SUSPENDED",
-  //       dashboard_url: process.env.FRONTEND_URL,
-  //     });
-
-  //     return updatedUser;
-  //   });
-
-  //   return updated;
-  // }
 
   static async toggleAdminStatus(companyId: string, adminId: string) {
     const admin = await prisma.user.findFirst({
@@ -647,7 +606,11 @@ export class UserManagementService {
     if (data.status === ApprovalStatus.REJECTED) {
       await prisma.approvalRequest.update({
         where: { id: request.id },
-        data: { status: ApprovalStatus.REJECTED },
+        data: {
+          status: ApprovalStatus.REJECTED,
+          reviewReason: data.reviewReason,
+          reviewedAt: new Date(),
+        },
       });
 
       if (requestAction === ApprovalAction.TOGGLE_ACTIVE) {
@@ -657,6 +620,7 @@ export class UserManagementService {
             requestId: request.requestId,
             marketerId,
             marketerName: marketerName ?? "Marketer",
+            reviewReason: data.reviewReason,
           },
         );
       } else if (requestAction === ApprovalAction.SOFT_DELETE) {
@@ -666,6 +630,7 @@ export class UserManagementService {
             requestId: request.requestId,
             marketerId: request.targetUserId,
             marketerName: request.targetUser.name ?? "Marketer",
+            reviewReason: data.reviewReason,
           },
         );
       }
@@ -676,7 +641,7 @@ export class UserManagementService {
     const requestUpdated = await prisma.$transaction(async (tx) => {
       const updatedRequest = await tx.approvalRequest.update({
         where: { id: request.id },
-        data: { status: ApprovalStatus.APPROVED },
+        data: { status: ApprovalStatus.APPROVED, reviewedAt: new Date() },
       });
 
       if (request.action === ApprovalAction.TOGGLE_ACTIVE) {
@@ -750,11 +715,12 @@ export class UserManagementService {
     return marketer;
   }
 
-  static async requestMarketerToggle(
-    adminId: string,
-    companyId: string,
-    marketerId: string,
-  ) {
+  static async requestMarketerToggle({
+    companyId,
+    marketerId,
+    adminId,
+    data: { reason },
+  }: CreateApprovalRequest) {
     const { name: marketerName, creator: requestedBy } =
       await this.ensureAdminCanManageMarketer(companyId, marketerId);
 
@@ -777,6 +743,7 @@ export class UserManagementService {
         requestedById: adminId,
         targetUserId: marketerId,
         action: ApprovalAction.TOGGLE_ACTIVE,
+        reason,
       },
       select: {
         requestId: true,
@@ -792,6 +759,7 @@ export class UserManagementService {
         requestId: request.requestId,
         marketerId,
         companyId,
+        reason,
         marketerName: marketerName ?? "Marketer",
         requestedBy: requestedBy?.name || "Admin",
       },
@@ -800,11 +768,12 @@ export class UserManagementService {
     return request;
   }
 
-  static async requestMarketerDeletion(
-    adminId: string,
-    companyId: string,
-    marketerId: string,
-  ) {
+  static async requestMarketerDeletion({
+    companyId,
+    marketerId,
+    adminId,
+    data: { reason },
+  }: CreateApprovalRequest) {
     const { name: marketerName, creator: requestedBy } =
       await this.ensureAdminCanManageMarketer(companyId, marketerId);
 
@@ -826,6 +795,7 @@ export class UserManagementService {
         companyId,
         requestedById: adminId,
         targetUserId: marketerId,
+        reason,
         action: ApprovalAction.SOFT_DELETE,
       },
       select: {
@@ -842,6 +812,7 @@ export class UserManagementService {
         requestId: request.requestId,
         marketerId,
         companyId,
+        reason,
         marketerName: marketerName ?? "Marketer",
         requestedBy: requestedBy?.name || "Admin",
       },

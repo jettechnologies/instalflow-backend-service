@@ -642,9 +642,12 @@ model ApprovalRequest {
   company       Company        @relation(fields: [companyId], references: [companyId])
   requestedById String
   requestedBy   User           @relation("RequestedApprovals", fields: [requestedById], references: [userId])
+  reviewReason  String?
+  reviewedAt    DateTime?
   targetUserId  String
   targetUser    User           @relation("TargetedApprovals", fields: [targetUserId], references: [userId])
   action        ApprovalAction
+  reason        String?
   status        ApprovalStatus @default(PENDING)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
