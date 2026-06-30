@@ -282,7 +282,7 @@ export class InstallmentService {
       );
     }
 
-    const associatedMarketer = await prisma.user.findUnique({
+    await prisma.user.findUnique({
       where: {
         userId: installment.financingContract.user.referredByMarketerId!,
       },

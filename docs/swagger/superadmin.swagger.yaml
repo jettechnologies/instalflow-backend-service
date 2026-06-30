@@ -116,6 +116,161 @@ paths:
         '200':
           description: Status toggled
 
+  /superadmin/ledger/reconciliation/summary:
+    get:
+      tags:
+        - Ledger Reconciliation
+      summary: Get latest reconciliation summary
+      description: |
+        Returns the cached summary of the most recent ledger reconciliation run.
+        If the cache is empty (cold), a `cacheStatus: "cold"` indicator is returned.
+        The reconciliation worker runs daily at 02:00.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reconciliation summary retrieved from Redis cache.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    oneOf:
+                      - type: object
+                        properties:
+                          cacheStatus:
+                            type: string
+                            enum: [hot]
+                          totalAccounts:
+                            type: integer
+                          discrepancies:
+                            type: integer
+                          reconciledAt:
+                            type: string
+                            format: date-time
+                      - type: object
+                        properties:
+                          cacheStatus:
+                            type: string
+                            enum: [cold]
+                          message:
+                            type: string
+
+  /superadmin/ledger/reconciliation/accounts:
+    get:
+      tags:
+        - Ledger Reconciliation
+      summary: List all ledger account reconciliation results
+      description: |
+        Returns per-account reconciliation results from the latest run.
+        Reads from Redis cache; accounts without a cached result show `computedBalance: "unchecked"`.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: discrepancyOnly
+          in: query
+          schema:
+            type: string
+            enum: [true, false]
+          description: |
+            Filter to only accounts that had a balance discrepancy in the last run.
+            Omit or set to `false` to return all accounts.
+        - name: companyId
+          in: query
+          schema:
+            type: string
+          description: |
+            Filter by company scope. Use `global` for platform-wide accounts, or a company UUID.
+            Omit to return all accounts.
+      responses:
+        '200':
+          description: List of account reconciliation results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      cacheStatus:
+                        type: string
+                        enum: [hot, partial, cold]
+                      accounts:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AccountReconciliationResult'
+                      totalReturned:
+                        type: integer
+
+  /superadmin/ledger/reconciliation/accounts/{accountId}:
+    get:
+      tags:
+        - Ledger Reconciliation
+      summary: Get reconciliation result for a single ledger account
+      description: |
+        Returns the reconciliation result for a specific ledger account by its numeric ID.
+        Reads from Redis cache; falls back to DB metadata if the cache is cold.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The numeric LedgerAccount ID.
+          example: 1
+      responses:
+        '200':
+          description: Account reconciliation data retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AccountReconciliationResult'
+        '404':
+          description: Ledger account not found.
+
+  /superadmin/ledger/reconciliation/cache:
+    delete:
+      tags:
+        - Ledger Reconciliation
+      summary: Invalidate reconciliation cache
+      description: |
+        Purges all reconciliation cache keys from Redis.
+        Call this before triggering a manual re-run to prevent stale dashboard reads.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reconciliation cache invalidated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      keysDeleted:
+                        type: integer
+
 components:
   securitySchemes:
     bearerAuth:
@@ -185,3 +340,33 @@ components:
           enum: [WEEKLY, MONTHLY, YEARLY]
         active:
           type: boolean
+
+    AccountReconciliationResult:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          example: 1
+        accountName:
+          type: string
+          example: PAYSTACK_CLEARING
+        companyId:
+          type: string
+          nullable: true
+          example: null
+        storedBalance:
+          type: string
+          example: "1500000.00"
+        computedBalance:
+          type: string
+          example: "1500000.00"
+        discrepancy:
+          type: boolean
+          example: false
+        corrected:
+          type: boolean
+          example: false
+        reconciledAt:
+          type: string
+          format: date-time
+          example: "2026-06-29T02:00:00.000Z"

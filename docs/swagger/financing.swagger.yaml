@@ -1,0 +1,228 @@
+openapi: 3.0.0
+info:
+  title: Financing Contract API
+  version: 1.0.0
+  description: |
+    API for managing financing contract lifecycle events — restructure and write-off.
+    All endpoints require JWT authentication.
+
+paths:
+  /financing/{id}/restructure:
+    post:
+      tags:
+        - Financing
+      summary: Restructure a DEFAULTED financing contract
+      description: |
+        Restructures a defaulted contract by voiding remaining unpaid installments,
+        calculating new terms based on remaining principal, and generating a fresh installment schedule.
+        **Authorization:** Requires `ADMIN` or `SUPER_ADMIN` role.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The Financing Contract UUID.
+          schema:
+            type: string
+            format: uuid
+            example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - interestPercentage
+                - numberOfInstallments
+                - firstPaymentDate
+              properties:
+                interestPercentage:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 12.5
+                  description: New annual interest rate percentage applied to remaining principal.
+                numberOfInstallments:
+                  type: integer
+                  minimum: 1
+                  maximum: 120
+                  example: 6
+                  description: Number of installments for the new schedule.
+                firstPaymentDate:
+                  type: string
+                  format: date
+                  example: "2026-07-15"
+                  description: ISO date string for the first installment due date.
+      responses:
+        "200":
+          description: Contract restructured successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      contractId:
+                        type: string
+                        format: uuid
+                      newTotalFinanced:
+                        type: number
+                        example: 450000.00
+                      newInstallments:
+                        type: integer
+                        example: 6
+                      status:
+                        type: string
+                        example: RESTRUCTURED
+        "400":
+          description: Invalid input — contract not defaulted or validation failed.
+        "401":
+          description: Unauthorized — invalid or expired JWT.
+        "403":
+          description: Forbidden — caller is not an ADMIN or SUPER_ADMIN.
+        "404":
+          description: Financing contract not found.
+
+  /financing/{id}/write-off:
+    post:
+      tags:
+        - Financing
+      summary: Write off a DEFAULTED or RESTRUCTURED financing contract
+      description: |
+        Permanently writes off a financing contract that is in DEFAULTED or RESTRUCTURED state.
+        All remaining unpaid installments are voided, the contract status moves to WRITTEN_OFF,
+        and a notification chain is dispatched to the Marketer, Admin (via marketer hierarchy),
+        and the Company approver.
+        **Authorization:** Requires `COMPANY` role.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The Financing Contract UUID.
+          schema:
+            type: string
+            format: uuid
+            example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reason
+              properties:
+                reason:
+                  type: string
+                  minLength: 4
+                  maxLength: 500
+                  example: Customer unreachable after 90 days; outstanding balance deemed irrecoverable.
+                  description: Detailed justification for the write-off. Must be at least 4 characters.
+      responses:
+        "200":
+          description: Contract written off successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      contractId:
+                        type: string
+                        format: uuid
+                      outstandingAmount:
+                        type: number
+                        example: 125000.00
+                      writeOffReason:
+                        type: string
+                        example: Customer unreachable after 90 days; outstanding balance deemed irrecoverable.
+                      status:
+                        type: string
+                        example: WRITTEN_OFF
+        "400":
+          description: Invalid input — reason too short or contract not in writable state.
+        "401":
+          description: Unauthorized — invalid or expired JWT.
+        "403":
+          description: Forbidden — caller is not a COMPANY role user.
+        "404":
+          description: Financing contract not found.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RestructureRequest:
+      type: object
+      required:
+        - interestPercentage
+        - numberOfInstallments
+        - firstPaymentDate
+      properties:
+        interestPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        numberOfInstallments:
+          type: integer
+          minimum: 1
+          maximum: 120
+        firstPaymentDate:
+          type: string
+          format: date
+
+    WriteOffRequest:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+          minLength: 4
+          maxLength: 500
+
+    RestructureResponse:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        newTotalFinanced:
+          type: number
+        newInstallments:
+          type: integer
+        status:
+          type: string
+          enum: [RESTRUCTURED]
+
+    WriteOffResponse:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        outstandingAmount:
+          type: number
+        writeOffReason:
+          type: string
+        status:
+          type: string
+          enum: [WRITTEN_OFF]

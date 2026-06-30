@@ -108,6 +108,14 @@ export class NotificationOrchestrator {
           return await this.handleMarketerDeleteRejected(
             payload as NotificationPayloadMap[NotificationEventType.MARKETER_DELETE_REJECTED],
           );
+        case NotificationEventType.CONTRACT_RESTRUCTURED:
+          return await this.handleContractRestructured(
+            payload as NotificationPayloadMap[NotificationEventType.CONTRACT_RESTRUCTURED],
+          );
+        case NotificationEventType.CONTRACT_WRITTEN_OFF:
+          return await this.handleContractWrittenOff(
+            payload as NotificationPayloadMap[NotificationEventType.CONTRACT_WRITTEN_OFF],
+          );
       }
     } catch (err: any) {
       // Notifications are non-critical — log and continue
@@ -477,9 +485,45 @@ export class NotificationOrchestrator {
       title: template.title,
       message: template.message,
       metadata: payload,
-      idempotencyKey: `transfer-initiated-${payload.payoutId}`,
+      idempotencyKey: `commission-transfer-initiated-${payload.payoutId}-${payload.marketerId}`,
     });
   }
+
+  // private static async handleContractRestructured(
+  //   payload: NotificationPayloadMap[NotificationEventType.CONTRACT_RESTRUCTURED],
+  // ) {
+  //   const template = NotificationTemplates.build(
+  //     NotificationEventType.CONTRACT_RESTRUCTURED,
+  //     payload,
+  //   );
+
+  //   await NotificationRepository.create({
+  //     userId: payload.marketerId,
+  //     type: NotificationEventType.CONTRACT_RESTRUCTURED,
+  //     title: template.title,
+  //     message: template.message,
+  //     metadata: payload,
+  //     idempotencyKey: `contract-restructured-${payload.contractId}-${payload.marketerId}`,
+  //   });
+  // }
+
+  // private static async handleContractWrittenOff(
+  //   payload: NotificationPayloadMap[NotificationEventType.CONTRACT_WRITTEN_OFF],
+  // ) {
+  //   const template = NotificationTemplates.build(
+  //     NotificationEventType.CONTRACT_WRITTEN_OFF,
+  //     payload,
+  //   );
+
+  //   await NotificationRepository.create({
+  //     userId: payload.recipientId,
+  //     type: NotificationEventType.CONTRACT_WRITTEN_OFF,
+  //     title: template.title,
+  //     message: template.message,
+  //     metadata: payload,
+  //     idempotencyKey: `contract-written-off-${payload.contractId}-${payload.recipientRole}-${payload.recipientId}`,
+  //   });
+  // }
 
   private static async handleCommissionTransferSuccess(
     payload: NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_SUCCESS],
@@ -785,6 +829,42 @@ export class NotificationOrchestrator {
       message: template.message,
       metadata: payload,
       idempotencyKey: `marketer-delete-rejected-${payload.requestId}`,
+    });
+  }
+
+  private static async handleContractRestructured(
+    payload: NotificationPayloadMap[NotificationEventType.CONTRACT_RESTRUCTURED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.CONTRACT_RESTRUCTURED,
+      payload,
+    );
+
+    await NotificationRepository.create({
+      userId: payload.marketerId,
+      type: NotificationEventType.CONTRACT_RESTRUCTURED,
+      title: template.title,
+      message: template.message,
+      metadata: payload,
+      idempotencyKey: `contract-restructured-${payload.contractId}-${payload.marketerId}`,
+    });
+  }
+
+  private static async handleContractWrittenOff(
+    payload: NotificationPayloadMap[NotificationEventType.CONTRACT_WRITTEN_OFF],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.CONTRACT_WRITTEN_OFF,
+      payload,
+    );
+
+    await NotificationRepository.create({
+      userId: payload.recipientId,
+      type: NotificationEventType.CONTRACT_WRITTEN_OFF,
+      title: template.title,
+      message: template.message,
+      metadata: payload,
+      idempotencyKey: `contract-written-off-${payload.contractId}-${payload.recipientRole}-${payload.recipientId}`,
     });
   }
 }

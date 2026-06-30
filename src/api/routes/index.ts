@@ -13,6 +13,7 @@ import customerManagementRoutes from "@/api/routes/customer-management.routes";
 import internalNotificationRoutes from "@/api/routes/internal_notification";
 import installmentRoutes from "@/api/routes/installment.routes";
 import commissionRoutes from "@/api/routes/comission.routes";
+import financingRoutes from "@/api/routes/financing.routes";
 
 const router = Router();
 
@@ -36,5 +37,6 @@ router.use("/customers", customerManagementRoutes);
 router.use("/notifications", internalNotificationRoutes);
 router.use("/installments", installmentRoutes);
 router.use("/commissions", commissionRoutes);
+router.use("/financing", financingRoutes);
 
 export default router;

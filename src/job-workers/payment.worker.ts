@@ -201,51 +201,6 @@ export const paymentWorker = new Worker(
         tx,
       );
 
-      // const allInstallments = await tx.installment.findMany({
-      //   where: {
-      //     financingContractId: contract.contractId,
-      //   },
-
-      //   orderBy: {
-      //     sequence: "asc",
-      //   },
-      // });
-
-      // let totalFinanced = new Prisma.Decimal(0);
-
-      // let totalPaid = new Prisma.Decimal(0);
-
-      // for (const inst of allInstallments) {
-      //   totalFinanced = totalFinanced.plus(inst.amount);
-
-      //   if (inst.status === InstallmentStatus.PAID) {
-      //     totalPaid = totalPaid.plus(inst.amount);
-      //   }
-      // }
-
-      // const aggregates = await tx.installment.aggregate({
-      //   where: {
-      //     financingContractId: contract.contractId,
-      //   },
-      //   _sum: {
-      //     amount: true,
-      //   },
-      // });
-
-      // const paidAggregates = await tx.installment.aggregate({
-      //   where: {
-      //     financingContractId: contract.contractId,
-      //     status: InstallmentStatus.PAID,
-      //   },
-      //   _sum: {
-      //     amount: true,
-      //   },
-      // });
-
-      // const percentagePaid = totalFinanced.isZero()
-      //   ? 0
-      //   : Number(totalPaid.div(totalFinanced).times(100).toFixed(2));
-
       const [aggregates, paidAggregates] = await Promise.all([
         tx.installment.aggregate({
           where: {
@@ -348,9 +303,7 @@ export const paymentWorker = new Worker(
 
   {
     connection: redis,
-
     concurrency: 2,
-
     limiter: {
       max: 10,
       duration: 1000,

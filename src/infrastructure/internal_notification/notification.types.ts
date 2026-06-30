@@ -19,6 +19,8 @@ export enum NotificationEventType {
   MARKETER_TOGGLE_REJECTED = "MARKETER_TOGGLE_REJECTED",
   MARKETER_DELETE_APPROVED = "MARKETER_DELETE_APPROVED",
   MARKETER_DELETE_REJECTED = "MARKETER_DELETE_REJECTED",
+  CONTRACT_RESTRUCTURED = "CONTRACT_RESTRUCTURED",
+  CONTRACT_WRITTEN_OFF = "CONTRACT_WRITTEN_OFF",
 }
 
 export interface NotificationPayloadMap {
@@ -201,5 +203,30 @@ export interface NotificationPayloadMap {
     marketerId: string;
     marketerName: string;
     reviewReason?: string;
+  };
+  [NotificationEventType.CONTRACT_RESTRUCTURED]: {
+    contractId: string;
+    customerName: string;
+    customerEmail: string;
+    newTotalFinanced: number;
+    restructuredBy: string;
+    restructuredAt: string;
+    marketerId: string;
+    marketerEmail: string;
+    marketerName: string;
+  };
+  [NotificationEventType.CONTRACT_WRITTEN_OFF]: {
+    contractId: string;
+    customerName: string;
+    customerEmail: string;
+    outstandingAmount: number;
+    writeOffReason: string;
+    writtenOffBy: string;
+    writtenOffAt: string;
+    recipientRole: "MARKETER" | "ADMIN" | "COMPANY";
+    recipientId: string;
+    recipientName: string;
+    recipientEmail: string;
+    companyId: string;
   };
 }

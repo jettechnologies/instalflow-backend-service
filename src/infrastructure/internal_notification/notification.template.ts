@@ -108,6 +108,30 @@ export class NotificationTemplates {
           message: `Your request to delete marketer "${payload.marketerName}" was rejected.`,
         };
 
+      case NotificationEventType.CONTRACT_RESTRUCTURED:
+        return {
+          title: "Contract Restructured",
+          message: `Contract for customer "${payload.customerName}" has been restructured. New total financed: ₦${Number(payload.newTotalFinanced).toLocaleString()}. Restructured by: ${payload.restructuredBy}.`,
+        };
+
+      case NotificationEventType.CONTRACT_WRITTEN_OFF:
+        if (payload.recipientRole === "MARKETER") {
+          return {
+            title: "Contract Written Off",
+            message: `The financing contract for your customer "${payload.customerName}" has been written off. Outstanding amount: ₦${Number(payload.outstandingAmount).toLocaleString()}. Reason: ${payload.writeOffReason}. Written off by: ${payload.writtenOffBy}.`,
+          };
+        }
+        if (payload.recipientRole === "ADMIN") {
+          return {
+            title: "Contract Written Off",
+            message: `Contract for customer "${payload.customerName}" (referred by marketer under your supervision) has been written off. Outstanding amount: ₦${Number(payload.outstandingAmount).toLocaleString()}. Reason: ${payload.writeOffReason}. Written off by: ${payload.writtenOffBy}.`,
+          };
+        }
+        return {
+          title: "Contract Written Off",
+          message: `Contract for customer "${payload.customerName}" has been written off. Outstanding amount: ₦${Number(payload.outstandingAmount).toLocaleString()}. Reason: ${payload.writeOffReason}.`,
+        };
+
       default:
         return {
           title: "Notification",

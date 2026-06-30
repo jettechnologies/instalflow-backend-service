@@ -44,6 +44,7 @@ export type LedgerAccountMinAggregateOutputType = {
   companyId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  lastReconciledAt: Date | null
 }
 
 export type LedgerAccountMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type LedgerAccountMaxAggregateOutputType = {
   companyId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  lastReconciledAt: Date | null
 }
 
 export type LedgerAccountCountAggregateOutputType = {
@@ -64,6 +66,7 @@ export type LedgerAccountCountAggregateOutputType = {
   companyId: number
   createdAt: number
   updatedAt: number
+  lastReconciledAt: number
   _all: number
 }
 
@@ -86,6 +89,7 @@ export type LedgerAccountMinAggregateInputType = {
   companyId?: true
   createdAt?: true
   updatedAt?: true
+  lastReconciledAt?: true
 }
 
 export type LedgerAccountMaxAggregateInputType = {
@@ -96,6 +100,7 @@ export type LedgerAccountMaxAggregateInputType = {
   companyId?: true
   createdAt?: true
   updatedAt?: true
+  lastReconciledAt?: true
 }
 
 export type LedgerAccountCountAggregateInputType = {
@@ -106,6 +111,7 @@ export type LedgerAccountCountAggregateInputType = {
   companyId?: true
   createdAt?: true
   updatedAt?: true
+  lastReconciledAt?: true
   _all?: true
 }
 
@@ -203,6 +209,7 @@ export type LedgerAccountGroupByOutputType = {
   companyId: string | null
   createdAt: Date
   updatedAt: Date
+  lastReconciledAt: Date
   _count: LedgerAccountCountAggregateOutputType | null
   _avg: LedgerAccountAvgAggregateOutputType | null
   _sum: LedgerAccountSumAggregateOutputType | null
@@ -236,6 +243,7 @@ export type LedgerAccountWhereInput = {
   companyId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
+  lastReconciledAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   entries?: Prisma.JournalEntryListRelationFilter
 }
@@ -248,6 +256,7 @@ export type LedgerAccountOrderByWithRelationInput = {
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastReconciledAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
   entries?: Prisma.JournalEntryOrderByRelationAggregateInput
 }
@@ -264,6 +273,7 @@ export type LedgerAccountWhereUniqueInput = Prisma.AtLeast<{
   companyId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
+  lastReconciledAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   entries?: Prisma.JournalEntryListRelationFilter
 }, "id" | "name_companyId">
@@ -276,6 +286,7 @@ export type LedgerAccountOrderByWithAggregationInput = {
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastReconciledAt?: Prisma.SortOrder
   _count?: Prisma.LedgerAccountCountOrderByAggregateInput
   _avg?: Prisma.LedgerAccountAvgOrderByAggregateInput
   _max?: Prisma.LedgerAccountMaxOrderByAggregateInput
@@ -294,6 +305,7 @@ export type LedgerAccountScalarWhereWithAggregatesInput = {
   companyId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LedgerAccount"> | Date | string
+  lastReconciledAt?: Prisma.DateTimeWithAggregatesFilter<"LedgerAccount"> | Date | string
 }
 
 export type LedgerAccountCreateInput = {
@@ -303,6 +315,7 @@ export type LedgerAccountCreateInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutLedgerAccountsInput
   entries?: Prisma.JournalEntryCreateNestedManyWithoutAccountInput
 }
@@ -315,6 +328,7 @@ export type LedgerAccountUncheckedCreateInput = {
   companyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
   entries?: Prisma.JournalEntryUncheckedCreateNestedManyWithoutAccountInput
 }
 
@@ -325,6 +339,7 @@ export type LedgerAccountUpdateInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutLedgerAccountsNestedInput
   entries?: Prisma.JournalEntryUpdateManyWithoutAccountNestedInput
 }
@@ -337,6 +352,7 @@ export type LedgerAccountUncheckedUpdateInput = {
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   entries?: Prisma.JournalEntryUncheckedUpdateManyWithoutAccountNestedInput
 }
 
@@ -348,6 +364,7 @@ export type LedgerAccountCreateManyInput = {
   companyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
 }
 
 export type LedgerAccountUpdateManyMutationInput = {
@@ -357,6 +374,7 @@ export type LedgerAccountUpdateManyMutationInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LedgerAccountUncheckedUpdateManyInput = {
@@ -367,6 +385,7 @@ export type LedgerAccountUncheckedUpdateManyInput = {
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LedgerAccountListRelationFilter = {
@@ -392,6 +411,7 @@ export type LedgerAccountCountOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastReconciledAt?: Prisma.SortOrder
 }
 
 export type LedgerAccountAvgOrderByAggregateInput = {
@@ -407,6 +427,7 @@ export type LedgerAccountMaxOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastReconciledAt?: Prisma.SortOrder
 }
 
 export type LedgerAccountMinOrderByAggregateInput = {
@@ -417,6 +438,7 @@ export type LedgerAccountMinOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastReconciledAt?: Prisma.SortOrder
 }
 
 export type LedgerAccountSumOrderByAggregateInput = {
@@ -496,6 +518,7 @@ export type LedgerAccountCreateWithoutCompanyInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
   entries?: Prisma.JournalEntryCreateNestedManyWithoutAccountInput
 }
 
@@ -506,6 +529,7 @@ export type LedgerAccountUncheckedCreateWithoutCompanyInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
   entries?: Prisma.JournalEntryUncheckedCreateNestedManyWithoutAccountInput
 }
 
@@ -546,6 +570,7 @@ export type LedgerAccountScalarWhereInput = {
   companyId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
+  lastReconciledAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
 }
 
 export type LedgerAccountCreateWithoutEntriesInput = {
@@ -555,6 +580,7 @@ export type LedgerAccountCreateWithoutEntriesInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutLedgerAccountsInput
 }
 
@@ -566,6 +592,7 @@ export type LedgerAccountUncheckedCreateWithoutEntriesInput = {
   companyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
 }
 
 export type LedgerAccountCreateOrConnectWithoutEntriesInput = {
@@ -591,6 +618,7 @@ export type LedgerAccountUpdateWithoutEntriesInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutLedgerAccountsNestedInput
 }
 
@@ -602,6 +630,7 @@ export type LedgerAccountUncheckedUpdateWithoutEntriesInput = {
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LedgerAccountCreateManyCompanyInput = {
@@ -611,6 +640,7 @@ export type LedgerAccountCreateManyCompanyInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastReconciledAt: Date | string
 }
 
 export type LedgerAccountUpdateWithoutCompanyInput = {
@@ -620,6 +650,7 @@ export type LedgerAccountUpdateWithoutCompanyInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   entries?: Prisma.JournalEntryUpdateManyWithoutAccountNestedInput
 }
 
@@ -630,6 +661,7 @@ export type LedgerAccountUncheckedUpdateWithoutCompanyInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   entries?: Prisma.JournalEntryUncheckedUpdateManyWithoutAccountNestedInput
 }
 
@@ -640,6 +672,7 @@ export type LedgerAccountUncheckedUpdateManyWithoutCompanyInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReconciledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -681,6 +714,7 @@ export type LedgerAccountSelect<ExtArgs extends runtime.Types.Extensions.Interna
   companyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastReconciledAt?: boolean
   company?: boolean | Prisma.LedgerAccount$companyArgs<ExtArgs>
   entries?: boolean | Prisma.LedgerAccount$entriesArgs<ExtArgs>
   _count?: boolean | Prisma.LedgerAccountCountOutputTypeDefaultArgs<ExtArgs>
@@ -694,6 +728,7 @@ export type LedgerAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   companyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastReconciledAt?: boolean
   company?: boolean | Prisma.LedgerAccount$companyArgs<ExtArgs>
 }, ExtArgs["result"]["ledgerAccount"]>
 
@@ -705,6 +740,7 @@ export type LedgerAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   companyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastReconciledAt?: boolean
   company?: boolean | Prisma.LedgerAccount$companyArgs<ExtArgs>
 }, ExtArgs["result"]["ledgerAccount"]>
 
@@ -716,9 +752,10 @@ export type LedgerAccountSelectScalar = {
   companyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastReconciledAt?: boolean
 }
 
-export type LedgerAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "balance" | "companyId" | "createdAt" | "updatedAt", ExtArgs["result"]["ledgerAccount"]>
+export type LedgerAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "balance" | "companyId" | "createdAt" | "updatedAt" | "lastReconciledAt", ExtArgs["result"]["ledgerAccount"]>
 export type LedgerAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.LedgerAccount$companyArgs<ExtArgs>
   entries?: boolean | Prisma.LedgerAccount$entriesArgs<ExtArgs>
@@ -745,6 +782,7 @@ export type $LedgerAccountPayload<ExtArgs extends runtime.Types.Extensions.Inter
     companyId: string | null
     createdAt: Date
     updatedAt: Date
+    lastReconciledAt: Date
   }, ExtArgs["result"]["ledgerAccount"]>
   composites: {}
 }
@@ -1177,6 +1215,7 @@ export interface LedgerAccountFieldRefs {
   readonly companyId: Prisma.FieldRef<"LedgerAccount", 'String'>
   readonly createdAt: Prisma.FieldRef<"LedgerAccount", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LedgerAccount", 'DateTime'>
+  readonly lastReconciledAt: Prisma.FieldRef<"LedgerAccount", 'DateTime'>
 }
     
 

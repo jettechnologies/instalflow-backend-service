@@ -13,6 +13,7 @@ import {
   type Overdue3DayPayload,
   type Overdue7DayPayload,
 } from "@/core/events/event.types";
+import logger from "@/infrastructure/logger/logger";
 
 const formatAmount = (val: Prisma.Decimal | string | number): string => {
   const num = typeof val === "object" ? val.toNumber() : Number(val);
@@ -74,6 +75,8 @@ export class PaymentReminderWorker {
     console.log("🔔 [InstallmentPaymentReminder] Starting reminder scan...");
     const now = new Date();
 
+    await this.transitionInstallmentStatuses(now);
+
     await Promise.allSettled([
       this.process3DayReminders(),
       this.processDueTodayReminders(now),
@@ -82,6 +85,40 @@ export class PaymentReminderWorker {
     ]);
 
     console.log("✅ [InstallmentPaymentReminder] Scan complete.");
+  }
+
+  private static async transitionInstallmentStatuses(now: Date): Promise<void> {
+    const todayStart = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
+    const threeDaysAgo = new Date(
+      todayStart.getTime() - 3 * 24 * 60 * 60 * 1000,
+    );
+
+    const [pendingToDue, dueToOverdue] = await Promise.all([
+      prisma.installment.updateMany({
+        where: {
+          status: InstallmentStatus.PENDING,
+          dueDate: { lte: todayStart },
+          financingContract: { status: FinancingStatus.ACTIVE },
+        },
+        data: { status: InstallmentStatus.DUE },
+      }),
+      prisma.installment.updateMany({
+        where: {
+          status: InstallmentStatus.DUE,
+          dueDate: { lt: threeDaysAgo },
+          financingContract: { status: FinancingStatus.ACTIVE },
+        },
+        data: { status: InstallmentStatus.OVERDUE },
+      }),
+    ]);
+
+    if (pendingToDue.count > 0 || dueToOverdue.count > 0) {
+      logger.debug(
+        `🔄 [StatusTransition] PENDING→DUE: ${pendingToDue.count}, DUE→OVERDUE: ${dueToOverdue.count}`,
+      );
+    }
   }
 
   private static async process3DayReminders(): Promise<void> {

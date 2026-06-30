@@ -474,7 +474,8 @@ export const LedgerAccountScalarFieldEnum = {
   balance: 'balance',
   companyId: 'companyId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lastReconciledAt: 'lastReconciledAt'
 } as const
 
 export type LedgerAccountScalarFieldEnum = (typeof LedgerAccountScalarFieldEnum)[keyof typeof LedgerAccountScalarFieldEnum]
