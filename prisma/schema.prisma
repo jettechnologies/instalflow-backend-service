@@ -576,7 +576,7 @@ model LedgerAccount {
   company          Company?    @relation(fields: [companyId], references: [companyId])
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
-  lastReconciledAt DateTime
+  lastReconciledAt DateTime?
 
   entries JournalEntry[]
 
