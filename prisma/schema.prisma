@@ -27,6 +27,7 @@ enum InstallmentStatus {
   OVERDUE
   DEFAULTED
   PAID
+  VOIDED
 }
 
 enum PaymentStatus {
@@ -381,11 +382,16 @@ model FinancingContract {
 
   installments Installment[]
 
-  activatedAt DateTime?
-  completedAt DateTime?
-  defaultedAt DateTime?
-  cancelledAt DateTime?
-  rejectedAt  DateTime?
+  activatedAt      DateTime?
+  completedAt      DateTime?
+  defaultedAt      DateTime?
+  cancelledAt      DateTime?
+  rejectedAt       DateTime?
+  restructuredAt   DateTime?
+  restructuredById String?
+  writtenOffAt     DateTime?
+  writtenOffById   String?
+  writeOffReason   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

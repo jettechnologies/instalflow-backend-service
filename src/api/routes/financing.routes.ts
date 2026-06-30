@@ -8,7 +8,7 @@ const router = Router();
 router.post(
   "/:id/restructure",
   requireAuth,
-  requireRole([Role.ADMIN, Role.SUPER_ADMIN]),
+  requireRole([Role.ADMIN, Role.COMPANY]),
   FinancingController.restructureContract,
 );
 

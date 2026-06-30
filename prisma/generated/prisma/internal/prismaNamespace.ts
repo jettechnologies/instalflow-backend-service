@@ -2964,6 +2964,11 @@ export const FinancingContractScalarFieldEnum = {
   defaultedAt: 'defaultedAt',
   cancelledAt: 'cancelledAt',
   rejectedAt: 'rejectedAt',
+  restructuredAt: 'restructuredAt',
+  restructuredById: 'restructuredById',
+  writtenOffAt: 'writtenOffAt',
+  writtenOffById: 'writtenOffById',
+  writeOffReason: 'writeOffReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -34,7 +34,8 @@ export const InstallmentStatus = {
   DUE: 'DUE',
   OVERDUE: 'OVERDUE',
   DEFAULTED: 'DEFAULTED',
-  PAID: 'PAID'
+  PAID: 'PAID',
+  VOIDED: 'VOIDED'
 } as const
 
 export type InstallmentStatus = (typeof InstallmentStatus)[keyof typeof InstallmentStatus]

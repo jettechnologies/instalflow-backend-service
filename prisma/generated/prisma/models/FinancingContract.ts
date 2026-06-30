@@ -65,6 +65,11 @@ export type FinancingContractMinAggregateOutputType = {
   defaultedAt: Date | null
   cancelledAt: Date | null
   rejectedAt: Date | null
+  restructuredAt: Date | null
+  restructuredById: string | null
+  writtenOffAt: Date | null
+  writtenOffById: string | null
+  writeOffReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -88,6 +93,11 @@ export type FinancingContractMaxAggregateOutputType = {
   defaultedAt: Date | null
   cancelledAt: Date | null
   rejectedAt: Date | null
+  restructuredAt: Date | null
+  restructuredById: string | null
+  writtenOffAt: Date | null
+  writtenOffById: string | null
+  writeOffReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -111,6 +121,11 @@ export type FinancingContractCountAggregateOutputType = {
   defaultedAt: number
   cancelledAt: number
   rejectedAt: number
+  restructuredAt: number
+  restructuredById: number
+  writtenOffAt: number
+  writtenOffById: number
+  writeOffReason: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -156,6 +171,11 @@ export type FinancingContractMinAggregateInputType = {
   defaultedAt?: true
   cancelledAt?: true
   rejectedAt?: true
+  restructuredAt?: true
+  restructuredById?: true
+  writtenOffAt?: true
+  writtenOffById?: true
+  writeOffReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -179,6 +199,11 @@ export type FinancingContractMaxAggregateInputType = {
   defaultedAt?: true
   cancelledAt?: true
   rejectedAt?: true
+  restructuredAt?: true
+  restructuredById?: true
+  writtenOffAt?: true
+  writtenOffById?: true
+  writeOffReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -202,6 +227,11 @@ export type FinancingContractCountAggregateInputType = {
   defaultedAt?: true
   cancelledAt?: true
   rejectedAt?: true
+  restructuredAt?: true
+  restructuredById?: true
+  writtenOffAt?: true
+  writtenOffById?: true
+  writeOffReason?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -312,6 +342,11 @@ export type FinancingContractGroupByOutputType = {
   defaultedAt: Date | null
   cancelledAt: Date | null
   rejectedAt: Date | null
+  restructuredAt: Date | null
+  restructuredById: string | null
+  writtenOffAt: Date | null
+  writtenOffById: string | null
+  writeOffReason: string | null
   createdAt: Date
   updatedAt: Date
   _count: FinancingContractCountAggregateOutputType | null
@@ -358,6 +393,11 @@ export type FinancingContractWhereInput = {
   defaultedAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  restructuredAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  restructuredById?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
+  writtenOffAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  writtenOffById?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
+  writeOffReason?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -386,6 +426,11 @@ export type FinancingContractOrderByWithRelationInput = {
   defaultedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  restructuredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  restructuredById?: Prisma.SortOrderInput | Prisma.SortOrder
+  writtenOffAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  writtenOffById?: Prisma.SortOrderInput | Prisma.SortOrder
+  writeOffReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -417,6 +462,11 @@ export type FinancingContractWhereUniqueInput = Prisma.AtLeast<{
   defaultedAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  restructuredAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  restructuredById?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
+  writtenOffAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  writtenOffById?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
+  writeOffReason?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -445,6 +495,11 @@ export type FinancingContractOrderByWithAggregationInput = {
   defaultedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  restructuredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  restructuredById?: Prisma.SortOrderInput | Prisma.SortOrder
+  writtenOffAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  writtenOffById?: Prisma.SortOrderInput | Prisma.SortOrder
+  writeOffReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.FinancingContractCountOrderByAggregateInput
@@ -476,6 +531,11 @@ export type FinancingContractScalarWhereWithAggregatesInput = {
   defaultedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FinancingContract"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FinancingContract"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FinancingContract"> | Date | string | null
+  restructuredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FinancingContract"> | Date | string | null
+  restructuredById?: Prisma.StringNullableWithAggregatesFilter<"FinancingContract"> | string | null
+  writtenOffAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FinancingContract"> | Date | string | null
+  writtenOffById?: Prisma.StringNullableWithAggregatesFilter<"FinancingContract"> | string | null
+  writeOffReason?: Prisma.StringNullableWithAggregatesFilter<"FinancingContract"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FinancingContract"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FinancingContract"> | Date | string
 }
@@ -495,6 +555,11 @@ export type FinancingContractCreateInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
@@ -523,6 +588,11 @@ export type FinancingContractUncheckedCreateInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutFinancingContractInput
@@ -543,6 +613,11 @@ export type FinancingContractUpdateInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
@@ -571,6 +646,11 @@ export type FinancingContractUncheckedUpdateInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutFinancingContractNestedInput
@@ -595,6 +675,11 @@ export type FinancingContractCreateManyInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -614,6 +699,11 @@ export type FinancingContractUpdateManyMutationInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -637,6 +727,11 @@ export type FinancingContractUncheckedUpdateManyInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -675,6 +770,11 @@ export type FinancingContractCountOrderByAggregateInput = {
   defaultedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   rejectedAt?: Prisma.SortOrder
+  restructuredAt?: Prisma.SortOrder
+  restructuredById?: Prisma.SortOrder
+  writtenOffAt?: Prisma.SortOrder
+  writtenOffById?: Prisma.SortOrder
+  writeOffReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -708,6 +808,11 @@ export type FinancingContractMaxOrderByAggregateInput = {
   defaultedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   rejectedAt?: Prisma.SortOrder
+  restructuredAt?: Prisma.SortOrder
+  restructuredById?: Prisma.SortOrder
+  writtenOffAt?: Prisma.SortOrder
+  writtenOffById?: Prisma.SortOrder
+  writeOffReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -731,6 +836,11 @@ export type FinancingContractMinOrderByAggregateInput = {
   defaultedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   rejectedAt?: Prisma.SortOrder
+  restructuredAt?: Prisma.SortOrder
+  restructuredById?: Prisma.SortOrder
+  writtenOffAt?: Prisma.SortOrder
+  writtenOffById?: Prisma.SortOrder
+  writeOffReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -941,6 +1051,11 @@ export type FinancingContractCreateWithoutUserInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutFinancingContractsInput
@@ -967,6 +1082,11 @@ export type FinancingContractUncheckedCreateWithoutUserInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutFinancingContractInput
@@ -1020,6 +1140,11 @@ export type FinancingContractScalarWhereInput = {
   defaultedAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  restructuredAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  restructuredById?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
+  writtenOffAt?: Prisma.DateTimeNullableFilter<"FinancingContract"> | Date | string | null
+  writtenOffById?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
+  writeOffReason?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
 }
@@ -1039,6 +1164,11 @@ export type FinancingContractCreateWithoutProductInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
@@ -1065,6 +1195,11 @@ export type FinancingContractUncheckedCreateWithoutProductInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutFinancingContractInput
@@ -1111,6 +1246,11 @@ export type FinancingContractCreateWithoutVariantInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
@@ -1137,6 +1277,11 @@ export type FinancingContractUncheckedCreateWithoutVariantInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutFinancingContractInput
@@ -1183,6 +1328,11 @@ export type FinancingContractCreateWithoutKycApplicationInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
@@ -1209,6 +1359,11 @@ export type FinancingContractUncheckedCreateWithoutKycApplicationInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   installments?: Prisma.InstallmentUncheckedCreateNestedManyWithoutFinancingContractInput
@@ -1245,6 +1400,11 @@ export type FinancingContractUpdateWithoutKycApplicationInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
@@ -1271,6 +1431,11 @@ export type FinancingContractUncheckedUpdateWithoutKycApplicationInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutFinancingContractNestedInput
@@ -1291,6 +1456,11 @@ export type FinancingContractCreateWithoutInstallmentsInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
@@ -1318,6 +1488,11 @@ export type FinancingContractUncheckedCreateWithoutInstallmentsInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1353,6 +1528,11 @@ export type FinancingContractUpdateWithoutInstallmentsInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
@@ -1380,6 +1560,11 @@ export type FinancingContractUncheckedUpdateWithoutInstallmentsInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1402,6 +1587,11 @@ export type FinancingContractCreateManyUserInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1421,6 +1611,11 @@ export type FinancingContractUpdateWithoutUserInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutFinancingContractsNestedInput
@@ -1447,6 +1642,11 @@ export type FinancingContractUncheckedUpdateWithoutUserInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutFinancingContractNestedInput
@@ -1470,6 +1670,11 @@ export type FinancingContractUncheckedUpdateManyWithoutUserInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1492,6 +1697,11 @@ export type FinancingContractCreateManyProductInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1511,6 +1721,11 @@ export type FinancingContractUpdateWithoutProductInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
@@ -1537,6 +1752,11 @@ export type FinancingContractUncheckedUpdateWithoutProductInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutFinancingContractNestedInput
@@ -1560,6 +1780,11 @@ export type FinancingContractUncheckedUpdateManyWithoutProductInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1582,6 +1807,11 @@ export type FinancingContractCreateManyVariantInput = {
   defaultedAt?: Date | string | null
   cancelledAt?: Date | string | null
   rejectedAt?: Date | string | null
+  restructuredAt?: Date | string | null
+  restructuredById?: string | null
+  writtenOffAt?: Date | string | null
+  writtenOffById?: string | null
+  writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1601,6 +1831,11 @@ export type FinancingContractUpdateWithoutVariantInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
@@ -1627,6 +1862,11 @@ export type FinancingContractUncheckedUpdateWithoutVariantInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   installments?: Prisma.InstallmentUncheckedUpdateManyWithoutFinancingContractNestedInput
@@ -1650,6 +1890,11 @@ export type FinancingContractUncheckedUpdateManyWithoutVariantInput = {
   defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restructuredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writtenOffAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  writtenOffById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1704,6 +1949,11 @@ export type FinancingContractSelect<ExtArgs extends runtime.Types.Extensions.Int
   defaultedAt?: boolean
   cancelledAt?: boolean
   rejectedAt?: boolean
+  restructuredAt?: boolean
+  restructuredById?: boolean
+  writtenOffAt?: boolean
+  writtenOffById?: boolean
+  writeOffReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1733,6 +1983,11 @@ export type FinancingContractSelectCreateManyAndReturn<ExtArgs extends runtime.T
   defaultedAt?: boolean
   cancelledAt?: boolean
   rejectedAt?: boolean
+  restructuredAt?: boolean
+  restructuredById?: boolean
+  writtenOffAt?: boolean
+  writtenOffById?: boolean
+  writeOffReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1760,6 +2015,11 @@ export type FinancingContractSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   defaultedAt?: boolean
   cancelledAt?: boolean
   rejectedAt?: boolean
+  restructuredAt?: boolean
+  restructuredById?: boolean
+  writtenOffAt?: boolean
+  writtenOffById?: boolean
+  writeOffReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1787,11 +2047,16 @@ export type FinancingContractSelectScalar = {
   defaultedAt?: boolean
   cancelledAt?: boolean
   rejectedAt?: boolean
+  restructuredAt?: boolean
+  restructuredById?: boolean
+  writtenOffAt?: boolean
+  writtenOffById?: boolean
+  writeOffReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FinancingContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contractId" | "userId" | "productId" | "variantId" | "kycApplicationId" | "approvedProductPrice" | "approvedInterestPercentage" | "approvedDurationMonths" | "principal" | "interest" | "totalFinanced" | "status" | "activatedAt" | "completedAt" | "defaultedAt" | "cancelledAt" | "rejectedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["financingContract"]>
+export type FinancingContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contractId" | "userId" | "productId" | "variantId" | "kycApplicationId" | "approvedProductPrice" | "approvedInterestPercentage" | "approvedDurationMonths" | "principal" | "interest" | "totalFinanced" | "status" | "activatedAt" | "completedAt" | "defaultedAt" | "cancelledAt" | "rejectedAt" | "restructuredAt" | "restructuredById" | "writtenOffAt" | "writtenOffById" | "writeOffReason" | "createdAt" | "updatedAt", ExtArgs["result"]["financingContract"]>
 export type FinancingContractInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -1841,6 +2106,11 @@ export type $FinancingContractPayload<ExtArgs extends runtime.Types.Extensions.I
     defaultedAt: Date | null
     cancelledAt: Date | null
     rejectedAt: Date | null
+    restructuredAt: Date | null
+    restructuredById: string | null
+    writtenOffAt: Date | null
+    writtenOffById: string | null
+    writeOffReason: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["financingContract"]>
@@ -2289,6 +2559,11 @@ export interface FinancingContractFieldRefs {
   readonly defaultedAt: Prisma.FieldRef<"FinancingContract", 'DateTime'>
   readonly cancelledAt: Prisma.FieldRef<"FinancingContract", 'DateTime'>
   readonly rejectedAt: Prisma.FieldRef<"FinancingContract", 'DateTime'>
+  readonly restructuredAt: Prisma.FieldRef<"FinancingContract", 'DateTime'>
+  readonly restructuredById: Prisma.FieldRef<"FinancingContract", 'String'>
+  readonly writtenOffAt: Prisma.FieldRef<"FinancingContract", 'DateTime'>
+  readonly writtenOffById: Prisma.FieldRef<"FinancingContract", 'String'>
+  readonly writeOffReason: Prisma.FieldRef<"FinancingContract", 'String'>
   readonly createdAt: Prisma.FieldRef<"FinancingContract", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FinancingContract", 'DateTime'>
 }

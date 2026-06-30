@@ -1,22 +1,25 @@
-import { prisma, Prisma, FinancingStatus, InstallmentStatus } from "@/infrastructure/prisma";
 import {
-  BadRequestError,
-  ForbiddenError,
-  NotFoundError,
-} from "@/shared/utils/AppError";
+  prisma,
+  Prisma,
+  FinancingStatus,
+  InstallmentStatus,
+  AccountType,
+} from "@/infrastructure/prisma";
+import { ForbiddenError, NotFoundError } from "@/shared/utils/AppError";
 import { LedgerService } from "./ledger.service";
 import { InstallmentService } from "./installment.service";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
-import { formatCurrency } from "@/shared/utils/helpers/misc";
-import { RestructureContractSchema, WriteOffContractSchema } from "@/shared/schemas/financing.schema";
+import {
+  RestructureContractSchema,
+  WriteOffContractSchema,
+} from "@/shared/schemas/financing.schema";
 import { z } from "zod";
 
 type RestructureInput = z.infer<typeof RestructureContractSchema>;
 type WriteOffInput = z.infer<typeof WriteOffContractSchema>;
 
 export class FinancingService {
-  // ─── Restructure a Defaulted Contract ───
   static async restructureContract(
     contractId: string,
     adminUserId: string,
@@ -41,7 +44,7 @@ export class FinancingService {
         where: { userId: adminUserId },
       });
 
-      if (!admin || !["ADMIN", "SUPER_ADMIN"].includes(admin.role)) {
+      if (!admin || !["ADMIN", "COMPANY"].includes(admin.role)) {
         throw new ForbiddenError("Only admins can restructure contracts");
       }
 
@@ -49,9 +52,9 @@ export class FinancingService {
         .filter((i) => i.status === InstallmentStatus.PAID)
         .reduce((sum, i) => sum.plus(i.amount), new Prisma.Decimal(0));
 
-      const remainingPrincipal = new Prisma.Decimal(contract.totalFinanced).minus(
-        paidAmount,
-      );
+      const remainingPrincipal = new Prisma.Decimal(
+        contract.totalFinanced,
+      ).minus(paidAmount);
 
       const newInterest = remainingPrincipal
         .times(validated.interestPercentage)
@@ -105,17 +108,17 @@ export class FinancingService {
           entries: [
             {
               accountName: "CUSTOMER_RECEIVABLE",
-              accountType: Prisma.AccountType.ASSET,
+              accountType: AccountType.ASSET,
               debit: newTotalFinanced,
             },
             {
               accountName: "BAD_DEBT_RECOVERY",
-              accountType: Prisma.AccountType.REVENUE,
+              accountType: AccountType.REVENUE,
               credit: remainingPrincipal,
             },
             {
               accountName: "INTEREST_INCOME",
-              accountType: Prisma.AccountType.REVENUE,
+              accountType: AccountType.REVENUE,
               credit: newInterest,
             },
           ],
@@ -186,16 +189,18 @@ export class FinancingService {
       });
 
       if (!approver || approver.role !== "COMPANY") {
-        throw new ForbiddenError("Only company accounts can write off contracts");
+        throw new ForbiddenError(
+          "Only company accounts can write off contracts",
+        );
       }
 
       const paidAmount = contract.installments
         .filter((i) => i.status === InstallmentStatus.PAID)
         .reduce((sum, i) => sum.plus(i.amount), new Prisma.Decimal(0));
 
-      const outstandingAmount = new Prisma.Decimal(contract.totalFinanced).minus(
-        paidAmount,
-      );
+      const outstandingAmount = new Prisma.Decimal(
+        contract.totalFinanced,
+      ).minus(paidAmount);
 
       await tx.financingContract.update({
         where: { contractId },
@@ -230,12 +235,12 @@ export class FinancingService {
           entries: [
             {
               accountName: "BAD_DEBT_EXPENSE",
-              accountType: Prisma.AccountType.EXPENSE,
+              accountType: AccountType.EXPENSE,
               debit: outstandingAmount,
             },
             {
               accountName: "CUSTOMER_RECEIVABLE",
-              accountType: Prisma.AccountType.ASSET,
+              accountType: AccountType.ASSET,
               credit: outstandingAmount,
             },
           ],
@@ -247,7 +252,12 @@ export class FinancingService {
       const marketer = customer.referredByMarketerId
         ? await tx.user.findUnique({
             where: { userId: customer.referredByMarketerId },
-            select: { userId: true, email: true, name: true, createdById: true },
+            select: {
+              userId: true,
+              email: true,
+              name: true,
+              createdById: true,
+            },
           })
         : null;
 
