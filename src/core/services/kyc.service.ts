@@ -58,9 +58,36 @@ export class KycService {
       );
     }
 
+    const product = await prisma.product.findUnique({
+      where: { slug: params.productSlug },
+      include: { variants: true },
+    });
+
+    if (!product) {
+      throw new BadRequestError("Product not found.");
+    }
+
+    if (product.status !== "PUBLISHED" && product.status !== "SOLD_OUT") {
+      throw new BadRequestError("Product is not available for referral.");
+    }
+
+    if (params.variantId) {
+      const variant = product.variants.find((v: any) => v.variantId === params.variantId);
+      if (!variant || !variant.isActive) {
+        throw new BadRequestError("Variant not found or inactive.");
+      }
+      if (variant.stockQuantity <= 0) {
+        throw new BadRequestError("Variant is out of stock.");
+      }
+    } else {
+      const totalStock = product.variants.reduce((sum: number, v: any) => sum + (v.stockQuantity || 0), 0) || product.stockQuantity;
+      if (totalStock <= 0) {
+        throw new BadRequestError("Product is out of stock.");
+      }
+    }
+
     let referralCode = marketer.referralCode;
 
-    // Generate a unique referral code dynamically if not already assigned
     if (!referralCode) {
       const cleanName = marketer.name
         ? marketer.name.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()
@@ -252,6 +279,22 @@ export class KycService {
 
     if (productVariant.productId !== params.productId) {
       throw new BadRequestError("Selected variant does not belong to product.");
+    }
+
+    if (!productVariant.isActive) {
+      throw new BadRequestError("Product variant is inactive.");
+    }
+
+    if (productVariant.stockQuantity <= 0) {
+      throw new BadRequestError("Product variant is out of stock.");
+    }
+
+    const product = await prisma.product.findUnique({
+      where: { productId: params.productId },
+    });
+
+    if (!product || product.status !== "PUBLISHED" && product.status !== "SOLD_OUT") {
+      throw new BadRequestError("Product is not available for application.");
     }
 
     const principal = new Prisma.Decimal(productVariant.price);
@@ -700,109 +743,4 @@ export class KycService {
       expiresIn: "15 minutes",
     };
   }
-
-  /**
-   * Dispatch internal notification alerts.
-   */
-  // private static async dispatchInternalNotifications(customer: any, application: any) {
-  //   try {
-  //     const title = "New Installment Application";
-  //     const message = `Customer "${customer.name}" has submitted an installment application for review.`;
-
-  //     const metadata = {
-  //       applicationId: application.kycApplicationId,
-  //       customerName: customer.name,
-  //       customerEmail: customer.email,
-  //     };
-
-  //     // Recipient 1: The referring Marketer
-  //     if (customer.referredByMarketerId) {
-  //       const marketerId = customer.referredByMarketerId;
-  //       const marketerIdempotency = `notif-marketer-${application.kycApplicationId}`;
-  //       await prisma.internalNotification.upsert({
-  //         where: { idempotencyKey: marketerIdempotency },
-  //         update: {},
-  //         create: {
-  //           userId: marketerId,
-  //           title,
-  //           message,
-  //           metadata,
-  //           idempotencyKey: marketerIdempotency,
-  //         },
-  //       });
-
-  //       // Recipient 2: The creator Admin
-  //       const marketer = await prisma.user.findUnique({
-  //         where: { userId: marketerId },
-  //         select: { createdById: true },
-  //       });
-
-  //       if (marketer?.createdById) {
-  //         const adminId = marketer.createdById;
-  //         const adminIdempotency = `notif-admin-${application.kycApplicationId}`;
-  //         await prisma.internalNotification.upsert({
-  //           where: { idempotencyKey: adminIdempotency },
-  //           update: {},
-  //           create: {
-  //             userId: adminId,
-  //             title: `${title} (Marketer Referral)`,
-  //             message: `${message} (Assigned Marketer: ${marketerId})`,
-  //             metadata,
-  //             idempotencyKey: adminIdempotency,
-  //           },
-  //         });
-  //       }
-  //     } else {
-  //       // Fallback: Super Admin
-  //       const superAdmin = await prisma.user.findFirst({
-  //         where: { role: "SUPER_ADMIN" },
-  //       });
-
-  //       if (superAdmin) {
-  //         const fallbackIdempotency = `notif-fallback-${application.kycApplicationId}`;
-  //         await prisma.internalNotification.upsert({
-  //           where: { idempotencyKey: fallbackIdempotency },
-  //           update: {},
-  //           create: {
-  //             userId: superAdmin.userId,
-  //             title: `${title} (Direct Applicant)`,
-  //             message,
-  //             metadata,
-  //             idempotencyKey: fallbackIdempotency,
-  //           },
-  //         });
-  //       }
-  //     }
-  //   } catch (err: any) {
-  //     console.error("⚠️ Failed to dispatch internal notifications:", err.message);
-  //   }
-  // }
-
-  // /**
-  //  * Retrieve internal notifications for the logged in user.
-  //  */
-  // static async getNotifications(userId: string) {
-  //   return prisma.internalNotification.findMany({
-  //     where: { userId },
-  //     orderBy: { createdAt: "desc" },
-  //   });
-  // }
-
-  // /**
-  //  * Mark a notification as read safely.
-  //  */
-  // static async markAsRead(userId: string, notificationId: string) {
-  //   const notif = await prisma.internalNotification.findFirst({
-  //     where: { notificationId, userId },
-  //   });
-
-  //   if (!notif) {
-  //     throw new NotFoundError("Notification not found.");
-  //   }
-
-  //   return prisma.internalNotification.update({
-  //     where: { notificationId },
-  //     data: { isRead: true },
-  //   });
-  // }
 }

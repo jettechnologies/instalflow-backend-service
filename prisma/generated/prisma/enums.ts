@@ -108,6 +108,16 @@ export const AccountType = {
 export type AccountType = (typeof AccountType)[keyof typeof AccountType]
 
 
+export const ProductStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  SOLD_OUT: 'SOLD_OUT',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus]
+
+
 export const ApprovalAction = {
   TOGGLE_ACTIVE: 'TOGGLE_ACTIVE',
   SOFT_DELETE: 'SOFT_DELETE'

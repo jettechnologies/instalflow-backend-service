@@ -1,6 +1,8 @@
 tags:
   - name: Product Catalog
     description: Endpoints for managing products, categories, variants, and dynamic installment plans.
+  - name: Variant Management
+    description: Endpoints for managing product variants inventory.
 
 paths:
   /products:
@@ -59,17 +61,20 @@ paths:
                           type: number
                         stockQuantity:
                           type: integer
-                  meta:
-                    type: object
-                    properties:
-                      total:
-                        type: integer
-                      page:
-                        type: integer
-                      limit:
-                        type: integer
-                      totalPages:
-                        type: integer
+                        status:
+                          type: string
+                          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
+                meta:
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                    page:
+                      type: integer
+                    limit:
+                      type: integer
+                    totalPages:
+                      type: integer
 
     post:
       summary: Create a Product (Admin/Company only)
@@ -113,6 +118,10 @@ paths:
                   type: integer
                   default: 0
                   example: 100
+                status:
+                  type: string
+                  enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
+                  default: DRAFT
                 images:
                   type: array
                   description: Array of product image files to upload.
@@ -272,6 +281,9 @@ paths:
                 stockQuantity:
                   type: integer
                   example: 120
+                status:
+                  type: string
+                  enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
                 active:
                   type: boolean
                   default: true
@@ -294,7 +306,7 @@ paths:
           description: Product updated
 
     delete:
-      summary: Soft Delete a Product
+      summary: Soft Delete a Product (Archive)
       tags: [Product Catalog]
       security:
         - bearerAuth: []
@@ -307,4 +319,269 @@ paths:
             type: string
       responses:
         "200":
-          description: Product deleted
+          description: Product archived (status set to ARCHIVED)
+
+  /products/{productId}/variants:
+    get:
+      summary: Get all variants for a product
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of variants
+    post:
+      summary: Create a new variant for a product
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sku, price]
+              properties:
+                sku:
+                  type: string
+                  example: PH-VAR-001
+                size:
+                  type: string
+                  example: M
+                color:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Red", "Blue"]
+                images:
+                  type: array
+                  items:
+                    type: string
+                stockQuantity:
+                  type: integer
+                  default: 0
+                price:
+                  type: number
+                  example: 499.99
+      responses:
+        "201":
+          description: Variant created successfully
+
+  /products/variants/{variantId}:
+    patch:
+      summary: Update a variant
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                size:
+                  type: string
+                color:
+                  type: array
+                  items:
+                    type: string
+                images:
+                  type: array
+                  items:
+                    type: string
+                stockQuantity:
+                  type: integer
+                price:
+                  type: number
+      responses:
+        "200":
+          description: Variant updated successfully
+
+  /products/variants/{variantId}/stock:
+    patch:
+      summary: Update variant stock quantity
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [stockQuantity]
+              properties:
+                stockQuantity:
+                  type: integer
+                  minimum: 0
+                  example: 50
+      responses:
+        "200":
+          description: Stock updated successfully
+
+  /products/variants/{variantId}/status:
+    patch:
+      summary: Deactivate/Activate a variant
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [isActive]
+              properties:
+                isActive:
+                  type: boolean
+                  example: false
+      responses:
+        "200":
+          description: Variant status updated successfully
+
+  /products/{productId}/installment-plans:
+    get:
+      summary: Get installment plans for a product
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of installment plans
+    post:
+      summary: Create an installment plan for a product
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [durationMonths, interestPercentage]
+              properties:
+                durationMonths:
+                  type: integer
+                  example: 12
+                interestPercentage:
+                  type: number
+                  example: 10.5
+                active:
+                  type: boolean
+                  default: true
+      responses:
+        "201":
+          description: Installment plan created successfully
+
+  /products/installment-plans/{planId}:
+    patch:
+      summary: Update an installment plan
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: planId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                durationMonths:
+                  type: integer
+                  example: 24
+                interestPercentage:
+                  type: number
+                  example: 12.0
+                active:
+                  type: boolean
+      responses:
+        "200":
+          description: Installment plan updated successfully
+
+  /products/installment-plans/{planId}/status:
+    patch:
+      summary: Activate/Deactivate an installment plan
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: planId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [active]
+              properties:
+                active:
+                  type: boolean
+                  example: false
+      responses:
+        "200":
+          description: Installment plan status updated successfully

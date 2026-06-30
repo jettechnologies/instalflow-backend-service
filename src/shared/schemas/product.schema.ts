@@ -35,10 +35,12 @@ export const CreateProductSchema = z.object({
   variants: z.array(ProductVariantSchema).optional(),
   installmentPlans: z.array(ProductInstallmentPlanSchema).optional(),
   images: z.array(ProductImageSchema).optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "SOLD_OUT", "ARCHIVED"]).default("DRAFT"),
 });
 
 export const UpdateProductSchema = CreateProductSchema.partial().extend({
   active: z.boolean().optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "SOLD_OUT", "ARCHIVED"]).optional(),
 });
 
 export const SearchQuerySchema = z.object({

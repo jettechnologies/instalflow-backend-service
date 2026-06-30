@@ -76,6 +76,13 @@ enum AccountType {
   EQUITY
 }
 
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  SOLD_OUT
+  ARCHIVED
+}
+
 enum ApprovalAction {
   TOGGLE_ACTIVE
   SOFT_DELETE
@@ -260,10 +267,10 @@ model Product {
   description    String?
   minPrice       Decimal?                 @map("min_price")
   maxPrice       Decimal?                 @map("max_price")
-  stockQuantity  Int                      @default(0)
+  stockQuantity  Int                      @default(0) @map("stock_quantity")
   price          Decimal                  @default(0)
   commissionRate Decimal                  @default(0)
-  isActive       Boolean                  @default(true) @map("is_active")
+  status         ProductStatus            @default(DRAFT) @map("status")
   searchVector   Unsupported("tsvector")? @map("search_vector")
   createdAt      DateTime                 @default(now())
   updatedAt      DateTime                 @updatedAt
@@ -277,22 +284,29 @@ model Product {
   images             ProductImage[]
   kycApplications    KycApplication[]
   financingContracts FinancingContract[]
+
+  @@index([status])
+  @@index([companyId])
 }
 
 model ProductVariant {
   id                 BigInt              @id @default(autoincrement())
   variantId          String              @unique @default(uuid())
   productId          String
-  product            Product             @relation(fields: [productId], references: [productId], onDelete: Cascade)
+  product            Product             @relation(fields: [productId], references: [productId], onDelete: Restrict)
   sku                String              @unique
   size               String?
   color              String[] // PostgreSQL string array
   images             String[] // PostgreSQL string array
-  stockQuantity      Int                 @default(0)
+  stockQuantity      Int                 @default(0) @map("stock_quantity")
+  isActive           Boolean             @default(true) @map("is_active")
   price              Decimal             @default(0)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   financingContracts FinancingContract[]
+
+  @@index([productId])
+  @@index([stockQuantity])
 }
 
 model KycApplication {
@@ -301,9 +315,9 @@ model KycApplication {
   userId             String                 @map("user_id")
   user               User                   @relation("UserKyc", fields: [userId], references: [userId])
   productId          String                 @map("product_id")
-  product            Product                @relation(fields: [productId], references: [productId])
+  product            Product                @relation(fields: [productId], references: [productId], onDelete: Restrict)
   installmentPlanId  String                 @map("installment_plan_id")
-  installmentPlan    ProductInstallmentPlan @relation(fields: [installmentPlanId], references: [planId])
+  installmentPlan    ProductInstallmentPlan @relation(fields: [installmentPlanId], references: [planId], onDelete: Restrict)
   variantId          String                 @map("variant_id")
   idType             String                 @map("id_type")
   idNumber           String                 @map("id_number")
@@ -321,6 +335,12 @@ model KycApplication {
   kycDocumentAssets KycDocumentAsset[]
   kycAuditTrails    KycAuditTrail[]
   financingContract FinancingContract?
+
+  @@index([userId])
+  @@index([productId])
+  @@index([variantId])
+  @@index([installmentPlanId])
+  @@index([status])
 }
 
 model KycDocumentAsset {
@@ -362,13 +382,13 @@ model FinancingContract {
   user   User   @relation(fields: [userId], references: [userId])
 
   productId String
-  product   Product @relation(fields: [productId], references: [productId])
+  product   Product @relation(fields: [productId], references: [productId], onDelete: Restrict)
 
   variantId String?
-  variant   ProductVariant? @relation(fields: [variantId], references: [variantId])
+  variant   ProductVariant? @relation(fields: [variantId], references: [variantId], onDelete: Restrict)
 
   kycApplicationId String         @unique
-  kycApplication   KycApplication @relation(fields: [kycApplicationId], references: [kycApplicationId])
+  kycApplication   KycApplication @relation(fields: [kycApplicationId], references: [kycApplicationId], onDelete: Restrict)
 
   approvedProductPrice       Decimal
   approvedInterestPercentage Decimal
@@ -397,6 +417,8 @@ model FinancingContract {
   updatedAt DateTime @updatedAt
 
   @@index([userId, productId])
+  @@index([variantId])
+  @@index([status])
 }
 
 model Installment {
@@ -666,7 +688,7 @@ model ProductInstallmentPlan {
   id                 BigInt           @id @default(autoincrement())
   planId             String           @unique @default(uuid())
   productId          String
-  product            Product          @relation(fields: [productId], references: [productId], onDelete: Cascade)
+  product            Product          @relation(fields: [productId], references: [productId], onDelete: Restrict)
   kycApplicationId   String?
   durationMonths     Int
   interestPercentage Decimal          @default(0)
@@ -674,6 +696,9 @@ model ProductInstallmentPlan {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   kycApplications    KycApplication[]
+
+  @@index([productId])
+  @@index([active])
 }
 
 model ProductImage {

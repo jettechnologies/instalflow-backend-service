@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { ProductController } from "@/api/controllers/product.controller";
+import { VariantController } from "@/api/controllers/variant.controller";
+import { InstallmentPlanController } from "@/api/controllers/installment-plan.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { Role } from "@/infrastructure/prisma";
 import {
@@ -32,5 +34,18 @@ router.patch(
   ProductController.updateProduct,
 );
 router.delete("/:id", ProductController.deleteProduct);
+
+// Variant management routes
+router.get("/:productId/variants", requireAuth, VariantController.getVariantsByProduct);
+router.post("/:productId/variants", VariantController.createVariant);
+router.patch("/variants/:variantId/stock", VariantController.updateVariantStock);
+router.patch("/variants/:variantId/status", VariantController.deactivateVariant);
+router.patch("/variants/:variantId", VariantController.updateVariant);
+
+// Installment plan management routes
+router.get("/:productId/installment-plans", requireAuth, InstallmentPlanController.getInstallmentPlansByProduct);
+router.post("/:productId/installment-plans", InstallmentPlanController.createInstallmentPlan);
+router.patch("/installment-plans/:planId", InstallmentPlanController.updateInstallmentPlan);
+router.patch("/installment-plans/:planId/status", InstallmentPlanController.deactivateInstallmentPlan);
 
 export default router;

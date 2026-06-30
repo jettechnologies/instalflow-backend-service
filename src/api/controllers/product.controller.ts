@@ -104,6 +104,7 @@ export class ProductController {
         body.active !== undefined
           ? body.active === "true" || body.active === true
           : undefined,
+      status: body.status || undefined,
       variants: body.variants
         ? typeof body.variants === "string"
           ? JSON.parse(body.variants)

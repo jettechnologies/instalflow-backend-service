@@ -1,4 +1,4 @@
-import { prisma } from "@/infrastructure/prisma";
+import { prisma, ProductStatus } from "@/infrastructure/prisma";
 import { z } from "zod";
 import {
   CreateProductSchema,
@@ -7,7 +7,7 @@ import {
   ProductQueryParams,
   ProductCursorQueryParams,
 } from "@/shared/schemas/product.schema";
-import { NotFoundError } from "@/shared/utils/AppError";
+import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
 import {
   uploadToCloudinary,
   deleteFromCloudinary,
@@ -117,6 +117,7 @@ export class ProductService {
         commissionRate: data.commissionRate,
         companyId,
         categoryId: data.categoryId,
+        status: data.status,
         variants: {
           create: data.variants?.map((v) => ({
             sku: v.sku,
@@ -149,7 +150,7 @@ export class ProductService {
   ) {
     const product = await prisma.product.findUnique({
       where: { productId },
-      include: { images: true },
+      include: { images: true, variants: true },
     });
     if (!product) throw new NotFoundError("Product not found");
 
@@ -182,28 +183,40 @@ export class ProductService {
       }
     }
 
+    const updateData: any = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      minPrice: data.minPrice,
+      maxPrice: data.maxPrice,
+      stockQuantity: data.stockQuantity,
+      commissionRate: data.commissionRate,
+      categoryId: data.categoryId,
+      status: data.status,
+      images: processedImages ? { create: processedImages } : undefined,
+    };
+
+    // Handle sold-out status auto-detection
+    if (data.stockQuantity !== undefined) {
+      const currentStock = data.stockQuantity;
+      const variantStocks = product.variants || [];
+      const totalVariantStock = variantStocks.reduce((sum: number, v: any) => sum + (v.stockQuantity || 0), 0);
+      
+      if (currentStock === 0 && totalVariantStock === 0) {
+        updateData.status = "SOLD_OUT";
+      } else if (updateData.status === "SOLD_OUT" && (currentStock > 0 || totalVariantStock > 0)) {
+        updateData.status = "PUBLISHED";
+      }
+    }
+
     return prisma.product.update({
       where: { productId },
-      data: {
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        minPrice: data.minPrice,
-        maxPrice: data.maxPrice,
-        stockQuantity: data.stockQuantity,
-        commissionRate: data.commissionRate,
-        categoryId: data.categoryId,
-        isActive: data.active,
-        images: processedImages ? { create: processedImages } : undefined,
-      },
+      data: updateData,
       include: { variants: true, installmentPlans: true, images: true },
     });
   }
 
-  /**
-   * Get all products with offset-based pagination and optional category/company filters.
-   */
-  static async getAllProducts(params: ProductQueryParams) {
+static async getAllProducts(params: ProductQueryParams) {
     const {
       page = 1,
       limit = 10,
@@ -214,7 +227,7 @@ export class ProductService {
     const skip = (page - 1) * limit;
 
     const whereClause: any = {
-      isActive: true,
+      status: "PUBLISHED",
     };
 
     if (companyId) {
@@ -266,7 +279,7 @@ export class ProductService {
     return { products: productsWithBreakdowns, pagination };
   }
 
-  /**
+/**
    * Get all products with cursor-based pagination and optional category/company filters.
    */
   static async getAllProductCursor(params: ProductCursorQueryParams) {
@@ -279,7 +292,7 @@ export class ProductService {
     } = params;
 
     const whereClause: any = {
-      isActive: true,
+      status: "PUBLISHED",
     };
 
     if (companyId) {
@@ -363,7 +376,7 @@ export class ProductService {
         ts_rank(p.search_vector, plainto_tsquery('english', ${q})) AS rank
       FROM "Product" p
       WHERE 
-        p.is_active = true
+        p.status = 'PUBLISHED'
         AND p.search_vector @@ plainto_tsquery('english', ${q})
       ORDER BY rank DESC
       LIMIT ${limit}
@@ -375,7 +388,7 @@ export class ProductService {
       SELECT COUNT(*)::int AS total
       FROM "Product" p
       WHERE 
-        p.is_active = true
+        p.status = 'PUBLISHED'
         AND p.search_vector @@ plainto_tsquery('english', ${q})
     `;
 
@@ -528,9 +541,40 @@ export class ProductService {
    * Soft delete a product.
    */
   static async deleteProduct(productId: string) {
+    const product = await prisma.product.findUnique({
+      where: { productId },
+      include: {
+        kycApplications: {
+          where: {
+            status: {
+              in: ["PENDING", "APPROVED"],
+            },
+          },
+        },
+        financingContracts: {
+          where: {
+            status: {
+              in: ["ACTIVE", "PENDING_ACTIVATION", "RESTRUCTURED"],
+            },
+          },
+        },
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundError("Product not found");
+    }
+
+    if (product.kycApplications.length > 0 || product.financingContracts.length > 0) {
+      return prisma.product.update({
+        where: { productId },
+        data: { status: ProductStatus.ARCHIVED },
+      });
+    }
+
     return prisma.product.update({
       where: { productId },
-      data: { isActive: false },
+      data: { status: ProductStatus.ARCHIVED },
     });
   }
 
