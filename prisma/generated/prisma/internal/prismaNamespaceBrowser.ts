@@ -81,6 +81,7 @@ export const ModelName = {
   ApprovalRequest: 'ApprovalRequest',
   ProductInstallmentPlan: 'ProductInstallmentPlan',
   ProductImage: 'ProductImage',
+  ProductVariantImage: 'ProductVariantImage',
   InternalNotification: 'InternalNotification'
 } as const
 
@@ -210,10 +211,10 @@ export const ProductVariantScalarFieldEnum = {
   sku: 'sku',
   size: 'size',
   color: 'color',
-  images: 'images',
   stockQuantity: 'stockQuantity',
   isActive: 'isActive',
   price: 'price',
+  attributes: 'attributes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -585,6 +586,18 @@ export const ProductImageScalarFieldEnum = {
 } as const
 
 export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
+
+
+export const ProductVariantImageScalarFieldEnum = {
+  id: 'id',
+  variantId: 'variantId',
+  imageId: 'imageId',
+  isPrimary: 'isPrimary',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductVariantImageScalarFieldEnum = (typeof ProductVariantImageScalarFieldEnum)[keyof typeof ProductVariantImageScalarFieldEnum]
 
 
 export const InternalNotificationScalarFieldEnum = {

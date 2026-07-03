@@ -414,6 +414,7 @@ export const ModelName = {
   ApprovalRequest: 'ApprovalRequest',
   ProductInstallmentPlan: 'ProductInstallmentPlan',
   ProductImage: 'ProductImage',
+  ProductVariantImage: 'ProductVariantImage',
   InternalNotification: 'InternalNotification'
 } as const
 
@@ -430,7 +431,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "internalNotification"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2654,6 +2655,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProductVariantImage: {
+      payload: Prisma.$ProductVariantImagePayload<ExtArgs>
+      fields: Prisma.ProductVariantImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProductVariantImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProductVariantImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>
+        }
+        findFirst: {
+          args: Prisma.ProductVariantImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProductVariantImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>
+        }
+        findMany: {
+          args: Prisma.ProductVariantImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>[]
+        }
+        create: {
+          args: Prisma.ProductVariantImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>
+        }
+        createMany: {
+          args: Prisma.ProductVariantImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProductVariantImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>[]
+        }
+        delete: {
+          args: Prisma.ProductVariantImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>
+        }
+        update: {
+          args: Prisma.ProductVariantImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProductVariantImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProductVariantImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProductVariantImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProductVariantImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductVariantImagePayload>
+        }
+        aggregate: {
+          args: Prisma.ProductVariantImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductVariantImage>
+        }
+        groupBy: {
+          args: Prisma.ProductVariantImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductVariantImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProductVariantImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductVariantImageCountAggregateOutputType> | number
+        }
+      }
+    }
     InternalNotification: {
       payload: Prisma.$InternalNotificationPayload<ExtArgs>
       fields: Prisma.InternalNotificationFieldRefs
@@ -2877,10 +2952,10 @@ export const ProductVariantScalarFieldEnum = {
   sku: 'sku',
   size: 'size',
   color: 'color',
-  images: 'images',
   stockQuantity: 'stockQuantity',
   isActive: 'isActive',
   price: 'price',
+  attributes: 'attributes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3252,6 +3327,18 @@ export const ProductImageScalarFieldEnum = {
 } as const
 
 export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
+
+
+export const ProductVariantImageScalarFieldEnum = {
+  id: 'id',
+  variantId: 'variantId',
+  imageId: 'imageId',
+  isPrimary: 'isPrimary',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductVariantImageScalarFieldEnum = (typeof ProductVariantImageScalarFieldEnum)[keyof typeof ProductVariantImageScalarFieldEnum]
 
 
 export const InternalNotificationScalarFieldEnum = {
@@ -3807,6 +3894,7 @@ export type GlobalOmitConfig = {
   approvalRequest?: Prisma.ApprovalRequestOmit
   productInstallmentPlan?: Prisma.ProductInstallmentPlanOmit
   productImage?: Prisma.ProductImageOmit
+  productVariantImage?: Prisma.ProductVariantImageOmit
   internalNotification?: Prisma.InternalNotificationOmit
 }
 

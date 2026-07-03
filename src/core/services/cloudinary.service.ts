@@ -1,7 +1,7 @@
 import { env } from "@/infrastructure/config/env";
 import { v4 as uuidv4 } from "uuid";
 import cloudinary from "@/infrastructure/config/cloudinary";
-import fs from "fs";
+import fs from "fs/promises";
 
 export interface CloudinaryUploadResult {
   url: string;
@@ -24,11 +24,10 @@ export const uploadToCloudinary = async (
       transformation: [{ quality: "auto", fetch_format: "auto" }],
     });
 
-    // Remove temp file after successful upload if it's a local file
-    if (fs.existsSync(filePath)) {
-      fs.unlink(filePath, (err) => {
-        if (err) console.warn("⚠️ Failed to delete temp file:", err.message);
-      });
+    try {
+      await fs.unlink(filePath);
+    } catch (err) {
+      console.warn("⚠️ Failed to delete temp file:", err);
     }
 
     return {
@@ -53,14 +52,13 @@ export const uploadPdfToCloudinary = async (
     const result = await cloudinary.uploader.upload(filePath, {
       folder: `${env.cloudinary.base_folder}/${folder}`,
       public_id: `${folder}_${uniqueId}`,
-      resource_type: "raw", // Force raw — no image conversion
+      resource_type: "raw",
     });
 
-    // Remove temp file after successful upload
-    if (fs.existsSync(filePath)) {
-      fs.unlink(filePath, (err) => {
-        if (err) console.warn("⚠️ Failed to delete temp file:", err.message);
-      });
+    try {
+      await fs.unlink(filePath);
+    } catch (err) {
+      console.warn("⚠️ Failed to delete temp file:", err);
     }
 
     return {

@@ -55,9 +55,9 @@ export class PaystackService {
   // ─── Initiate Transfer ──────────────────────────────────────────────────────
 
   static async initiateTransfer(params: {
-    amountKobo: number; // already multiplied by 100
+    amountKobo: number;
     recipientCode: string;
-    reference: string; // use payoutId
+    reference: string;
     reason?: string;
   }): Promise<{ transferCode: string; status: string }> {
     const response = await fetch("https://api.paystack.co/transfer", {

@@ -128,10 +128,10 @@ paths:
                   items:
                     type: string
                     format: binary
-                variants:
-                  type: string
-                  description: JSON stringified array of variant objects.
-                  example: '[{"sku":"PH-AMZ-256","size":"256GB","color":["Space Black"],"images":[],"stockQuantity":50,"price":999.99}]'
+variants:
+                      type: string
+                      description: JSON stringified array of variant objects.
+                      example: '[{"sku":"PH-AMZ-256","size":"256GB","color":["Space Black"],"imageIds":[1,2],"stockQuantity":50,"price":999.99}]'
                 installmentPlans:
                   type: string
                   description: JSON stringified array of installment plan objects.
@@ -296,7 +296,7 @@ paths:
                 variants:
                   type: string
                   description: JSON stringified array of variant objects.
-                  example: '[{"sku":"PH-AMZ-256-V2","size":"256GB","color":["Space Gray"],"images":[],"stockQuantity":60,"price":949.99}]'
+                  example: '[{"sku":"PH-AMZ-256-V2","size":"256GB","color":["Space Gray"],"imageIds":[1,2],"stockQuantity":60,"price":949.99}]'
                 installmentPlans:
                   type: string
                   description: JSON stringified array of installment plan objects.
@@ -367,19 +367,25 @@ paths:
                   items:
                     type: string
                   example: ["Red", "Blue"]
-                images:
+                attributes:
+                  type: object
+                  description: Custom attributes (future-proof for RAM, storage, etc.)
+                  example: {"ram": "16GB", "storage": "512GB"}
+                imageIds:
                   type: array
+                  description: Array of ProductImage IDs to associate with this variant
                   items:
-                    type: string
+                    type: number
+                  example: [1, 2]
                 stockQuantity:
                   type: integer
                   default: 0
                 price:
                   type: number
                   example: 499.99
-      responses:
-        "201":
-          description: Variant created successfully
+          responses:
+            "201":
+              description: Variant created successfully
 
   /products/variants/{variantId}:
     patch:
@@ -394,7 +400,7 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
+requestBody:
         required: true
         content:
           application/json:
@@ -409,17 +415,21 @@ paths:
                   type: array
                   items:
                     type: string
-                images:
+                attributes:
+                  type: object
+                  description: Custom attributes
+                imageIds:
                   type: array
+                  description: Array of ProductImage IDs to associate with this variant
                   items:
-                    type: string
+                    type: number
                 stockQuantity:
                   type: integer
                 price:
                   type: number
-      responses:
-        "200":
-          description: Variant updated successfully
+        responses:
+          "200":
+            description: Variant updated successfully
 
   /products/variants/{variantId}/stock:
     patch:
@@ -474,9 +484,26 @@ paths:
                 isActive:
                   type: boolean
                   example: false
-      responses:
-        "200":
-          description: Variant status updated successfully
+responses:
+          "200":
+            description: Variant status updated successfully
+
+    /products/variants/{variantId}:
+      delete:
+        summary: Delete a variant
+        tags: [Variant Management]
+        security:
+          - bearerAuth: []
+          - csrfToken: []
+        parameters:
+          - in: path
+            name: variantId
+            required: true
+            schema:
+              type: string
+        responses:
+          "200":
+            description: Variant deleted successfully
 
   /products/{productId}/installment-plans:
     get:
@@ -585,3 +612,484 @@ paths:
       responses:
         "200":
           description: Installment plan status updated successfully
+
+  /products/bulk:
+    post:
+      summary: Bulk create products with variants
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [products]
+              properties:
+                products:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  items:
+                    $ref: "#/components/schemas/BulkProduct"
+      responses:
+        "201":
+          description: Products created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        example: 3
+                      products:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Product"
+
+  /products/{productId}/variants/bulk:
+    post:
+      summary: Bulk create variants for a product
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [variants]
+              properties:
+                variants:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  items:
+                    $ref: "#/components/schemas/BulkVariant"
+      responses:
+        "201":
+          description: Variants created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        example: 4
+variants:
+                       type: array
+                       items:
+                         $ref: "#/components/schemas/BulkVariant"
+
+  /products/{productId}/images:
+    get:
+      summary: Get product images
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Images retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductImage"
+    post:
+      summary: Upload product gallery images
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "201":
+          description: Images uploaded successfully
+
+  /products/{productId}/images/reorder:
+    patch:
+      summary: Reorder product gallery images
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [orderedIds]
+              properties:
+                orderedIds:
+                  type: array
+                  items:
+                    type: string
+                  example: ["1", "2", "3"]
+      responses:
+        "200":
+          description: Images reordered successfully
+
+  /products/{productId}/images/{imageId}/primary:
+    patch:
+      summary: Set primary image for product
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Primary image set successfully
+
+  /products/{productId}/images/{imageId}:
+    patch:
+      summary: Update product image metadata
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                altText:
+                  type: string
+                sortOrder:
+                  type: integer
+      responses:
+        "200":
+          description: Image metadata updated successfully
+    delete:
+      summary: Delete a product image
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Image deleted successfully
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+        minPrice:
+          type: number
+          nullable: true
+        maxPrice:
+          type: number
+          nullable: true
+        stockQuantity:
+          type: integer
+        commissionRate:
+          type: number
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
+        category:
+          $ref: "#/components/schemas/Category"
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductImage"
+        variants:
+          type: array
+          items:
+            $ref: "#/components/schemas/Variant"
+        installmentPlans:
+          type: array
+          items:
+            $ref: "#/components/schemas/InstallmentPlan"
+
+    Variant:
+      type: object
+      properties:
+        variantId:
+          type: string
+          format: uuid
+        sku:
+          type: string
+        size:
+          type: string
+          nullable: true
+        color:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: object
+          additionalProperties: true
+          nullable: true
+        stockQuantity:
+          type: integer
+        price:
+          type: number
+        isActive:
+          type: boolean
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/VariantImage"
+
+    ProductImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        productId:
+          type: string
+          format: uuid
+        imageUrl:
+          type: string
+        altText:
+          type: string
+          nullable: true
+        isPrimary:
+          type: boolean
+        sortOrder:
+          type: integer
+        cloudinaryPublicId:
+          type: string
+          nullable: true
+
+    VariantImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        variantId:
+          type: string
+          format: uuid
+        imageId:
+          type: integer
+        isPrimary:
+          type: boolean
+        sortOrder:
+          type: integer
+        image:
+          $ref: "#/components/schemas/ProductImage"
+
+    InstallmentPlan:
+      type: object
+      properties:
+        planId:
+          type: string
+          format: uuid
+        durationMonths:
+          type: integer
+        interestPercentage:
+          type: number
+        active:
+          type: boolean
+
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+          nullable: true
+
+    BulkProduct:
+      type: object
+      required:
+        - name
+        - categoryId
+      properties:
+        name:
+          type: string
+          example: iPhone 16 Pro
+        description:
+          type: string
+          example: Latest flagship smartphone
+        categoryId:
+          type: string
+          format: uuid
+          example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+        commissionRate:
+          type: number
+          default: 0
+          example: 5.5
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
+          default: DRAFT
+        price:
+          type: number
+          default: 0
+          example: 999.99
+        stockQuantity:
+          type: integer
+          default: 0
+          example: 100
+        installmentPlans:
+          type: array
+          items:
+            type: object
+            required:
+              - durationMonths
+              - interestPercentage
+            properties:
+              durationMonths:
+                type: integer
+                example: 12
+              interestPercentage:
+                type: number
+                example: 5.0
+              active:
+                type: boolean
+                default: true
+        variants:
+          type: array
+          items:
+            $ref: "#/components/schemas/BulkVariant"
+
+    BulkVariant:
+      type: object
+      required:
+        - sku
+        - price
+      properties:
+        sku:
+          type: string
+          example: IPHONE-BLK-256
+        price:
+          type: number
+          example: 999.99
+        stockQuantity:
+          type: integer
+          default: 0
+          example: 50
+        size:
+          type: string
+          example: 256GB
+        color:
+          type: array
+          items:
+            type: string
+          example: ["Black"]
+        attributes:
+          type: object
+          additionalProperties: true
+          example: {"ram": "8GB", "storage": "256GB"}
+        imageIds:
+          type: array
+          items:
+            type: integer
+          example: [1, 2]
+        isActive:
+          type: boolean
+          default: true

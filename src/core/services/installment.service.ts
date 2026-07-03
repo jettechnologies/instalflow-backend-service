@@ -21,14 +21,6 @@ interface GenerateInstallmentScheduleParams {
   firstPaymentDate: Date;
 }
 
-// interface ProcessPaymentParams {
-//   installmentId: string;
-//   amount: number;
-//   gatewayRef?: string;
-//   idempotencyKey?: string;
-//   webhookPayload?: any;
-// }
-
 export class InstallmentService {
   static generateInstallmentSchedule({
     financingContractId,
