@@ -41,7 +41,7 @@ export class ProductImageController {
   static async getGallery(req: Request, res: Response) {
     const productId = req.params.productId as string;
 
-    if (!!productId || productId === "") {
+    if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
@@ -58,7 +58,7 @@ export class ProductImageController {
   static async reorderGalleryImages(req: Request, res: Response) {
     const productId = req.params.productId as string;
 
-    if (!!productId || productId === "") {
+    if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
@@ -81,7 +81,7 @@ export class ProductImageController {
     const productId = req.params.productId as string;
     const imageId = BigInt(req.params.imageId as string);
 
-    if (!!productId || productId === "") {
+    if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
@@ -108,7 +108,7 @@ export class ProductImageController {
 
     const payload = UpdateImageMetaSchema.parse(req.body);
 
-    if (!!productId || productId === "") {
+    if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
@@ -134,7 +134,7 @@ export class ProductImageController {
     const productId = req.params.productId as string;
     const imageId = BigInt(req.params.imageId as string);
 
-    if (!!productId || productId === "") {
+    if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 

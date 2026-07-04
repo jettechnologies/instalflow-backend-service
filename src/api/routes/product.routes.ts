@@ -11,10 +11,6 @@ import { uploadMultiple } from "@/api/middlewares/multer.middlewares";
 
 const router = Router();
 
-//
-// -----------------------------------------------------------------------------
-// Public / Authenticated Read Routes
-// -----------------------------------------------------------------------------
 router.use(requireAuth);
 
 router.get("/", ProductController.getProducts);
@@ -25,37 +21,17 @@ router.get("/search", ProductController.searchProducts);
 
 router.get("/:id", ProductController.getProductById);
 
-//
-// -----------------------------------------------------------------------------
-// Product Gallery
-// -----------------------------------------------------------------------------
 router.get("/:productId/gallery", ProductImageController.getGallery);
 
-//
-// -----------------------------------------------------------------------------
-// Product Variants
-// -----------------------------------------------------------------------------
 // router.get("/:productId/variants", VariantController.getVariantsByProduct);
 
-//
-// -----------------------------------------------------------------------------
-// Installment Plans
-// -----------------------------------------------------------------------------
 router.get(
   "/:productId/installment-plans",
   InstallmentPlanController.getInstallmentPlansByProduct,
 );
 
-//
-// -----------------------------------------------------------------------------
-// Protected Routes
-// -----------------------------------------------------------------------------
 router.use(requireRole([Role.COMPANY, Role.ADMIN, Role.SUPER_ADMIN]));
 
-//
-// -----------------------------------------------------------------------------
-// Product CRUD
-// -----------------------------------------------------------------------------
 router.post("/", ProductController.createProduct);
 
 router.post("/bulk", ProductController.createProductsBulk);
@@ -64,10 +40,6 @@ router.patch("/:id", ProductController.updateProduct);
 
 router.delete("/:id", ProductController.deleteProduct);
 
-//
-// -----------------------------------------------------------------------------
-// Gallery Management
-// -----------------------------------------------------------------------------
 router.post(
   "/:productId/gallery",
   uploadMultiple("images"),
@@ -94,19 +66,11 @@ router.delete(
   ProductImageController.removeGalleryImage,
 );
 
-//
-// -----------------------------------------------------------------------------
-// Variant Image Mapping
-// -----------------------------------------------------------------------------
 router.put(
   "/variants/:variantId/images",
   ProductImageController.setVariantImages,
 );
 
-//
-// -----------------------------------------------------------------------------
-// Variant CRUD
-// -----------------------------------------------------------------------------
 router.post("/:productId/variants", VariantController.createVariant);
 
 router.post("/:productId/variants/bulk", VariantController.bulkCreateVariants);
@@ -128,10 +92,6 @@ router.patch(
 //   VariantController.deleteVariant,
 // );
 
-//
-// -----------------------------------------------------------------------------
-// Installment Plans
-// -----------------------------------------------------------------------------
 router.post(
   "/:productId/installment-plans",
   InstallmentPlanController.createInstallmentPlan,

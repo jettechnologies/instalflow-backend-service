@@ -1,83 +1,97 @@
 tags:
   - name: Product Catalog
-    description: Endpoints for managing products, categories, variants, and dynamic installment plans.
-  - name: Variant Management
-    description: Endpoints for managing product variants inventory.
+    description: >
+      Endpoints for managing the product catalog — metadata, gallery images,
+      and installment plans. Image uploads and variants are handled
+      via dedicated sub-resource endpoints following a step-by-step creation flow.
 
+      **Creation flow:**
+      1. `POST /products` — create product shell (metadata + installment plans)
+      2. `POST /products/:id/gallery` — upload gallery images to Cloudinary
+      3. `POST /products/:id/variants` — create variants (reference gallery imageIds)
+      4. `PUT /variants/:variantId/images` — associate gallery images to a variant
+
+  - name: Gallery Management
+    description: >
+      Surgical gallery operations — upload, remove, reorder, set primary, and
+      update image metadata. Cloudinary uploads happen ONLY here.
+      Variants reference existing gallery images; they never upload files.
+
+  - name: Variant Management
+    description: >
+      Endpoints for managing product variants — create, update, stock, status,
+      bulk operations, and image associations. Price and stockQuantity on the
+      parent product are always derived automatically from active variants.
+
+  - name: Installment Plans
+    description: >
+      Create and manage installment financing plans attached to products.
+      All variants on a product inherit the same plans.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATHS
+# ─────────────────────────────────────────────────────────────────────────────
 paths:
+  # ── Product CRUD ────────────────────────────────────────────────────────────
+
   /products:
     get:
-      summary: List Products with Installment Breakdowns (Offset Paginated)
+      summary: List Products (Offset Paginated)
+      description: >
+        Returns published products with full installment breakdown per variant
+        per plan. Filter by category name/slug or companyId.
       tags: [Product Catalog]
       security:
         - bearerAuth: []
       parameters:
         - in: query
           name: page
-          schema:
-            type: integer
-            default: 1
-          description: Page number for offset pagination.
+          schema: { type: integer, default: 1 }
         - in: query
           name: limit
-          schema:
-            type: integer
-            default: 10
-          description: Max number of products to return per page.
+          schema: { type: integer, default: 10, maximum: 100 }
         - in: query
-          name: categorySlug
-          schema:
-            type: string
-          description: Filter products matching a specific category slug.
+          name: sortOrder
+          schema: { type: string, enum: [asc, desc], default: desc }
         - in: query
-          name: categoryName
-          schema:
-            type: string
-          description: Filter products matching a specific category name.
+          name: category
+          schema: { type: string }
+          description: Filter by category name or slug (case-insensitive).
+        - in: query
+          name: status
+          schema: { type: string, enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED] }
+          description: Defaults to PUBLISHED when omitted.
       responses:
         "200":
-          description: Offset paginated list of products.
+          description: Paginated list of products.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        productId:
-                          type: string
-                          format: uuid
-                        name:
-                          type: string
-                        slug:
-                          type: string
-                        price:
-                          type: number
-                        stockQuantity:
-                          type: integer
-                        status:
-                          type: string
-                          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
-                meta:
-                  type: object
-                  properties:
-                    total:
-                      type: integer
-                    page:
-                      type: integer
-                    limit:
-                      type: integer
-                    totalPages:
-                      type: integer
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          products:
+                            type: array
+                            items: { $ref: "#/components/schemas/Product" }
+                          pagination:
+                            $ref: "#/components/schemas/OffsetPagination"
 
     post:
-      summary: Create a Product (Admin/Company only)
+      summary: Create a Product — Step 1 (COMPANY / ADMIN only)
+      description: >
+        Creates the product catalog record and optional installment plans.
+        **No images or variants in this call.**
+
+        - Images → `POST /products/:id/gallery`
+        - Variants → `POST /products/:id/variants`
+        - Variant image associations → `PUT /variants/:id/images`
+
+        `price` and `stockQuantity` are writable here for standalone products.
+        Once variants are added they are derived automatically and become read-only.
       tags: [Product Catalog]
       security:
         - bearerAuth: []
@@ -85,117 +99,84 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              type: object
-              required: [name, categoryId]
-              properties:
-                name:
-                  type: string
-                  example: Amazing Flagship Phone
-                description:
-                  type: string
-                  example: Premium high-end flagship phone.
-                categoryId:
-                  type: string
-                  format: uuid
-                  example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
-                price:
-                  type: number
-                  default: 0
-                  example: 999.99
-                minPrice:
-                  type: number
-                  example: 899.99
-                maxPrice:
-                  type: number
-                  example: 1099.99
-                commissionRate:
-                  type: number
-                  default: 0
-                  example: 5.5
-                stockQuantity:
-                  type: integer
-                  default: 0
-                  example: 100
-                status:
-                  type: string
-                  enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
-                  default: DRAFT
-                images:
-                  type: array
-                  description: Array of product image files to upload.
-                  items:
-                    type: string
-                    format: binary
-variants:
-                      type: string
-                      description: JSON stringified array of variant objects.
-                      example: '[{"sku":"PH-AMZ-256","size":"256GB","color":["Space Black"],"imageIds":[1,2],"stockQuantity":50,"price":999.99}]'
-                installmentPlans:
-                  type: string
-                  description: JSON stringified array of installment plan objects.
-                  example: '[{"durationMonths":6,"interestPercentage":5.0,"active":true}]'
+              $ref: "#/components/schemas/CreateProductRequest"
+            example:
+              name: "iPhone 16 Pro"
+              description: "Apple flagship smartphone with titanium chassis."
+              categoryId: "8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c"
+              commissionRate: 5.5
+              status: "DRAFT"
+              price: 0
+              stockQuantity: 0
+              installmentPlans:
+                - durationMonths: 6
+                  interestPercentage: 5.0
+                  active: true
+                - durationMonths: 12
+                  interestPercentage: 8.5
+                  active: true
       responses:
         "201":
-          description: Product created successfully
+          description: Product shell created.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
 
   /products/cursor:
     get:
-      summary: List Products with Installment Breakdowns (Cursor Paginated)
+      summary: List Products (Cursor Paginated)
+      description: >
+        Cursor-based pagination using the internal BigInt id.
+        More efficient than offset pagination for large catalogs.
       tags: [Product Catalog]
       security:
         - bearerAuth: []
       parameters:
         - in: query
           name: cursor
-          schema:
-            type: string
-          description: Base64 or ID cursor string for pagination.
+          schema: { type: string }
+          description: Opaque cursor from the previous response (nextCursor / prevCursor).
         - in: query
           name: limit
-          schema:
-            type: integer
-            default: 10
-          description: Max number of products to return.
+          schema: { type: integer, default: 10, maximum: 100 }
         - in: query
-          name: categorySlug
-          schema:
-            type: string
-          description: Filter matching a specific category slug.
+          name: sortOrder
+          schema: { type: string, enum: [asc, desc], default: desc }
         - in: query
-          name: categoryName
-          schema:
-            type: string
-          description: Filter matching a specific category name.
+          name: category
+          schema: { type: string }
       responses:
         "200":
-          description: Cursor-paginated list of products.
+          description: Cursor-paginated products.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: array
-                    items:
-                      type: object
-                  meta:
-                    type: object
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
                     properties:
-                      nextCursor:
-                        type: string
-                        example: cursor_id_string
-                      hasMore:
-                        type: boolean
-                        example: true
+                      data:
+                        type: object
+                        properties:
+                          products:
+                            type: array
+                            items: { $ref: "#/components/schemas/Product" }
+                          pagination:
+                            $ref: "#/components/schemas/CursorPagination"
 
   /products/search:
     get:
-      summary: Full-Text GIN Index Search Products
+      summary: Full-Text Search Products (PostgreSQL GIN)
+      description: >
+        Ranked full-text search using `plainto_tsquery` against the
+        `search_vector` GIN index. Only PUBLISHED products are searched.
       tags: [Product Catalog]
       security:
         - bearerAuth: []
@@ -203,26 +184,93 @@ variants:
         - in: query
           name: search
           required: true
-          schema:
-            type: string
-          description: Query string search term matching product titles/description.
+          schema: { type: string }
+          description: Search term (e.g. "iPhone titanium").
         - in: query
           name: page
-          schema:
-            type: integer
-            default: 1
+          schema: { type: integer, default: 1 }
         - in: query
           name: limit
-          schema:
-            type: integer
-            default: 10
+          schema: { type: integer, default: 10, maximum: 100 }
+        - in: query
+          name: minPrice
+          schema: { type: number }
+        - in: query
+          name: maxPrice
+          schema: { type: number }
       responses:
         "200":
-          description: Ranked search results returned.
+          description: Ranked search results.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          products:
+                            type: array
+                            items: { $ref: "#/components/schemas/Product" }
+                          pagination:
+                            $ref: "#/components/schemas/OffsetPagination"
+
+  /products/bulk:
+    post:
+      summary: Bulk Create Products with Variants (COMPANY / ADMIN only)
+      description: >
+        Atomically creates multiple products each with optional variants
+        in a single transaction. Useful for seeding or mass imports.
+        Gallery images must still be uploaded separately per product.
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              maxItems: 100
+              items: { $ref: "#/components/schemas/BulkProductInput" }
+            example:
+              - name: "iPhone 16 Pro"
+                categoryId: "8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c"
+                commissionRate: 5.5
+                installmentPlans:
+                  - durationMonths: 12
+                    interestPercentage: 8.5
+                variants:
+                  - sku: "IPHONE-BLK-256"
+                    price: 999.99
+                    stockQuantity: 50
+                    color: ["Black"]
+                    size: "256GB"
+      responses:
+        "201":
+          description: All products created.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          count: { type: integer, example: 3 }
+                          products:
+                            type: array
+                            items: { $ref: "#/components/schemas/Product" }
 
   /products/{id}:
     get:
-      summary: Get Product by ID
+      summary: Get Product by UUID
       tags: [Product Catalog]
       security:
         - bearerAuth: []
@@ -230,15 +278,30 @@ variants:
         - in: path
           name: id
           required: true
-          schema:
-            type: string
-          description: The UUID of the product
+          schema: { type: string, format: uuid }
       responses:
         "200":
-          description: Product details retrieved
+          description: Product with variants, gallery, and installment breakdowns.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     patch:
-      summary: Update a Product (Admin/Company only)
+      summary: Update Product Metadata (COMPANY / ADMIN only)
+      description: >
+        Updates catalog metadata only — name, description, category,
+        commissionRate, status.
+
+        **`price` and `stockQuantity` are blocked when active variants exist.**
+        They are automatically derived from variants by the system.
+        Send them only for standalone products (no variants).
       tags: [Product Catalog]
       security:
         - bearerAuth: []
@@ -247,427 +310,392 @@ variants:
         - in: path
           name: id
           required: true
-          schema:
-            type: string
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateProductRequest" }
+      responses:
+        "200":
+          description: Product updated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "400":
+          description: >
+            Returned when `price` or `stockQuantity` is supplied for a product
+            that already has active variants.
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      summary: Archive a Product (COMPANY / ADMIN only)
+      description: >
+        Sets product status to ARCHIVED. Hard deletion is never performed
+        on products with KYC applications or financing contracts.
+      tags: [Product Catalog]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Product archived.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApiSuccess" }
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Gallery ──────────────────────────────────────────────────────────────────
+
+  /products/{productId}/gallery:
+    get:
+      summary: Get Product Gallery
+      description: >
+        Returns all images in sortOrder, annotated with which variants
+        reference each image.
+      tags: [Gallery Management]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      responses:
+        "200":
+          description: Gallery images with variant associations.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          { $ref: "#/components/schemas/ProductImageDetail" }
+
+    post:
+      summary: Upload Gallery Images — Step 2 (COMPANY / ADMIN only)
+      description: >
+        Uploads image files to Cloudinary and creates `ProductImage` records.
+        **This is the only endpoint that writes to Cloudinary.**
+
+        - Files are uploaded one-by-one with compensation on failure.
+        - If any Cloudinary upload fails, all previously-uploaded assets
+          in that batch are deleted before the error is surfaced.
+        - If the DB insert fails after all uploads succeed, all uploaded
+          Cloudinary assets are deleted.
+        - The first image in the batch becomes `isPrimary` if the product
+          has no primary image yet.
+
+        `altTextMap` is an optional JSON object mapping file index to alt text:
+        `{ "0": "Front view", "1": "Back view" }`
+      tags: [Gallery Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
       requestBody:
         required: true
         content:
           multipart/form-data:
             schema:
               type: object
+              required: [images]
               properties:
-                name:
-                  type: string
-                  example: Amazing Flagship Phone V2
-                description:
-                  type: string
-                  example: Updated premium high-end flagship phone.
-                categoryId:
-                  type: string
-                  format: uuid
-                  example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
-                price:
-                  type: number
-                  example: 949.99
-                minPrice:
-                  type: number
-                  example: 849.99
-                maxPrice:
-                  type: number
-                  example: 1049.99
-                commissionRate:
-                  type: number
-                  example: 6.0
-                stockQuantity:
-                  type: integer
-                  example: 120
-                status:
-                  type: string
-                  enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
-                active:
-                  type: boolean
-                  default: true
                 images:
                   type: array
-                  description: Array of new product image files to upload (replaces existing images).
                   items:
                     type: string
                     format: binary
-                variants:
+                  description: Image files (JPEG, PNG, WebP, etc.)
+                altTextMap:
                   type: string
-                  description: JSON stringified array of variant objects.
-                  example: '[{"sku":"PH-AMZ-256-V2","size":"256GB","color":["Space Gray"],"imageIds":[1,2],"stockQuantity":60,"price":949.99}]'
-                installmentPlans:
-                  type: string
-                  description: JSON stringified array of installment plan objects.
-                  example: '[{"durationMonths":12,"interestPercentage":8.0,"active":true}]'
-      responses:
-        "200":
-          description: Product updated
-
-    delete:
-      summary: Soft Delete a Product (Archive)
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Product archived (status set to ARCHIVED)
-
-  /products/{productId}/variants:
-    get:
-      summary: Get all variants for a product
-      tags: [Variant Management]
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of variants
-    post:
-      summary: Create a new variant for a product
-      tags: [Variant Management]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [sku, price]
-              properties:
-                sku:
-                  type: string
-                  example: PH-VAR-001
-                size:
-                  type: string
-                  example: M
-                color:
-                  type: array
-                  items:
-                    type: string
-                  example: ["Red", "Blue"]
-                attributes:
-                  type: object
-                  description: Custom attributes (future-proof for RAM, storage, etc.)
-                  example: {"ram": "16GB", "storage": "512GB"}
-                imageIds:
-                  type: array
-                  description: Array of ProductImage IDs to associate with this variant
-                  items:
-                    type: number
-                  example: [1, 2]
-                stockQuantity:
-                  type: integer
-                  default: 0
-                price:
-                  type: number
-                  example: 499.99
-          responses:
-            "201":
-              description: Variant created successfully
-
-  /products/variants/{variantId}:
-    patch:
-      summary: Update a variant
-      tags: [Variant Management]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: variantId
-          required: true
-          schema:
-            type: string
-requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                sku:
-                  type: string
-                size:
-                  type: string
-                color:
-                  type: array
-                  items:
-                    type: string
-                attributes:
-                  type: object
-                  description: Custom attributes
-                imageIds:
-                  type: array
-                  description: Array of ProductImage IDs to associate with this variant
-                  items:
-                    type: number
-                stockQuantity:
-                  type: integer
-                price:
-                  type: number
-        responses:
-          "200":
-            description: Variant updated successfully
-
-  /products/variants/{variantId}/stock:
-    patch:
-      summary: Update variant stock quantity
-      tags: [Variant Management]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: variantId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [stockQuantity]
-              properties:
-                stockQuantity:
-                  type: integer
-                  minimum: 0
-                  example: 50
-      responses:
-        "200":
-          description: Stock updated successfully
-
-  /products/variants/{variantId}/status:
-    patch:
-      summary: Deactivate/Activate a variant
-      tags: [Variant Management]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: variantId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [isActive]
-              properties:
-                isActive:
-                  type: boolean
-                  example: false
-responses:
-          "200":
-            description: Variant status updated successfully
-
-    /products/variants/{variantId}:
-      delete:
-        summary: Delete a variant
-        tags: [Variant Management]
-        security:
-          - bearerAuth: []
-          - csrfToken: []
-        parameters:
-          - in: path
-            name: variantId
-            required: true
-            schema:
-              type: string
-        responses:
-          "200":
-            description: Variant deleted successfully
-
-  /products/{productId}/installment-plans:
-    get:
-      summary: Get installment plans for a product
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of installment plans
-    post:
-      summary: Create an installment plan for a product
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [durationMonths, interestPercentage]
-              properties:
-                durationMonths:
-                  type: integer
-                  example: 12
-                interestPercentage:
-                  type: number
-                  example: 10.5
-                active:
-                  type: boolean
-                  default: true
+                  description: >
+                    JSON string mapping file index to alt text.
+                    Example: `{"0":"Front","1":"Side"}`
+                  example: '{"0":"Front view","1":"Back view"}'
       responses:
         "201":
-          description: Installment plan created successfully
-
-  /products/installment-plans/{planId}:
-    patch:
-      summary: Update an installment plan
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: planId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                durationMonths:
-                  type: integer
-                  example: 24
-                interestPercentage:
-                  type: number
-                  example: 12.0
-                active:
-                  type: boolean
-      responses:
-        "200":
-          description: Installment plan updated successfully
-
-  /products/installment-plans/{planId}/status:
-    patch:
-      summary: Activate/Deactivate an installment plan
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: planId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [active]
-              properties:
-                active:
-                  type: boolean
-                  example: false
-      responses:
-        "200":
-          description: Installment plan status updated successfully
-
-  /products/bulk:
-    post:
-      summary: Bulk create products with variants
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [products]
-              properties:
-                products:
-                  type: array
-                  minItems: 1
-                  maxItems: 100
-                  items:
-                    $ref: "#/components/schemas/BulkProduct"
-      responses:
-        "201":
-          description: Products created successfully
+          description: Images uploaded and gallery records created.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
                     properties:
-                      count:
-                        type: integer
-                        example: 3
-                      products:
+                      data:
                         type: array
-                        items:
-                          $ref: "#/components/schemas/Product"
+                        items: { $ref: "#/components/schemas/ProductImage" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
-  /products/{productId}/variants/bulk:
+  /products/{productId}/gallery/reorder:
+    patch:
+      summary: Reorder Gallery Images (COMPANY / ADMIN only)
+      description: >
+        Accepts an ordered array of image IDs. Assigns `sortOrder = array index`.
+        All supplied IDs must belong to this product.
+      tags: [Gallery Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [orderedIds]
+              properties:
+                orderedIds:
+                  type: array
+                  items: { type: string, pattern: "^\\d+$" }
+                  minItems: 1
+                  description: Numeric image IDs as strings in the desired display order.
+                  example: ["5", "1", "3", "2", "4"]
+      responses:
+        "200":
+          description: Gallery reordered.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/ProductImage" }
+
+  /products/{productId}/gallery/{imageId}/primary:
+    patch:
+      summary: Set Primary Gallery Image (COMPANY / ADMIN only)
+      description: >
+        Atomically unsets `isPrimary` on all other images for this product
+        and sets it on the specified image.
+      tags: [Gallery Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
+        - $ref: "#/components/parameters/imageId"
+      responses:
+        "200":
+          description: Primary image updated. Returns full updated gallery.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/ProductImage" }
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /products/{productId}/gallery/{imageId}:
+    patch:
+      summary: Update Image Metadata (COMPANY / ADMIN only)
+      description: Update `altText` or `sortOrder` without re-uploading to Cloudinary.
+      tags: [Gallery Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
+        - $ref: "#/components/parameters/imageId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                altText:
+                  type: string
+                  nullable: true
+                  example: "Black front view"
+                sortOrder:
+                  type: integer
+                  minimum: 0
+                  example: 2
+      responses:
+        "200":
+          description: Image metadata updated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/ProductImage" }
+
+    delete:
+      summary: Remove a Gallery Image (COMPANY / ADMIN only)
+      description: >
+        Removes all `ProductVariantImage` associations for this image atomically,
+        then deletes the `ProductImage` record. After the DB transaction commits,
+        the Cloudinary asset is deleted.
+
+        If the deleted image was `isPrimary`, the next image in `sortOrder`
+        is promoted automatically.
+      tags: [Gallery Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
+        - $ref: "#/components/parameters/imageId"
+      responses:
+        "200":
+          description: Image removed.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          deleted: { type: boolean, example: true }
+                          imageId: { type: string, example: "12" }
+
+  # ── Variant Images ───────────────────────────────────────────────────────────
+
+  /variants/{variantId}/images:
+    put:
+      summary: Set Variant Image Associations — Step 4 (COMPANY / ADMIN only)
+      description: >
+        Associates existing gallery images with a variant.
+        **No file upload occurs here.** `imageIds` must reference
+        `ProductImage` records belonging to the same product.
+
+        This is a full replace — all existing associations are removed
+        and replaced with the provided list atomically.
+
+        To clear all images from a variant, send an empty array.
+      tags: [Gallery Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/variantId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [imageIds]
+              properties:
+                imageIds:
+                  type: array
+                  items:
+                    { type: string, description: "Numeric image ID as string" }
+                  description: >
+                    Gallery image IDs to associate. The first ID becomes
+                    isPrimary for this variant.
+                  example: ["2", "5"]
+      responses:
+        "200":
+          description: Variant image associations updated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Variant" }
+        "400":
+          description: One or more imageIds do not belong to this product.
+          $ref: "#/components/responses/BadRequest"
+
+  # ── Variants ─────────────────────────────────────────────────────────────────
+
+  /products/{productId}/variants:
     post:
-      summary: Bulk create variants for a product
+      summary: Create a Variant — Step 3 (COMPANY / ADMIN only)
+      description: >
+        Adds a purchasable SKU to a product. Automatically updates
+        `product.price`, `product.minPrice`, `product.maxPrice`,
+        and `product.stockQuantity` via `syncStats`.
+
+        `imageIds` must reference existing `ProductImage` records on this product.
+        No file uploads occur here.
       tags: [Variant Management]
       security:
         - bearerAuth: []
         - csrfToken: []
       parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
+        - $ref: "#/components/parameters/productId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateVariantRequest" }
+            example:
+              sku: "IPHONE-BLK-256"
+              price: 999.99
+              stockQuantity: 50
+              size: "256GB"
+              color: ["Black Titanium"]
+              attributes: { ram: "8GB", storage: "256GB" }
+              imageIds: [2, 5]
+              isActive: true
+      responses:
+        "201":
+          description: Variant created. Product stats auto-updated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Variant" }
+        "400":
+          description: Duplicate SKU or invalid imageIds.
+          $ref: "#/components/responses/BadRequest"
+
+  /products/{productId}/variants/bulk:
+    post:
+      summary: Bulk Create Variants (COMPANY / ADMIN only)
+      description: >
+        Creates multiple variants for a product in a single transaction.
+        `syncStats` is called once after all variants are inserted.
+        Maximum 100 variants per call.
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
       requestBody:
         required: true
         content:
@@ -680,154 +708,220 @@ responses:
                   type: array
                   minItems: 1
                   maxItems: 100
-                  items:
-                    $ref: "#/components/schemas/BulkVariant"
+                  items: { $ref: "#/components/schemas/BulkVariantInput" }
+            example:
+              variants:
+                - sku: "IPHONE-BLK-256"
+                  price: 999.99
+                  stockQuantity: 50
+                  color: ["Black Titanium"]
+                  size: "256GB"
+                  imageIds: [2, 5]
+                - sku: "IPHONE-SIL-512"
+                  price: 1199.99
+                  stockQuantity: 30
+                  color: ["Natural Titanium"]
+                  size: "512GB"
+                  imageIds: [3, 6]
       responses:
         "201":
-          description: Variants created successfully
+          description: Variants created. Product stats auto-updated.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
                     properties:
-                      count:
-                        type: integer
-                        example: 4
-variants:
-                       type: array
-                       items:
-                         $ref: "#/components/schemas/BulkVariant"
+                      data:
+                        type: object
+                        properties:
+                          count: { type: integer, example: 2 }
+                          variants:
+                            type: array
+                            items: { $ref: "#/components/schemas/Variant" }
 
-  /products/{productId}/images:
-    get:
-      summary: Get product images
-      tags: [Product Catalog]
+  /variants/{variantId}:
+    patch:
+      summary: Update a Variant (COMPANY / ADMIN only)
+      description: >
+        Updates variant fields. All fields are optional.
+
+        Supplying `imageIds` replaces variant image associations atomically
+        without uploading to Cloudinary.
+
+        After update, `syncStats` recalculates product price/stock from
+        all active variants.
+      tags: [Variant Management]
       security:
         - bearerAuth: []
+        - csrfToken: []
       parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
+        - $ref: "#/components/parameters/variantId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateVariantRequest" }
       responses:
         "200":
-          description: Images retrieved successfully
+          description: Variant updated.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/ProductImage"
-    post:
-      summary: Upload product gallery images
-      tags: [Product Catalog]
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Variant" }
+
+  /variants/{variantId}/stock:
+    patch:
+      summary: Update Variant Stock (COMPANY / ADMIN only)
+      description: Updates `stockQuantity` and recalculates product stock via `syncStats`.
+      tags: [Variant Management]
       security:
         - bearerAuth: []
         - csrfToken: []
       parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
+        - $ref: "#/components/parameters/variantId"
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
+              required: [stockQuantity]
               properties:
-                images:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
+                stockQuantity:
+                  type: integer
+                  minimum: 0
+                  example: 75
+      responses:
+        "200":
+          description: Stock updated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Variant" }
+
+  /variants/{variantId}/status:
+    patch:
+      summary: Activate / Deactivate a Variant (COMPANY / ADMIN only)
+      description: >
+        Toggles `isActive`. Deactivating a variant with active financing
+        contracts is blocked — restructure contracts first.
+
+        After status change, `syncStats` recalculates product price/stock
+        excluding deactivated variants.
+      tags: [Variant Management]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/variantId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [isActive]
+              properties:
+                isActive: { type: boolean, example: false }
+      responses:
+        "200":
+          description: Variant status updated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Variant" }
+        "400":
+          description: Cannot deactivate — active financing contracts exist.
+          $ref: "#/components/responses/BadRequest"
+
+  /products/{productId}/installment-plans:
+    get:
+      summary: Get Installment Plans for a Product
+      tags: [Installment Plans]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      responses:
+        "200":
+          description: Active installment plans with breakdowns.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/InstallmentPlan" }
+
+    post:
+      summary: Create an Installment Plan (COMPANY / ADMIN only)
+      tags: [Installment Plans]
+      security:
+        - bearerAuth: []
+        - csrfToken: []
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [durationMonths, interestPercentage]
+              properties:
+                durationMonths:
+                  type: integer
+                  minimum: 1
+                  example: 12
+                interestPercentage:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 10.5
+                active:
+                  type: boolean
+                  default: true
       responses:
         "201":
-          description: Images uploaded successfully
+          description: Plan created.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/InstallmentPlan" }
 
-  /products/{productId}/images/reorder:
+  /installment-plans/{planId}:
     patch:
-      summary: Reorder product gallery images
-      tags: [Product Catalog]
+      summary: Update an Installment Plan (COMPANY / ADMIN only)
+      tags: [Installment Plans]
       security:
         - bearerAuth: []
         - csrfToken: []
       parameters:
         - in: path
-          name: productId
+          name: planId
           required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [orderedIds]
-              properties:
-                orderedIds:
-                  type: array
-                  items:
-                    type: string
-                  example: ["1", "2", "3"]
-      responses:
-        "200":
-          description: Images reordered successfully
-
-  /products/{productId}/images/{imageId}/primary:
-    patch:
-      summary: Set primary image for product
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: imageId
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Primary image set successfully
-
-  /products/{productId}/images/{imageId}:
-    patch:
-      summary: Update product image metadata
-      tags: [Product Catalog]
-      security:
-        - bearerAuth: []
-        - csrfToken: []
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: imageId
-          required: true
-          schema:
-            type: string
+          schema: { type: string, format: uuid }
       requestBody:
         required: true
         content:
@@ -835,192 +929,104 @@ variants:
             schema:
               type: object
               properties:
-                altText:
-                  type: string
-                sortOrder:
-                  type: integer
+                durationMonths: { type: integer, minimum: 1, example: 24 }
+                interestPercentage: { type: number, minimum: 0, example: 12.0 }
+                active: { type: boolean }
       responses:
         "200":
-          description: Image metadata updated successfully
-    delete:
-      summary: Delete a product image
-      tags: [Product Catalog]
+          description: Plan updated.
+
+  /installment-plans/{planId}/status:
+    patch:
+      summary: Toggle Installment Plan Status (COMPANY / ADMIN only)
+      tags: [Installment Plans]
       security:
         - bearerAuth: []
         - csrfToken: []
       parameters:
         - in: path
-          name: productId
+          name: planId
           required: true
-          schema:
-            type: string
-        - in: path
-          name: imageId
-          required: true
-          schema:
-            type: string
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [active]
+              properties:
+                active: { type: boolean, example: false }
       responses:
         "200":
-          description: Image deleted successfully
+          description: Plan status updated.
 
 components:
+  parameters:
+    productId:
+      in: path
+      name: productId
+      required: true
+      schema: { type: string, format: uuid }
+      description: UUID of the product (productId field).
+
+    variantId:
+      in: path
+      name: variantId
+      required: true
+      schema: { type: string, format: uuid }
+      description: UUID of the variant (variantId field).
+
+    imageId:
+      in: path
+      name: imageId
+      required: true
+      schema: { type: string, pattern: "^\\d+$" }
+      description: Numeric BigInt ID of the ProductImage, sent as a string.
+
+  responses:
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success: { type: boolean, example: false }
+              message: { type: string, example: "Product not found" }
+
+    BadRequest:
+      description: Validation or business rule error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success: { type: boolean, example: false }
+              message: { type: string }
+
   schemas:
-    Product:
+    CreateProductRequest:
       type: object
+      required: [name, categoryId]
       properties:
-        productId:
-          type: string
-          format: uuid
         name:
           type: string
-        slug:
-          type: string
+          minLength: 1
+          maxLength: 255
+          example: "iPhone 16 Pro"
         description:
           type: string
           nullable: true
-        price:
-          type: number
-        minPrice:
-          type: number
-          nullable: true
-        maxPrice:
-          type: number
-          nullable: true
-        stockQuantity:
-          type: integer
-        commissionRate:
-          type: number
-        status:
-          type: string
-          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
-        category:
-          $ref: "#/components/schemas/Category"
-        images:
-          type: array
-          items:
-            $ref: "#/components/schemas/ProductImage"
-        variants:
-          type: array
-          items:
-            $ref: "#/components/schemas/Variant"
-        installmentPlans:
-          type: array
-          items:
-            $ref: "#/components/schemas/InstallmentPlan"
-
-    Variant:
-      type: object
-      properties:
-        variantId:
-          type: string
-          format: uuid
-        sku:
-          type: string
-        size:
-          type: string
-          nullable: true
-        color:
-          type: array
-          items:
-            type: string
-        attributes:
-          type: object
-          additionalProperties: true
-          nullable: true
-        stockQuantity:
-          type: integer
-        price:
-          type: number
-        isActive:
-          type: boolean
-        images:
-          type: array
-          items:
-            $ref: "#/components/schemas/VariantImage"
-
-    ProductImage:
-      type: object
-      properties:
-        id:
-          type: integer
-        productId:
-          type: string
-          format: uuid
-        imageUrl:
-          type: string
-        altText:
-          type: string
-          nullable: true
-        isPrimary:
-          type: boolean
-        sortOrder:
-          type: integer
-        cloudinaryPublicId:
-          type: string
-          nullable: true
-
-    VariantImage:
-      type: object
-      properties:
-        id:
-          type: integer
-        variantId:
-          type: string
-          format: uuid
-        imageId:
-          type: integer
-        isPrimary:
-          type: boolean
-        sortOrder:
-          type: integer
-        image:
-          $ref: "#/components/schemas/ProductImage"
-
-    InstallmentPlan:
-      type: object
-      properties:
-        planId:
-          type: string
-          format: uuid
-        durationMonths:
-          type: integer
-        interestPercentage:
-          type: number
-        active:
-          type: boolean
-
-    Category:
-      type: object
-      properties:
+          example: "Apple flagship smartphone with titanium chassis."
         categoryId:
           type: string
           format: uuid
-        name:
-          type: string
-        slug:
-          type: string
-        description:
-          type: string
-          nullable: true
-
-    BulkProduct:
-      type: object
-      required:
-        - name
-        - categoryId
-      properties:
-        name:
-          type: string
-          example: iPhone 16 Pro
-        description:
-          type: string
-          example: Latest flagship smartphone
-        categoryId:
-          type: string
-          format: uuid
-          example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+          example: "8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c"
         commissionRate:
           type: number
+          minimum: 0
+          maximum: 100
           default: 0
           example: 5.5
         status:
@@ -1029,67 +1035,347 @@ components:
           default: DRAFT
         price:
           type: number
+          minimum: 0
           default: 0
-          example: 999.99
+          description: Standalone product price. Ignored once variants are added.
         stockQuantity:
           type: integer
+          minimum: 0
           default: 0
-          example: 100
+          description: Standalone product stock. Ignored once variants are added.
         installmentPlans:
           type: array
-          items:
-            type: object
-            required:
-              - durationMonths
-              - interestPercentage
-            properties:
-              durationMonths:
-                type: integer
-                example: 12
-              interestPercentage:
-                type: number
-                example: 5.0
-              active:
-                type: boolean
-                default: true
-        variants:
-          type: array
-          items:
-            $ref: "#/components/schemas/BulkVariant"
+          items: { $ref: "#/components/schemas/InstallmentPlanInput" }
+          default: []
 
-    BulkVariant:
+    UpdateProductRequest:
       type: object
-      required:
-        - sku
-        - price
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+        commissionRate:
+          type: number
+          minimum: 0
+          maximum: 100
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
+        price:
+          type: number
+          minimum: 0
+          description: >
+            **Only writable when no active variants exist.**
+            Returns 400 if supplied for a product with variants.
+        stockQuantity:
+          type: integer
+          minimum: 0
+          description: >
+            **Only writable when no active variants exist.**
+            Returns 400 if supplied for a product with variants.
+
+    CreateVariantRequest:
+      type: object
+      required: [sku, price]
       properties:
         sku:
           type: string
-          example: IPHONE-BLK-256
+          minLength: 1
+          maxLength: 100
+          example: "IPHONE-BLK-256"
         price:
           type: number
+          minimum: 0.01
           example: 999.99
         stockQuantity:
           type: integer
+          minimum: 0
           default: 0
           example: 50
         size:
           type: string
-          example: 256GB
+          nullable: true
+          example: "256GB"
         color:
           type: array
-          items:
-            type: string
-          example: ["Black"]
+          items: { type: string }
+          default: []
+          example: ["Black Titanium"]
         attributes:
           type: object
           additionalProperties: true
-          example: {"ram": "8GB", "storage": "256GB"}
+          nullable: true
+          description: >
+            Future-proof key-value store for attributes like RAM, storage, etc.
+          example: { ram: "8GB", storage: "256GB" }
         imageIds:
           type: array
-          items:
-            type: integer
-          example: [1, 2]
+          items: { type: integer }
+          default: []
+          description: >
+            IDs of existing ProductImage records belonging to this product.
+            No file uploads — gallery images must be uploaded first.
+          example: [2, 5]
         isActive:
           type: boolean
           default: true
+
+    UpdateVariantRequest:
+      type: object
+      description: All fields are optional.
+      properties:
+        sku: { type: string }
+        price: { type: number, minimum: 0.01 }
+        stockQuantity: { type: integer, minimum: 0 }
+        size: { type: string, nullable: true }
+        color:
+          type: array
+          items: { type: string }
+        attributes:
+          type: object
+          additionalProperties: true
+          nullable: true
+        imageIds:
+          type: array
+          items: { type: integer }
+          description: Replaces all existing variant image associations (full replace).
+        isActive: { type: boolean }
+
+    BulkVariantInput:
+      type: object
+      required: [sku, price]
+      properties:
+        sku: { type: string, example: "IPHONE-BLK-256" }
+        price: { type: number, example: 999.99 }
+        stockQuantity: { type: integer, default: 0 }
+        size: { type: string, nullable: true }
+        color: { type: array, items: { type: string } }
+        attributes: { type: object, additionalProperties: true, nullable: true }
+        imageIds: { type: array, items: { type: integer } }
+        isActive: { type: boolean, default: true }
+
+    BulkProductInput:
+      type: object
+      required: [name, categoryId]
+      properties:
+        name: { type: string, example: "iPhone 16 Pro" }
+        description: { type: string, nullable: true }
+        categoryId: { type: string, format: uuid }
+        commissionRate: { type: number, default: 0 }
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
+          default: DRAFT
+        price: { type: number, default: 0 }
+        stockQuantity: { type: integer, default: 0 }
+        installmentPlans:
+          type: array
+          items: { $ref: "#/components/schemas/InstallmentPlanInput" }
+          default: []
+        variants:
+          type: array
+          items: { $ref: "#/components/schemas/BulkVariantInput" }
+          default: []
+          description: >
+            Variants included in a bulk product import.
+            `syncStats` is applied once after all variants are created.
+
+    InstallmentPlanInput:
+      type: object
+      required: [durationMonths, interestPercentage]
+      properties:
+        durationMonths: { type: integer, minimum: 1, example: 12 }
+        interestPercentage:
+          { type: number, minimum: 0, maximum: 100, example: 8.5 }
+        active: { type: boolean, default: true }
+
+    ApiSuccess:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        message: { type: string }
+
+    Product:
+      type: object
+      description: >
+        `price` = lowest active variant price (or standalone price if no variants).
+        `minPrice` = lowest active variant price.
+        `maxPrice` = highest active variant price.
+        `stockQuantity` = SUM of all active variant stock.
+        These four fields are always derived — never sent by the client.
+      properties:
+        productId: { type: string, format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        description: { type: string, nullable: true }
+        price:
+          {
+            type: number,
+            description: "Derived — lowest active variant price.",
+          }
+        minPrice: { type: number, nullable: true }
+        maxPrice: { type: number, nullable: true }
+        stockQuantity:
+          {
+            type: integer,
+            description: "Derived — SUM of active variant stock.",
+          }
+        commissionRate: { type: number }
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, SOLD_OUT, ARCHIVED]
+        category: { $ref: "#/components/schemas/Category" }
+        images:
+          type: array
+          items: { $ref: "#/components/schemas/ProductImage" }
+        variants:
+          type: array
+          items: { $ref: "#/components/schemas/Variant" }
+        installmentPlans:
+          type: array
+          items: { $ref: "#/components/schemas/InstallmentPlan" }
+        installmentBreakdown:
+          type: array
+          description: Pre-computed monthly payment for every variant × plan combination.
+          items: { $ref: "#/components/schemas/InstallmentBreakdown" }
+
+    Variant:
+      type: object
+      description: >
+        Variants no longer store image URLs directly.
+        `images` is an array of `VariantImage` join records that reference
+        the parent product's `ProductImage` gallery.
+      properties:
+        variantId: { type: string, format: uuid }
+        productId: { type: string, format: uuid }
+        sku: { type: string }
+        size: { type: string, nullable: true }
+        color: { type: array, items: { type: string } }
+        attributes:
+          type: object
+          additionalProperties: true
+          nullable: true
+        stockQuantity: { type: integer }
+        price: { type: number }
+        isActive: { type: boolean }
+        images:
+          type: array
+          description: Gallery image associations (no duplicated URLs).
+          items: { $ref: "#/components/schemas/VariantImage" }
+
+    ProductImage:
+      type: object
+      description: >
+        Single source of truth for an uploaded image.
+        The Cloudinary asset is stored exactly once here.
+        Variants reference this record via `ProductVariantImage`.
+      properties:
+        id:
+          type: string
+          description: Numeric BigInt ID returned as a string.
+          example: "12"
+        imageUrl: { type: string, format: uri }
+        altText: { type: string, nullable: true }
+        isPrimary: { type: boolean }
+        sortOrder: { type: integer }
+        cloudinaryPublicId: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+
+    ProductImageDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProductImage"
+        - type: object
+          properties:
+            variants:
+              type: array
+              description: Which variants currently reference this image.
+              items:
+                type: object
+                properties:
+                  variantId: { type: string, format: uuid }
+                  sku: { type: string }
+
+    VariantImage:
+      type: object
+      description: >
+        Mapping between a variant and a gallery image.
+        No URL duplication — the URL lives on `image` (ProductImage).
+      properties:
+        id:
+          type: string
+          description: Numeric BigInt ID as string.
+        isPrimary: { type: boolean }
+        sortOrder: { type: integer }
+        image: { $ref: "#/components/schemas/ProductImage" }
+
+    InstallmentPlan:
+      type: object
+      properties:
+        planId: { type: string, format: uuid }
+        durationMonths: { type: integer }
+        interestPercentage: { type: number }
+        active: { type: boolean }
+
+    InstallmentBreakdown:
+      type: object
+      description: Pre-computed financing cost. Returned inline on all product responses.
+      properties:
+        variantId:
+          type: string
+          format: uuid
+          description: Present only when the product has variants.
+        sku:
+          type: string
+          description: Present only when the product has variants.
+        planId: { type: string, format: uuid }
+        durationMonths: { type: integer, example: 12 }
+        interestPercentage: { type: number, example: 8.5 }
+        basePrice: { type: number, example: 999.99 }
+        totalPrice: { type: number, example: 1084.99 }
+        monthlyPayment: { type: number, example: 90.42 }
+
+    Category:
+      type: object
+      properties:
+        categoryId: { type: string, format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        description: { type: string, nullable: true }
+
+    OffsetPagination:
+      type: object
+      properties:
+        total: { type: integer }
+        totalPages: { type: integer }
+        currentPage: { type: integer }
+        limit: { type: integer }
+        hasNextPage: { type: boolean }
+        hasPreviousPage: { type: boolean }
+
+    CursorPagination:
+      type: object
+      properties:
+        limit: { type: integer }
+        nextCursor: { type: string, nullable: true }
+        prevCursor: { type: string, nullable: true }
+        hasNextPage: { type: boolean }
+        hasPreviousPage: { type: boolean }
+        nextLink: { type: string, nullable: true, format: uri }
+        prevLink: { type: string, nullable: true, format: uri }
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    csrfToken:
+      type: apiKey
+      in: header
+      name: x-csrf-token

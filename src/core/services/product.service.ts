@@ -484,121 +484,204 @@ export class ProductService {
     return { ...product, installmentBreakdown: breakdowns };
   }
 
-  // ── Bulk Create ──────────────────────────────────────────────────────────────────
-
-  /**
-   * Bulk create multiple products in a single transaction.
-   *
-   * POST /products/bulk
-   * ───────────────────
-   * Creates multiple product shells with their variants and installment plans.
-   * Images are uploaded separately via ProductImageService.
-   *
-   * Each product in the array should follow the standard 4-step creation flow:
-   * 1. Product shell created
-   * 2. Images uploaded separately
-   * 3. Variants created with imageIds
-   * 4. Final associations made
-   *
-   * Performance: Uses createMany for products when no variants exist.
-   */
   static async createProductsBulk(
     companyId: string | undefined,
     products: BulkCreateProductInput[],
   ) {
-    if (!products || products.length === 0) {
+    if (!products.length) {
       throw new BadRequestError("At least one product is required");
     }
 
-    if (products.length > 100) {
-      throw new BadRequestError("Maximum 100 products per bulk import");
+    if (products.length > 50) {
+      throw new BadRequestError("Maximum 50 products per bulk import");
     }
 
-    const skus = products.flatMap((p) =>
-      p.variants?.map((v) => v.sku) ?? [],
+    const payloadSkus = products.flatMap((p) => p.variants.map((v) => v.sku));
+
+    const duplicatePayloadSkus = payloadSkus.filter(
+      (sku, index) => payloadSkus.indexOf(sku) !== index,
     );
 
-    const existingSkus = await prisma.productVariant.findMany({
-      where: { sku: { in: skus } },
-      select: { sku: true },
+    if (duplicatePayloadSkus.length) {
+      throw new BadRequestError(
+        `Duplicate SKU(s) in import: ${[...new Set(duplicatePayloadSkus)].join(
+          ", ",
+        )}`,
+      );
+    }
+
+    const existing = await prisma.productVariant.findMany({
+      where: {
+        sku: {
+          in: payloadSkus,
+        },
+      },
+      select: {
+        sku: true,
+      },
     });
 
-    if (existingSkus.length > 0) {
-      const taken = existingSkus.map((v) => v.sku).join(", ");
-      throw new BadRequestError(`Variant SKU(s) already exist: ${taken}`);
+    if (existing.length) {
+      throw new BadRequestError(
+        `Variant SKU(s) already exist: ${existing
+          .map((s) => s.sku)
+          .join(", ")}`,
+      );
     }
 
     return prisma.$transaction(async (tx) => {
       const createdProducts = [];
 
-      for (const productData of products) {
-        const slug = this.generateSlug(productData.name);
-
+      for (const item of products) {
+        const slug = await this.generateSlug(item.name);
         const product = await tx.product.create({
           data: {
-            name: productData.name,
-            slug,
-            description: productData.description,
-            price: new Prisma.Decimal(productData.price),
-            stockQuantity: productData.stockQuantity,
-            commissionRate: new Prisma.Decimal(productData.commissionRate),
-            status: productData.status,
             companyId,
-            categoryId: productData.categoryId,
-            installmentPlans: productData.installmentPlans?.length
+            name: item.name,
+            slug,
+            description: item.description,
+            categoryId: item.categoryId,
+            commissionRate: new Prisma.Decimal(item.commissionRate),
+            status: item.status,
+            price: new Prisma.Decimal(item.price),
+            stockQuantity: item.stockQuantity,
+            installmentPlans: item.installmentPlans.length
               ? {
-                  create: productData.installmentPlans.map((p) => ({
-                    durationMonths: p.durationMonths,
+                  create: item.installmentPlans.map((plan) => ({
+                    durationMonths: plan.durationMonths,
                     interestPercentage: new Prisma.Decimal(
-                      p.interestPercentage,
+                      plan.interestPercentage,
                     ),
-                    active: p.active ?? true,
+                    active: plan.active,
                   })),
                 }
               : undefined,
           },
-          include: this.standardIncludes(),
         });
 
-        if (productData.variants?.length) {
-          for (const variant of productData.variants) {
-            const createdVariant = await tx.productVariant.create({
+        if (item.variants.length) {
+          for (const variant of item.variants) {
+            await tx.productVariant.create({
               data: {
                 productId: product.productId,
                 sku: variant.sku,
                 size: variant.size,
-                color: variant.color ?? [],
-                ...(variant.attributes !== undefined && {
-                  attributes: variant.attributes,
-                }),
-                stockQuantity: variant.stockQuantity ?? 0,
+                color: variant.color,
+                attributes: variant.attributes,
+                stockQuantity: variant.stockQuantity,
                 price: new Prisma.Decimal(variant.price),
-                isActive: variant.isActive ?? true,
+                isActive: variant.isActive,
               },
             });
-
-            if (variant.imageIds?.length) {
-              await tx.productVariantImage.createMany({
-                data: variant.imageIds.map((imageId, idx) => ({
-                  variantId: createdVariant.id,
-                  imageId: BigInt(imageId),
-                  isPrimary: idx === 0,
-                  sortOrder: idx,
-                })),
-                skipDuplicates: true,
-              });
-            }
           }
-
-          await ProductService.syncStats(product.productId, tx);
+          await this.syncStats(product.productId, tx);
         }
-
         createdProducts.push(product);
       }
-
-      return { count: createdProducts.length, products: createdProducts };
+      return {
+        count: createdProducts.length,
+        products: createdProducts,
+      };
     });
   }
+
+  // static async createProductsBulk(
+  //   companyId: string | undefined,
+  //   products: BulkCreateProductInput[],
+  // ) {
+  //   if (!products || products.length === 0) {
+  //     throw new BadRequestError("At least one product is required");
+  //   }
+
+  //   if (products.length > 100) {
+  //     throw new BadRequestError("Maximum 100 products per bulk import");
+  //   }
+
+  //   const skus = products.flatMap((p) =>
+  //     p.variants?.map((v) => v.sku) ?? [],
+  //   );
+
+  //   const existingSkus = await prisma.productVariant.findMany({
+  //     where: { sku: { in: skus } },
+  //     select: { sku: true },
+  //   });
+
+  //   if (existingSkus.length > 0) {
+  //     const taken = existingSkus.map((v) => v.sku).join(", ");
+  //     throw new BadRequestError(`Variant SKU(s) already exist: ${taken}`);
+  //   }
+
+  //   return prisma.$transaction(async (tx) => {
+  //     const createdProducts = [];
+
+  //     for (const productData of products) {
+  //       const slug = this.generateSlug(productData.name);
+
+  //       const product = await tx.product.create({
+  //         data: {
+  //           name: productData.name,
+  //           slug,
+  //           description: productData.description,
+  //           price: new Prisma.Decimal(productData.price),
+  //           stockQuantity: productData.stockQuantity,
+  //           commissionRate: new Prisma.Decimal(productData.commissionRate),
+  //           status: productData.status,
+  //           companyId,
+  //           categoryId: productData.categoryId,
+  //           installmentPlans: productData.installmentPlans?.length
+  //             ? {
+  //                 create: productData.installmentPlans.map((p) => ({
+  //                   durationMonths: p.durationMonths,
+  //                   interestPercentage: new Prisma.Decimal(
+  //                     p.interestPercentage,
+  //                   ),
+  //                   active: p.active ?? true,
+  //                 })),
+  //               }
+  //             : undefined,
+  //         },
+  //         include: this.standardIncludes(),
+  //       });
+
+  //       if (productData.variants?.length) {
+  //         for (const variant of productData.variants) {
+  //           const createdVariant = await tx.productVariant.create({
+  //             data: {
+  //               productId: product.productId,
+  //               sku: variant.sku,
+  //               size: variant.size,
+  //               color: variant.color ?? [],
+  //               ...(variant.attributes !== undefined && {
+  //                 attributes: variant.attributes,
+  //               }),
+  //               stockQuantity: variant.stockQuantity ?? 0,
+  //               price: new Prisma.Decimal(variant.price),
+  //               isActive: variant.isActive ?? true,
+  //             },
+  //           });
+
+  //           if (variant.imageIds?.length) {
+  //             await tx.productVariantImage.createMany({
+  //               data: variant.imageIds.map((imageId, idx) => ({
+  //                 variantId: createdVariant.id,
+  //                 imageId: BigInt(imageId),
+  //                 isPrimary: idx === 0,
+  //                 sortOrder: idx,
+  //               })),
+  //               skipDuplicates: true,
+  //             });
+  //           }
+  //         }
+
+  //         await ProductService.syncStats(product.productId, tx);
+  //       }
+
+  //       createdProducts.push(product);
+  //     }
+
+  //     return { count: createdProducts.length, products: createdProducts };
+  //   });
+  // }
 }
 
 // import { prisma, ProductStatus } from "@/infrastructure/prisma";
