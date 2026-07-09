@@ -11,7 +11,7 @@ export class ProductImageController {
     const productId = req.params.productId as string;
     const files = (req.files ?? []) as Express.Multer.File[];
 
-    if (!!productId || productId === "") {
+    if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
