@@ -424,6 +424,11 @@ export class PaymentIntentService {
         authorizationUrl: providerResponse.authorizationUrl,
       });
 
+      console.log(
+        providerResponse,
+        "providerResponse data within initializePaystack",
+      );
+
       return {
         authorizationUrl: providerResponse.authorizationUrl,
         reference: providerResponse.reference,

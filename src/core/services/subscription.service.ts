@@ -37,8 +37,6 @@ export class SubscriptionService {
 
     const idempotencyKey = randomUUID();
 
-    console.log(amount, "amount within initializeOnboardingPayment");
-
     const { intent, isExisting } = await PaymentIntentService.reserve({
       type: PaymentIntentType.ONBOARDING,
       amount,
@@ -46,8 +44,6 @@ export class SubscriptionService {
       planId: onboardingIntent.planId,
       idempotencyKey,
     });
-
-    console.log(intent, "intent within initializeOnboardingPayment");
 
     if (isExisting && intent.status === PaymentInitStatus.INITIALIZED) {
       return {
@@ -102,9 +98,10 @@ export class SubscriptionService {
       throw new NotFoundError("Subscription plan not found or inactive");
     }
 
-    const amount = plan.discountPrice
-      ? Number(plan.discountPrice)
-      : Number(plan.price);
+    const amount =
+      plan.discountPrice && Number(plan.discountPrice) > 0
+        ? Number(plan.discountPrice)
+        : Number(plan.price);
 
     const idempotencyKey = randomUUID();
 
