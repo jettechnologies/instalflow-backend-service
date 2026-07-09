@@ -52,6 +52,8 @@ export class SubscriptionService {
       };
     }
 
+    console.log(intent, "intent within initializeOnboardingPayment");
+
     const { authorizationUrl, reference, accessCode } =
       await PaymentIntentService.initializePaystack(intent.intentId, {
         email: onboardingIntent.email,
