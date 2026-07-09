@@ -52,13 +52,20 @@ export class SubscriptionService {
       };
     }
 
-    console.log(intent, "intent within initializeOnboardingPayment");
-
     const { authorizationUrl, reference, accessCode } =
-      await PaymentIntentService.initializePaystack(intent.intentId, {
-        email: onboardingIntent.email,
-        metadata: { intentId },
-      });
+      await PaymentIntentService.initializePaystack(
+        intent.intentId,
+        {
+          email: onboardingIntent.email,
+          metadata: { intentId },
+        },
+        {
+          traceId: crypto.randomUUID
+            ? crypto.randomUUID()
+            : `IFL_ONBOARDING_${Date.now()}`,
+          paymentIntentId: intent.intentId,
+        },
+      );
 
     await PaymentIntentService.markPending(intent.intentId);
 
@@ -141,14 +148,23 @@ export class SubscriptionService {
     }
 
     const { authorizationUrl, reference, accessCode } =
-      await PaymentIntentService.initializePaystack(intent.intentId, {
-        email,
-        callbackUrl: `${process.env.FRONTEND_URL}/subscription/verify`,
-        metadata: {
-          companyId,
-          planId,
+      await PaymentIntentService.initializePaystack(
+        intent.intentId,
+        {
+          email,
+          callbackUrl: `${process.env.FRONTEND_URL}/subscription/verify`,
+          metadata: {
+            companyId,
+            planId,
+          },
         },
-      });
+        {
+          traceId: crypto.randomUUID
+            ? crypto.randomUUID()
+            : `IFL_SUBSCRIPTION_${Date.now()}`,
+          paymentIntentId: intent.intentId,
+        },
+      );
 
     await PaymentIntentService.markPending(intent.intentId);
 

@@ -291,12 +291,16 @@ export class InstallmentService {
     });
 
     if (isExisting) {
-      if (intent.status === PaymentInitStatus.INITIALIZED || intent.status === PaymentInitStatus.PENDING) {
+      if (
+        intent.status === PaymentInitStatus.INITIALIZED ||
+        intent.status === PaymentInitStatus.PENDING
+      ) {
         return {
           authorizationUrl: intent.authorizationUrl!,
           reference: intent.reference!,
           isExisting: true,
-          message: "You have an active pending payment. Please complete it first.",
+          message:
+            "You have an active pending payment. Please complete it first.",
         };
       }
       throw new BadRequestError(
@@ -314,6 +318,12 @@ export class InstallmentService {
           productId: product.productId,
           sequence: installment.sequence,
         },
+      },
+      {
+        traceId: crypto.randomUUID
+          ? crypto.randomUUID()
+          : `IFL_INSTALLMENT_${Date.now()}`,
+        paymentIntentId: intent.intentId,
       },
     );
 
