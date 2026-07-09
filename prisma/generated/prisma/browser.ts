@@ -88,6 +88,11 @@ export type Installment = Prisma.InstallmentModel
  */
 export type Payment = Prisma.PaymentModel
 /**
+ * Model PaymentIntent
+ * 
+ */
+export type PaymentIntent = Prisma.PaymentIntentModel
+/**
  * Model Commission
  * 
  */

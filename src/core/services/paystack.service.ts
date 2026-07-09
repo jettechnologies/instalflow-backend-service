@@ -1,58 +1,25 @@
-import crypto from "crypto";
+import {
+  PaystackHttpClient,
+  PaystackErrorCode,
+} from "@/infrastructure/paystack/PaystackHttpClient";
 
-const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || "";
+export { PaystackErrorCode };
+export { PaystackHttpClient };
 
 export class PaystackService {
-  /**
-   * Verify Paystack webhook signature
-   */
-  static verifyWebhookSignature(payload: string, signature: string): boolean {
-    try {
-      const expectedSignature = crypto
-        .createHmac("sha512", PAYSTACK_SECRET)
-        .update(payload)
-        .digest("hex");
-
-      return this.timingSafeCompare(expectedSignature, signature);
-    } catch (error) {
-      console.error("Webhook verification error:", error);
-      return false;
-    }
-  }
-
   static async createTransferRecipient(params: {
     name: string;
     accountNumber: string;
     bankCode: string;
     currency?: string;
   }): Promise<{ recipientCode: string }> {
-    const response = await fetch("https://api.paystack.co/transferrecipient", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        type: "nuban",
-        name: params.name,
-        account_number: params.accountNumber,
-        bank_code: params.bankCode,
-        currency: params.currency ?? "NGN",
-      }),
+    return PaystackHttpClient.createTransferRecipient({
+      name: params.name,
+      accountNumber: params.accountNumber,
+      bankCode: params.bankCode,
+      currency: params.currency,
     });
-
-    const data = await response.json();
-
-    if (!data.status) {
-      throw new Error(
-        `Paystack createTransferRecipient failed: ${data.message}`,
-      );
-    }
-
-    return { recipientCode: data.data.recipient_code as string };
   }
-
-  // ─── Initiate Transfer ──────────────────────────────────────────────────────
 
   static async initiateTransfer(params: {
     amountKobo: number;
@@ -60,78 +27,55 @@ export class PaystackService {
     reference: string;
     reason?: string;
   }): Promise<{ transferCode: string; status: string }> {
-    const response = await fetch("https://api.paystack.co/transfer", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        source: "balance",
-        amount: params.amountKobo,
-        recipient: params.recipientCode,
-        reason: params.reason ?? "Commission payout",
-        reference: params.reference,
-      }),
+    return PaystackHttpClient.initiateTransfer({
+      amountKobo: params.amountKobo,
+      recipientCode: params.recipientCode,
+      reference: params.reference,
+      reason: params.reason,
     });
-
-    const data = await response.json();
-
-    if (!data.status) {
-      throw new Error(`Paystack initiateTransfer failed: ${data.message}`);
-    }
-
-    return {
-      transferCode: data.data.transfer_code as string,
-      status: data.data.status as string,
-    };
   }
-
-  // ─── Resolve Account (for verification) ────────────────────────────────────
 
   static async resolveAccount(params: {
     accountNumber: string;
     bankCode: string;
   }): Promise<{ accountName: string }> {
-    const qs = new URLSearchParams({
-      account_number: params.accountNumber,
-      bank_code: params.bankCode,
+    return PaystackHttpClient.resolveAccount({
+      accountNumber: params.accountNumber,
+      bankCode: params.bankCode,
     });
-
-    const response = await fetch(
-      `https://api.paystack.co/bank/resolve?${qs.toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-        },
-      },
-    );
-
-    const data = await response.json();
-
-    if (!data.status) {
-      throw new Error(`Paystack resolveAccount failed: ${data.message}`);
-    }
-
-    return { accountName: data.data.account_name as string };
   }
 
-  /**
-   * Timing-safe comparison
-   */
-  private static timingSafeCompare(a: string, b: string): boolean {
-    try {
-      const aBuffer = Buffer.from(a);
-      const bBuffer = Buffer.from(b);
+  static verifyWebhookSignature(payload: string, signature: string): boolean {
+    const { valid } = PaystackHttpClient.verifyWebhookSignature(
+      payload,
+      signature,
+    );
+    return valid;
+  }
 
-      if (aBuffer.length !== bBuffer.length) {
-        return false;
-      }
+  static async initializeTransaction(params: {
+    email: string;
+    amountKobo: number;
+    metadata?: Record<string, unknown>;
+  }): Promise<{ authorization_url: string; access_code: string; reference: string }> {
+    const result = await PaystackHttpClient.initializeTransaction({
+      email: params.email,
+      amountKobo: params.amountKobo,
+      metadata: params.metadata,
+    });
 
-      return crypto.timingSafeEqual(aBuffer, bBuffer);
-    } catch (error) {
-      console.error("Timing safe compare error:", error);
-      return false;
-    }
+    return {
+      authorization_url: result.authorizationUrl,
+      access_code: result.accessCode,
+      reference: result.reference,
+    };
+  }
+
+  static async verifyTransaction(reference: string): Promise<{
+    status: string;
+    amount: number;
+    metadata?: Record<string, unknown>;
+  }> {
+    return PaystackHttpClient.verifyTransaction(reference);
   }
 }

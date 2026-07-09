@@ -7,5 +7,6 @@ import "@/job-workers/payment.worker";
 import "@/job-workers/installment-payment-reminder.worker";
 import "@/job-workers/transfer.worker";
 import "@/job-workers/ledger-reconciliation.worker";
+import "@/job-workers/payment-recovery.worker";
 
 console.log("✅ BullMQ Workers initialized");

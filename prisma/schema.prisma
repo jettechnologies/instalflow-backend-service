@@ -36,6 +36,23 @@ enum PaymentStatus {
   FAILED
 }
 
+enum PaymentIntentType {
+  INSTALLMENT
+  ONBOARDING
+  SUBSCRIPTION
+}
+
+enum PaymentInitStatus {
+  INITIALIZING
+  INITIALIZED
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  EXPIRED
+  CANCELLED
+}
+
 enum CommissionStatus {
   ACTIVE
   PARTIALLY_RESERVED
@@ -290,19 +307,19 @@ model Product {
 }
 
 model ProductVariant {
-  id                 BigInt              @id @default(autoincrement())
-  variantId          String              @unique @default(uuid())
+  id                 BigInt                @id @default(autoincrement())
+  variantId          String                @unique @default(uuid())
   productId          String
-  product            Product             @relation(fields: [productId], references: [productId], onDelete: Restrict)
-  sku                String              @unique
+  product            Product               @relation(fields: [productId], references: [productId], onDelete: Restrict)
+  sku                String                @unique
   size               String?
   color              String[] // PostgreSQL string array
-  stockQuantity      Int                 @default(0) @map("stock_quantity")
-  isActive           Boolean             @default(true) @map("is_active")
-  price              Decimal             @default(0)
-  attributes         Json?               @db.Json
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  stockQuantity      Int                   @default(0) @map("stock_quantity")
+  isActive           Boolean               @default(true) @map("is_active")
+  price              Decimal               @default(0)
+  attributes         Json?                 @db.Json
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
   financingContracts FinancingContract[]
   images             ProductVariantImage[]
 
@@ -458,6 +475,41 @@ model Payment {
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
   commissions       Commission[]
+}
+
+model PaymentIntent {
+  id       BigInt @id @default(autoincrement())
+  intentId String @unique @default(uuid())
+
+  type             PaymentIntentType
+  reference        String?           @unique
+  authorizationUrl String?
+
+  status   PaymentInitStatus @default(INITIALIZING)
+  amount   Decimal
+  currency String            @default("NGN")
+
+  customerId     String?
+  companyId      String?
+  installmentId  String?
+  onboardingId   String?
+  subscriptionId String?
+  planId         String?
+
+  reservationKey String   @map("reservation_key")
+  idempotencyKey String   @unique
+  expiresAt      DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([reference])
+  @@index([status, expiresAt])
+  @@index([customerId, status])
+  @@index([companyId, status])
+  @@index([installmentId, status])
+  @@index([planId, type])
+  @@index([reservationKey])
 }
 
 model Commission {
@@ -703,15 +755,15 @@ model ProductInstallmentPlan {
 }
 
 model ProductImage {
-  id                 BigInt   @id @default(autoincrement())
-  product            Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id                 BigInt                @id @default(autoincrement())
+  product            Product               @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId          BigInt
-  imageUrl           String   @map("image_url")
-  altText            String?  @map("alt_text")
-  isPrimary          Boolean  @default(false) @map("is_primary")
-  sortOrder          Int      @default(0) @map("sort_order")
-  cloudinaryPublicId String?  @map("cloudinary_public_id")
-  createdAt          DateTime @default(now()) @map("created_at")
+  imageUrl           String                @map("image_url")
+  altText            String?               @map("alt_text")
+  isPrimary          Boolean               @default(false) @map("is_primary")
+  sortOrder          Int                   @default(0) @map("sort_order")
+  cloudinaryPublicId String?               @map("cloudinary_public_id")
+  createdAt          DateTime              @default(now()) @map("created_at")
   variants           ProductVariantImage[]
 
   @@index([productId])
@@ -720,14 +772,14 @@ model ProductImage {
 }
 
 model ProductVariantImage {
-  id          BigInt    @id @default(autoincrement())
-  variantId   BigInt
-  imageId     BigInt
-  variant     ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
-  image       ProductImage   @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  isPrimary   Boolean   @default(false) @map("is_primary")
-  sortOrder   Int       @default(0) @map("sort_order")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id        BigInt         @id @default(autoincrement())
+  variantId BigInt
+  imageId   BigInt
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  image     ProductImage   @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  isPrimary Boolean        @default(false) @map("is_primary")
+  sortOrder Int            @default(0) @map("sort_order")
+  createdAt DateTime       @default(now()) @map("created_at")
 
   @@unique([variantId, imageId])
   @@index([imageId])

@@ -22,11 +22,10 @@ import { DomainEvent } from "../events/event.types";
 import { deriveReservationStatus } from "@/shared/utils/helpers/commission-helper";
 import logger from "@/infrastructure/logger/logger";
 
-type AllocationEntry = {
+type LockedCommissionRow = {
   commissionId: string;
-  toAllocate: Prisma.Decimal;
-  currentReserved: Prisma.Decimal;
-  totalAmount: Prisma.Decimal;
+  amount: Prisma.Decimal;
+  reservedAmount: Prisma.Decimal;
 };
 
 export class CommissionService {
@@ -400,9 +399,7 @@ export class CommissionService {
   static async requestPayout(userId: string, amount: number) {
     const user = await prisma.user.findUnique({
       where: { userId },
-      include: {
-        creator: true,
-      },
+      include: { creator: true },
     });
     if (!user) throw new NotFoundError("User not found");
     if (!user.companyId)
@@ -444,13 +441,21 @@ export class CommissionService {
     }
 
     const payoutRequest = await prisma.$transaction(async (tx) => {
-      const commissions = await tx.commission.findMany({
-        where: {
-          userId,
-          status: { notIn: [CommissionStatus.PAID, CommissionStatus.FROZEN] },
-        },
-        orderBy: { createdAt: "asc" },
-      });
+      const lockedCommissions = await tx.$queryRaw<LockedCommissionRow[]>`
+      SELECT "commissionId", "amount", "reservedAmount"
+      FROM "Commission"
+      WHERE "userId" = ${userId}
+        AND "status" NOT IN ('PAID', 'FROZEN')
+        AND "reservedAmount" < "amount"
+      ORDER BY "createdAt" ASC
+      FOR UPDATE
+    `;
+
+      const commissions = lockedCommissions.map((c) => ({
+        commissionId: c.commissionId,
+        amount: new Prisma.Decimal(c.amount),
+        reservedAmount: new Prisma.Decimal(c.reservedAmount),
+      }));
 
       const totalAvailable = commissions.reduce(
         (acc, c) => acc.plus(c.amount.minus(c.reservedAmount)),
@@ -478,7 +483,7 @@ export class CommissionService {
         if (remaining.lessThanOrEqualTo(0)) break;
 
         const available = c.amount.minus(c.reservedAmount);
-        if (available.lessThanOrEqualTo(0)) continue;
+        if (available.lessThanOrEqualTo(0)) continue; // defensive; WHERE already excludes these
 
         const toAllocate = Prisma.Decimal.min(remaining, available);
         plan.push({
@@ -502,9 +507,7 @@ export class CommissionService {
           amount: requestedAmount,
           status,
         },
-        include: {
-          user: true,
-        },
+        include: { user: true },
       });
 
       for (const entry of plan) {
@@ -558,6 +561,168 @@ export class CommissionService {
 
     return payoutRequest;
   }
+
+  // static async requestPayout(userId: string, amount: number) {
+  //   const user = await prisma.user.findUnique({
+  //     where: { userId },
+  //     include: {
+  //       creator: true,
+  //     },
+  //   });
+  //   if (!user) throw new NotFoundError("User not found");
+  //   if (!user.companyId)
+  //     throw new BadRequestError("User has no associated company");
+
+  //   const requestedAmount = new Prisma.Decimal(amount);
+
+  //   if (requestedAmount.lessThanOrEqualTo(0)) {
+  //     throw new BadRequestError("Requested amount must be greater than zero");
+  //   }
+
+  //   const existingPending = await prisma.commissionPayoutRequest.findFirst({
+  //     where: {
+  //       userId,
+  //       status: {
+  //         in: [
+  //           CommissionPayoutStatus.PENDING_ADMIN_APPROVAL,
+  //           CommissionPayoutStatus.PENDING_COMPANY_APPROVAL,
+  //           CommissionPayoutStatus.APPROVED,
+  //           CommissionPayoutStatus.TRANSFER_INITIATED,
+  //         ],
+  //       },
+  //     },
+  //     select: { status: true, payoutId: true },
+  //   });
+
+  //   if (existingPending) {
+  //     throw new BadRequestError(
+  //       `You already have a payout in progress (status: ${existingPending.status})`,
+  //     );
+  //   }
+
+  //   const creatorRole = user.creator?.role;
+
+  //   if (!creatorRole) {
+  //     throw new BadRequestError(
+  //       "Marketer has no creator relationship configured",
+  //     );
+  //   }
+
+  //   const payoutRequest = await prisma.$transaction(async (tx) => {
+  //     const commissions = await tx.commission.findMany({
+  //       where: {
+  //         userId,
+  //         status: { notIn: [CommissionStatus.PAID, CommissionStatus.FROZEN] },
+  //       },
+  //       orderBy: { createdAt: "asc" },
+  //     });
+
+  //     const totalAvailable = commissions.reduce(
+  //       (acc, c) => acc.plus(c.amount.minus(c.reservedAmount)),
+  //       new Prisma.Decimal(0),
+  //     );
+
+  //     if (totalAvailable.lessThan(requestedAmount)) {
+  //       throw new BadRequestError(
+  //         `Insufficient available balance. ` +
+  //           `Available: ₦${totalAvailable.toFixed(2)}, Requested: ₦${requestedAmount.toFixed(2)}`,
+  //       );
+  //     }
+
+  //     type AllocationEntry = {
+  //       commissionId: string;
+  //       toAllocate: Prisma.Decimal;
+  //       currentReserved: Prisma.Decimal;
+  //       totalAmount: Prisma.Decimal;
+  //     };
+
+  //     const plan: AllocationEntry[] = [];
+  //     let remaining = requestedAmount;
+
+  //     for (const c of commissions) {
+  //       if (remaining.lessThanOrEqualTo(0)) break;
+
+  //       const available = c.amount.minus(c.reservedAmount);
+  //       if (available.lessThanOrEqualTo(0)) continue;
+
+  //       const toAllocate = Prisma.Decimal.min(remaining, available);
+  //       plan.push({
+  //         commissionId: c.commissionId,
+  //         toAllocate,
+  //         currentReserved: c.reservedAmount,
+  //         totalAmount: c.amount,
+  //       });
+  //       remaining = remaining.minus(toAllocate);
+  //     }
+
+  //     const status =
+  //       creatorRole === Role.COMPANY
+  //         ? CommissionPayoutStatus.PENDING_COMPANY_APPROVAL
+  //         : CommissionPayoutStatus.PENDING_ADMIN_APPROVAL;
+
+  //     const request = await tx.commissionPayoutRequest.create({
+  //       data: {
+  //         userId,
+  //         companyId: user.companyId!,
+  //         amount: requestedAmount,
+  //         status,
+  //       },
+  //       include: {
+  //         user: true,
+  //       },
+  //     });
+
+  //     for (const entry of plan) {
+  //       await tx.commissionAllocation.create({
+  //         data: {
+  //           payoutId: request.payoutId,
+  //           commissionId: entry.commissionId,
+  //           allocatedAmount: entry.toAllocate,
+  //           status: CommissionAllocationStatus.RESERVED,
+  //         },
+  //       });
+
+  //       const newReservedAmount = entry.currentReserved.plus(entry.toAllocate);
+
+  //       await tx.commission.update({
+  //         where: { commissionId: entry.commissionId },
+  //         data: {
+  //           reservedAmount: newReservedAmount,
+  //           status: deriveReservationStatus(
+  //             newReservedAmount,
+  //             entry.totalAmount,
+  //           ),
+  //         },
+  //       });
+  //     }
+
+  //     return request;
+  //   });
+
+  //   if (creatorRole === Role.COMPANY) {
+  //     await NotificationOrchestrator.handle(
+  //       NotificationEventType.COMMISSION_REQUEST_APPROVAL,
+  //       {
+  //         requestId: payoutRequest.payoutId,
+  //         marketerId: payoutRequest.user.userId,
+  //         marketerName: payoutRequest.user.name ?? "Marketer",
+  //         role: Role.ADMIN,
+  //         amount: formatCurrency(amount),
+  //       },
+  //     );
+  //   } else {
+  //     await NotificationOrchestrator.handle(
+  //       NotificationEventType.COMMISSION_TRANSFER_REQUEST,
+  //       {
+  //         requestId: payoutRequest.payoutId,
+  //         marketerName: user.name ?? "",
+  //         amount: formatCurrency(amount),
+  //       },
+  //     );
+  //   }
+
+  //   return payoutRequest;
+  // }
 
   static async adminApprovePayout(payoutId: string, adminId: string) {
     const admin = await prisma.user.findUnique({

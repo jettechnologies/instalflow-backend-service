@@ -6,4 +6,5 @@ export const QueueNames = {
   KycRetentionQueue: "kyc-retention-queue",
   InstallmentPaymentReminderQueue: "installment-payment-reminder-queue",
   LedgerReconciliationQueue: "ledger-reconciliation-queue",
+  PaymentRecoveryQueue: "payment-recovery-queue",
 };

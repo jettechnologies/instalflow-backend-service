@@ -162,6 +162,7 @@ const logger = {
 };
 
 export default logger;
+export { logger };
 
 // // logger.ts
 // import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";

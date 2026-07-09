@@ -50,6 +50,29 @@ export const PaymentStatus = {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
+export const PaymentIntentType = {
+  INSTALLMENT: 'INSTALLMENT',
+  ONBOARDING: 'ONBOARDING',
+  SUBSCRIPTION: 'SUBSCRIPTION'
+} as const
+
+export type PaymentIntentType = (typeof PaymentIntentType)[keyof typeof PaymentIntentType]
+
+
+export const PaymentInitStatus = {
+  INITIALIZING: 'INITIALIZING',
+  INITIALIZED: 'INITIALIZED',
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PaymentInitStatus = (typeof PaymentInitStatus)[keyof typeof PaymentInitStatus]
+
+
 export const CommissionStatus = {
   ACTIVE: 'ACTIVE',
   PARTIALLY_RESERVED: 'PARTIALLY_RESERVED',

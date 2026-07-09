@@ -4,15 +4,16 @@ import {
   PaymentStatus,
   Prisma,
   FinancingStatus,
+  PaymentIntentType,
+  PaymentInitStatus,
 } from "@/infrastructure/prisma";
 import {
   BadRequestError,
   NotFoundError,
   UnauthorizedError,
 } from "@/shared/utils/AppError";
-import { MetadataType } from "@/shared/utils/helpers/misc";
-
-const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
+import { PaymentIntentService } from "@/core/services/payment-intent.service";
+import { randomUUID } from "crypto";
 
 interface GenerateInstallmentScheduleParams {
   financingContractId: string;
@@ -274,67 +275,54 @@ export class InstallmentService {
       );
     }
 
-    await prisma.user.findUnique({
-      where: {
-        userId: installment.financingContract.user.referredByMarketerId!,
-      },
-      select: {
-        userId: true,
-        email: true,
-        name: true,
-      },
-    });
-
     const customer = installment.financingContract.user;
     const product = installment.financingContract.product;
-
     const amount = Number(installment.amount);
 
-    const response = await fetch(
-      "https://api.paystack.co/transaction/initialize",
+    const idempotencyKey = randomUUID();
+
+    const { intent, isExisting } = await PaymentIntentService.reserve({
+      type: PaymentIntentType.INSTALLMENT,
+      amount: installment.amount,
+      customerId: customer.userId,
+      installmentId: installment.installmentId,
+      planId: product.productId,
+      idempotencyKey,
+    });
+
+    if (isExisting) {
+      if (intent.status === PaymentInitStatus.INITIALIZED || intent.status === PaymentInitStatus.PENDING) {
+        return {
+          authorizationUrl: intent.authorizationUrl!,
+          reference: intent.reference!,
+          isExisting: true,
+          message: "You have an active pending payment. Please complete it first.",
+        };
+      }
+      throw new BadRequestError(
+        `Payment intent is in ${intent.status} state, cannot re-initialize`,
+      );
+    }
+
+    const result = await PaymentIntentService.initializePaystack(
+      intent.intentId,
       {
-        method: "POST",
-
-        headers: {
-          Authorization: `Bearer ${PAYSTACK_SECRET}`,
-          "Content-Type": "application/json",
+        email: customer.email,
+        metadata: {
+          installmentId: installment.installmentId,
+          financingContractId: installment.financingContractId,
+          productId: product.productId,
+          sequence: installment.sequence,
         },
-
-        body: JSON.stringify({
-          email: customer.email,
-          amount: Math.round(amount * 100),
-          metadata: {
-            type: MetadataType.installment_payment,
-            installmentId: installment.installmentId,
-            financingContractId: installment.financingContractId,
-            customerId: customer.userId,
-            productId: product.productId,
-            sequence: installment.sequence,
-          },
-        }),
       },
     );
 
-    const data = await response.json();
-
-    if (!data.status) {
-      throw new BadRequestError(data.message || "Failed to initialize payment");
-    }
-
-    await prisma.payment.create({
-      data: {
-        installmentId: installment.installmentId,
-        amount: installment.amount,
-        status: PaymentStatus.PENDING,
-        providerReference: data.data.reference,
-        idempotencyKey: data.data.reference,
-      },
-    });
+    await PaymentIntentService.markPending(intent.intentId);
 
     return {
-      authorizationUrl: data.data.authorization_url,
-      accessCode: data.data.access_code,
-      reference: data.data.reference,
+      authorizationUrl: result.authorizationUrl,
+      accessCode: result.accessCode,
+      reference: result.reference,
       amount,
       installmentId: installment.installmentId,
       dueDate: installment.dueDate,

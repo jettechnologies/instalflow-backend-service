@@ -398,6 +398,7 @@ export const ModelName = {
   FinancingContract: 'FinancingContract',
   Installment: 'Installment',
   Payment: 'Payment',
+  PaymentIntent: 'PaymentIntent',
   Commission: 'Commission',
   CommissionAllocation: 'CommissionAllocation',
   CommissionPayoutRequest: 'CommissionPayoutRequest',
@@ -431,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "paymentIntent" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1468,6 +1469,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PaymentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PaymentCountAggregateOutputType> | number
+        }
+      }
+    }
+    PaymentIntent: {
+      payload: Prisma.$PaymentIntentPayload<ExtArgs>
+      fields: Prisma.PaymentIntentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentIntentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentIntentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentIntentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentIntentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentIntentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentIntentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentIntentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentIntentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentIntentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        update: {
+          args: Prisma.PaymentIntentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentIntentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentIntentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentIntentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentIntentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentIntentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentIntent>
+        }
+        groupBy: {
+          args: Prisma.PaymentIntentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentIntentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentIntentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentIntentCountAggregateOutputType> | number
         }
       }
     }
@@ -3084,6 +3159,31 @@ export const PaymentScalarFieldEnum = {
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
+export const PaymentIntentScalarFieldEnum = {
+  id: 'id',
+  intentId: 'intentId',
+  type: 'type',
+  reference: 'reference',
+  authorizationUrl: 'authorizationUrl',
+  status: 'status',
+  amount: 'amount',
+  currency: 'currency',
+  customerId: 'customerId',
+  companyId: 'companyId',
+  installmentId: 'installmentId',
+  onboardingId: 'onboardingId',
+  subscriptionId: 'subscriptionId',
+  planId: 'planId',
+  reservationKey: 'reservationKey',
+  idempotencyKey: 'idempotencyKey',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentIntentScalarFieldEnum = (typeof PaymentIntentScalarFieldEnum)[keyof typeof PaymentIntentScalarFieldEnum]
+
+
 export const CommissionScalarFieldEnum = {
   id: 'id',
   commissionId: 'commissionId',
@@ -3574,6 +3674,34 @@ export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'PaymentIntentType'
+ */
+export type EnumPaymentIntentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentIntentType'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentIntentType[]'
+ */
+export type ListEnumPaymentIntentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentIntentType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentInitStatus'
+ */
+export type EnumPaymentInitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentInitStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentInitStatus[]'
+ */
+export type ListEnumPaymentInitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentInitStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'CommissionStatus'
  */
 export type EnumCommissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionStatus'>
@@ -3878,6 +4006,7 @@ export type GlobalOmitConfig = {
   financingContract?: Prisma.FinancingContractOmit
   installment?: Prisma.InstallmentOmit
   payment?: Prisma.PaymentOmit
+  paymentIntent?: Prisma.PaymentIntentOmit
   commission?: Prisma.CommissionOmit
   commissionAllocation?: Prisma.CommissionAllocationOmit
   commissionPayoutRequest?: Prisma.CommissionPayoutRequestOmit

@@ -65,6 +65,7 @@ export const ModelName = {
   FinancingContract: 'FinancingContract',
   Installment: 'Installment',
   Payment: 'Payment',
+  PaymentIntent: 'PaymentIntent',
   Commission: 'Commission',
   CommissionAllocation: 'CommissionAllocation',
   CommissionPayoutRequest: 'CommissionPayoutRequest',
@@ -341,6 +342,31 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentIntentScalarFieldEnum = {
+  id: 'id',
+  intentId: 'intentId',
+  type: 'type',
+  reference: 'reference',
+  authorizationUrl: 'authorizationUrl',
+  status: 'status',
+  amount: 'amount',
+  currency: 'currency',
+  customerId: 'customerId',
+  companyId: 'companyId',
+  installmentId: 'installmentId',
+  onboardingId: 'onboardingId',
+  subscriptionId: 'subscriptionId',
+  planId: 'planId',
+  reservationKey: 'reservationKey',
+  idempotencyKey: 'idempotencyKey',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentIntentScalarFieldEnum = (typeof PaymentIntentScalarFieldEnum)[keyof typeof PaymentIntentScalarFieldEnum]
 
 
 export const CommissionScalarFieldEnum = {
