@@ -402,6 +402,8 @@ export class PaymentIntentService {
       where: { intentId },
     });
 
+    console.log(intent, "intent within initializePaystack");
+
     if (!intent) {
       throw new NotFoundError("Payment intent not found");
     }
