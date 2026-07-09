@@ -45,11 +45,15 @@ export class SubscriptionService {
       idempotencyKey,
     });
 
-    if (isExisting && intent.status === PaymentInitStatus.INITIALIZED) {
+    if (
+      isExisting &&
+      (intent.status === PaymentInitStatus.INITIALIZED ||
+        intent.status === PaymentInitStatus.PENDING)
+    ) {
       return {
-        authorizationUrl: intent.authorizationUrl!,
+        authorizationUrl: intent.authorizationUrl ?? "",
         accessCode: "",
-        reference: intent.reference!,
+        reference: intent.reference ?? "",
       };
     }
 
@@ -61,9 +65,7 @@ export class SubscriptionService {
           metadata: { intentId },
         },
         {
-          traceId: crypto.randomUUID
-            ? crypto.randomUUID()
-            : `IFL_ONBOARDING_${Date.now()}`,
+          traceId: randomUUID(),
           paymentIntentId: intent.intentId,
         },
       );
@@ -77,6 +79,15 @@ export class SubscriptionService {
         status: "PAYMENT_INITIALIZED",
       },
     });
+
+    console.log(
+      {
+        authorizationUrl,
+        accessCode,
+        reference,
+      },
+      "data response within the onboardingPayment service in the subscription service",
+    );
 
     return {
       authorizationUrl,
@@ -119,9 +130,9 @@ export class SubscriptionService {
         intent.status === PaymentInitStatus.PENDING)
     ) {
       return {
-        authorizationUrl: intent.authorizationUrl!,
+        authorizationUrl: intent.authorizationUrl ?? "",
         accessCode: "",
-        reference: intent.reference!,
+        reference: intent.reference ?? "",
       };
     }
 
@@ -161,9 +172,7 @@ export class SubscriptionService {
           },
         },
         {
-          traceId: crypto.randomUUID
-            ? crypto.randomUUID()
-            : `IFL_SUBSCRIPTION_${Date.now()}`,
+          traceId: randomUUID(),
           paymentIntentId: intent.intentId,
         },
       );

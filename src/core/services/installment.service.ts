@@ -296,8 +296,9 @@ export class InstallmentService {
         intent.status === PaymentInitStatus.PENDING
       ) {
         return {
-          authorizationUrl: intent.authorizationUrl!,
-          reference: intent.reference!,
+          authorizationUrl: intent.authorizationUrl ?? "",
+          accessCode: "",
+          reference: intent.reference ?? "",
           isExisting: true,
           message:
             "You have an active pending payment. Please complete it first.",
@@ -320,9 +321,7 @@ export class InstallmentService {
         },
       },
       {
-        traceId: crypto.randomUUID
-          ? crypto.randomUUID()
-          : `IFL_INSTALLMENT_${Date.now()}`,
+        traceId: randomUUID(),
         paymentIntentId: intent.intentId,
       },
     );

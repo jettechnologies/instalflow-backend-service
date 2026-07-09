@@ -54,6 +54,9 @@ export class SubscriptionController {
     try {
       const data =
         await SubscriptionService.initializeOnboardingPayment(intentId);
+
+      console.log(data, "data");
+
       return ApiResponse.success(
         res,
         200,
