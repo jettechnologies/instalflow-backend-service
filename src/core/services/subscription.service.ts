@@ -30,9 +30,10 @@ export class SubscriptionService {
     if (!onboardingIntent.plan) throw new NotFoundError("Plan not found");
 
     const plan = onboardingIntent.plan;
-    const amount = plan.discountPrice
-      ? Number(plan.discountPrice)
-      : Number(plan.price);
+    const amount =
+      plan.discountPrice && Number(plan.discountPrice) > 0
+        ? Number(plan.discountPrice)
+        : Number(plan.price);
 
     const idempotencyKey = randomUUID();
 
