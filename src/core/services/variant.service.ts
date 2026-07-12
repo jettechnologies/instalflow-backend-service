@@ -288,7 +288,7 @@ export class VariantService {
 
       const createdVariants = await tx.productVariant.createMany({
         data: data.variants.map((v) => ({
-          productId: data.productId,
+          productId,
           sku: v.sku,
           size: v.size,
           color: v.color ?? [],
@@ -322,10 +322,10 @@ export class VariantService {
         }
       }
 
-      await ProductService.syncStats(data.productId, tx);
+      await ProductService.syncStats(productId, tx);
 
       const variants = await tx.productVariant.findMany({
-        where: { productId: data.productId },
+        where: { productId },
         orderBy: { createdAt: "desc" },
         include: {
           images: {
