@@ -50,6 +50,10 @@ paths:
                 name:
                   type: string
                   example: Testing Gadgets
+                description:
+                  type: string
+                  description: Optional description providing additional details about the category.
+                  example: Electronic gadgets and accessories for testing purposes.
       responses:
         "201":
           description: Category created successfully.
