@@ -421,18 +421,13 @@ export class PaymentIntentService {
 
       await this.markInitialized(intentId, {
         reference: providerResponse.reference,
-        authorizationUrl: providerResponse.authorizationUrl,
+        authorizationUrl: providerResponse.authorization_url,
       });
 
-      console.log(
-        providerResponse,
-        "providerResponse data within initializePaystack",
-      );
-
       return {
-        authorizationUrl: providerResponse.authorizationUrl,
+        authorization_url: providerResponse.authorization_url,
         reference: providerResponse.reference,
-        accessCode: providerResponse.accessCode,
+        access_code: providerResponse.access_code,
       };
     } catch (error: any) {
       await this.markFailed(intentId);

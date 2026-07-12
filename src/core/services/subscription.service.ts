@@ -51,13 +51,13 @@ export class SubscriptionService {
         intent.status === PaymentInitStatus.PENDING)
     ) {
       return {
-        authorizationUrl: intent.authorizationUrl ?? "",
-        accessCode: "",
+        authorization_url: intent.authorizationUrl ?? "",
+        access_code: "",
         reference: intent.reference ?? "",
       };
     }
 
-    const { authorizationUrl, reference, accessCode } =
+    const { authorization_url, reference, access_code } =
       await PaymentIntentService.initializePaystack(
         intent.intentId,
         {
@@ -80,18 +80,9 @@ export class SubscriptionService {
       },
     });
 
-    console.log(
-      {
-        authorizationUrl,
-        accessCode,
-        reference,
-      },
-      "data response within the onboardingPayment service in the subscription service",
-    );
-
     return {
-      authorizationUrl,
-      accessCode,
+      authorization_url,
+      access_code,
       reference,
     };
   }
@@ -130,8 +121,8 @@ export class SubscriptionService {
         intent.status === PaymentInitStatus.PENDING)
     ) {
       return {
-        authorizationUrl: intent.authorizationUrl ?? "",
-        accessCode: "",
+        authorization_url: intent.authorizationUrl ?? "",
+        access_code: "",
         reference: intent.reference ?? "",
       };
     }
@@ -160,7 +151,7 @@ export class SubscriptionService {
       }
     }
 
-    const { authorizationUrl, reference, accessCode } =
+    const { authorization_url, reference, access_code } =
       await PaymentIntentService.initializePaystack(
         intent.intentId,
         {
@@ -179,7 +170,7 @@ export class SubscriptionService {
 
     await PaymentIntentService.markPending(intent.intentId);
 
-    return { authorizationUrl, accessCode, reference };
+    return { authorization_url, access_code, reference };
   }
 
   static async validatePaystackTransaction(reference: string) {

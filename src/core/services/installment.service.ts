@@ -296,8 +296,8 @@ export class InstallmentService {
         intent.status === PaymentInitStatus.PENDING
       ) {
         return {
-          authorizationUrl: intent.authorizationUrl ?? "",
-          accessCode: "",
+          authorization_url: intent.authorizationUrl ?? "",
+          access_code: "",
           reference: intent.reference ?? "",
           isExisting: true,
           message:
@@ -329,8 +329,8 @@ export class InstallmentService {
     await PaymentIntentService.markPending(intent.intentId);
 
     return {
-      authorizationUrl: result.authorizationUrl,
-      accessCode: result.accessCode,
+      authorization_url: result.authorization_url,
+      access_code: result.access_code,
       reference: result.reference,
       amount,
       installmentId: installment.installmentId,

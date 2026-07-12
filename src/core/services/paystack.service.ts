@@ -57,7 +57,11 @@ export class PaystackService {
     email: string;
     amountKobo: number;
     metadata?: Record<string, unknown>;
-  }): Promise<{ authorization_url: string; access_code: string; reference: string }> {
+  }): Promise<{
+    authorization_url: string;
+    access_code: string;
+    reference: string;
+  }> {
     const result = await PaystackHttpClient.initializeTransaction({
       email: params.email,
       amountKobo: params.amountKobo,
@@ -65,8 +69,8 @@ export class PaystackService {
     });
 
     return {
-      authorization_url: result.authorizationUrl,
-      access_code: result.accessCode,
+      authorization_url: result.authorization_url,
+      access_code: result.access_code,
       reference: result.reference,
     };
   }

@@ -258,8 +258,8 @@ export class PaystackHttpClient {
     callbackUrl?: string;
     context?: RequestContext;
   }): Promise<{
-    authorizationUrl: string;
-    accessCode: string;
+    authorization_url: string;
+    access_code: string;
     reference: string;
   }> {
     const { email, amountKobo, metadata, callbackUrl, context } = params;
@@ -276,7 +276,11 @@ export class PaystackHttpClient {
         metadata: metadata ?? {},
         ...(callbackUrl && { callback_url: callbackUrl }),
       },
-      context: { traceId, idempotencyKey, paymentIntentId: context?.paymentIntentId },
+      context: {
+        traceId,
+        idempotencyKey,
+        paymentIntentId: context?.paymentIntentId,
+      },
     });
   }
 
@@ -292,7 +296,11 @@ export class PaystackHttpClient {
     const traceId = context?.traceId ?? this.generateTraceId();
     return this.request(`/transaction/verify/${reference}`, {
       method: "GET",
-      context: { traceId, paymentIntentId: context?.paymentIntentId, idempotencyKey: context?.idempotencyKey },
+      context: {
+        traceId,
+        paymentIntentId: context?.paymentIntentId,
+        idempotencyKey: context?.idempotencyKey,
+      },
     });
   }
 
@@ -315,7 +323,11 @@ export class PaystackHttpClient {
         bank_code: bankCode,
         currency,
       },
-      context: { traceId, paymentIntentId: context?.paymentIntentId, idempotencyKey: context?.idempotencyKey },
+      context: {
+        traceId,
+        paymentIntentId: context?.paymentIntentId,
+        idempotencyKey: context?.idempotencyKey,
+      },
     });
   }
 
@@ -341,7 +353,11 @@ export class PaystackHttpClient {
         reason: reason ?? "Commission payout",
         reference,
       },
-      context: { traceId, paymentIntentId: context?.paymentIntentId, idempotencyKey: context?.idempotencyKey },
+      context: {
+        traceId,
+        paymentIntentId: context?.paymentIntentId,
+        idempotencyKey: context?.idempotencyKey,
+      },
     });
   }
 
@@ -356,7 +372,11 @@ export class PaystackHttpClient {
     return this.request("/bank/resolve", {
       method: "GET",
       params: { account_number: accountNumber, bank_code: bankCode },
-      context: { traceId, paymentIntentId: context?.paymentIntentId, idempotencyKey: context?.idempotencyKey },
+      context: {
+        traceId,
+        paymentIntentId: context?.paymentIntentId,
+        idempotencyKey: context?.idempotencyKey,
+      },
     });
   }
 
