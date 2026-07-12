@@ -3,7 +3,6 @@ import authRoutes from "@/api/routes/auth.routes";
 import subscriptionRoutes from "@/api/routes/subscription.routes";
 import superadminRoutes from "@/api/routes/superadmin.routes";
 import { CsrfController } from "@/api/controllers/csrf.controller";
-import { WebhookController } from "@/api/controllers/webhook.controller";
 import companyRoutes from "@/api/routes/company.routes";
 import adminRoutes from "@/api/routes/admin.routes";
 import productRoutes from "@/api/routes/product.routes";

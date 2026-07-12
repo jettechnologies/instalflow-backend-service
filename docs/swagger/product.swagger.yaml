@@ -587,7 +587,7 @@ paths:
 
   # ── Variant Images ───────────────────────────────────────────────────────────
 
-  /variants/{variantId}/images:
+  /products/variants/{variantId}/images:
     put:
       summary: Set Variant Image Associations — Step 4 (COMPANY / ADMIN only)
       description: >
