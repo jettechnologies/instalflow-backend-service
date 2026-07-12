@@ -587,7 +587,7 @@ paths:
 
   # ── Variant Images ───────────────────────────────────────────────────────────
 
-  /products/variants/{variantId}/images:
+  /variants/{variantId}/images:
     put:
       summary: Set Variant Image Associations — Step 4 (COMPANY / ADMIN only)
       description: >
@@ -641,7 +641,7 @@ paths:
 
   # ── Variants ─────────────────────────────────────────────────────────────────
 
-  /products/{productId}/variants:
+  /variants/{productId}/variants:
     post:
       summary: Create a Variant — Step 3 (COMPANY / ADMIN only)
       description: >
@@ -686,7 +686,7 @@ paths:
           description: Duplicate SKU or invalid imageIds.
           $ref: "#/components/responses/BadRequest"
 
-  /products/{productId}/variants/bulk:
+  /variants/{productId}/variants/bulk:
     post:
       summary: Bulk Create Variants (COMPANY / ADMIN only)
       description: >

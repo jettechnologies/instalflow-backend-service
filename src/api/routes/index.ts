@@ -13,6 +13,7 @@ import internalNotificationRoutes from "@/api/routes/internal_notification";
 import installmentRoutes from "@/api/routes/installment.routes";
 import commissionRoutes from "@/api/routes/comission.routes";
 import financingRoutes from "@/api/routes/financing.routes";
+import variantRoutes from "@/api/routes/variants.routes";
 
 const router = Router();
 
@@ -30,6 +31,7 @@ router.use("/superadmin", superadminRoutes);
 router.use("/company", companyRoutes);
 router.use("/admin", adminRoutes);
 router.use("/products", productRoutes);
+router.use("/variants", variantRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/kyc", kycRoutes);
 router.use("/customers", customerManagementRoutes);
