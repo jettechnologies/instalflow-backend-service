@@ -102,6 +102,10 @@ paths:
                 name:
                   type: string
                   example: Premium Electronics
+                description:
+                  type: string
+                  description: Optional description providing additional details about the category.
+                  example: Electronic gadgets and accessories for testing purposes.
       responses:
         "200":
           description: Category updated successfully.
