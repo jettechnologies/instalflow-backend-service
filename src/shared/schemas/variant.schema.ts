@@ -29,7 +29,6 @@ export const BulkCreateVariantSchema = CreateVariantSchema.omit({
 });
 
 export const BulkCreateVariantsSchema = z.object({
-  productId: z.string().uuid(),
   variants: z.array(BulkCreateVariantSchema).min(1).max(100),
 });
 
