@@ -3417,6 +3417,7 @@ export type ProductInstallmentPlanScalarFieldEnum = (typeof ProductInstallmentPl
 
 export const ProductImageScalarFieldEnum = {
   id: 'id',
+  imageId: 'imageId',
   productId: 'productId',
   imageUrl: 'imageUrl',
   altText: 'altText',

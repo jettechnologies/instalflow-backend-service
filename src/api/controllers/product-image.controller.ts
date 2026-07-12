@@ -66,7 +66,7 @@ export class ProductImageController {
 
     const gallery = await ProductImageService.reorderGalleryImages(
       productId,
-      orderedIds.map(BigInt),
+      orderedIds,
     );
 
     return ApiResponse.success(
@@ -79,13 +79,13 @@ export class ProductImageController {
 
   static async setPrimaryImage(req: Request, res: Response) {
     const productId = req.params.productId as string;
-    const imageId = BigInt(req.params.imageId as string);
+    const imageId = req.params.imageId as string;
 
     if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
-    if (isNaN(Number(imageId))) {
+    if (!imageId) {
       return ApiResponse.badRequest(res, "Invalid image ID");
     }
 
@@ -104,7 +104,7 @@ export class ProductImageController {
 
   static async updateImageMeta(req: Request, res: Response) {
     const productId = req.params.productId as string;
-    const imageId = BigInt(req.params.imageId as string);
+    const imageId = req.params.imageId as string;
 
     const payload = UpdateImageMetaSchema.parse(req.body);
 
@@ -112,7 +112,7 @@ export class ProductImageController {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
-    if (isNaN(Number(imageId))) {
+    if (!imageId) {
       return ApiResponse.badRequest(res, "Invalid image ID");
     }
 
@@ -132,13 +132,13 @@ export class ProductImageController {
 
   static async removeGalleryImage(req: Request, res: Response) {
     const productId = req.params.productId as string;
-    const imageId = BigInt(req.params.imageId as string);
+    const imageId = req.params.imageId as string;
 
     if (!productId || productId === "") {
       return ApiResponse.badRequest(res, "Invalid product ID");
     }
 
-    if (isNaN(Number(imageId))) {
+    if (!imageId) {
       return ApiResponse.badRequest(res, "Invalid image ID");
     }
 
@@ -154,7 +154,7 @@ export class ProductImageController {
     const variantId = req.params.variantId as string;
 
     const imageIds = Array.isArray(req.body.imageIds)
-      ? req.body.imageIds.map((id: string) => BigInt(id))
+      ? req.body.imageIds.map((id: string) => id)
       : [];
 
     const variant = await ProductImageService.setVariantImages(

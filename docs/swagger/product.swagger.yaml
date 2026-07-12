@@ -468,10 +468,10 @@ paths:
               properties:
                 orderedIds:
                   type: array
-                  items: { type: string, pattern: "^\\d+$" }
+                  items: { type: string, format: uuid }
                   minItems: 1
                   description: Numeric image IDs as strings in the desired display order.
-                  example: ["5", "1", "3", "2", "4"]
+                  example: ["0525d948-f673-4247-98c8-86775da44d3b"]
       responses:
         "200":
           description: Gallery reordered.
@@ -615,12 +615,15 @@ paths:
               properties:
                 imageIds:
                   type: array
-                  items:
-                    { type: string, description: "Numeric image ID as string" }
+                  items: { type: string, description: "Image ID as string" }
                   description: >
                     Gallery image IDs to associate. The first ID becomes
                     isPrimary for this variant.
-                  example: ["2", "5"]
+                  example:
+                    [
+                      "0525d948-f673-4247-98c8-86775da44d3b",
+                      "a1b2c3d4-e5f6-7890-abcd-1234567890ef",
+                    ]
       responses:
         "200":
           description: Variant image associations updated.

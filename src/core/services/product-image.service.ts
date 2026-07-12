@@ -81,35 +81,37 @@ export class ProductImageService {
     });
   }
 
-  static async removeGalleryImage(productId: string, imageId: bigint) {
+  static async removeGalleryImage(productId: string, imageId: string) {
     const productBigIntId = await resolveProductId(productId);
 
     const image = await prisma.productImage.findFirst({
-      where: { id: imageId, productId: productBigIntId },
+      where: { imageId, productId: productBigIntId },
       include: { variants: { select: { id: true } } },
     });
 
     if (!image) throw new NotFoundError("Image not found for this product");
 
-    const { cloudinaryPublicId, isPrimary } = image;
+    const { id: imageBigIntId, cloudinaryPublicId, isPrimary } = image;
 
     await prisma.$transaction(async (tx) => {
       if (image.variants.length > 0) {
-        await tx.productVariantImage.deleteMany({ where: { imageId } });
+        await tx.productVariantImage.deleteMany({
+          where: { imageId: imageBigIntId },
+        });
       }
 
-      await tx.productImage.delete({ where: { id: imageId } });
+      await tx.productImage.delete({ where: { imageId } });
 
       if (isPrimary) {
         const next = await tx.productImage.findFirst({
           where: { productId: productBigIntId },
           orderBy: { sortOrder: "asc" },
-          select: { id: true },
+          select: { imageId: true },
         });
 
         if (next) {
           await tx.productImage.update({
-            where: { id: next.id },
+            where: { imageId: next.imageId },
             data: { isPrimary: true },
           });
         }
@@ -120,19 +122,19 @@ export class ProductImageService {
       await deleteFromCloudinary(cloudinaryPublicId);
     }
 
-    return { deleted: true, imageId: imageId.toString() };
+    return { deleted: true, imageId };
   }
 
-  static async reorderGalleryImages(productId: string, orderedIds: bigint[]) {
+  static async reorderGalleryImages(productId: string, orderedIds: string[]) {
     const productBigIntId = await resolveProductId(productId);
 
     const existing = await prisma.productImage.findMany({
       where: { productId: productBigIntId },
-      select: { id: true },
+      select: { imageId: true },
     });
 
-    const existingSet = new Set(existing.map((i) => i.id.toString()));
-    const invalid = orderedIds.filter((id) => !existingSet.has(id.toString()));
+    const existingSet = new Set(existing.map((i) => i.imageId));
+    const invalid = orderedIds.filter((id) => !existingSet.has(id));
 
     if (invalid.length) {
       throw new BadRequestError(
@@ -142,7 +144,10 @@ export class ProductImageService {
 
     await prisma.$transaction(
       orderedIds.map((id, idx) =>
-        prisma.productImage.update({ where: { id }, data: { sortOrder: idx } }),
+        prisma.productImage.update({
+          where: { imageId: id },
+          data: { sortOrder: idx },
+        }),
       ),
     );
 
@@ -152,11 +157,11 @@ export class ProductImageService {
     });
   }
 
-  static async setPrimaryImage(productId: string, imageId: bigint) {
+  static async setPrimaryImage(productId: string, imageId: string) {
     const productBigIntId = await resolveProductId(productId);
 
     const image = await prisma.productImage.findFirst({
-      where: { id: imageId, productId: productBigIntId },
+      where: { imageId, productId: productBigIntId },
     });
 
     if (!image) throw new NotFoundError("Image not found for this product");
@@ -167,7 +172,7 @@ export class ProductImageService {
         data: { isPrimary: false },
       }),
       prisma.productImage.update({
-        where: { id: imageId },
+        where: { imageId },
         data: { isPrimary: true },
       }),
     ]);
@@ -180,19 +185,19 @@ export class ProductImageService {
 
   static async updateImageMeta(
     productId: string,
-    imageId: bigint,
+    imageId: string,
     meta: UpdateImageMetaInput,
   ) {
     const productBigIntId = await resolveProductId(productId);
 
     const image = await prisma.productImage.findFirst({
-      where: { id: imageId, productId: productBigIntId },
+      where: { imageId, productId: productBigIntId },
     });
 
     if (!image) throw new NotFoundError("Image not found for this product");
 
     return prisma.productImage.update({
-      where: { id: imageId },
+      where: { imageId },
       data: {
         ...(meta.altText !== undefined && { altText: meta.altText }),
         ...(meta.sortOrder !== undefined && { sortOrder: meta.sortOrder }),
@@ -217,7 +222,7 @@ export class ProductImageService {
     });
   }
 
-  static async setVariantImages(variantId: string, imageIds: bigint[]) {
+  static async setVariantImages(variantId: string, imageIds: string[]) {
     const variant = await prisma.productVariant.findUnique({
       where: { variantId },
       select: { id: true, productId: true },
@@ -225,11 +230,13 @@ export class ProductImageService {
 
     if (!variant) throw new NotFoundError("Variant not found");
 
+    let validImages: { id: bigint }[] = [];
+
     if (imageIds.length > 0) {
       const productBigIntId = await resolveProductId(variant.productId);
 
-      const validImages = await prisma.productImage.findMany({
-        where: { id: { in: imageIds }, productId: productBigIntId },
+      validImages = await prisma.productImage.findMany({
+        where: { imageId: { in: imageIds }, productId: productBigIntId },
         select: { id: true },
       });
 
@@ -249,11 +256,11 @@ export class ProductImageService {
         where: { variantId: variant.id },
       });
 
-      if (imageIds.length > 0) {
+      if (validImages.length > 0) {
         await tx.productVariantImage.createMany({
-          data: imageIds.map((imageId, idx) => ({
+          data: validImages.map((img, idx) => ({
             variantId: variant.id,
-            imageId,
+            imageId: img.id,
             isPrimary: idx === 0,
             sortOrder: idx,
           })),

@@ -29,7 +29,7 @@ export const UpdateProductSchema = z.object({
 });
 
 export const ReorderGallerySchema = z.object({
-  orderedIds: z.array(z.string().regex(/^\d+$/)).min(1),
+  orderedIds: z.array(z.string().uuid()).min(1),
 });
 
 export const UpdateImageMetaSchema = z.object({
