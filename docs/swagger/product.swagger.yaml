@@ -641,7 +641,7 @@ paths:
 
   # ── Variants ─────────────────────────────────────────────────────────────────
 
-  /variants/{productId}/variants:
+  /variants/{productId}:
     post:
       summary: Create a Variant — Step 3 (COMPANY / ADMIN only)
       description: >
@@ -686,7 +686,7 @@ paths:
           description: Duplicate SKU or invalid imageIds.
           $ref: "#/components/responses/BadRequest"
 
-  /variants/{productId}/variants/bulk:
+  /variants/{productId}/bulk:
     post:
       summary: Bulk Create Variants (COMPANY / ADMIN only)
       description: >
