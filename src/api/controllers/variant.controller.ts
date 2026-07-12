@@ -131,9 +131,9 @@ export class VariantController {
 
   static async bulkCreateVariants(req: Request, res: Response) {
     const body = req.body;
+    const productId = req.params.productId as string;
 
     const payload = BulkCreateVariantsSchema.parse({
-      productId: body.productId,
       variants: (body.variants ?? []).map((variant: any) => ({
         ...variant,
         price: parseNumber(variant.price),
@@ -145,7 +145,7 @@ export class VariantController {
       })),
     });
 
-    const result = await VariantService.bulkCreateVariants(payload);
+    const result = await VariantService.bulkCreateVariants(productId, payload);
 
     return ApiResponse.success(
       res,

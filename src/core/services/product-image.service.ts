@@ -28,18 +28,6 @@ export class ProductImageService {
 
     const productBigIntId = await resolveProductId(productId);
 
-    const lastImage = await prisma.productImage.findFirst({
-      where: { productId: productBigIntId },
-      orderBy: { sortOrder: "desc" },
-      select: { sortOrder: true },
-    });
-
-    const sortOffset = (lastImage?.sortOrder ?? -1) + 1;
-
-    const hasPrimary = await prisma.productImage.count({
-      where: { productId: productBigIntId, isPrimary: true },
-    });
-
     const uploadedAssets: CloudinaryUploadResult[] = [];
 
     try {
@@ -54,31 +42,49 @@ export class ProductImageService {
       throw uploadError;
     }
 
-    const rows = uploadedAssets.map((asset, idx) => ({
-      productId: productBigIntId,
-      imageUrl: asset.url,
-      cloudinaryPublicId: asset.public_id,
-      altText: altTextMap?.[idx] ?? null,
-      isPrimary: hasPrimary === 0 && idx === 0,
-      sortOrder: sortOffset + idx,
-    }));
-
     try {
-      await prisma.productImage.createMany({ data: rows });
+      return await prisma.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT 1 FROM "Product" WHERE id = ${productBigIntId} FOR UPDATE`;
+
+        const lastImage = await tx.productImage.findFirst({
+          where: { productId: productBigIntId },
+          orderBy: { sortOrder: "desc" },
+          select: { sortOrder: true },
+        });
+
+        const sortOffset = (lastImage?.sortOrder ?? -1) + 1;
+
+        const hasPrimary = await tx.productImage.count({
+          where: { productId: productBigIntId, isPrimary: true },
+        });
+
+        const rows = uploadedAssets.map((asset, idx) => ({
+          productId: productBigIntId,
+          imageUrl: asset.url,
+          cloudinaryPublicId: asset.public_id,
+          altText: altTextMap?.[idx] ?? null,
+          isPrimary: hasPrimary === 0 && idx === 0,
+          sortOrder: sortOffset + idx,
+        }));
+
+        await tx.productImage.createMany({ data: rows });
+
+        return tx.productImage.findMany({
+          where: {
+            productId: productBigIntId,
+            cloudinaryPublicId: {
+              in: uploadedAssets.map((a) => a.public_id),
+            },
+          },
+          orderBy: { sortOrder: "asc" },
+        });
+      });
     } catch (dbError) {
       await Promise.allSettled(
         uploadedAssets.map((a) => deleteFromCloudinary(a.public_id)),
       );
       throw dbError;
     }
-
-    return prisma.productImage.findMany({
-      where: {
-        productId: productBigIntId,
-        cloudinaryPublicId: { in: uploadedAssets.map((a) => a.public_id) },
-      },
-      orderBy: { sortOrder: "asc" },
-    });
   }
 
   static async removeGalleryImage(productId: string, imageId: string) {

@@ -263,10 +263,13 @@ export class VariantService {
     });
   }
 
-  static async bulkCreateVariants(data: BulkCreateVariantsInput) {
+  static async bulkCreateVariants(
+    productId: string,
+    data: BulkCreateVariantsInput,
+  ) {
     return prisma.$transaction(async (tx) => {
       const product = await tx.product.findUnique({
-        where: { productId: data.productId },
+        where: { productId: productId },
         select: { productId: true },
       });
 
