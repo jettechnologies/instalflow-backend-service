@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { InternalNotificationService } from "@/core/services/internal_notification.service";
+import ApiResponse from "@/shared/utils/ApiResponse";
 
 export class NotificationController {
   static async getNotifications(req: Request, res: Response) {
@@ -14,11 +15,12 @@ export class NotificationController {
       limit,
     );
 
-    return res.status(200).json({
-      success: true,
-      message: "Notifications retrieved successfully.",
+    return ApiResponse.success(
+      res,
+      200,
+      "Notifications retrieved successfully.",
       data,
-    });
+    );
   }
 
   static async getUnreadCount(req: Request, res: Response) {
@@ -26,11 +28,12 @@ export class NotificationController {
 
     const data = await InternalNotificationService.getUnreadCount(userId);
 
-    return res.status(200).json({
-      success: true,
-      message: "Unread notification count retrieved successfully.",
+    return ApiResponse.success(
+      res,
+      200,
+      "Unread notification count retrieved successfully.",
       data,
-    });
+    );
   }
 
   static async markAsRead(req: Request, res: Response) {
@@ -43,11 +46,12 @@ export class NotificationController {
       notificationId,
     );
 
-    return res.status(200).json({
-      success: true,
-      message: "Notification marked as read successfully.",
+    return ApiResponse.success(
+      res,
+      200,
+      "Notification marked as read successfully.",
       data,
-    });
+    );
   }
 
   static async markSelectedAsRead(req: Request, res: Response) {
@@ -60,11 +64,12 @@ export class NotificationController {
       notificationIds,
     );
 
-    return res.status(200).json({
-      success: true,
-      message: "Selected notifications marked as read successfully.",
+    return ApiResponse.success(
+      res,
+      200,
+      "Selected notifications marked as read successfully.",
       data,
-    });
+    );
   }
 
   static async markAllAsRead(req: Request, res: Response) {
@@ -72,10 +77,11 @@ export class NotificationController {
 
     const data = await InternalNotificationService.markAllAsRead(userId);
 
-    return res.status(200).json({
-      success: true,
-      message: "All notifications marked as read successfully.",
+    return ApiResponse.success(
+      res,
+      200,
+      "All notifications marked as read successfully.",
       data,
-    });
+    );
   }
 }

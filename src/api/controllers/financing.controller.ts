@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { FinancingService } from "@/core/services/financing.service";
+import ApiResponse from "@/shared/utils/ApiResponse";
 import {
   RestructureContractSchema,
   WriteOffContractSchema,
@@ -26,7 +27,12 @@ export class FinancingController {
         data,
       );
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Contract restructured successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -52,7 +58,12 @@ export class FinancingController {
         data.reason,
       );
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Contract written off successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }

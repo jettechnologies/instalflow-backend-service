@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
+import ApiResponse from "@/shared/utils/ApiResponse";
 import { CommissionService } from "@/core/services/commission.service";
 
 export class CommissionController {
@@ -9,7 +10,12 @@ export class CommissionController {
 
       const result = await CommissionService.getAllTimeCommissions(userId);
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "All-time commissions retrieved successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -21,7 +27,12 @@ export class CommissionController {
 
       const result = await CommissionService.getCommissionPerCustomer(userId);
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Commission per customer retrieved successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -33,7 +44,12 @@ export class CommissionController {
 
       const result = await CommissionService.getCommissionPerProduct(userId);
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Commission per product retrieved successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -47,7 +63,12 @@ export class CommissionController {
 
       const result = await CommissionService.requestPayout(userId, amount);
 
-      res.status(201).json(result);
+      return ApiResponse.success(
+        res,
+        201,
+        "Payout request submitted successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -63,7 +84,12 @@ export class CommissionController {
         adminId,
       );
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Payout approved by admin successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -79,7 +105,12 @@ export class CommissionController {
         companyUserId,
       );
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Payout approved by company successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -99,11 +130,12 @@ export class CommissionController {
         companyUserId,
       );
 
-      res.status(200).json({
-        success: true,
-        message: "Transfer queued successfully",
-        payload: result,
-      });
+      return ApiResponse.success(
+        res,
+        200,
+        "Transfer queued successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -123,11 +155,12 @@ export class CommissionController {
         companyUserId,
       );
 
-      res.status(200).json({
-        success: true,
-        message: "Bulk transfer processing started",
-        payload: result,
-      });
+      return ApiResponse.success(
+        res,
+        200,
+        "Bulk transfer processing started",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -144,10 +177,12 @@ export class CommissionController {
 
       const result = await CommissionService.getPayoutRequests(userId, role);
 
-      res.status(200).json({
-        success: true,
-        payload: result,
-      });
+      return ApiResponse.success(
+        res,
+        200,
+        "Payout requests retrieved successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -159,10 +194,12 @@ export class CommissionController {
 
       const result = await CommissionService.getPayoutById(payoutId);
 
-      res.status(200).json({
-        success: true,
-        payload: result,
-      });
+      return ApiResponse.success(
+        res,
+        200,
+        "Payout retrieved successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }

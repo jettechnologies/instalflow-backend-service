@@ -2,13 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { CustomerManagementService } from "@/core/services/customer-management.service";
 import { CustomerQuerySchema } from "@/shared/schemas/customer-management.schema";
 import { Role } from "@/prisma/client";
+import ApiResponse from "@/shared/utils/ApiResponse";
 
 export class CustomerManagementController {
-  static async listCustomers(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  static async listCustomers(req: Request, res: Response, next: NextFunction) {
     try {
       const parsed = CustomerQuerySchema.parse(req.query);
       const reviewerId = req.user!.userId;
@@ -20,11 +17,12 @@ export class CustomerManagementController {
         parsed,
       );
 
-      res.status(200).json({
-        success: true,
-        message: "Customers fetched successfully.",
-        ...data,
-      });
+      return ApiResponse.success(
+        res,
+        200,
+        "Customers fetched successfully.",
+        data,
+      );
     } catch (error) {
       next(error);
     }
@@ -34,7 +32,7 @@ export class CustomerManagementController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<void> {
+  ) {
     try {
       const customerId = req.params.id as string;
       const reviewerId = req.user!.userId;
@@ -46,11 +44,12 @@ export class CustomerManagementController {
         reviewerRole,
       );
 
-      res.status(200).json({
-        success: true,
-        message: "Customer financed products fetched successfully.",
+      return ApiResponse.success(
+        res,
+        200,
+        "Customer financed products fetched successfully.",
         data,
-      });
+      );
     } catch (error) {
       next(error);
     }
@@ -60,7 +59,7 @@ export class CustomerManagementController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<void> {
+  ) {
     try {
       const productId = req.params.productId as string;
       const customerId = req.params.id as string;
@@ -74,12 +73,12 @@ export class CustomerManagementController {
         reviewerRole,
       );
 
-      res.status(200).json({
-        success: true,
-        message:
-          "Customer installment plan schedules and due dates fetched successfully.",
-        ...data,
-      });
+      return ApiResponse.success(
+        res,
+        200,
+        "Customer installment plan schedules and due dates fetched successfully.",
+        data,
+      );
     } catch (error) {
       next(error);
     }
@@ -89,7 +88,7 @@ export class CustomerManagementController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<void> {
+  ) {
     try {
       const customerId = req.params.id as string;
       const reviewerId = req.user!.userId;
@@ -101,11 +100,12 @@ export class CustomerManagementController {
         reviewerRole,
       );
 
-      res.status(200).json({
-        success: true,
-        message: "Customer payment history ledger fetched successfully.",
+      return ApiResponse.success(
+        res,
+        200,
+        "Customer payment history ledger fetched successfully.",
         data,
-      });
+      );
     } catch (error) {
       next(error);
     }
@@ -115,7 +115,7 @@ export class CustomerManagementController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<void> {
+  ) {
     try {
       const reviewerId = req.user!.userId;
       const reviewerRole = req.user!.role as Role;
@@ -125,11 +125,12 @@ export class CustomerManagementController {
         reviewerRole,
       );
 
-      res.status(200).json({
-        success: true,
-        message: "Corporate hierarchical pipeline retrieved successfully.",
+      return ApiResponse.success(
+        res,
+        200,
+        "Corporate hierarchical pipeline retrieved successfully.",
         data,
-      });
+      );
     } catch (error) {
       next(error);
     }

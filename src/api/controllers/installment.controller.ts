@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { InstallmentService } from "@/core/services/installment.service";
+import ApiResponse from "@/shared/utils/ApiResponse";
 
 export class InstallmentController {
   static async getRelatedCustomersInstallments(
@@ -21,11 +22,12 @@ export class InstallmentController {
         },
       );
 
-      return res.status(200).json({
-        success: true,
-        message: "Customer installments retrieved successfully",
+      return ApiResponse.success(
+        res,
+        200,
+        "Customer installments retrieved successfully",
         data,
-      });
+      );
     } catch (error) {
       next(error);
     }
@@ -39,11 +41,12 @@ export class InstallmentController {
 
     const data = await InstallmentService.getCustomerInstallments(contractId);
 
-    return res.status(200).json({
-      success: true,
-      message: "Installments retrieved successfully",
+    return ApiResponse.success(
+      res,
+      200,
+      "Installments retrieved successfully",
       data,
-    });
+    );
   }
 
   /**
@@ -54,11 +57,12 @@ export class InstallmentController {
 
     const data = await InstallmentService.getFinancedProducts(contractId);
 
-    return res.status(200).json({
-      success: true,
-      message: "Financed products retrieved successfully",
+    return ApiResponse.success(
+      res,
+      200,
+      "Financed products retrieved successfully",
       data,
-    });
+    );
   }
 
   /**
@@ -70,11 +74,12 @@ export class InstallmentController {
     const data =
       await InstallmentService.calculateProgressPercentage(contractId);
 
-    return res.status(200).json({
-      success: true,
-      message: "Payment progress retrieved successfully",
+    return ApiResponse.success(
+      res,
+      200,
+      "Payment progress retrieved successfully",
       data,
-    });
+    );
   }
 
   /**
@@ -89,10 +94,11 @@ export class InstallmentController {
       customerId,
     );
 
-    return res.status(200).json({
-      success: true,
-      message: "Payment initialized successfully",
+    return ApiResponse.success(
+      res,
+      200,
+      "Payment initialized successfully",
       data,
-    });
+    );
   }
 }

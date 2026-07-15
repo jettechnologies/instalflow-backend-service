@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { KycService } from "@/core/services/kyc.service";
+import ApiResponse from "@/shared/utils/ApiResponse";
 import {
   GenerateReferralLinkSchema,
   InviteRegisterSchema,
@@ -23,7 +24,12 @@ export class KycController {
       const params = GenerateReferralLinkSchema.parse(req.body);
       const result = await KycService.generateReferralLink(marketerId, params);
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Referral link generated successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -38,7 +44,12 @@ export class KycController {
       const params = InviteRegisterSchema.parse(req.body);
       const result = await KycService.registerViaReferral(params);
 
-      res.status(201).json(result);
+      return ApiResponse.success(
+        res,
+        201,
+        "Customer registered via referral successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -60,7 +71,12 @@ export class KycController {
         file,
       );
 
-      res.status(201).json(result);
+      return ApiResponse.success(
+        res,
+        201,
+        "KYC application submitted successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -83,7 +99,12 @@ export class KycController {
         reviewerId,
       );
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "KYC application approved successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -109,7 +130,12 @@ export class KycController {
         body.reason,
       );
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "KYC application rejected successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }
@@ -132,7 +158,12 @@ export class KycController {
         reviewerId,
       );
 
-      res.status(200).json(result);
+      return ApiResponse.success(
+        res,
+        200,
+        "Signed document URL retrieved successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }

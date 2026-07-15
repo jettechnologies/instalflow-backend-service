@@ -1,6 +1,7 @@
 // making use of csrf token hash instead
 import type { Request, Response } from "express";
 import logger from "@/infrastructure/logger/logger";
+import ApiResponse from "@/shared/utils/ApiResponse";
 import { createCsrfToken, hashToken } from "@/shared/utils/helpers/csrf.helper";
 
 export class CsrfController {
@@ -19,14 +20,15 @@ export class CsrfController {
 
       res.cookie("csrf_hash", hashed, cookieOptions);
 
-      return res.status(200).json({
-        status: "success",
-
-        csrfToken: rawToken,
-      });
+      return ApiResponse.success(
+        res,
+        200,
+        "CSRF token generated successfully",
+        { csrfToken: rawToken },
+      );
     } catch (error) {
       logger.error("CSRF generation failed", { error });
-      return res.status(500).json({ error: "CSRF generation failed" });
+      return ApiResponse.internalServerError(res, "CSRF generation failed");
     }
   }
 }
