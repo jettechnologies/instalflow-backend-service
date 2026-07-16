@@ -293,6 +293,29 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /products/slug/{slug}:
+    get:
+      summary: Get Product by Slug
+      tags: [Product Catalog]
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Product with variants, gallery, and installment breakdowns.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiSuccess"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/Product" }
+        "404":
+          $ref: "#/components/responses/NotFound"
+
     patch:
       summary: Update Product Metadata (COMPANY / ADMIN only)
       description: >

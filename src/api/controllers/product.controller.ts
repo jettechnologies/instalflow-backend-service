@@ -103,6 +103,19 @@ export class ProductController {
     );
   }
 
+  static async getProductBySlug(req: Request, res: Response) {
+    const slug = req.params.slug as string;
+
+    const product = await ProductService.getProductBySlug(slug);
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Product retrieved successfully",
+      product,
+    );
+  }
+
   static async deleteProduct(req: Request, res: Response) {
     await ProductService.deleteProduct(req.params.id as string);
 

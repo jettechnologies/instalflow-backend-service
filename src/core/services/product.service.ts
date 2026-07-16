@@ -1,10 +1,3 @@
-// src/core/services/product.service.ts
-//
-// Responsibility: Product catalog CRUD + derived-stats sync.
-// This service owns NO image logic and NO variant logic.
-// Images   → ProductImageService
-// Variants → VariantService
-
 import { prisma, ProductStatus, Prisma } from "@/infrastructure/prisma";
 import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
 import {
@@ -16,35 +9,21 @@ import {
   type BulkCreateProductInput,
 } from "@/shared/schemas/product.schema";
 
-// ─── Type alias for a Prisma interactive-transaction client ──────────────────
 type TxClient = Omit<
   typeof prisma,
   "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
 >;
 
 export class ProductService {
-  // ── Private: slug generation ────────────────────────────────────────────────
-
   private static generateSlug(name: string): string {
     const base = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)+/g, "");
 
-    // crypto.randomUUID() not Math.random() — avoids collision risk
     return `${base}-${crypto.randomUUID().slice(0, 8)}`;
   }
 
-  // ── Public: derived-stats sync ──────────────────────────────────────────────
-
-  /**
-   * Derive product.price / minPrice / maxPrice / stockQuantity from active variants.
-   * Called by VariantService inside its own transactions whenever variants change.
-   *
-   * Contract:
-   *  - If active variants exist  → product price/stock are overwritten from variants.
-   *  - If no active variants     → product retains its own standalone values (no-op).
-   */
   static async syncStats(
     productId: string,
     tx: TxClient = prisma,
@@ -54,7 +33,7 @@ export class ProductService {
       select: { price: true, stockQuantity: true },
     });
 
-    if (variants.length === 0) return; // standalone product — don't overwrite
+    if (variants.length === 0) return;
 
     const prices = variants.map((v) => Number(v.price));
     const minPrice = Math.min(...prices);
@@ -68,27 +47,12 @@ export class ProductService {
         minPrice: new Prisma.Decimal(minPrice),
         maxPrice: new Prisma.Decimal(maxPrice),
         stockQuantity: totalStock,
-        // Auto-flip PUBLISHED ↔ SOLD_OUT based on real stock
         status:
           totalStock === 0 ? ProductStatus.SOLD_OUT : ProductStatus.PUBLISHED,
       },
     });
   }
 
-  // ── CRUD ────────────────────────────────────────────────────────────────────
-
-  /**
-   * Step 1 of the creation flow: create the product shell.
-   *
-   * POST /products
-   * ─────────────
-   * Creates catalog record + installment plans only.
-   * No images, no variants in this call.
-   *
-   * Step 2 → POST /products/:id/images       (ProductImageService)
-   * Step 3 → POST /products/:id/variants     (VariantService)
-   * Step 4 → PATCH /variants/:id/images      (VariantService)
-   */
   static async createProduct(
     companyId: string | undefined,
     data: CreateProductInput,
@@ -120,15 +84,6 @@ export class ProductService {
     });
   }
 
-  /**
-   * Update product metadata (name, description, category, commissionRate, status).
-   *
-   * PATCH /products/:id
-   * ────────────────────
-   * Price and stockQuantity are BLOCKED when active variants exist — those
-   * are derived from variants by syncStats() and must not be set manually here.
-   * The caller will receive a 400 if they attempt it.
-   */
   static async updateProduct(productId: string, data: UpdateProductInput) {
     const product = await prisma.product.findUnique({
       where: { productId },
@@ -163,7 +118,6 @@ export class ProductService {
           commissionRate: new Prisma.Decimal(data.commissionRate),
         }),
         ...(data.status !== undefined && { status: data.status }),
-        // Only apply manual price/stock for standalone products
         ...(!hasActiveVariants &&
           data.price !== undefined && {
             price: new Prisma.Decimal(data.price),
@@ -177,12 +131,6 @@ export class ProductService {
     });
   }
 
-  /**
-   * Archive a product. Hard delete is never performed on products
-   * with any financial history (KYC applications, financing contracts).
-   *
-   * DELETE /products/:id
-   */
   static async deleteProduct(productId: string) {
     const product = await prisma.product.findUnique({
       where: { productId },
@@ -202,14 +150,11 @@ export class ProductService {
 
     if (!product) throw new NotFoundError("Product not found");
 
-    // Always archive — products with financial history must never be hard-deleted
     return prisma.product.update({
       where: { productId },
       data: { status: ProductStatus.ARCHIVED },
     });
   }
-
-  // ── Query methods ───────────────────────────────────────────────────────────
 
   static async getAllProducts(params: ProductQueryParamsInput) {
     const {
@@ -411,7 +356,20 @@ export class ProductService {
     return this.attachBreakdowns(product);
   }
 
-  // ── Private: shared include shape ───────────────────────────────────────────
+  static async getProductBySlug(slug: string) {
+    const product = await prisma.product.findUnique({
+      where: {
+        slug,
+      },
+      include: this.standardIncludes(),
+    });
+
+    if (!product || product.status !== ProductStatus.PUBLISHED) {
+      throw new Error("Product not found");
+    }
+
+    return this.attachBreakdowns(product);
+  }
 
   private static standardIncludes() {
     return {
@@ -435,8 +393,6 @@ export class ProductService {
       },
     } satisfies Prisma.ProductInclude;
   }
-
-  // ── Private: installment breakdown ─────────────────────────────────────────
 
   private static attachBreakdowns(product: any) {
     const plans = product.installmentPlans ?? [];

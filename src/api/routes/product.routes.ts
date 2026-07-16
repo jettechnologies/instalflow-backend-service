@@ -7,8 +7,11 @@ import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { Role } from "@/infrastructure/prisma";
 
 import { uploadMultiple } from "@/api/middlewares/multer.middlewares";
+import { publicApiLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
+
+router.get("/slug/:slug", publicApiLimiter, ProductController.getProductBySlug);
 
 router.use(requireAuth);
 
