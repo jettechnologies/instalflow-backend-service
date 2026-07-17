@@ -72,7 +72,9 @@ export class KycService {
     }
 
     if (params.variantId) {
-      const variant = product.variants.find((v: any) => v.variantId === params.variantId);
+      const variant = product.variants.find(
+        (v: any) => v.variantId === params.variantId,
+      );
       if (!variant || !variant.isActive) {
         throw new BadRequestError("Variant not found or inactive.");
       }
@@ -80,7 +82,11 @@ export class KycService {
         throw new BadRequestError("Variant is out of stock.");
       }
     } else {
-      const totalStock = product.variants.reduce((sum: number, v: any) => sum + (v.stockQuantity || 0), 0) || product.stockQuantity;
+      const totalStock =
+        product.variants.reduce(
+          (sum: number, v: any) => sum + (v.stockQuantity || 0),
+          0,
+        ) || product.stockQuantity;
       if (totalStock <= 0) {
         throw new BadRequestError("Product is out of stock.");
       }
@@ -293,7 +299,10 @@ export class KycService {
       where: { productId: params.productId },
     });
 
-    if (!product || product.status !== "PUBLISHED" && product.status !== "SOLD_OUT") {
+    if (
+      !product ||
+      (product.status !== "PUBLISHED" && product.status !== "SOLD_OUT")
+    ) {
       throw new BadRequestError("Product is not available for application.");
     }
 
@@ -742,5 +751,138 @@ export class KycService {
       signedUrl,
       expiresIn: "15 minutes",
     };
+  }
+
+  /**
+   * List KYC applications with offset pagination and filtering.
+   * Supports filtering by `status`, `marketerId` (referredByMarketerId)
+   * and `marketerName` (case-insensitive match against the marketer's name).
+   */
+  static async getAllKycApplications(params: {
+    page?: number;
+    limit?: number;
+    sortOrder?: "asc" | "desc";
+    status?: string;
+    marketerId?: string;
+    marketerName?: string;
+  }) {
+    const {
+      page = 1,
+      limit = 10,
+      sortOrder = "desc",
+      status,
+      marketerId,
+      marketerName,
+    } = params;
+
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.KycApplicationWhereInput = {
+      ...(status && { status }),
+      ...(marketerId && { referredByMarketerId: marketerId }),
+      ...(marketerName && {
+        user: {
+          referredByMarketer: {
+            name: { contains: marketerName, mode: "insensitive" },
+          },
+        },
+      }),
+    };
+
+    const [applications, total] = await prisma.$transaction([
+      prisma.kycApplication.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: sortOrder },
+        include: {
+          user: {
+            select: {
+              userId: true,
+              name: true,
+              email: true,
+              referredByMarketerId: true,
+            },
+          },
+          product: {
+            select: {
+              productId: true,
+              name: true,
+              slug: true,
+            },
+          },
+          financingContract: {
+            select: {
+              contractId: true,
+              status: true,
+              totalFinanced: true,
+            },
+          },
+        },
+      }),
+      prisma.kycApplication.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      applications,
+      pagination: {
+        total,
+        totalPages,
+        currentPage: page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
+
+  /**
+   * Retrieve a single KYC application by its public UUID.
+   */
+  static async getKycApplicationById(applicationId: string) {
+    const application = await prisma.kycApplication.findUnique({
+      where: { kycApplicationId: applicationId },
+      include: {
+        user: {
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+            referredByMarketerId: true,
+          },
+        },
+        product: {
+          select: {
+            productId: true,
+            name: true,
+            slug: true,
+          },
+        },
+        financingContract: {
+          select: {
+            contractId: true,
+            status: true,
+            totalFinanced: true,
+          },
+        },
+        kycDocumentAssets: {
+          where: { isDeleted: false },
+          select: {
+            assetId: true,
+            fileSize: true,
+            mimeType: true,
+            scheduledDeletionAt: true,
+          },
+        },
+      },
+    });
+
+    if (!application) {
+      throw new NotFoundError("KYC Application not found.");
+    }
+
+    return application;
   }
 }

@@ -169,53 +169,57 @@ export class KycController {
     }
   }
 
-  /**
-   * GET /kyc/notifications
-   * Restricted to logged-in Marketers or Admins.
-   */
-  // static async getNotifications(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ) {
-  //   try {
-  //     const userId = (req as any).user?.userId;
-  //     if (!userId) {
-  //       throw new BadRequestError("Unauthorized user session.");
-  //     }
+  static async getAllKycApplications(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const page = Number(req.query.page || 1);
+      const limit = Number(req.query.limit || 10);
+      const sortOrder = (req.query.sortOrder as "asc" | "desc") || "desc";
+      const status = req.query.status as string | undefined;
+      const marketerId = req.query.marketerId as string | undefined;
+      const marketerName = req.query.marketerName as string | undefined;
 
-  //     const notifications = await KycService.getNotifications(userId);
-  //     res.status(200).json(notifications);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+      const result = await KycService.getAllKycApplications({
+        page,
+        limit,
+        sortOrder,
+        status,
+        marketerId,
+        marketerName,
+      });
 
-  // /**
-  //  * PATCH /kyc/notifications/:id/read
-  //  * Scopes reading/updating directly to the userId.
-  //  */
-  // static async markAsRead(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const userId = (req as any).user?.userId;
-  //     if (!userId) {
-  //       throw new BadRequestError("Unauthorized user session.");
-  //     }
+      return ApiResponse.success(
+        res,
+        200,
+        "KYC applications retrieved successfully",
+        result,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 
-  //     const notificationId = req.params.id as string;
-  //     const result = await KycService.markAsRead(
-  //       userId,
-  //       notificationId,
-  //     );
+  static async getKycApplicationById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const applicationId = req.params.id as string;
 
-  //     res.status(200).json({
-  //       success: true,
-  //       message: "Notification marked as read.",
-  //       notificationId: result.notificationId,
-  //       isRead: result.isRead,
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+      const result = await KycService.getKycApplicationById(applicationId);
+
+      return ApiResponse.success(
+        res,
+        200,
+        "KYC application retrieved successfully",
+        result,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }

@@ -305,3 +305,265 @@ paths:
           description: Unauthorized session.
         "404":
           description: Document has been purged or application not found.
+
+  /kyc/applications:
+    get:
+      tags:
+        - KYC & Onboarding
+      summary: List KYC Applications (Paginated)
+      description: |
+        Returns a paginated list of KYC applications. Supports filtering by
+        `status` (PENDING | APPROVED | REJECTED), `marketerId` (the referring
+        marketer's UUID) and `marketerName` (case-insensitive match against the
+        marketer's display name).
+        **Authorization:** Restricted to logged-in Admins, Companies, Marketers and Super Admins.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: 1-based page number.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Number of applications per page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+            example: 10
+        - name: sortOrder
+          in: query
+          required: false
+          description: Sort direction by creation date.
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+            example: desc
+        - name: status
+          in: query
+          required: false
+          description: Filter by application status.
+          schema:
+            type: string
+            enum: [PENDING, APPROVED, REJECTED]
+            example: PENDING
+        - name: marketerId
+          in: query
+          required: false
+          description: Filter by referring marketer UUID.
+          schema:
+            type: string
+            format: uuid
+            example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+        - name: marketerName
+          in: query
+          required: false
+          description: Case-insensitive filter by referring marketer name.
+          schema:
+            type: string
+            example: John
+      responses:
+        "200":
+          description: Paginated list of KYC applications.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: KYC applications retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      applications:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/KycApplication"
+                      pagination:
+                        $ref: "#/components/schemas/Pagination"
+        "401":
+          description: Unauthorized session or invalid role.
+
+  /kyc/applications/{id}:
+    get:
+      tags:
+        - KYC & Onboarding
+      summary: Get KYC Application by ID
+      description: |
+        Retrieves a single KYC application and its related customer, product,
+        financing contract and retained document metadata by the application UUID.
+        **Authorization:** Restricted to authorized Marketers and Admins in lead scope.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The KYC Application UUID.
+          schema:
+            type: string
+            format: uuid
+            example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+      responses:
+        "200":
+          description: KYC application retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: KYC application retrieved successfully
+                  data:
+                    $ref: "#/components/schemas/KycApplication"
+        "401":
+          description: Unauthorized session or invalid checker relationship.
+        "404":
+          description: KYC Application not found.
+
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 42
+        totalPages:
+          type: integer
+          example: 5
+        currentPage:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        hasNextPage:
+          type: boolean
+          example: true
+        hasPreviousPage:
+          type: boolean
+          example: false
+    KycApplication:
+      type: object
+      properties:
+        kycApplicationId:
+          type: string
+          format: uuid
+          example: 671c2e10-7e63-40c5-9ea2-2941b3c9c328
+        userId:
+          type: string
+          format: uuid
+          example: c9f294b8-8e85-4797-bdf5-6d0a3ecaa25c
+        productId:
+          type: string
+          format: uuid
+          example: c9f294b8-8e85-4797-bdf5-6d0a3ecaa25c
+        variantId:
+          type: string
+          format: uuid
+          example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+        installmentPlanId:
+          type: string
+          format: uuid
+          example: d20f9a23-bc9a-4c2c-80fe-9a6e5ee9b0f7
+        idType:
+          type: string
+          example: NIN
+        idNumber:
+          type: string
+          example: "12039129031"
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+          example: PENDING
+        marketerApproved:
+          type: boolean
+          example: false
+        adminApproved:
+          type: boolean
+          example: false
+        rejectionReason:
+          type: string
+          nullable: true
+          example: null
+        createdAt:
+          type: string
+          format: date-time
+        user:
+          type: object
+          properties:
+            userId:
+              type: string
+              format: uuid
+            name:
+              type: string
+              example: Alice Customer
+            email:
+              type: string
+              format: email
+              example: alice.customer@example.com
+            referredByMarketerId:
+              type: string
+              format: uuid
+              nullable: true
+        product:
+          type: object
+          properties:
+            productId:
+              type: string
+              format: uuid
+            name:
+              type: string
+              example: Amazing Flagship Phone
+            slug:
+              type: string
+              example: amazing-flagship-phone-6019
+        financingContract:
+          type: object
+          nullable: true
+          properties:
+            contractId:
+              type: string
+              format: uuid
+            status:
+              type: string
+              example: PENDING_ACTIVATION
+            totalFinanced:
+              type: number
+              example: 540000
+        kycDocumentAssets:
+          type: array
+          items:
+            type: object
+            properties:
+              assetId:
+                type: string
+                format: uuid
+              fileSize:
+                type: integer
+                example: 245760
+              mimeType:
+                type: string
+                example: application/pdf
+              scheduledDeletionAt:
+                type: string
+                format: date-time
+                nullable: true

@@ -1,10 +1,8 @@
 import { Router } from "express";
 import { NotificationController } from "../controllers/internal_notification";
-import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
-import { Role } from "@/infrastructure/prisma";
-const router = Router();
+import { requireAuth } from "@/api/middlewares/auth.guard";
 
-router.use(requireAuth);
+const router = Router();
 
 router.use(requireAuth);
 

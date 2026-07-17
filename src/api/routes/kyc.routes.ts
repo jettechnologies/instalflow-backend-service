@@ -39,6 +39,18 @@ router.post(
 );
 
 router.get(
+  "/applications",
+  requireRole([Role.SUPER_ADMIN, Role.ADMIN, Role.COMPANY, Role.MARKETER]),
+  KycController.getAllKycApplications,
+);
+
+router.get(
+  "/applications/:id",
+  requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY]),
+  KycController.getKycApplicationById,
+);
+
+router.get(
   "/applications/:id/document",
   requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY]),
   KycController.getSignedDocumentUrl,
