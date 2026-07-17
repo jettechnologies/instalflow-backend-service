@@ -1,4 +1,4 @@
-import { FinancingStatus, Prisma, prisma } from "@/infrastructure/prisma";
+import { FinancingStatus, Prisma, Role, prisma } from "@/infrastructure/prisma";
 import crypto from "crypto";
 import { z } from "zod";
 import {
@@ -420,19 +420,31 @@ export class KycService {
    * Maker-Checker Approval Process:
    * Requires approval from BOTH the assigned Marketer and their creator Admin.
    */
+
   static async approveApplication(applicationId: string, reviewerId: string) {
-    const reviewer = await prisma.user.findUnique({
-      where: { userId: reviewerId },
-    });
+    const [reviewer, application] = await Promise.all([
+      prisma.user.findUnique({
+        where: { userId: reviewerId },
+        select: { userId: true, role: true, name: true },
+      }),
+      prisma.kycApplication.findUnique({
+        where: { kycApplicationId: applicationId },
+        include: {
+          kycDocumentAssets: { select: { fileHash: true }, take: 1 },
+          user: {
+            include: {
+              referredByMarketer: {
+                select: { userId: true, createdById: true },
+              },
+            },
+          },
+        },
+      }),
+    ]);
 
     if (!reviewer) {
       throw new UnauthorizedError("Reviewer session is invalid.");
     }
-
-    const application = await prisma.kycApplication.findUnique({
-      where: { kycApplicationId: applicationId },
-      include: { kycDocumentAssets: true, user: true },
-    });
 
     if (!application) {
       throw new NotFoundError("KYC Application not found.");
@@ -456,19 +468,19 @@ export class KycService {
         );
       }
       isMarketerApproval = true;
-    } else if (reviewer.role === "ADMIN" || reviewer.role === "COMPANY") {
-      if (customer.referredByMarketerId) {
-        const marketer = await prisma.user.findUnique({
-          where: { userId: customer.referredByMarketerId },
-        });
-        if (
-          marketer?.createdById !== reviewer.userId &&
-          reviewer.role !== "COMPANY"
-        ) {
-          throw new UnauthorizedError(
-            "Unauthorized: You are not the Admin associated with this marketer.",
-          );
-        }
+    } else if (reviewer.role === "COMPANY") {
+      if (customer.companyId !== reviewer.userId) {
+        throw new UnauthorizedError(
+          "Unauthorized: This customer does not belong to your company.",
+        );
+      }
+      isAdminApproval = true;
+    } else if (reviewer.role === "ADMIN") {
+      const marketer = customer.referredByMarketer;
+      if (marketer && marketer.createdById !== reviewer.userId) {
+        throw new UnauthorizedError(
+          "Unauthorized: You are not the Admin associated with this marketer.",
+        );
       }
       isAdminApproval = true;
     } else {
@@ -480,7 +492,7 @@ export class KycService {
     const fileHash = primaryAsset ? primaryAsset.fileHash : "mock-hash";
 
     const updatedApp = await prisma.$transaction(async (tx) => {
-      const updateData: any = {};
+      const updateData: Prisma.KycApplicationUpdateInput = {};
       if (isMarketerApproval) {
         updateData.marketerApproved = true;
         updateData.marketerApprovedAt = new Date();
@@ -495,7 +507,6 @@ export class KycService {
         data: updateData,
       });
 
-      // Write reviewer approval log to immutable Audit Trail
       await tx.kycAuditTrail.create({
         data: {
           kycApplicationId: applicationId,
@@ -508,68 +519,66 @@ export class KycService {
         },
       });
 
-      if (updated.marketerApproved && updated.adminApproved) {
-        const finalized = await tx.kycApplication.update({
-          where: { kycApplicationId: applicationId },
-          data: { status: "APPROVED" },
-        });
-
-        const contract = await tx.financingContract.findUnique({
-          where: {
-            kycApplicationId: applicationId,
-          },
-        });
-
-        if (!contract) {
-          throw new Error("Financing contract not found");
-        }
-
-        const firstPaymentDate = new Date();
-
-        firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
-
-        const installmentSchedules =
-          InstallmentService.generateInstallmentSchedule({
-            financingContractId: contract.contractId,
-            totalAmount: Number(contract.totalFinanced),
-            months: contract.approvedDurationMonths,
-            firstPaymentDate,
-          });
-
-        await tx.installment.createMany({
-          data: installmentSchedules,
-        });
-
-        await tx.financingContract.update({
-          where: {
-            contractId: contract.contractId,
-          },
-          data: {
-            status: FinancingStatus.ACTIVE,
-            activatedAt: new Date(),
-          },
-        });
-
-        // CBN/NDPR: Schedule physical asset deletion instantly (buffer 24 hours or immediate)
-        // Set scheduledDeletionAt to past to allow immediate cleanup worker purging
-        await tx.kycDocumentAsset.updateMany({
-          where: { kycApplicationId: applicationId },
-          data: { scheduledDeletionAt: new Date(Date.now() - 1000) },
-        });
-
-        return finalized;
+      if (!updated.marketerApproved || !updated.adminApproved) {
+        return updated;
       }
 
-      return updated;
+      const claim = await tx.kycApplication.updateMany({
+        where: { kycApplicationId: applicationId, status: "PENDING" },
+        data: { status: "APPROVED" },
+      });
+
+      if (claim.count === 0) {
+        return updated;
+      }
+
+      const contract = await tx.financingContract.findUnique({
+        where: { kycApplicationId: applicationId },
+      });
+
+      if (!contract) {
+        throw new NotFoundError("Financing contract not found.");
+      }
+
+      const firstPaymentDate = new Date();
+      firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
+
+      const installmentSchedules =
+        InstallmentService.generateInstallmentSchedule({
+          financingContractId: contract.contractId,
+          totalAmount: Number(contract.totalFinanced),
+          months: contract.approvedDurationMonths,
+          firstPaymentDate,
+        });
+
+      await tx.installment.createMany({
+        data: installmentSchedules,
+      });
+
+      await tx.financingContract.update({
+        where: { contractId: contract.contractId },
+        data: {
+          status: FinancingStatus.ACTIVE,
+          activatedAt: new Date(),
+        },
+      });
+
+      // CBN/NDPR: Schedule physical asset deletion instantly (buffer 24 hours or immediate)
+      // Set scheduledDeletionAt to past to allow immediate cleanup worker purging
+      await tx.kycDocumentAsset.updateMany({
+        where: { kycApplicationId: applicationId },
+        data: { scheduledDeletionAt: new Date(Date.now() - 1000) },
+      });
+
+      return { ...updated, status: "APPROVED" as const };
     });
 
-    // If fully approved, trigger notifications outside database transaction
     if (updatedApp.status === "APPROVED") {
       emitEvent(DomainEvent.USER_REGISTERED, {
         email: customer.email,
         name: customer.name || "Customer",
         role: "CUSTOMER",
-        applicationUnderReview: false, // Promotes to approved view
+        applicationUnderReview: false,
       });
     }
 
@@ -716,7 +725,6 @@ export class KycService {
 
     const customer = application.user;
 
-    // Secure Scoping Checks
     if (reviewer.role === "MARKETER") {
       if (customer.referredByMarketerId !== reviewer.userId) {
         throw new UnauthorizedError(
@@ -753,43 +761,70 @@ export class KycService {
     };
   }
 
-  /**
-   * List KYC applications with offset pagination and filtering.
-   * Supports filtering by `status`, `marketerId` (referredByMarketerId)
-   * and `marketerName` (case-insensitive match against the marketer's name).
-   */
   static async getAllKycApplications(params: {
+    reviewerId: string;
+    reviewerRole: string;
     page?: number;
     limit?: number;
     sortOrder?: "asc" | "desc";
     status?: string;
     marketerId?: string;
-    marketerName?: string;
+    search?: string;
   }) {
     const {
+      reviewerId,
+      reviewerRole,
       page = 1,
-      limit = 10,
       sortOrder = "desc",
       status,
       marketerId,
-      marketerName,
+      search,
     } = params;
 
+    const limit = Math.min(Math.max(params.limit ?? 10, 1), 100);
     const skip = (page - 1) * limit;
 
+    const userScope: Prisma.UserWhereInput = {};
+
+    if (reviewerRole === Role.MARKETER) {
+      userScope.referredByMarketerId = reviewerId;
+    } else if (reviewerRole === Role.ADMIN) {
+      userScope.referredByMarketer = { createdById: reviewerId };
+    } else if (reviewerRole === Role.COMPANY) {
+      userScope.companyId = reviewerId;
+    } else if (reviewerRole !== Role.SUPER_ADMIN) {
+      throw new UnauthorizedError(
+        "You are not authorized to view KYC applications.",
+      );
+    }
+
+    if (marketerId && reviewerRole !== Role.MARKETER) {
+      userScope.referredByMarketerId = marketerId;
+    }
+
     const where: Prisma.KycApplicationWhereInput = {
-      ...(status && { status }),
-      ...(marketerId && { referredByMarketerId: marketerId }),
-      ...(marketerName && {
-        user: {
-          referredByMarketer: {
-            name: { contains: marketerName, mode: "insensitive" },
-          },
-        },
-      }),
+      ...(Object.keys(userScope).length > 0 ? { user: userScope } : {}),
     };
 
-    const [applications, total] = await prisma.$transaction([
+    if (status) {
+      where.status = status;
+    }
+
+    if (search) {
+      where.OR = [
+        { user: { name: { contains: search, mode: "insensitive" } } },
+        { user: { email: { contains: search, mode: "insensitive" } } },
+        {
+          user: {
+            referredByMarketer: {
+              name: { contains: search, mode: "insensitive" },
+            },
+          },
+        },
+      ];
+    }
+
+    const [applications, total] = await Promise.all([
       prisma.kycApplication.findMany({
         where,
         skip,
@@ -801,11 +836,14 @@ export class KycService {
               userId: true,
               name: true,
               email: true,
+              companyId: true,
               referredByMarketerId: true,
               referredByMarketer: {
                 select: {
+                  userId: true,
                   name: true,
                   email: true,
+                  referralCode: true,
                 },
               },
             },
@@ -898,3 +936,290 @@ export class KycService {
     return application;
   }
 }
+
+// static async approveApplication(applicationId: string, reviewerId: string) {
+//   const reviewer = await prisma.user.findUnique({
+//     where: { userId: reviewerId },
+//   });
+
+//   if (!reviewer) {
+//     throw new UnauthorizedError("Reviewer session is invalid.");
+//   }
+
+//   const application = await prisma.kycApplication.findUnique({
+//     where: { kycApplicationId: applicationId },
+//     include: { kycDocumentAssets: true, user: true },
+//   });
+
+//   if (!application) {
+//     throw new NotFoundError("KYC Application not found.");
+//   }
+
+//   if (application.status !== "PENDING") {
+//     throw new BadRequestError(
+//       `Application is already processed: ${application.status}.`,
+//     );
+//   }
+
+//   const customer = application.user;
+//   let isMarketerApproval = false;
+//   let isAdminApproval = false;
+
+//   // Check Maker-Checker scoping credentials
+//   if (reviewer.role === "MARKETER") {
+//     if (customer.referredByMarketerId !== reviewer.userId) {
+//       throw new UnauthorizedError(
+//         "Unauthorized: You are not the referring marketer for this customer.",
+//       );
+//     }
+//     isMarketerApproval = true;
+//   } else if (reviewer.role === "ADMIN" || reviewer.role === "COMPANY") {
+//     if (customer.referredByMarketerId) {
+//       const marketer = await prisma.user.findUnique({
+//         where: { userId: customer.referredByMarketerId },
+//       });
+//       if (
+//         marketer?.createdById !== reviewer.userId &&
+//         reviewer.role !== "COMPANY"
+//       ) {
+//         throw new UnauthorizedError(
+//           "Unauthorized: You are not the Admin associated with this marketer.",
+//         );
+//       }
+//     }
+//     isAdminApproval = true;
+//   } else {
+//     throw new UnauthorizedError("Unauthorized role credentials.");
+//   }
+
+//   // Capture the asset hash for the immutable audit trail
+//   const primaryAsset = application.kycDocumentAssets[0];
+//   const fileHash = primaryAsset ? primaryAsset.fileHash : "mock-hash";
+
+//   const updatedApp = await prisma.$transaction(async (tx) => {
+//     const updateData: any = {};
+//     if (isMarketerApproval) {
+//       updateData.marketerApproved = true;
+//       updateData.marketerApprovedAt = new Date();
+//     }
+//     if (isAdminApproval) {
+//       updateData.adminApproved = true;
+//       updateData.adminApprovedAt = new Date();
+//     }
+
+//     const updated = await tx.kycApplication.update({
+//       where: { kycApplicationId: applicationId },
+//       data: updateData,
+//     });
+
+//     // Write reviewer approval log to immutable Audit Trail
+//     await tx.kycAuditTrail.create({
+//       data: {
+//         kycApplicationId: applicationId,
+//         action: isMarketerApproval ? "MARKETER_APPROVED" : "ADMIN_APPROVED",
+//         documentType: "BANK_STATEMENT_PDF",
+//         fileHash: fileHash,
+//         performedById: reviewer.userId,
+//         outcome: "SUCCESS",
+//         details: `Approved by ${reviewer.role}: ${reviewer.name}`,
+//       },
+//     });
+
+//     if (updated.marketerApproved && updated.adminApproved) {
+//       const finalized = await tx.kycApplication.update({
+//         where: { kycApplicationId: applicationId },
+//         data: { status: "APPROVED" },
+//       });
+
+//       const contract = await tx.financingContract.findUnique({
+//         where: {
+//           kycApplicationId: applicationId,
+//         },
+//       });
+
+//       if (!contract) {
+//         throw new Error("Financing contract not found");
+//       }
+
+//       const firstPaymentDate = new Date();
+
+//       firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
+
+//       const installmentSchedules =
+//         InstallmentService.generateInstallmentSchedule({
+//           financingContractId: contract.contractId,
+//           totalAmount: Number(contract.totalFinanced),
+//           months: contract.approvedDurationMonths,
+//           firstPaymentDate,
+//         });
+
+//       await tx.installment.createMany({
+//         data: installmentSchedules,
+//       });
+
+//       await tx.financingContract.update({
+//         where: {
+//           contractId: contract.contractId,
+//         },
+//         data: {
+//           status: FinancingStatus.ACTIVE,
+//           activatedAt: new Date(),
+//         },
+//       });
+
+//       // CBN/NDPR: Schedule physical asset deletion instantly (buffer 24 hours or immediate)
+//       // Set scheduledDeletionAt to past to allow immediate cleanup worker purging
+//       await tx.kycDocumentAsset.updateMany({
+//         where: { kycApplicationId: applicationId },
+//         data: { scheduledDeletionAt: new Date(Date.now() - 1000) },
+//       });
+
+//       return finalized;
+//     }
+
+//     return updated;
+//   });
+
+//   // If fully approved, trigger notifications outside database transaction
+//   if (updatedApp.status === "APPROVED") {
+//     emitEvent(DomainEvent.USER_REGISTERED, {
+//       email: customer.email,
+//       name: customer.name || "Customer",
+//       role: "CUSTOMER",
+//       applicationUnderReview: false, // Promotes to approved view
+//     });
+//   }
+
+//   return {
+//     success: true,
+//     message:
+//       updatedApp.status === "APPROVED"
+//         ? "KYC Application fully approved by both Marketer and Admin."
+//         : `Approval recorded. Awaiting remaining Maker/Checker signature.`,
+//     status: updatedApp.status,
+//   };
+// }
+
+// static async getAllKycApplications(params: {
+//   reviewerId: string;
+//   reviewerRole: string;
+//   page?: number;
+//   limit?: number;
+//   sortOrder?: "asc" | "desc";
+//   status?: string;
+//   marketerId?: string;
+//   search?: string;
+// }) {
+//   const {
+//     reviewerId,
+//     reviewerRole,
+//     page = 1,
+//     limit = 10,
+//     sortOrder = "desc",
+//     status,
+//     marketerId,
+//     search,
+//   } = params;
+
+//   const skip = (page - 1) * limit;
+
+//   // ── Role-based scoping ───────────────────────────────────────────────
+//   // KycApplication has no direct companyId; scope via the customer (user).
+//   const where: Prisma.KycApplicationWhereInput = {
+//     user: {},
+//   };
+
+//   if (reviewerRole === Role.MARKETER) {
+//     // Marketers only ever see their own referrals — ignore any marketerId param.
+//     where.referredByMarketerId = reviewerId;
+//   } else if (reviewerRole === Role.ADMIN) {
+//     where.user!.referredByMarketer = { createdById: reviewerId };
+//   } else if (reviewerRole === Role.COMPANY) {
+//     where.user!.companyId = reviewerId;
+//   } else if (reviewerRole !== Role.SUPER_ADMIN) {
+//     // Any other role (e.g. CUSTOMER) is not permitted to list applications.
+//     throw new UnauthorizedError(
+//       "You are not authorized to view KYC applications.",
+//     );
+//   }
+
+//   // ── Explicit filters ────────────────────────────────────────────────
+//   if (status) {
+//     where.status = status;
+//   }
+
+//   if (marketerId) {
+//     where.referredByMarketerId = marketerId;
+//   }
+
+//   if (search) {
+//     where.OR = [
+//       { user: { name: { contains: search, mode: "insensitive" } } },
+//       { user: { email: { contains: search, mode: "insensitive" } } },
+//       {
+//         user: {
+//           referredByMarketer: {
+//             name: { contains: search, mode: "insensitive" },
+//           },
+//         },
+//       },
+//     ];
+//   }
+
+//   const [applications, total] = await prisma.$transaction([
+//     prisma.kycApplication.findMany({
+//       where,
+//       skip,
+//       take: limit,
+//       orderBy: { createdAt: sortOrder },
+//       include: {
+//         user: {
+//           select: {
+//             userId: true,
+//             name: true,
+//             email: true,
+//             companyId: true,
+//             referredByMarketerId: true,
+//             referredByMarketer: {
+//               select: {
+//                 userId: true,
+//                 name: true,
+//                 email: true,
+//                 referralCode: true,
+//               },
+//             },
+//           },
+//         },
+//         product: {
+//           select: {
+//             productId: true,
+//             name: true,
+//             slug: true,
+//           },
+//         },
+//         financingContract: {
+//           select: {
+//             contractId: true,
+//             status: true,
+//             totalFinanced: true,
+//           },
+//         },
+//       },
+//     }),
+//     prisma.kycApplication.count({ where }),
+//   ]);
+
+//   const totalPages = Math.ceil(total / limit);
+
+//   return {
+//     applications,
+//     pagination: {
+//       total,
+//       totalPages,
+//       currentPage: page,
+//       limit,
+//       hasNextPage: page < totalPages,
+//       hasPreviousPage: page > 1,
+//     },
+//   };
+// }

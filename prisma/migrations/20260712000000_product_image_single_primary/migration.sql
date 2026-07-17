@@ -8,4 +8,4 @@
 -- duplicates first (keep the lowest sortOrder as primary per product).
 CREATE UNIQUE INDEX "product_image_one_primary"
 ON "ProductImage" ("productId")
-WHERE "isPrimary" = true;
+WHERE "is_primary" = true;

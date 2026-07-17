@@ -312,10 +312,15 @@ paths:
         - KYC & Onboarding
       summary: List KYC Applications (Paginated)
       description: |
-        Returns a paginated list of KYC applications. Supports filtering by
-        `status` (PENDING | APPROVED | REJECTED), `marketerId` (the referring
-        marketer's UUID) and `marketerName` (case-insensitive match against the
-        marketer's display name).
+        Returns a paginated list of KYC applications, automatically scoped to the
+        caller's role:
+        - **Marketer**: only applications they referred.
+        - **Admin**: only applications referred by marketers they created.
+        - **Company**: only applications belonging to customers of their company.
+        - **Super Admin**: all applications.
+        Supports filtering by `status` (PENDING | APPROVED | REJECTED), a specific
+        `marketerId`, and a free-text `search` over the customer's name/email and
+        the referring marketer's name (case-insensitive).
         **Authorization:** Restricted to logged-in Admins, Companies, Marketers and Super Admins.
       security:
         - bearerAuth: []
@@ -359,18 +364,18 @@ paths:
         - name: marketerId
           in: query
           required: false
-          description: Filter by referring marketer UUID.
+          description: Filter by referring marketer UUID (Admin/Company/Super Admin only). Marketers are always scoped to themselves.
           schema:
             type: string
             format: uuid
             example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
-        - name: marketerName
+        - name: search
           in: query
           required: false
-          description: Case-insensitive filter by referring marketer name.
+          description: Case-insensitive search across customer name, customer email and referring marketer name.
           schema:
             type: string
-            example: John
+            example: alice
       responses:
         "200":
           description: Paginated list of KYC applications.

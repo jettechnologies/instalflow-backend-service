@@ -233,6 +233,10 @@ model User {
   companyApprovedPayouts      CommissionPayoutRequest[] @relation("CommissionCompanyApprover")
   marketerBankAccounts        MarketerBankAccount[]
   commissionTransferInitiator CommissionPayoutRequest[] @relation("TransferInitiator")
+
+  @@index([companyId])
+  @@index([referredByMarketerId])
+  @@index([createdById])
 }
 
 model UserSession {
@@ -358,7 +362,7 @@ model KycApplication {
   @@index([productId])
   @@index([variantId])
   @@index([installmentPlanId])
-  @@index([status])
+  @@index([status, createdAt])
 }
 
 model KycDocumentAsset {

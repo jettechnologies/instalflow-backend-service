@@ -175,20 +175,29 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
+      const reviewerId = (req as any).user?.userId;
+      const reviewerRole = (req as any).user?.role;
+
+      if (!reviewerId || !reviewerRole) {
+        throw new BadRequestError("Unauthorized session.");
+      }
+
       const page = Number(req.query.page || 1);
       const limit = Number(req.query.limit || 10);
       const sortOrder = (req.query.sortOrder as "asc" | "desc") || "desc";
       const status = req.query.status as string | undefined;
       const marketerId = req.query.marketerId as string | undefined;
-      const marketerName = req.query.marketerName as string | undefined;
+      const search = req.query.search as string | undefined;
 
       const result = await KycService.getAllKycApplications({
+        reviewerId,
+        reviewerRole,
         page,
         limit,
         sortOrder,
         status,
         marketerId,
-        marketerName,
+        search,
       });
 
       return ApiResponse.success(
