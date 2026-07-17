@@ -524,6 +524,18 @@ components:
               type: string
               format: uuid
               nullable: true
+            referredByMarketer:
+              type: object
+              nullable: true
+              properties:
+                name:
+                  type: string
+                  nullable: true
+                  example: John Marketer
+                email:
+                  type: string
+                  format: email
+                  example: marketer@example.com
         product:
           type: object
           properties:

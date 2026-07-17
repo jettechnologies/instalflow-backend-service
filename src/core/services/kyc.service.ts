@@ -802,6 +802,12 @@ export class KycService {
               name: true,
               email: true,
               referredByMarketerId: true,
+              referredByMarketer: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
             },
           },
           product: {
@@ -851,6 +857,12 @@ export class KycService {
             name: true,
             email: true,
             referredByMarketerId: true,
+            referredByMarketer: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
           },
         },
         product: {
