@@ -764,6 +764,7 @@ export class KycService {
   static async getAllKycApplications(params: {
     reviewerId: string;
     reviewerRole: string;
+    companyId?: string;
     page?: number;
     limit?: number;
     sortOrder?: "asc" | "desc";
@@ -774,6 +775,8 @@ export class KycService {
     const {
       reviewerId,
       reviewerRole,
+      companyId,
+      limit = 10,
       page = 1,
       sortOrder = "desc",
       status,
@@ -781,21 +784,45 @@ export class KycService {
       search,
     } = params;
 
-    const limit = Math.min(Math.max(params.limit ?? 10, 1), 100);
     const skip = (page - 1) * limit;
 
     const userScope: Prisma.UserWhereInput = {};
 
-    if (reviewerRole === Role.MARKETER) {
-      userScope.referredByMarketerId = reviewerId;
-    } else if (reviewerRole === Role.ADMIN) {
-      userScope.referredByMarketer = { createdById: reviewerId };
-    } else if (reviewerRole === Role.COMPANY) {
-      userScope.companyId = reviewerId;
-    } else if (reviewerRole !== Role.SUPER_ADMIN) {
-      throw new UnauthorizedError(
-        "You are not authorized to view KYC applications.",
-      );
+    // if (reviewerRole === Role.MARKETER) {
+    //   userScope.referredByMarketerId = reviewerId;
+    // } else if (reviewerRole === Role.ADMIN) {
+    //   userScope.referredByMarketer = { createdById: reviewerId };
+    // } else if (reviewerRole === Role.COMPANY) {
+    //   userScope.companyId = companyId;
+    // } else if (reviewerRole !== Role.SUPER_ADMIN) {
+    //   throw new UnauthorizedError(
+    //     "You are not authorized to view KYC applications.",
+    //   );
+    // }
+
+    switch (reviewerRole) {
+      case Role.MARKETER:
+        userScope.referredByMarketerId = reviewerId;
+        break;
+      case Role.ADMIN:
+        userScope.referredByMarketer = {
+          createdById: reviewerId,
+        };
+        break;
+      case Role.COMPANY:
+        if (!companyId) {
+          throw new BadRequestError(
+            "Company account is not associated with a company.",
+          );
+        }
+        userScope.companyId = companyId;
+        break;
+      case Role.SUPER_ADMIN:
+        break;
+      default:
+        throw new UnauthorizedError(
+          "You are not authorized to view KYC applications.",
+        );
     }
 
     if (marketerId && reviewerRole !== Role.MARKETER) {

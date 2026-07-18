@@ -177,6 +177,7 @@ export class KycController {
     try {
       const reviewerId = (req as any).user?.userId;
       const reviewerRole = (req as any).user?.role;
+      const companyId = (req as any).user?.companyId;
 
       if (!reviewerId || !reviewerRole) {
         throw new BadRequestError("Unauthorized session.");
@@ -192,6 +193,7 @@ export class KycController {
       const result = await KycService.getAllKycApplications({
         reviewerId,
         reviewerRole,
+        companyId,
         page,
         limit,
         sortOrder,
