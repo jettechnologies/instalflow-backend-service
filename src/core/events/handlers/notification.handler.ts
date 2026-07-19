@@ -16,6 +16,8 @@ const fmt = (amount: string | number) =>
 onEvent(DomainEvent.USER_REGISTERED, async (payload) => {
   const isCustomer =
     payload.role === "CUSTOMER" || !!payload.applicationUnderReview;
+  const dashboard_url = `${process.env.FRONTEND_URL}/customer?activationToken=${payload.activationToken}`;
+
   await NotificationService.send({
     to: payload.email,
     channel: NotificationChannel.EMAIL,
@@ -29,8 +31,9 @@ onEvent(DomainEvent.USER_REGISTERED, async (payload) => {
       : "Welcome to Instalflow 🎉",
     context: {
       name: payload.name,
-      dashboard_url: process.env.FRONTEND_URL,
+      dashboard_url,
       applicationUnderReview: payload.applicationUnderReview || false,
+      rejectionReason: payload.rejectionReason || undefined,
     },
   });
 });

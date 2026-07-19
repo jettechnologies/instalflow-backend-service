@@ -326,7 +326,7 @@ export type FinancingContractGroupByArgs<ExtArgs extends runtime.Types.Extension
 export type FinancingContractGroupByOutputType = {
   id: bigint
   contractId: string
-  userId: string
+  userId: string | null
   productId: string
   variantId: string | null
   kycApplicationId: string
@@ -377,7 +377,7 @@ export type FinancingContractWhereInput = {
   NOT?: Prisma.FinancingContractWhereInput | Prisma.FinancingContractWhereInput[]
   id?: Prisma.BigIntFilter<"FinancingContract"> | bigint | number
   contractId?: Prisma.StringFilter<"FinancingContract"> | string
-  userId?: Prisma.StringFilter<"FinancingContract"> | string
+  userId?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   productId?: Prisma.StringFilter<"FinancingContract"> | string
   variantId?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   kycApplicationId?: Prisma.StringFilter<"FinancingContract"> | string
@@ -400,7 +400,7 @@ export type FinancingContractWhereInput = {
   writeOffReason?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   variant?: Prisma.XOR<Prisma.ProductVariantNullableScalarRelationFilter, Prisma.ProductVariantWhereInput> | null
   kycApplication?: Prisma.XOR<Prisma.KycApplicationScalarRelationFilter, Prisma.KycApplicationWhereInput>
@@ -410,7 +410,7 @@ export type FinancingContractWhereInput = {
 export type FinancingContractOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   productId?: Prisma.SortOrder
   variantId?: Prisma.SortOrderInput | Prisma.SortOrder
   kycApplicationId?: Prisma.SortOrder
@@ -447,7 +447,7 @@ export type FinancingContractWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.FinancingContractWhereInput | Prisma.FinancingContractWhereInput[]
   OR?: Prisma.FinancingContractWhereInput[]
   NOT?: Prisma.FinancingContractWhereInput | Prisma.FinancingContractWhereInput[]
-  userId?: Prisma.StringFilter<"FinancingContract"> | string
+  userId?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   productId?: Prisma.StringFilter<"FinancingContract"> | string
   variantId?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   approvedProductPrice?: Prisma.DecimalFilter<"FinancingContract"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -469,7 +469,7 @@ export type FinancingContractWhereUniqueInput = Prisma.AtLeast<{
   writeOffReason?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinancingContract"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
   variant?: Prisma.XOR<Prisma.ProductVariantNullableScalarRelationFilter, Prisma.ProductVariantWhereInput> | null
   kycApplication?: Prisma.XOR<Prisma.KycApplicationScalarRelationFilter, Prisma.KycApplicationWhereInput>
@@ -479,7 +479,7 @@ export type FinancingContractWhereUniqueInput = Prisma.AtLeast<{
 export type FinancingContractOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   productId?: Prisma.SortOrder
   variantId?: Prisma.SortOrderInput | Prisma.SortOrder
   kycApplicationId?: Prisma.SortOrder
@@ -515,7 +515,7 @@ export type FinancingContractScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FinancingContractScalarWhereWithAggregatesInput | Prisma.FinancingContractScalarWhereWithAggregatesInput[]
   id?: Prisma.BigIntWithAggregatesFilter<"FinancingContract"> | bigint | number
   contractId?: Prisma.StringWithAggregatesFilter<"FinancingContract"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"FinancingContract"> | string
+  userId?: Prisma.StringNullableWithAggregatesFilter<"FinancingContract"> | string | null
   productId?: Prisma.StringWithAggregatesFilter<"FinancingContract"> | string
   variantId?: Prisma.StringNullableWithAggregatesFilter<"FinancingContract"> | string | null
   kycApplicationId?: Prisma.StringWithAggregatesFilter<"FinancingContract"> | string
@@ -562,7 +562,7 @@ export type FinancingContractCreateInput = {
   writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
+  user?: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
   product: Prisma.ProductCreateNestedOneWithoutFinancingContractsInput
   variant?: Prisma.ProductVariantCreateNestedOneWithoutFinancingContractsInput
   kycApplication: Prisma.KycApplicationCreateNestedOneWithoutFinancingContractInput
@@ -572,7 +572,7 @@ export type FinancingContractCreateInput = {
 export type FinancingContractUncheckedCreateInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   productId: string
   variantId?: string | null
   kycApplicationId: string
@@ -620,7 +620,7 @@ export type FinancingContractUpdateInput = {
   writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFinancingContractsNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutFinancingContractsNestedInput
   variant?: Prisma.ProductVariantUpdateOneWithoutFinancingContractsNestedInput
   kycApplication?: Prisma.KycApplicationUpdateOneRequiredWithoutFinancingContractNestedInput
@@ -630,7 +630,7 @@ export type FinancingContractUpdateInput = {
 export type FinancingContractUncheckedUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -659,7 +659,7 @@ export type FinancingContractUncheckedUpdateInput = {
 export type FinancingContractCreateManyInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   productId: string
   variantId?: string | null
   kycApplicationId: string
@@ -711,7 +711,7 @@ export type FinancingContractUpdateManyMutationInput = {
 export type FinancingContractUncheckedUpdateManyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1124,7 +1124,7 @@ export type FinancingContractScalarWhereInput = {
   NOT?: Prisma.FinancingContractScalarWhereInput | Prisma.FinancingContractScalarWhereInput[]
   id?: Prisma.BigIntFilter<"FinancingContract"> | bigint | number
   contractId?: Prisma.StringFilter<"FinancingContract"> | string
-  userId?: Prisma.StringFilter<"FinancingContract"> | string
+  userId?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   productId?: Prisma.StringFilter<"FinancingContract"> | string
   variantId?: Prisma.StringNullableFilter<"FinancingContract"> | string | null
   kycApplicationId?: Prisma.StringFilter<"FinancingContract"> | string
@@ -1171,7 +1171,7 @@ export type FinancingContractCreateWithoutProductInput = {
   writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
+  user?: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
   variant?: Prisma.ProductVariantCreateNestedOneWithoutFinancingContractsInput
   kycApplication: Prisma.KycApplicationCreateNestedOneWithoutFinancingContractInput
   installments?: Prisma.InstallmentCreateNestedManyWithoutFinancingContractInput
@@ -1180,7 +1180,7 @@ export type FinancingContractCreateWithoutProductInput = {
 export type FinancingContractUncheckedCreateWithoutProductInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   variantId?: string | null
   kycApplicationId: string
   approvedProductPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1253,7 +1253,7 @@ export type FinancingContractCreateWithoutVariantInput = {
   writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
+  user?: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
   product: Prisma.ProductCreateNestedOneWithoutFinancingContractsInput
   kycApplication: Prisma.KycApplicationCreateNestedOneWithoutFinancingContractInput
   installments?: Prisma.InstallmentCreateNestedManyWithoutFinancingContractInput
@@ -1262,7 +1262,7 @@ export type FinancingContractCreateWithoutVariantInput = {
 export type FinancingContractUncheckedCreateWithoutVariantInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   productId: string
   kycApplicationId: string
   approvedProductPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1335,7 +1335,7 @@ export type FinancingContractCreateWithoutKycApplicationInput = {
   writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
+  user?: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
   product: Prisma.ProductCreateNestedOneWithoutFinancingContractsInput
   variant?: Prisma.ProductVariantCreateNestedOneWithoutFinancingContractsInput
   installments?: Prisma.InstallmentCreateNestedManyWithoutFinancingContractInput
@@ -1344,7 +1344,7 @@ export type FinancingContractCreateWithoutKycApplicationInput = {
 export type FinancingContractUncheckedCreateWithoutKycApplicationInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   productId: string
   variantId?: string | null
   approvedProductPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1407,7 +1407,7 @@ export type FinancingContractUpdateWithoutKycApplicationInput = {
   writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFinancingContractsNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutFinancingContractsNestedInput
   variant?: Prisma.ProductVariantUpdateOneWithoutFinancingContractsNestedInput
   installments?: Prisma.InstallmentUpdateManyWithoutFinancingContractNestedInput
@@ -1416,7 +1416,7 @@ export type FinancingContractUpdateWithoutKycApplicationInput = {
 export type FinancingContractUncheckedUpdateWithoutKycApplicationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedProductPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1463,7 +1463,7 @@ export type FinancingContractCreateWithoutInstallmentsInput = {
   writeOffReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
+  user?: Prisma.UserCreateNestedOneWithoutFinancingContractsInput
   product: Prisma.ProductCreateNestedOneWithoutFinancingContractsInput
   variant?: Prisma.ProductVariantCreateNestedOneWithoutFinancingContractsInput
   kycApplication: Prisma.KycApplicationCreateNestedOneWithoutFinancingContractInput
@@ -1472,7 +1472,7 @@ export type FinancingContractCreateWithoutInstallmentsInput = {
 export type FinancingContractUncheckedCreateWithoutInstallmentsInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   productId: string
   variantId?: string | null
   kycApplicationId: string
@@ -1535,7 +1535,7 @@ export type FinancingContractUpdateWithoutInstallmentsInput = {
   writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFinancingContractsNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutFinancingContractsNestedInput
   variant?: Prisma.ProductVariantUpdateOneWithoutFinancingContractsNestedInput
   kycApplication?: Prisma.KycApplicationUpdateOneRequiredWithoutFinancingContractNestedInput
@@ -1544,7 +1544,7 @@ export type FinancingContractUpdateWithoutInstallmentsInput = {
 export type FinancingContractUncheckedUpdateWithoutInstallmentsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1682,7 +1682,7 @@ export type FinancingContractUncheckedUpdateManyWithoutUserInput = {
 export type FinancingContractCreateManyProductInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   variantId?: string | null
   kycApplicationId: string
   approvedProductPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1728,7 +1728,7 @@ export type FinancingContractUpdateWithoutProductInput = {
   writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFinancingContractsNestedInput
   variant?: Prisma.ProductVariantUpdateOneWithoutFinancingContractsNestedInput
   kycApplication?: Prisma.KycApplicationUpdateOneRequiredWithoutFinancingContractNestedInput
   installments?: Prisma.InstallmentUpdateManyWithoutFinancingContractNestedInput
@@ -1737,7 +1737,7 @@ export type FinancingContractUpdateWithoutProductInput = {
 export type FinancingContractUncheckedUpdateWithoutProductInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedProductPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1765,7 +1765,7 @@ export type FinancingContractUncheckedUpdateWithoutProductInput = {
 export type FinancingContractUncheckedUpdateManyWithoutProductInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedProductPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1792,7 +1792,7 @@ export type FinancingContractUncheckedUpdateManyWithoutProductInput = {
 export type FinancingContractCreateManyVariantInput = {
   id?: bigint | number
   contractId?: string
-  userId: string
+  userId?: string | null
   productId: string
   kycApplicationId: string
   approvedProductPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1838,7 +1838,7 @@ export type FinancingContractUpdateWithoutVariantInput = {
   writeOffReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFinancingContractsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFinancingContractsNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutFinancingContractsNestedInput
   kycApplication?: Prisma.KycApplicationUpdateOneRequiredWithoutFinancingContractNestedInput
   installments?: Prisma.InstallmentUpdateManyWithoutFinancingContractNestedInput
@@ -1847,7 +1847,7 @@ export type FinancingContractUpdateWithoutVariantInput = {
 export type FinancingContractUncheckedUpdateWithoutVariantInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedProductPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1875,7 +1875,7 @@ export type FinancingContractUncheckedUpdateWithoutVariantInput = {
 export type FinancingContractUncheckedUpdateManyWithoutVariantInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   kycApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedProductPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1956,7 +1956,7 @@ export type FinancingContractSelect<ExtArgs extends runtime.Types.Extensions.Int
   writeOffReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.FinancingContract$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   variant?: boolean | Prisma.FinancingContract$variantArgs<ExtArgs>
   kycApplication?: boolean | Prisma.KycApplicationDefaultArgs<ExtArgs>
@@ -1990,7 +1990,7 @@ export type FinancingContractSelectCreateManyAndReturn<ExtArgs extends runtime.T
   writeOffReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.FinancingContract$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   variant?: boolean | Prisma.FinancingContract$variantArgs<ExtArgs>
   kycApplication?: boolean | Prisma.KycApplicationDefaultArgs<ExtArgs>
@@ -2022,7 +2022,7 @@ export type FinancingContractSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   writeOffReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.FinancingContract$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   variant?: boolean | Prisma.FinancingContract$variantArgs<ExtArgs>
   kycApplication?: boolean | Prisma.KycApplicationDefaultArgs<ExtArgs>
@@ -2058,7 +2058,7 @@ export type FinancingContractSelectScalar = {
 
 export type FinancingContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contractId" | "userId" | "productId" | "variantId" | "kycApplicationId" | "approvedProductPrice" | "approvedInterestPercentage" | "approvedDurationMonths" | "principal" | "interest" | "totalFinanced" | "status" | "activatedAt" | "completedAt" | "defaultedAt" | "cancelledAt" | "rejectedAt" | "restructuredAt" | "restructuredById" | "writtenOffAt" | "writtenOffById" | "writeOffReason" | "createdAt" | "updatedAt", ExtArgs["result"]["financingContract"]>
 export type FinancingContractInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.FinancingContract$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   variant?: boolean | Prisma.FinancingContract$variantArgs<ExtArgs>
   kycApplication?: boolean | Prisma.KycApplicationDefaultArgs<ExtArgs>
@@ -2066,13 +2066,13 @@ export type FinancingContractInclude<ExtArgs extends runtime.Types.Extensions.In
   _count?: boolean | Prisma.FinancingContractCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FinancingContractIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.FinancingContract$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   variant?: boolean | Prisma.FinancingContract$variantArgs<ExtArgs>
   kycApplication?: boolean | Prisma.KycApplicationDefaultArgs<ExtArgs>
 }
 export type FinancingContractIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.FinancingContract$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   variant?: boolean | Prisma.FinancingContract$variantArgs<ExtArgs>
   kycApplication?: boolean | Prisma.KycApplicationDefaultArgs<ExtArgs>
@@ -2081,7 +2081,7 @@ export type FinancingContractIncludeUpdateManyAndReturn<ExtArgs extends runtime.
 export type $FinancingContractPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FinancingContract"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs> | null
     product: Prisma.$ProductPayload<ExtArgs>
     variant: Prisma.$ProductVariantPayload<ExtArgs> | null
     kycApplication: Prisma.$KycApplicationPayload<ExtArgs>
@@ -2090,7 +2090,7 @@ export type $FinancingContractPayload<ExtArgs extends runtime.Types.Extensions.I
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     contractId: string
-    userId: string
+    userId: string | null
     productId: string
     variantId: string | null
     kycApplicationId: string
@@ -2507,7 +2507,7 @@ readonly fields: FinancingContractFieldRefs;
  */
 export interface Prisma__FinancingContractClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.FinancingContract$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancingContract$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   variant<T extends Prisma.FinancingContract$variantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancingContract$variantArgs<ExtArgs>>): Prisma.Prisma__ProductVariantClient<runtime.Types.Result.GetResult<Prisma.$ProductVariantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   kycApplication<T extends Prisma.KycApplicationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KycApplicationDefaultArgs<ExtArgs>>): Prisma.Prisma__KycApplicationClient<runtime.Types.Result.GetResult<Prisma.$KycApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -2964,6 +2964,25 @@ export type FinancingContractDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many FinancingContracts to delete.
    */
   limit?: number
+}
+
+/**
+ * FinancingContract.user
+ */
+export type FinancingContract$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

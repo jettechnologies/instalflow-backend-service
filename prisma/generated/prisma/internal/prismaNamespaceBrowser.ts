@@ -60,6 +60,7 @@ export const ModelName = {
   Product: 'Product',
   ProductVariant: 'ProductVariant',
   KycApplication: 'KycApplication',
+  OnboardingSession: 'OnboardingSession',
   KycDocumentAsset: 'KycDocumentAsset',
   KycAuditTrail: 'KycAuditTrail',
   FinancingContract: 'FinancingContract',
@@ -227,6 +228,7 @@ export const KycApplicationScalarFieldEnum = {
   id: 'id',
   kycApplicationId: 'kycApplicationId',
   userId: 'userId',
+  onboardingSessionId: 'onboardingSessionId',
   productId: 'productId',
   installmentPlanId: 'installmentPlanId',
   variantId: 'variantId',
@@ -245,6 +247,24 @@ export const KycApplicationScalarFieldEnum = {
 } as const
 
 export type KycApplicationScalarFieldEnum = (typeof KycApplicationScalarFieldEnum)[keyof typeof KycApplicationScalarFieldEnum]
+
+
+export const OnboardingSessionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  name: 'name',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  marketerId: 'marketerId',
+  companyId: 'companyId',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OnboardingSessionScalarFieldEnum = (typeof OnboardingSessionScalarFieldEnum)[keyof typeof OnboardingSessionScalarFieldEnum]
 
 
 export const KycDocumentAssetScalarFieldEnum = {

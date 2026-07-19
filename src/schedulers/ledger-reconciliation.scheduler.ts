@@ -28,7 +28,6 @@ ledgerReconciliationQueue
     {},
     {
       repeat: {
-        // Run daily at 02:00 AM — off-peak, after nightly settlement windows
         pattern: "0 2 * * *",
       },
     },

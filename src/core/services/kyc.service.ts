@@ -15,8 +15,12 @@ import {
 import {
   bcryptHash,
   generateOnboardingToken,
+  generateLoginToken,
 } from "@/shared/utils/password-hash-verify";
-import { uploadPdfToCloudinary } from "./cloudinary.service";
+import {
+  uploadPdfToCloudinary,
+  deleteFromCloudinary,
+} from "./cloudinary.service";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 import { KycStorageService } from "./kyc-storage.service";
@@ -118,9 +122,16 @@ export class KycService {
 
   /**
    * Register a new Customer via a Marketer's referral code.
-   * Does NOT auto-login or return session tokens.
+   *
+   * Deferred User Creation (PRD Option B): no `User` row is created here. Instead
+   * we create or resume a provisional, expiring `OnboardingSession`. A `User` is
+   * only materialized once a KYC application is fully approved (see approveApplication).
+   * If the person abandons or the network drops, the session expires via the
+   * sweeper and the email is freed — no permanent `User` row, no consumed email.
    */
   static async registerViaReferral(data: z.infer<typeof InviteRegisterSchema>) {
+    const email = data.email.toLowerCase().trim();
+
     const marketer = await prisma.user.findUnique({
       where: { referralCode: data.referredByCode, role: "MARKETER" },
     });
@@ -129,69 +140,76 @@ export class KycService {
       throw new BadRequestError("Invalid referral code: Marketer not found.");
     }
 
-    const existing = await prisma.user.findUnique({
-      where: { email: data.email },
-    });
-
-    if (existing) {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
       throw new ConflictError("Email is already in use.");
     }
 
-    const hashedPassword = await bcryptHash(data.password);
-
-    // Create Customer account
-    const user = await prisma.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        password: hashedPassword,
-        role: "CUSTOMER",
-        referredByMarketerId: marketer.userId,
-      },
-      select: {
-        userId: true,
-        name: true,
-        email: true,
-        role: true,
-        referredByMarketerId: true,
-        createdAt: true,
+    const activeSession = await prisma.onboardingSession.findFirst({
+      where: {
+        email,
+        status: { in: ["PENDING_KYC", "KYC_SUBMITTED"] },
+        expiresAt: { gt: new Date() },
       },
     });
 
-    // Log the Referral inside the Referral table
-    await prisma.referral.create({
-      data: {
-        marketerId: marketer.userId,
-        referralCode: `REF-${marketer.referralCode}-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
-      },
-    });
+    const EXPIRY_HOURS = 24;
+    const expiresAt = new Date(Date.now() + EXPIRY_HOURS * 60 * 60 * 1000);
 
-    // Issue a short-lived onboarding token (1hr) scoped only to POST /kyc/submit
-    const onboardingToken = generateOnboardingToken(user.userId);
+    const session = activeSession
+      ? await prisma.onboardingSession.update({
+          where: { sessionId: activeSession.sessionId },
+          data: { expiresAt },
+        })
+      : await prisma.onboardingSession.create({
+          data: {
+            name: data.name,
+            email,
+            passwordHash: await bcryptHash(data.password),
+            marketerId: marketer.userId,
+            companyId: marketer.companyId,
+            status: "PENDING_KYC",
+            expiresAt,
+          },
+        });
+
+    // Issue a short-lived onboarding token (scoped to the session, not a User)
+    const onboardingToken = generateOnboardingToken(session.sessionId);
 
     return {
       success: true,
       message:
-        "Customer registered successfully via referral. Use the onboardingToken to complete your KYC application.",
+        "Referral accepted. Use the onboardingToken to complete your KYC application.",
       onboardingToken,
     };
   }
 
   /**
    * Submit an eligibility application for installment plan.
-   * Uploads PDF bank statement, computes hash, creates application + audit trail.
+   *
+   * Identity is anchored to the provisional `OnboardingSession` (no `User` yet).
+   * Uploads PDF bank statement, computes hash, creates application + audit trail,
+   * and flips the session to `KYC_SUBMITTED`.
    */
   static async submitApplication(
-    customerId: string,
+    sessionId: string,
     params: z.infer<typeof SubmitApplicationSchema>,
     file: any,
   ) {
-    const customer = await prisma.user.findUnique({
-      where: { userId: customerId },
+    const session = await prisma.onboardingSession.findUnique({
+      where: { sessionId },
     });
 
-    if (!customer) {
-      throw new NotFoundError("Customer account not found.");
+    if (!session) {
+      throw new NotFoundError("Onboarding session not found.");
+    }
+    if (session.expiresAt < new Date()) {
+      throw new BadRequestError(
+        "This onboarding session has expired. Please register again.",
+      );
+    }
+    if (session.status === "APPROVED") {
+      throw new ConflictError("This onboarding session is already completed.");
     }
 
     if (!file) {
@@ -221,36 +239,59 @@ export class KycService {
         format: "pdf",
         resource_type: "raw",
       };
+      const fileHash = this.getFileHash(filePath);
       if (fs.existsSync(filePath)) {
         fs.unlink(filePath, () => {});
       }
-    } else {
-      uploadResult = await uploadPdfToCloudinary(filePath, "documents");
-      if (fs.existsSync(filePath)) {
-        fs.unlink(filePath, () => {});
-      }
+      return this.persistApplication({
+        session,
+        params,
+        uploadResult,
+        fileHash,
+        file,
+      });
     }
 
     const fileHash = this.getFileHash(filePath);
+    uploadResult = await uploadPdfToCloudinary(filePath, "documents");
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, () => {});
+    }
 
-    // 4. Simulate External KYC Check
-    const customerName = customer.name || "Customer";
-    const simulatedIdName = customerName;
-    const simulatedStatementName = customerName;
+    try {
+      return await this.persistApplication({
+        session,
+        params,
+        uploadResult,
+        fileHash,
+        file,
+      });
+    } catch (err) {
+      // Orphan cleanup: if the transaction fails after a successful Cloudinary
+      // upload, don't leave the document dangling in storage.
+      await deleteFromCloudinary(uploadResult.public_id).catch(() => {});
+      throw err;
+    }
+  }
 
-    const idVerified = true;
-    const bankNameVerified = true;
-    const nameTallyStatus = "VERIFIED_MATCH";
+  /**
+   * Atomically create the KycApplication, FinancingContract, document asset and
+   * audit trail, and flip the OnboardingSession to KYC_SUBMITTED. Extracted so the
+   * Cloudinary orphan-cleanup path (submitApplication) can wrap it.
+   */
+  private static async persistApplication(args: {
+    session: any;
+    params: z.infer<typeof SubmitApplicationSchema>;
+    uploadResult: any;
+    fileHash: string;
+    file: any;
+  }) {
+    const { session, params, uploadResult, fileHash, file } = args;
 
     const existingApplication = await prisma.kycApplication.findFirst({
       where: {
-        userId: customer.userId,
-        installmentPlanId: params.installmentPlanId,
-        productId: params.productId,
-        variantId: params.variantId,
-        status: {
-          in: ["PENDING", "APPROVED"],
-        },
+        onboardingSessionId: session.sessionId,
+        status: { in: ["PENDING", "APPROVED"] },
       },
     });
 
@@ -260,9 +301,7 @@ export class KycService {
 
     const productInstallmentPlan =
       await prisma.productInstallmentPlan.findUnique({
-        where: {
-          planId: params.installmentPlanId,
-        },
+        where: { planId: params.installmentPlanId },
       });
 
     if (!productInstallmentPlan) {
@@ -270,13 +309,8 @@ export class KycService {
     }
 
     const productVariant = await prisma.productVariant.findUnique({
-      where: {
-        variantId: params.variantId,
-      },
-
-      include: {
-        product: true,
-      },
+      where: { variantId: params.variantId },
+      include: { product: true },
     });
 
     if (!productVariant) {
@@ -319,7 +353,7 @@ export class KycService {
     const { application } = await prisma.$transaction(async (tx) => {
       const app = await tx.kycApplication.create({
         data: {
-          userId: customer.userId,
+          onboardingSessionId: session.sessionId,
           productId: params.productId,
           variantId: params.variantId,
           installmentPlanId: params.installmentPlanId,
@@ -331,20 +365,15 @@ export class KycService {
 
       await tx.financingContract.create({
         data: {
-          userId: customer.userId,
           productId: params.productId,
           variantId: params.variantId,
-
           kycApplicationId: app.kycApplicationId,
-
           approvedProductPrice: principal,
           approvedInterestPercentage: productInstallmentPlan.interestPercentage,
           approvedDurationMonths: productInstallmentPlan.durationMonths,
-
           principal,
           interest,
           totalFinanced,
-
           status: FinancingStatus.PENDING_ACTIVATION,
         },
       });
@@ -360,7 +389,7 @@ export class KycService {
           secureUrl: uploadResult.url,
           fileSize: file.size,
           mimeType: file.mimetype,
-          fileHash: fileHash,
+          fileHash,
           scheduledDeletionAt: scheduledDeletion,
         },
       });
@@ -370,26 +399,29 @@ export class KycService {
           kycApplicationId: app.kycApplicationId,
           action: "SUBMITTED",
           documentType: "BANK_STATEMENT_PDF",
-          fileHash: fileHash,
-          performedById: customer.userId,
+          fileHash,
+          performedById: null,
           outcome: "SUCCESS",
           details: JSON.stringify({
             idType: params.idType,
-            idVerified,
-            bankNameVerified,
-            nameTallyStatus,
-            idName: simulatedIdName,
-            bankStatementName: simulatedStatementName,
+            idVerified: true,
+            bankNameVerified: true,
+            nameTallyStatus: "VERIFIED_MATCH",
           }),
         },
+      });
+
+      await tx.onboardingSession.update({
+        where: { sessionId: session.sessionId },
+        data: { status: "KYC_SUBMITTED" },
       });
 
       return { application: app };
     });
 
     emitEvent(DomainEvent.USER_REGISTERED, {
-      email: customer.email,
-      name: customerName,
+      email: session.email,
+      name: session.name,
       role: "CUSTOMER",
       applicationUnderReview: true,
     });
@@ -398,11 +430,11 @@ export class KycService {
       NotificationEventType.KYC_APPLICATION_SUBMITTED,
       {
         applicationId: application.kycApplicationId,
-        customerName: customer.name ?? "Customer",
-        customerEmail: customer.email,
+        customerName: "Customer",
+        customerEmail: session.email,
         customer: {
-          userId: customer.userId,
-          referredByMarketerId: customer.referredByMarketerId ?? undefined,
+          email: session.email,
+          referredByMarketerId: session.marketerId,
         },
       },
     );
@@ -419,8 +451,12 @@ export class KycService {
   /**
    * Maker-Checker Approval Process:
    * Requires approval from BOTH the assigned Marketer and their creator Admin.
+   *
+   * Deferred User Creation (PRD Option B): the customer does not yet exist as a
+   * `User`. Scoping is read from `application.onboardingSession`. Only when both
+   * signatures land (atomic claim on `status: PENDING -> APPROVED`) is the `User`
+   * created, the FKs backfilled, the session closed, and the `Referral` recorded.
    */
-
   static async approveApplication(applicationId: string, reviewerId: string) {
     const [reviewer, application] = await Promise.all([
       prisma.user.findUnique({
@@ -431,10 +467,10 @@ export class KycService {
         where: { kycApplicationId: applicationId },
         include: {
           kycDocumentAssets: { select: { fileHash: true }, take: 1 },
-          user: {
+          onboardingSession: {
             include: {
-              referredByMarketer: {
-                select: { userId: true, createdById: true },
+              marketer: {
+                select: { userId: true, referralCode: true, createdById: true },
               },
             },
           },
@@ -456,27 +492,30 @@ export class KycService {
       );
     }
 
-    const customer = application.user;
+    const session = application.onboardingSession;
+    if (!session) {
+      throw new NotFoundError("Onboarding session not found for application.");
+    }
+
+    const marketer = session.marketer;
     let isMarketerApproval = false;
     let isAdminApproval = false;
 
-    // Check Maker-Checker scoping credentials
     if (reviewer.role === "MARKETER") {
-      if (customer.referredByMarketerId !== reviewer.userId) {
+      if (session.marketerId !== reviewer.userId) {
         throw new UnauthorizedError(
           "Unauthorized: You are not the referring marketer for this customer.",
         );
       }
       isMarketerApproval = true;
     } else if (reviewer.role === "COMPANY") {
-      if (customer.companyId !== reviewer.userId) {
+      if (session.companyId !== reviewer.userId) {
         throw new UnauthorizedError(
           "Unauthorized: This customer does not belong to your company.",
         );
       }
       isAdminApproval = true;
     } else if (reviewer.role === "ADMIN") {
-      const marketer = customer.referredByMarketer;
       if (marketer && marketer.createdById !== reviewer.userId) {
         throw new UnauthorizedError(
           "Unauthorized: You are not the Admin associated with this marketer.",
@@ -487,7 +526,6 @@ export class KycService {
       throw new UnauthorizedError("Unauthorized role credentials.");
     }
 
-    // Capture the asset hash for the immutable audit trail
     const primaryAsset = application.kycDocumentAssets[0];
     const fileHash = primaryAsset ? primaryAsset.fileHash : "mock-hash";
 
@@ -540,6 +578,40 @@ export class KycService {
         throw new NotFoundError("Financing contract not found.");
       }
 
+      const newUser = await tx.user.create({
+        data: {
+          name: session.name,
+          email: session.email,
+          password: session.passwordHash,
+          role: "CUSTOMER",
+          referredByMarketerId: session.marketerId,
+          companyId: session.companyId,
+          active: true,
+        },
+      });
+
+      await tx.kycApplication.update({
+        where: { kycApplicationId: applicationId },
+        data: { userId: newUser.userId },
+      });
+
+      await tx.financingContract.update({
+        where: { contractId: contract.contractId },
+        data: { userId: newUser.userId },
+      });
+
+      await tx.onboardingSession.update({
+        where: { sessionId: session.sessionId },
+        data: { status: "APPROVED", completedAt: new Date() },
+      });
+
+      await tx.referral.create({
+        data: {
+          marketerId: session.marketerId,
+          referralCode: `REF-${marketer.referralCode}-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
+        },
+      });
+
       const firstPaymentDate = new Date();
       firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
 
@@ -570,15 +642,27 @@ export class KycService {
         data: { scheduledDeletionAt: new Date(Date.now() - 1000) },
       });
 
-      return { ...updated, status: "APPROVED" as const };
+      return {
+        ...updated,
+        status: "APPROVED" as const,
+        userId: newUser.userId,
+      };
     });
 
     if (updatedApp.status === "APPROVED") {
+      // Deliver credentials via the existing notification channel — the reviewer
+      // (not the customer) called this endpoint, so the token goes to the customer.
+      const activationToken = generateLoginToken(
+        (updatedApp as any).userId,
+        session.email,
+      );
+
       emitEvent(DomainEvent.USER_REGISTERED, {
-        email: customer.email,
-        name: customer.name || "Customer",
+        email: session.email,
+        name: session.name,
         role: "CUSTOMER",
         applicationUnderReview: false,
+        activationToken,
       });
     }
 
@@ -613,7 +697,14 @@ export class KycService {
 
     const application = await prisma.kycApplication.findUnique({
       where: { kycApplicationId: applicationId },
-      include: { kycDocumentAssets: true, user: true },
+      include: {
+        kycDocumentAssets: true,
+        onboardingSession: {
+          include: {
+            marketer: { select: { createdById: true } },
+          },
+        },
+      },
     });
 
     if (!application) {
@@ -626,12 +717,12 @@ export class KycService {
       );
     }
 
-    const customer = application.user;
+    const session = application.onboardingSession;
 
-    // Check associated admin link
-    if (customer.referredByMarketerId) {
+    // Check associated admin link (read from the session's marketer)
+    if (session?.marketerId) {
       const marketer = await prisma.user.findUnique({
-        where: { userId: customer.referredByMarketerId },
+        where: { userId: session.marketerId },
       });
       if (
         marketer?.createdById !== admin.userId &&
@@ -665,7 +756,6 @@ export class KycService {
         },
       });
 
-      // Write rejection audit trail entry (Retained permanently)
       await tx.kycAuditTrail.create({
         data: {
           kycApplicationId: applicationId,
@@ -685,13 +775,12 @@ export class KycService {
       });
     });
 
-    // Trigger rejection notification to customer
     emitEvent(DomainEvent.USER_REGISTERED, {
-      email: customer.email,
-      name: customer.name || "Customer",
+      email: session?.email ?? "",
+      name: session?.name ?? "",
       role: "CUSTOMER",
       applicationUnderReview: false,
-      rejectionReason: reason, // Triggers dynamic rejection emails
+      rejectionReason: reason,
     });
 
     return {
@@ -716,25 +805,28 @@ export class KycService {
 
     const application = await prisma.kycApplication.findUnique({
       where: { kycApplicationId: applicationId },
-      include: { kycDocumentAssets: true, user: true },
+      include: {
+        kycDocumentAssets: true,
+        onboardingSession: { select: { marketerId: true } },
+      },
     });
 
     if (!application) {
       throw new NotFoundError("KYC Application not found.");
     }
 
-    const customer = application.user;
+    const session = application.onboardingSession;
 
     if (reviewer.role === "MARKETER") {
-      if (customer.referredByMarketerId !== reviewer.userId) {
+      if (session?.marketerId !== reviewer.userId) {
         throw new UnauthorizedError(
           "Unauthorized: You are not the referring marketer for this customer.",
         );
       }
     } else if (reviewer.role === "ADMIN" || reviewer.role === "COMPANY") {
-      if (customer.referredByMarketerId) {
+      if (session?.marketerId) {
         const marketer = await prisma.user.findUnique({
-          where: { userId: customer.referredByMarketerId },
+          where: { userId: session.marketerId },
         });
         if (marketer?.createdById !== reviewer.userId) {
           throw new UnauthorizedError(
@@ -787,18 +879,6 @@ export class KycService {
     const skip = (page - 1) * limit;
 
     const userScope: Prisma.UserWhereInput = {};
-
-    // if (reviewerRole === Role.MARKETER) {
-    //   userScope.referredByMarketerId = reviewerId;
-    // } else if (reviewerRole === Role.ADMIN) {
-    //   userScope.referredByMarketer = { createdById: reviewerId };
-    // } else if (reviewerRole === Role.COMPANY) {
-    //   userScope.companyId = companyId;
-    // } else if (reviewerRole !== Role.SUPER_ADMIN) {
-    //   throw new UnauthorizedError(
-    //     "You are not authorized to view KYC applications.",
-    //   );
-    // }
 
     switch (reviewerRole) {
       case Role.MARKETER:

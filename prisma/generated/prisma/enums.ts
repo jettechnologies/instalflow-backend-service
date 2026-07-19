@@ -20,6 +20,18 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const KycOnboardingStatus = {
+  PENDING_KYC: 'PENDING_KYC',
+  KYC_SUBMITTED: 'KYC_SUBMITTED',
+  APPROVED: 'APPROVED',
+  EXPIRED: 'EXPIRED',
+  EXPIRING: 'EXPIRING',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type KycOnboardingStatus = (typeof KycOnboardingStatus)[keyof typeof KycOnboardingStatus]
+
+
 export const ApplicationStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

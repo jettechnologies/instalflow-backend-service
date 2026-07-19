@@ -28,7 +28,7 @@ export interface NotificationPayloadMap {
     applicationId: string;
     customerName: string;
     customerEmail: string;
-    customer: { userId: string; referredByMarketerId?: string };
+    customer: { email: string; referredByMarketerId?: string };
   };
   [NotificationEventType.INSTALLMENT_OVERDUE]: {
     installmentId: string;

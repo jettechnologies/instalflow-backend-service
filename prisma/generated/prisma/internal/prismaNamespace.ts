@@ -393,6 +393,7 @@ export const ModelName = {
   Product: 'Product',
   ProductVariant: 'ProductVariant',
   KycApplication: 'KycApplication',
+  OnboardingSession: 'OnboardingSession',
   KycDocumentAsset: 'KycDocumentAsset',
   KycAuditTrail: 'KycAuditTrail',
   FinancingContract: 'FinancingContract',
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "paymentIntent" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "onboardingSession" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "paymentIntent" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1099,6 +1100,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.KycApplicationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KycApplicationCountAggregateOutputType> | number
+        }
+      }
+    }
+    OnboardingSession: {
+      payload: Prisma.$OnboardingSessionPayload<ExtArgs>
+      fields: Prisma.OnboardingSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OnboardingSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OnboardingSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.OnboardingSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OnboardingSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>
+        }
+        findMany: {
+          args: Prisma.OnboardingSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>[]
+        }
+        create: {
+          args: Prisma.OnboardingSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>
+        }
+        createMany: {
+          args: Prisma.OnboardingSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OnboardingSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.OnboardingSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>
+        }
+        update: {
+          args: Prisma.OnboardingSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.OnboardingSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OnboardingSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OnboardingSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.OnboardingSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OnboardingSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.OnboardingSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOnboardingSession>
+        }
+        groupBy: {
+          args: Prisma.OnboardingSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OnboardingSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OnboardingSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OnboardingSessionCountAggregateOutputType> | number
         }
       }
     }
@@ -3042,6 +3117,7 @@ export const KycApplicationScalarFieldEnum = {
   id: 'id',
   kycApplicationId: 'kycApplicationId',
   userId: 'userId',
+  onboardingSessionId: 'onboardingSessionId',
   productId: 'productId',
   installmentPlanId: 'installmentPlanId',
   variantId: 'variantId',
@@ -3060,6 +3136,24 @@ export const KycApplicationScalarFieldEnum = {
 } as const
 
 export type KycApplicationScalarFieldEnum = (typeof KycApplicationScalarFieldEnum)[keyof typeof KycApplicationScalarFieldEnum]
+
+
+export const OnboardingSessionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  name: 'name',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  marketerId: 'marketerId',
+  companyId: 'companyId',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OnboardingSessionScalarFieldEnum = (typeof OnboardingSessionScalarFieldEnum)[keyof typeof OnboardingSessionScalarFieldEnum]
 
 
 export const KycDocumentAssetScalarFieldEnum = {
@@ -3633,6 +3727,20 @@ export type ListEnumProductStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'KycOnboardingStatus'
+ */
+export type EnumKycOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KycOnboardingStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'KycOnboardingStatus[]'
+ */
+export type ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KycOnboardingStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'FinancingStatus'
  */
 export type EnumFinancingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancingStatus'>
@@ -4002,6 +4110,7 @@ export type GlobalOmitConfig = {
   product?: Prisma.ProductOmit
   productVariant?: Prisma.ProductVariantOmit
   kycApplication?: Prisma.KycApplicationOmit
+  onboardingSession?: Prisma.OnboardingSessionOmit
   kycDocumentAsset?: Prisma.KycDocumentAssetOmit
   kycAuditTrail?: Prisma.KycAuditTrailOmit
   financingContract?: Prisma.FinancingContractOmit

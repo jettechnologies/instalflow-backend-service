@@ -392,6 +392,23 @@ export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonNullableFilter<$PrismaModel>
 }
 
+export type EnumKycOnboardingStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycOnboardingStatus | Prisma.EnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycOnboardingStatusFilter<$PrismaModel> | $Enums.KycOnboardingStatus
+}
+
+export type EnumKycOnboardingStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycOnboardingStatus | Prisma.EnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycOnboardingStatusWithAggregatesFilter<$PrismaModel> | $Enums.KycOnboardingStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKycOnboardingStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKycOnboardingStatusFilter<$PrismaModel>
+}
+
 export type EnumFinancingStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.FinancingStatus | Prisma.EnumFinancingStatusFieldRefInput<$PrismaModel>
   in?: $Enums.FinancingStatus[] | Prisma.ListEnumFinancingStatusFieldRefInput<$PrismaModel>
@@ -1043,6 +1060,23 @@ export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
+}
+
+export type NestedEnumKycOnboardingStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycOnboardingStatus | Prisma.EnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycOnboardingStatusFilter<$PrismaModel> | $Enums.KycOnboardingStatus
+}
+
+export type NestedEnumKycOnboardingStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycOnboardingStatus | Prisma.EnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycOnboardingStatusWithAggregatesFilter<$PrismaModel> | $Enums.KycOnboardingStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKycOnboardingStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKycOnboardingStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumFinancingStatusFilter<$PrismaModel = never> = {

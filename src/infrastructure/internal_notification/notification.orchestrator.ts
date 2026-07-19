@@ -134,7 +134,9 @@ export class NotificationOrchestrator {
       payload,
     );
 
-    const recipients = await this.resolveKycRecipients(payload.customer);
+    const recipients = await this.resolveRecipientsForKycSubmission(
+      payload.customer,
+    );
 
     await Promise.all(
       recipients.map(
@@ -286,8 +288,8 @@ export class NotificationOrchestrator {
     }
   }
 
-  private static async resolveKycRecipients(customer: {
-    userId: string;
+  private static async resolveRecipientsForKycSubmission(customer: {
+    email: string;
     referredByMarketerId?: string;
   }): Promise<
     Array<{
@@ -315,7 +317,9 @@ export class NotificationOrchestrator {
     }
 
     const marketerId = customer.referredByMarketerId;
-    const recipients: Awaited<ReturnType<typeof this.resolveKycRecipients>> = [
+    const recipients: Awaited<
+      ReturnType<typeof this.resolveRecipientsForKycSubmission>
+    > = [
       {
         userId: marketerId,
         idempotencySuffix: `marketer-${marketerId}`,
@@ -323,7 +327,7 @@ export class NotificationOrchestrator {
     ];
 
     const marketer = await prisma.user.findUnique({
-      where: { userId: marketerId },
+      where: { userId: marketerId, role: Role.MARKETER },
       select: { createdById: true },
     });
 

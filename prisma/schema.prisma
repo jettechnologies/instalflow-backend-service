@@ -15,6 +15,15 @@ enum Role {
   CUSTOMER
 }
 
+enum KycOnboardingStatus {
+  PENDING_KYC
+  KYC_SUBMITTED
+  APPROVED
+  EXPIRED
+  EXPIRING
+  CANCELLED
+}
+
 enum ApplicationStatus {
   PENDING
   APPROVED
@@ -187,6 +196,7 @@ model Company {
   ledgerAccounts           LedgerAccount[]
   approvalRequests         ApprovalRequest[]
   commissionPayoutRequests CommissionPayoutRequest[]
+  onboardingSessions       OnboardingSession[]
 }
 
 model User {
@@ -209,6 +219,8 @@ model User {
   kycApplications       KycApplication[]       @relation("UserKyc")
   kycAuditTrails        KycAuditTrail[]
   internalNotifications InternalNotification[]
+
+  onboardingSessions OnboardingSession[] @relation("MarketerOnboardingSessions")
 
   referralCode   String?             @unique
   referrals      Referral[]
@@ -332,37 +344,62 @@ model ProductVariant {
 }
 
 model KycApplication {
-  id                 BigInt                 @id @default(autoincrement())
-  kycApplicationId   String                 @unique @default(uuid()) @map("kyc_application_id")
-  userId             String                 @map("user_id")
-  user               User                   @relation("UserKyc", fields: [userId], references: [userId])
-  productId          String                 @map("product_id")
-  product            Product                @relation(fields: [productId], references: [productId], onDelete: Restrict)
-  installmentPlanId  String                 @map("installment_plan_id")
-  installmentPlan    ProductInstallmentPlan @relation(fields: [installmentPlanId], references: [planId], onDelete: Restrict)
-  variantId          String                 @map("variant_id")
-  idType             String                 @map("id_type")
-  idNumber           String                 @map("id_number")
-  status             String                 @default("PENDING") // PENDING, APPROVED, REJECTED
-  marketerApproved   Boolean                @default(false) @map("marketer_approved")
-  marketerApprovedAt DateTime?              @map("marketer_approved_at")
-  adminApproved      Boolean                @default(false) @map("admin_approved")
-  adminApprovedAt    DateTime?              @map("admin_approved_at")
-  rejectionReason    String?                @map("rejection_reason")
-  legalHold          Boolean                @default(false) @map("legal_hold")
-  isUnderFraudReview Boolean                @default(false) @map("is_under_fraud_review")
-  createdAt          DateTime               @default(now()) @map("created_at")
-  updatedAt          DateTime               @updatedAt @map("updated_at")
+  id                  BigInt                 @id @default(autoincrement())
+  kycApplicationId    String                 @unique @default(uuid()) @map("kyc_application_id")
+  userId              String?                @map("user_id")
+  user                User?                  @relation("UserKyc", fields: [userId], references: [userId])
+  onboardingSessionId String?                @unique @map("onboarding_session_id")
+  onboardingSession   OnboardingSession?     @relation(fields: [onboardingSessionId], references: [sessionId])
+  productId           String                 @map("product_id")
+  product             Product                @relation(fields: [productId], references: [productId], onDelete: Restrict)
+  installmentPlanId   String                 @map("installment_plan_id")
+  installmentPlan     ProductInstallmentPlan @relation(fields: [installmentPlanId], references: [planId], onDelete: Restrict)
+  variantId           String                 @map("variant_id")
+  idType              String                 @map("id_type")
+  idNumber            String                 @map("id_number")
+  status              String                 @default("PENDING")
+  marketerApproved    Boolean                @default(false) @map("marketer_approved")
+  marketerApprovedAt  DateTime?              @map("marketer_approved_at")
+  adminApproved       Boolean                @default(false) @map("admin_approved")
+  adminApprovedAt     DateTime?              @map("admin_approved_at")
+  rejectionReason     String?                @map("rejection_reason")
+  legalHold           Boolean                @default(false) @map("legal_hold")
+  isUnderFraudReview  Boolean                @default(false) @map("is_under_fraud_review")
+  createdAt           DateTime               @default(now()) @map("created_at")
+  updatedAt           DateTime               @updatedAt @map("updated_at")
 
   kycDocumentAssets KycDocumentAsset[]
   kycAuditTrails    KycAuditTrail[]
   financingContract FinancingContract?
 
   @@index([userId])
+  @@index([onboardingSessionId])
   @@index([productId])
   @@index([variantId])
   @@index([installmentPlanId])
   @@index([status, createdAt])
+}
+
+model OnboardingSession {
+  id           BigInt              @id @default(autoincrement())
+  sessionId    String              @unique @default(uuid())
+  name         String
+  email        String
+  passwordHash String
+  marketerId   String
+  marketer     User                @relation("MarketerOnboardingSessions", fields: [marketerId], references: [userId])
+  companyId    String?
+  company      Company?            @relation(fields: [companyId], references: [companyId])
+  status       KycOnboardingStatus @default(PENDING_KYC)
+  expiresAt    DateTime
+  completedAt  DateTime?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  kycApplication KycApplication?
+
+  @@index([email, status])
+  @@index([status, expiresAt])
 }
 
 model KycDocumentAsset {
@@ -400,8 +437,8 @@ model FinancingContract {
   id         BigInt @id @default(autoincrement())
   contractId String @unique @default(uuid())
 
-  userId String
-  user   User   @relation(fields: [userId], references: [userId])
+  userId String?
+  user   User?   @relation(fields: [userId], references: [userId])
 
   productId String
   product   Product @relation(fields: [productId], references: [productId], onDelete: Restrict)

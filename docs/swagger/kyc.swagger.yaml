@@ -3,10 +3,13 @@ paths:
     post:
       tags:
         - KYC & Onboarding
-      summary: Onboard/Register Customer via Referral
+      summary: Start Referral Onboarding (provisional session)
       description: |
-        Registers a new Customer account and associates them with the referring Marketer.
-        **Note:** This endpoint does NOT auto-login or return JWT session tokens.
+        Creates or resumes a provisional, expiring `OnboardingSession` for the referred
+        customer. **No `User` account is created yet** — identity is only materialized once
+        the KYC application is fully approved (maker + checker). Re-calling with the same
+        email and a live session returns a fresh token for the same session and extends its
+        expiry, so a dropped connection mid-flow is always recoverable.
       requestBody:
         required: true
         content:
@@ -14,7 +17,6 @@ paths:
             schema:
               type: object
               required:
-                - name
                 - email
                 - password
                 - referredByCode
@@ -35,7 +37,7 @@ paths:
                   example: IFL-REF-JOHNMARKETER-A8786D
       responses:
         "201":
-          description: Customer registered successfully. Use the onboardingToken to call POST /kyc/submit.
+          description: Referral accepted. Use the onboardingToken to call POST /kyc/submit. A User is only created on full KYC approval.
           content:
             application/json:
               schema:
@@ -46,14 +48,14 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Customer registered successfully via referral. Use the onboardingToken to complete your KYC application.
+                    example: Referral accepted. Use the onboardingToken to complete your KYC application.
                   onboardingToken:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         "400":
           description: Invalid inputs or invalid referral code.
         "409":
-          description: Email is already in use.
+          description: Email is already in use by an existing User.
 
   /kyc/referral-link:
     post:
@@ -104,8 +106,11 @@ paths:
         - KYC & Onboarding
       summary: Submit Installment Eligibility Application (KYC)
       description: |
-        Uploads customer's financial statement PDF and submits identity parameters for mock KYC check validation.
-        **Authorization:** Requires the short-lived `onboardingToken` returned by `POST /kyc/register` as `Authorization: Bearer <onboardingToken>`. This token expires in **1 hour**.
+        Uploads the customer's bank statement PDF and submits identity parameters for the
+        mock KYC check. The customer does not yet exist as a `User`; the application is
+        anchored to the provisional `OnboardingSession` created by `POST /kyc/register`.
+        **Authorization:** Requires the short-lived `onboardingToken` (now scoped to the
+        session, valid 24h) as `Authorization: Bearer <onboardingToken>`.
         **Constraints:** Bank statement file size must be <= 10MB and format must be strictly `.pdf`.
       security:
         - bearerAuth: []
@@ -168,9 +173,13 @@ paths:
                     type: string
                     example: PENDING
         "400":
-          description: PDF upload fails size limit or type constraint.
+          description: PDF upload fails size/type constraint, or the onboarding session has expired.
         "401":
           description: Onboarding token missing, expired, or invalid.
+        "404":
+          description: Onboarding session not found (e.g. already expired and swept). Re-register to obtain a new session.
+        "409":
+          description: An existing PENDING/APPROVED KYC application is already attached to this session.
 
   /kyc/applications/{id}/approve:
     post:

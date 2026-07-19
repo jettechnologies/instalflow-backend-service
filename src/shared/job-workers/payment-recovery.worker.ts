@@ -134,7 +134,7 @@ export class PaymentRecoveryWorker {
         if (!installment) return null;
 
         return {
-          email: installment.financingContract.user.email,
+          email: installment.financingContract.user?.email ?? "",
           metadata: {
             installmentId: installment.installmentId,
             financingContractId: installment.financingContractId,

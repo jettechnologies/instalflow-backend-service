@@ -5,7 +5,7 @@ import { verifyOnboardingToken } from "@/shared/utils/password-hash-verify";
 declare global {
   namespace Express {
     interface Request {
-      onboardingCustomerId?: string;
+      onboardingSessionId?: string;
     }
   }
 }
@@ -29,7 +29,7 @@ export const requireOnboardingToken = (
     const token = authHeader.split(" ")[1];
     const payload = verifyOnboardingToken(token);
 
-    req.onboardingCustomerId = payload.customerId;
+    req.onboardingSessionId = payload.sessionId;
 
     next();
   } catch (err: any) {

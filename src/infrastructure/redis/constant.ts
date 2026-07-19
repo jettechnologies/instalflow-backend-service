@@ -4,6 +4,7 @@ export const QueueNames = {
   TransferQueue: "transfer-queue",
   CommissionQueue: "commission-queue",
   KycRetentionQueue: "kyc-retention-queue",
+  OnboardingSweeperQueue: "kyc-onboarding-sweeper-queue",
   InstallmentPaymentReminderQueue: "installment-payment-reminder-queue",
   LedgerReconciliationQueue: "ledger-reconciliation-queue",
   PaymentRecoveryQueue: "payment-recovery-queue",

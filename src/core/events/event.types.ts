@@ -24,6 +24,7 @@ export enum DomainEvent {
   MARKETER_TOGGLE_STATUS = "marketer.toggle.status",
   ADMIN_TOGGLE_STATUS = "admin.toggle.status",
   ADMIN_ACCOUNT_DELETED = "admin.account.deleted",
+  ONBOARDING_SESSION_EXPIRED = "onboarding.session.expired",
 }
 
 export enum EventStatus {
@@ -124,6 +125,7 @@ export interface DomainEventPayloads {
     dashboard_url?: string;
     role?: string;
     applicationUnderReview?: boolean;
+    activationToken?: string;
     rejectionReason?: string;
   };
   [DomainEvent.STAFF_CREATED]: {
@@ -219,6 +221,11 @@ export interface DomainEventPayloads {
     status: "ACTIVE" | "SUSPENDED";
     processedAt: string;
     dashboard_url?: string;
+  };
+  [DomainEvent.ONBOARDING_SESSION_EXPIRED]: {
+    sessionId: string;
+    email: string;
+    hadKycApplication: boolean;
   };
 
   [DomainEvent.INSTALLMENT_REMINDER_3DAY]: Reminder3DayPayload;

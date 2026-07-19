@@ -63,6 +63,11 @@ export type ProductVariant = Prisma.ProductVariantModel
  */
 export type KycApplication = Prisma.KycApplicationModel
 /**
+ * Model OnboardingSession
+ * 
+ */
+export type OnboardingSession = Prisma.OnboardingSessionModel
+/**
  * Model KycDocumentAsset
  * 
  */

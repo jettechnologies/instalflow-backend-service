@@ -61,12 +61,12 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const customerId = (req as any).onboardingCustomerId!;
+      const sessionId = (req as any).onboardingSessionId!;
       const params = SubmitApplicationSchema.parse(req.body);
       const file = req.file;
 
       const result = await KycService.submitApplication(
-        customerId,
+        sessionId,
         params,
         file,
       );

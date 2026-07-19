@@ -303,6 +303,7 @@ export type UserWhereInput = {
   kycApplications?: Prisma.KycApplicationListRelationFilter
   kycAuditTrails?: Prisma.KycAuditTrailListRelationFilter
   internalNotifications?: Prisma.InternalNotificationListRelationFilter
+  onboardingSessions?: Prisma.OnboardingSessionListRelationFilter
   referrals?: Prisma.ReferralListRelationFilter
   commissions?: Prisma.CommissionListRelationFilter
   transactions?: Prisma.LedgerTransactionListRelationFilter
@@ -342,6 +343,7 @@ export type UserOrderByWithRelationInput = {
   kycApplications?: Prisma.KycApplicationOrderByRelationAggregateInput
   kycAuditTrails?: Prisma.KycAuditTrailOrderByRelationAggregateInput
   internalNotifications?: Prisma.InternalNotificationOrderByRelationAggregateInput
+  onboardingSessions?: Prisma.OnboardingSessionOrderByRelationAggregateInput
   referrals?: Prisma.ReferralOrderByRelationAggregateInput
   commissions?: Prisma.CommissionOrderByRelationAggregateInput
   transactions?: Prisma.LedgerTransactionOrderByRelationAggregateInput
@@ -384,6 +386,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   kycApplications?: Prisma.KycApplicationListRelationFilter
   kycAuditTrails?: Prisma.KycAuditTrailListRelationFilter
   internalNotifications?: Prisma.InternalNotificationListRelationFilter
+  onboardingSessions?: Prisma.OnboardingSessionListRelationFilter
   referrals?: Prisma.ReferralListRelationFilter
   commissions?: Prisma.CommissionListRelationFilter
   transactions?: Prisma.LedgerTransactionListRelationFilter
@@ -464,6 +467,7 @@ export type UserCreateInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -501,6 +505,7 @@ export type UserUncheckedCreateInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -536,6 +541,7 @@ export type UserUpdateInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -573,6 +579,7 @@ export type UserUncheckedUpdateInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -925,12 +932,28 @@ export type UserCreateNestedOneWithoutKycApplicationsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutKycApplicationsNestedInput = {
+export type UserUpdateOneWithoutKycApplicationsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutKycApplicationsInput, Prisma.UserUncheckedCreateWithoutKycApplicationsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutKycApplicationsInput
   upsert?: Prisma.UserUpsertWithoutKycApplicationsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutKycApplicationsInput, Prisma.UserUpdateWithoutKycApplicationsInput>, Prisma.UserUncheckedUpdateWithoutKycApplicationsInput>
+}
+
+export type UserCreateNestedOneWithoutOnboardingSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOnboardingSessionsInput, Prisma.UserUncheckedCreateWithoutOnboardingSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOnboardingSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOnboardingSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOnboardingSessionsInput, Prisma.UserUncheckedCreateWithoutOnboardingSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOnboardingSessionsInput
+  upsert?: Prisma.UserUpsertWithoutOnboardingSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOnboardingSessionsInput, Prisma.UserUpdateWithoutOnboardingSessionsInput>, Prisma.UserUncheckedUpdateWithoutOnboardingSessionsInput>
 }
 
 export type UserCreateNestedOneWithoutKycAuditTrailsInput = {
@@ -955,10 +978,12 @@ export type UserCreateNestedOneWithoutFinancingContractsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutFinancingContractsNestedInput = {
+export type UserUpdateOneWithoutFinancingContractsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutFinancingContractsInput, Prisma.UserUncheckedCreateWithoutFinancingContractsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutFinancingContractsInput
   upsert?: Prisma.UserUpsertWithoutFinancingContractsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFinancingContractsInput, Prisma.UserUpdateWithoutFinancingContractsInput>, Prisma.UserUncheckedUpdateWithoutFinancingContractsInput>
 }
@@ -1142,6 +1167,7 @@ export type UserCreateWithoutCompanyInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -1178,6 +1204,7 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -1259,6 +1286,7 @@ export type UserCreateWithoutReferredUsersInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -1295,6 +1323,7 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -1334,6 +1363,7 @@ export type UserCreateWithoutReferredByMarketerInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -1370,6 +1400,7 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -1415,6 +1446,7 @@ export type UserCreateWithoutCreatedUsersInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -1451,6 +1483,7 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -1490,6 +1523,7 @@ export type UserCreateWithoutCreatorInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -1525,6 +1559,7 @@ export type UserUncheckedCreateWithoutCreatorInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -1580,6 +1615,7 @@ export type UserUpdateWithoutReferredUsersInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -1616,6 +1652,7 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -1678,6 +1715,7 @@ export type UserUpdateWithoutCreatedUsersInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -1714,6 +1752,7 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -1763,6 +1802,7 @@ export type UserCreateWithoutSessionsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -1799,6 +1839,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -1849,6 +1890,7 @@ export type UserUpdateWithoutSessionsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -1885,6 +1927,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -1920,6 +1963,7 @@ export type UserCreateWithoutPasswordResetsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -1956,6 +2000,7 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2006,6 +2051,7 @@ export type UserUpdateWithoutPasswordResetsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -2042,6 +2088,7 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -2075,6 +2122,7 @@ export type UserCreateWithoutKycApplicationsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2111,6 +2159,7 @@ export type UserUncheckedCreateWithoutKycApplicationsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2161,6 +2210,7 @@ export type UserUpdateWithoutKycApplicationsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -2197,6 +2247,167 @@ export type UserUncheckedUpdateWithoutKycApplicationsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+}
+
+export type UserCreateWithoutOnboardingSessionsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+}
+
+export type UserUncheckedCreateWithoutOnboardingSessionsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+}
+
+export type UserCreateOrConnectWithoutOnboardingSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOnboardingSessionsInput, Prisma.UserUncheckedCreateWithoutOnboardingSessionsInput>
+}
+
+export type UserUpsertWithoutOnboardingSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOnboardingSessionsInput, Prisma.UserUncheckedUpdateWithoutOnboardingSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOnboardingSessionsInput, Prisma.UserUncheckedCreateWithoutOnboardingSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOnboardingSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOnboardingSessionsInput, Prisma.UserUncheckedUpdateWithoutOnboardingSessionsInput>
+}
+
+export type UserUpdateWithoutOnboardingSessionsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOnboardingSessionsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -2231,6 +2442,7 @@ export type UserCreateWithoutKycAuditTrailsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2267,6 +2479,7 @@ export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2317,6 +2530,7 @@ export type UserUpdateWithoutKycAuditTrailsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -2353,6 +2567,7 @@ export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -2388,6 +2603,7 @@ export type UserCreateWithoutFinancingContractsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2424,6 +2640,7 @@ export type UserUncheckedCreateWithoutFinancingContractsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2474,6 +2691,7 @@ export type UserUpdateWithoutFinancingContractsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -2510,6 +2728,7 @@ export type UserUncheckedUpdateWithoutFinancingContractsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -2544,6 +2763,7 @@ export type UserCreateWithoutCommissionsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
@@ -2580,6 +2800,7 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
@@ -2630,6 +2851,7 @@ export type UserUpdateWithoutCommissionsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
@@ -2666,6 +2888,7 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
@@ -2700,6 +2923,7 @@ export type UserCreateWithoutCommissionPayoutRequestsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2736,6 +2960,7 @@ export type UserUncheckedCreateWithoutCommissionPayoutRequestsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2775,6 +3000,7 @@ export type UserCreateWithoutAdminApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2811,6 +3037,7 @@ export type UserUncheckedCreateWithoutAdminApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2850,6 +3077,7 @@ export type UserCreateWithoutCompanyApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2886,6 +3114,7 @@ export type UserUncheckedCreateWithoutCompanyApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -2925,6 +3154,7 @@ export type UserCreateWithoutCommissionTransferInitiatorInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -2961,6 +3191,7 @@ export type UserUncheckedCreateWithoutCommissionTransferInitiatorInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -3011,6 +3242,7 @@ export type UserUpdateWithoutCommissionPayoutRequestsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -3047,6 +3279,7 @@ export type UserUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -3092,6 +3325,7 @@ export type UserUpdateWithoutAdminApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -3128,6 +3362,7 @@ export type UserUncheckedUpdateWithoutAdminApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -3173,6 +3408,7 @@ export type UserUpdateWithoutCompanyApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -3209,6 +3445,7 @@ export type UserUncheckedUpdateWithoutCompanyApprovedPayoutsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -3254,6 +3491,7 @@ export type UserUpdateWithoutCommissionTransferInitiatorInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -3290,6 +3528,7 @@ export type UserUncheckedUpdateWithoutCommissionTransferInitiatorInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -3324,6 +3563,7 @@ export type UserCreateWithoutMarketerBankAccountsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -3360,6 +3600,7 @@ export type UserUncheckedCreateWithoutMarketerBankAccountsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -3410,6 +3651,7 @@ export type UserUpdateWithoutMarketerBankAccountsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -3446,6 +3688,7 @@ export type UserUncheckedUpdateWithoutMarketerBankAccountsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -3480,6 +3723,7 @@ export type UserCreateWithoutTransactionsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
@@ -3516,6 +3760,7 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
@@ -3566,6 +3811,7 @@ export type UserUpdateWithoutTransactionsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
@@ -3602,6 +3848,7 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
@@ -3636,6 +3883,7 @@ export type UserCreateWithoutReferralsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
@@ -3672,6 +3920,7 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
@@ -3722,6 +3971,7 @@ export type UserUpdateWithoutReferralsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
@@ -3758,6 +4008,7 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
@@ -3792,6 +4043,7 @@ export type UserCreateWithoutRequestedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -3828,6 +4080,7 @@ export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -3867,6 +4120,7 @@ export type UserCreateWithoutTargetedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -3903,6 +4157,7 @@ export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
   internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -3953,6 +4208,7 @@ export type UserUpdateWithoutRequestedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -3989,6 +4245,7 @@ export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -4034,6 +4291,7 @@ export type UserUpdateWithoutTargetedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -4070,6 +4328,7 @@ export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -4103,6 +4362,7 @@ export type UserCreateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
@@ -4139,6 +4399,7 @@ export type UserUncheckedCreateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
   kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
   referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
@@ -4189,6 +4450,7 @@ export type UserUpdateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -4225,6 +4487,7 @@ export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
   sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -4276,6 +4539,7 @@ export type UserUpdateWithoutCompanyInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -4312,6 +4576,7 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -4397,6 +4662,7 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -4433,6 +4699,7 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -4485,6 +4752,7 @@ export type UserUpdateWithoutCreatorInput = {
   kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
@@ -4520,6 +4788,7 @@ export type UserUncheckedUpdateWithoutCreatorInput = {
   kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
   kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
   internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
   referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -4563,6 +4832,7 @@ export type UserCountOutputType = {
   kycApplications: number
   kycAuditTrails: number
   internalNotifications: number
+  onboardingSessions: number
   referrals: number
   commissions: number
   transactions: number
@@ -4584,6 +4854,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   kycApplications?: boolean | UserCountOutputTypeCountKycApplicationsArgs
   kycAuditTrails?: boolean | UserCountOutputTypeCountKycAuditTrailsArgs
   internalNotifications?: boolean | UserCountOutputTypeCountInternalNotificationsArgs
+  onboardingSessions?: boolean | UserCountOutputTypeCountOnboardingSessionsArgs
   referrals?: boolean | UserCountOutputTypeCountReferralsArgs
   commissions?: boolean | UserCountOutputTypeCountCommissionsArgs
   transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
@@ -4642,6 +4913,13 @@ export type UserCountOutputTypeCountKycAuditTrailsArgs<ExtArgs extends runtime.T
  */
 export type UserCountOutputTypeCountInternalNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InternalNotificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOnboardingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OnboardingSessionWhereInput
 }
 
 /**
@@ -4759,6 +5037,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   kycApplications?: boolean | Prisma.User$kycApplicationsArgs<ExtArgs>
   kycAuditTrails?: boolean | Prisma.User$kycAuditTrailsArgs<ExtArgs>
   internalNotifications?: boolean | Prisma.User$internalNotificationsArgs<ExtArgs>
+  onboardingSessions?: boolean | Prisma.User$onboardingSessionsArgs<ExtArgs>
   referrals?: boolean | Prisma.User$referralsArgs<ExtArgs>
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
@@ -4845,6 +5124,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   kycApplications?: boolean | Prisma.User$kycApplicationsArgs<ExtArgs>
   kycAuditTrails?: boolean | Prisma.User$kycAuditTrailsArgs<ExtArgs>
   internalNotifications?: boolean | Prisma.User$internalNotificationsArgs<ExtArgs>
+  onboardingSessions?: boolean | Prisma.User$onboardingSessionsArgs<ExtArgs>
   referrals?: boolean | Prisma.User$referralsArgs<ExtArgs>
   commissions?: boolean | Prisma.User$commissionsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
@@ -4882,6 +5162,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     kycApplications: Prisma.$KycApplicationPayload<ExtArgs>[]
     kycAuditTrails: Prisma.$KycAuditTrailPayload<ExtArgs>[]
     internalNotifications: Prisma.$InternalNotificationPayload<ExtArgs>[]
+    onboardingSessions: Prisma.$OnboardingSessionPayload<ExtArgs>[]
     referrals: Prisma.$ReferralPayload<ExtArgs>[]
     commissions: Prisma.$CommissionPayload<ExtArgs>[]
     transactions: Prisma.$LedgerTransactionPayload<ExtArgs>[]
@@ -5314,6 +5595,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   kycApplications<T extends Prisma.User$kycApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$kycApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kycAuditTrails<T extends Prisma.User$kycAuditTrailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$kycAuditTrailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycAuditTrailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   internalNotifications<T extends Prisma.User$internalNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$internalNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InternalNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  onboardingSessions<T extends Prisma.User$onboardingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$onboardingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OnboardingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   referrals<T extends Prisma.User$referralsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   commissions<T extends Prisma.User$commissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transactions<T extends Prisma.User$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5928,6 +6210,30 @@ export type User$internalNotificationsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.InternalNotificationScalarFieldEnum | Prisma.InternalNotificationScalarFieldEnum[]
+}
+
+/**
+ * User.onboardingSessions
+ */
+export type User$onboardingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OnboardingSession
+   */
+  select?: Prisma.OnboardingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OnboardingSession
+   */
+  omit?: Prisma.OnboardingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OnboardingSessionInclude<ExtArgs> | null
+  where?: Prisma.OnboardingSessionWhereInput
+  orderBy?: Prisma.OnboardingSessionOrderByWithRelationInput | Prisma.OnboardingSessionOrderByWithRelationInput[]
+  cursor?: Prisma.OnboardingSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OnboardingSessionScalarFieldEnum | Prisma.OnboardingSessionScalarFieldEnum[]
 }
 
 /**
