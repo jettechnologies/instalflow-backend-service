@@ -485,7 +485,8 @@ components:
         userId:
           type: string
           format: uuid
-          example: c9f294b8-8e85-4797-bdf5-6d0a3ecaa25c
+          nullable: true
+          example: null
         productId:
           type: string
           format: uuid
@@ -575,6 +576,49 @@ components:
             totalFinanced:
               type: number
               example: 540000
+        onboardingSession:
+          type: object
+          nullable: true
+          properties:
+            sessionId:
+              type: string
+              format: uuid
+            email:
+              type: string
+              format: email
+              example: alice.customer@example.com
+            status:
+              type: string
+              enum: [PENDING_KYC, KYC_SUBMITTED, APPROVED, EXPIRED, CANCELLED]
+            expiresAt:
+              type: string
+              format: date-time
+            marketer:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                  example: John Marketer
+                email:
+                  type: string
+                  format: email
+                  example: marketer@example.com
+                referralCode:
+                  type: string
+                  example: IFL-REF-JOHNMARKETER-A8786D
+            company:
+              type: object
+              nullable: true
+              properties:
+                companyId:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                  example: Acme Corp
         kycDocumentAssets:
           type: array
           items:

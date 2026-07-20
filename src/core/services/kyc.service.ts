@@ -878,15 +878,15 @@ export class KycService {
 
     const skip = (page - 1) * limit;
 
-    const userScope: Prisma.UserWhereInput = {};
+    const where: Prisma.KycApplicationWhereInput = {};
 
     switch (reviewerRole) {
       case Role.MARKETER:
-        userScope.referredByMarketerId = reviewerId;
+        where.onboardingSession = { marketerId: reviewerId };
         break;
       case Role.ADMIN:
-        userScope.referredByMarketer = {
-          createdById: reviewerId,
+        where.onboardingSession = {
+          marketer: { createdById: reviewerId },
         };
         break;
       case Role.COMPANY:
@@ -895,7 +895,7 @@ export class KycService {
             "Company account is not associated with a company.",
           );
         }
-        userScope.companyId = companyId;
+        where.onboardingSession = { companyId };
         break;
       case Role.SUPER_ADMIN:
         break;
@@ -905,30 +905,77 @@ export class KycService {
         );
     }
 
-    if (marketerId && reviewerRole !== Role.MARKETER) {
-      userScope.referredByMarketerId = marketerId;
-    }
-
-    const where: Prisma.KycApplicationWhereInput = {
-      ...(Object.keys(userScope).length > 0 ? { user: userScope } : {}),
-    };
-
     if (status) {
       where.status = status;
     }
 
+    if (marketerId && reviewerRole !== Role.MARKETER) {
+      where.onboardingSession = {
+        ...(where.onboardingSession as any),
+        marketerId,
+      };
+    }
+
     if (search) {
+      const term = search.trim();
+      const isEmailSearch = /^[^\s@]+@[^\s@]+$/.test(term);
+
       where.OR = [
-        { user: { name: { contains: search, mode: "insensitive" } } },
-        { user: { email: { contains: search, mode: "insensitive" } } },
         {
           user: {
-            referredByMarketer: {
-              name: { contains: search, mode: "insensitive" },
+            name: {
+              contains: term,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          product: {
+            name: {
+              contains: term,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          product: {
+            slug: {
+              contains: term,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          onboardingSession: {
+            marketer: {
+              name: {
+                contains: term,
+                mode: "insensitive",
+              },
             },
           },
         },
       ];
+      if (isEmailSearch) {
+        where.OR.push(
+          {
+            user: {
+              email: {
+                contains: term,
+                mode: "insensitive",
+              },
+            },
+          },
+          {
+            onboardingSession: {
+              email: {
+                contains: term,
+                mode: "insensitive",
+              },
+            },
+          },
+        );
+      }
     }
 
     const [applications, total] = await Promise.all([
@@ -951,6 +998,25 @@ export class KycService {
                   name: true,
                   email: true,
                   referralCode: true,
+                },
+              },
+            },
+          },
+          onboardingSession: {
+            include: {
+              marketer: {
+                select: {
+                  userId: true,
+                  name: true,
+                  email: true,
+                  referralCode: true,
+                  createdById: true,
+                },
+              },
+              company: {
+                select: {
+                  companyId: true,
+                  name: true,
                 },
               },
             },
@@ -991,6 +1057,9 @@ export class KycService {
 
   /**
    * Retrieve a single KYC application by its public UUID.
+   *
+   * Under Option B, `user` is nullable pre-approval. `onboardingSession` is the
+   * authoritative source for the customer's identity until approval.
    */
   static async getKycApplicationById(applicationId: string) {
     const application = await prisma.kycApplication.findUnique({
@@ -1001,11 +1070,33 @@ export class KycService {
             userId: true,
             name: true,
             email: true,
+            companyId: true,
             referredByMarketerId: true,
             referredByMarketer: {
               select: {
+                userId: true,
                 name: true,
                 email: true,
+                referralCode: true,
+              },
+            },
+          },
+        },
+        onboardingSession: {
+          include: {
+            marketer: {
+              select: {
+                userId: true,
+                name: true,
+                email: true,
+                referralCode: true,
+                createdById: true,
+              },
+            },
+            company: {
+              select: {
+                companyId: true,
+                name: true,
               },
             },
           },
