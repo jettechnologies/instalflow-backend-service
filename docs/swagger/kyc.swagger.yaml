@@ -563,6 +563,9 @@ components:
             slug:
               type: string
               example: amazing-flagship-phone-6019
+            commissionRate:
+              type: string
+              example: 0.05
         financingContract:
           type: object
           nullable: true

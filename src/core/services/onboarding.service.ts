@@ -83,6 +83,8 @@ export class OnboardingService {
         }
       });
 
+      // need to create an internal notification for handling the expiration of an onboarding section and also the audit log for it and the notification would be to the user and also the marketer and admin or company role. also would need to look into having the onbaording session been extended cause it would make sense if its about 3 days lasting or the onboarding session might expiry and then the kyc might still stay intact for at least the next 3 days.
+
       // 3. Decoupled side effects: emit a domain event. Notification, audit,
       //    metrics and document cleanup are handled by subscribers, not here.
       // emitEvent(DomainEvent.ONBOARDING_SESSION_EXPIRED, {

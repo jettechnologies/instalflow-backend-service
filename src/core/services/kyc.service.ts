@@ -1026,6 +1026,7 @@ export class KycService {
               productId: true,
               name: true,
               slug: true,
+              commissionRate: true,
             },
           },
           financingContract: {
