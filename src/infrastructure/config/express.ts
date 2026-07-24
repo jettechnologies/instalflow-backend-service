@@ -4,7 +4,6 @@ import helmet from "helmet";
 import session from "express-session";
 import PrismaSessionStore from "@/shared/utils/prisma-session-store";
 import sanitizer from "@/shared/utils/sanitizer";
-import csrfMiddleware from "@/api/middlewares/csrf-middlewares";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -19,7 +18,6 @@ export function configureExpress(app: Application): void {
   app.set("trust proxy", 1);
 
   app.use("/api-docs", (req, res, next) => {
-    // Remove helmet's CSP and set a permissive one for swagger
     res.setHeader(
       "Content-Security-Policy",
       [
@@ -28,7 +26,6 @@ export function configureExpress(app: Application): void {
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data:",
         "connect-src 'self'",
-        // Critical: do NOT include upgrade-insecure-requests
       ].join("; "),
     );
     next();
@@ -48,6 +45,4 @@ export function configureExpress(app: Application): void {
       },
     }),
   );
-
-  app.use(csrfMiddleware);
 }

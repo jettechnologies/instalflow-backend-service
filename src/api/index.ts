@@ -10,6 +10,7 @@ import "@/core/events/handlers/notification.handler";
 import router from "@/api/routes";
 import webhookRoutes from "@/api/routes/webhook.routes";
 import { errorHandler } from "@/api/middlewares/errorHandler";
+import csrfMiddleware from "./middlewares/csrf-middlewares";
 
 const app = express();
 
@@ -22,11 +23,6 @@ app.use(
 
 configureExpress(app);
 setupSwagger(app);
-// app.use(cors());
-
-// const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",").map((origin) =>
-//   origin.trim().replace(/\/$/, ""),
-// )
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
   .split(",")
@@ -44,6 +40,9 @@ app.use(
     credentials: true,
   }),
 );
+
+// setting csrfMiddleware after cors
+app.use(csrfMiddleware);
 
 // Mount primary domain routers
 app.use("/api/v1", router);
