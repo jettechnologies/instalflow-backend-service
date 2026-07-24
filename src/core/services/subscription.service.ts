@@ -63,6 +63,7 @@ export class SubscriptionService {
         {
           email: onboardingIntent.email,
           metadata: { intentId },
+          callbackUrl: `${process.env.FRONTEND_URL}/login`,
         },
         {
           traceId: randomUUID(),

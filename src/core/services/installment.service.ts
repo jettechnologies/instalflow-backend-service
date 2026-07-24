@@ -284,7 +284,7 @@ export class InstallmentService {
     const { intent, isExisting } = await PaymentIntentService.reserve({
       type: PaymentIntentType.INSTALLMENT,
       amount: installment.amount,
-      customerId: customer.userId,
+      customerId: customer?.userId,
       installmentId: installment.installmentId,
       planId: product.productId,
       idempotencyKey,
@@ -312,13 +312,14 @@ export class InstallmentService {
     const result = await PaymentIntentService.initializePaystack(
       intent.intentId,
       {
-        email: customer.email,
+        email: customer?.email ?? "",
         metadata: {
           installmentId: installment.installmentId,
           financingContractId: installment.financingContractId,
           productId: product.productId,
           sequence: installment.sequence,
         },
+        callbackUrl: `${process.env.FRONTEND_URL}/customer/installments`,
       },
       {
         traceId: randomUUID(),
