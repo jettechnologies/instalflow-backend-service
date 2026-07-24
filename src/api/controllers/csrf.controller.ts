@@ -10,12 +10,14 @@ export class CsrfController {
       const rawToken = createCsrfToken();
       const hashed = hashToken(rawToken);
 
+      const maxAge = 24 * 60 * 60 * 1000;
+
       const cookieOptions = {
         httpOnly: true,
         sameSite: "none" as const,
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        maxAge: 3 * 24 * 60 * 60 * 1000,
+        maxAge,
       };
 
       res.cookie("csrf_hash", hashed, cookieOptions);
@@ -24,7 +26,7 @@ export class CsrfController {
         res,
         200,
         "CSRF token generated successfully",
-        { csrfToken: rawToken },
+        { csrfToken: rawToken, expiresIn: maxAge },
       );
     } catch (error) {
       logger.error("CSRF generation failed", { error });
