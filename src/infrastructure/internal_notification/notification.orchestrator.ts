@@ -249,7 +249,7 @@ export class NotificationOrchestrator {
     // 1. ALWAYS notify marketer (single source of truth)
     const marketer = await prisma.user.findUnique({
       where: { userId: payload.marketerId },
-      select: { userId: true, companyId: true },
+      select: { userId: true, companyId: true, createdById: true },
     });
 
     if (marketer) {
@@ -264,17 +264,29 @@ export class NotificationOrchestrator {
     }
 
     // 2. Only notify next approver group (NOT marketers again)
-    if (payload.role === "ADMIN") {
-      const companyApprovers = await prisma.user.findMany({
+
+    let approvers: Array<{ userId: string }> = [];
+
+    if (payload.role === "ADMIN" && marketer?.createdById) {
+      approvers = await prisma.user.findMany({
+        where: { userId: marketer?.createdById, role: { in: ["ADMIN"] } },
+        select: { userId: true },
+      });
+    }
+
+    if (payload.role === "COMPANY") {
+      approvers = await prisma.user.findMany({
         where: {
           companyId: marketer?.companyId,
           role: "COMPANY",
         },
         select: { userId: true },
       });
+    }
 
+    if (approvers) {
       await Promise.all(
-        companyApprovers.map((approver) =>
+        approvers.map((approver) =>
           NotificationRepository.create({
             userId: approver.userId,
             type: NotificationEventType.COMMISSION_REQUEST_APPROVAL,
@@ -492,42 +504,6 @@ export class NotificationOrchestrator {
       idempotencyKey: `commission-transfer-initiated-${payload.payoutId}-${payload.marketerId}`,
     });
   }
-
-  // private static async handleContractRestructured(
-  //   payload: NotificationPayloadMap[NotificationEventType.CONTRACT_RESTRUCTURED],
-  // ) {
-  //   const template = NotificationTemplates.build(
-  //     NotificationEventType.CONTRACT_RESTRUCTURED,
-  //     payload,
-  //   );
-
-  //   await NotificationRepository.create({
-  //     userId: payload.marketerId,
-  //     type: NotificationEventType.CONTRACT_RESTRUCTURED,
-  //     title: template.title,
-  //     message: template.message,
-  //     metadata: payload,
-  //     idempotencyKey: `contract-restructured-${payload.contractId}-${payload.marketerId}`,
-  //   });
-  // }
-
-  // private static async handleContractWrittenOff(
-  //   payload: NotificationPayloadMap[NotificationEventType.CONTRACT_WRITTEN_OFF],
-  // ) {
-  //   const template = NotificationTemplates.build(
-  //     NotificationEventType.CONTRACT_WRITTEN_OFF,
-  //     payload,
-  //   );
-
-  //   await NotificationRepository.create({
-  //     userId: payload.recipientId,
-  //     type: NotificationEventType.CONTRACT_WRITTEN_OFF,
-  //     title: template.title,
-  //     message: template.message,
-  //     metadata: payload,
-  //     idempotencyKey: `contract-written-off-${payload.contractId}-${payload.recipientRole}-${payload.recipientId}`,
-  //   });
-  // }
 
   private static async handleCommissionTransferSuccess(
     payload: NotificationPayloadMap[NotificationEventType.COMMISSION_TRANSFER_SUCCESS],
@@ -872,3 +848,39 @@ export class NotificationOrchestrator {
     });
   }
 }
+
+// private static async handleContractRestructured(
+//   payload: NotificationPayloadMap[NotificationEventType.CONTRACT_RESTRUCTURED],
+// ) {
+//   const template = NotificationTemplates.build(
+//     NotificationEventType.CONTRACT_RESTRUCTURED,
+//     payload,
+//   );
+
+//   await NotificationRepository.create({
+//     userId: payload.marketerId,
+//     type: NotificationEventType.CONTRACT_RESTRUCTURED,
+//     title: template.title,
+//     message: template.message,
+//     metadata: payload,
+//     idempotencyKey: `contract-restructured-${payload.contractId}-${payload.marketerId}`,
+//   });
+// }
+
+// private static async handleContractWrittenOff(
+//   payload: NotificationPayloadMap[NotificationEventType.CONTRACT_WRITTEN_OFF],
+// ) {
+//   const template = NotificationTemplates.build(
+//     NotificationEventType.CONTRACT_WRITTEN_OFF,
+//     payload,
+//   );
+
+//   await NotificationRepository.create({
+//     userId: payload.recipientId,
+//     type: NotificationEventType.CONTRACT_WRITTEN_OFF,
+//     title: template.title,
+//     message: template.message,
+//     metadata: payload,
+//     idempotencyKey: `contract-written-off-${payload.contractId}-${payload.recipientRole}-${payload.recipientId}`,
+//   });
+// }
