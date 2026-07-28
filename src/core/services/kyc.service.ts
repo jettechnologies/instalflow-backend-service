@@ -112,7 +112,8 @@ export class KycService {
 
     const frontendUrl = process.env.FRONTEND_URL || "https://instalflow.com";
     const variantQuery = params.variantId ? `&variant=${params.variantId}` : "";
-    const referralLink = `${frontendUrl}/invite?ref=${referralCode}&product=${params.productSlug}${variantQuery}`;
+    const planQuery = params.planId ? `&installmentPlan=${params.planId}` : "";
+    const referralLink = `${frontendUrl}/invite?ref=${referralCode}&product=${params.productSlug}${variantQuery}${planQuery}`;
 
     return {
       referralCode,

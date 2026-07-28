@@ -3,6 +3,7 @@ import { z } from "zod";
 export const GenerateReferralLinkSchema = z.object({
   productSlug: z.string().min(1, "Product slug is required"),
   variantId: z.string().uuid().optional(),
+  planId: z.string().uuid().optional(),
 });
 
 export const InviteRegisterSchema = z.object({
@@ -15,7 +16,9 @@ export const InviteRegisterSchema = z.object({
 export const SubmitApplicationSchema = z.object({
   productId: z.string().uuid("Product ID must be a valid UUID"),
   variantId: z.string().uuid("Variant ID must be a valid UUID"),
-  installmentPlanId: z.string().uuid("Installment Plan ID must be a valid UUID"),
+  installmentPlanId: z
+    .string()
+    .uuid("Installment Plan ID must be a valid UUID"),
   idType: z.enum(["NIN", "BVN", "PASSPORT"], {
     message: "KYC ID Type must be NIN, BVN, or PASSPORT",
   }),

@@ -83,6 +83,10 @@ paths:
                   type: string
                   format: uuid
                   example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
+                planId:
+                  type: string
+                  format: uuid
+                  example: 8c9f294b-8e85-4797-bdf5-6d0a3ecaa25c
       responses:
         "200":
           description: Link generated successfully.
