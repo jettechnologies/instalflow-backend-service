@@ -3727,6 +3727,20 @@ export type ListEnumProductStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'KycApplicationStatus'
+ */
+export type EnumKycApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KycApplicationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'KycApplicationStatus[]'
+ */
+export type ListEnumKycApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KycApplicationStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'KycOnboardingStatus'
  */
 export type EnumKycOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KycOnboardingStatus'>

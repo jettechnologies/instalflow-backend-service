@@ -44,7 +44,7 @@ export type KycApplicationMinAggregateOutputType = {
   variantId: string | null
   idType: string | null
   idNumber: string | null
-  status: string | null
+  status: $Enums.KycApplicationStatus | null
   marketerApproved: boolean | null
   marketerApprovedAt: Date | null
   adminApproved: boolean | null
@@ -66,7 +66,7 @@ export type KycApplicationMaxAggregateOutputType = {
   variantId: string | null
   idType: string | null
   idNumber: string | null
-  status: string | null
+  status: $Enums.KycApplicationStatus | null
   marketerApproved: boolean | null
   marketerApprovedAt: Date | null
   adminApproved: boolean | null
@@ -273,7 +273,7 @@ export type KycApplicationGroupByOutputType = {
   variantId: string
   idType: string
   idNumber: string
-  status: string
+  status: $Enums.KycApplicationStatus
   marketerApproved: boolean
   marketerApprovedAt: Date | null
   adminApproved: boolean
@@ -318,7 +318,7 @@ export type KycApplicationWhereInput = {
   variantId?: Prisma.StringFilter<"KycApplication"> | string
   idType?: Prisma.StringFilter<"KycApplication"> | string
   idNumber?: Prisma.StringFilter<"KycApplication"> | string
-  status?: Prisma.StringFilter<"KycApplication"> | string
+  status?: Prisma.EnumKycApplicationStatusFilter<"KycApplication"> | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFilter<"KycApplication"> | boolean
   marketerApprovedAt?: Prisma.DateTimeNullableFilter<"KycApplication"> | Date | string | null
   adminApproved?: Prisma.BoolFilter<"KycApplication"> | boolean
@@ -379,7 +379,7 @@ export type KycApplicationWhereUniqueInput = Prisma.AtLeast<{
   variantId?: Prisma.StringFilter<"KycApplication"> | string
   idType?: Prisma.StringFilter<"KycApplication"> | string
   idNumber?: Prisma.StringFilter<"KycApplication"> | string
-  status?: Prisma.StringFilter<"KycApplication"> | string
+  status?: Prisma.EnumKycApplicationStatusFilter<"KycApplication"> | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFilter<"KycApplication"> | boolean
   marketerApprovedAt?: Prisma.DateTimeNullableFilter<"KycApplication"> | Date | string | null
   adminApproved?: Prisma.BoolFilter<"KycApplication"> | boolean
@@ -438,7 +438,7 @@ export type KycApplicationScalarWhereWithAggregatesInput = {
   variantId?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   idType?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
   idNumber?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
-  status?: Prisma.StringWithAggregatesFilter<"KycApplication"> | string
+  status?: Prisma.EnumKycApplicationStatusWithAggregatesFilter<"KycApplication"> | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolWithAggregatesFilter<"KycApplication"> | boolean
   marketerApprovedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"KycApplication"> | Date | string | null
   adminApproved?: Prisma.BoolWithAggregatesFilter<"KycApplication"> | boolean
@@ -456,7 +456,7 @@ export type KycApplicationCreateInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -485,7 +485,7 @@ export type KycApplicationUncheckedCreateInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -506,7 +506,7 @@ export type KycApplicationUpdateInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -535,7 +535,7 @@ export type KycApplicationUncheckedUpdateInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -560,7 +560,7 @@ export type KycApplicationCreateManyInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -578,7 +578,7 @@ export type KycApplicationUpdateManyMutationInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -600,7 +600,7 @@ export type KycApplicationUncheckedUpdateManyInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -790,6 +790,10 @@ export type KycApplicationUncheckedUpdateManyWithoutProductNestedInput = {
   deleteMany?: Prisma.KycApplicationScalarWhereInput | Prisma.KycApplicationScalarWhereInput[]
 }
 
+export type EnumKycApplicationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.KycApplicationStatus
+}
+
 export type KycApplicationCreateNestedOneWithoutOnboardingSessionInput = {
   create?: Prisma.XOR<Prisma.KycApplicationCreateWithoutOnboardingSessionInput, Prisma.KycApplicationUncheckedCreateWithoutOnboardingSessionInput>
   connectOrCreate?: Prisma.KycApplicationCreateOrConnectWithoutOnboardingSessionInput
@@ -912,7 +916,7 @@ export type KycApplicationCreateWithoutUserInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -939,7 +943,7 @@ export type KycApplicationUncheckedCreateWithoutUserInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -993,7 +997,7 @@ export type KycApplicationScalarWhereInput = {
   variantId?: Prisma.StringFilter<"KycApplication"> | string
   idType?: Prisma.StringFilter<"KycApplication"> | string
   idNumber?: Prisma.StringFilter<"KycApplication"> | string
-  status?: Prisma.StringFilter<"KycApplication"> | string
+  status?: Prisma.EnumKycApplicationStatusFilter<"KycApplication"> | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFilter<"KycApplication"> | boolean
   marketerApprovedAt?: Prisma.DateTimeNullableFilter<"KycApplication"> | Date | string | null
   adminApproved?: Prisma.BoolFilter<"KycApplication"> | boolean
@@ -1011,7 +1015,7 @@ export type KycApplicationCreateWithoutProductInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1038,7 +1042,7 @@ export type KycApplicationUncheckedCreateWithoutProductInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1085,7 +1089,7 @@ export type KycApplicationCreateWithoutOnboardingSessionInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1112,7 +1116,7 @@ export type KycApplicationUncheckedCreateWithoutOnboardingSessionInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1149,7 +1153,7 @@ export type KycApplicationUpdateWithoutOnboardingSessionInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1176,7 +1180,7 @@ export type KycApplicationUncheckedUpdateWithoutOnboardingSessionInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1197,7 +1201,7 @@ export type KycApplicationCreateWithoutKycDocumentAssetsInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1225,7 +1229,7 @@ export type KycApplicationUncheckedCreateWithoutKycDocumentAssetsInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1261,7 +1265,7 @@ export type KycApplicationUpdateWithoutKycDocumentAssetsInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1289,7 +1293,7 @@ export type KycApplicationUncheckedUpdateWithoutKycDocumentAssetsInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1309,7 +1313,7 @@ export type KycApplicationCreateWithoutKycAuditTrailsInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1337,7 +1341,7 @@ export type KycApplicationUncheckedCreateWithoutKycAuditTrailsInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1373,7 +1377,7 @@ export type KycApplicationUpdateWithoutKycAuditTrailsInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1401,7 +1405,7 @@ export type KycApplicationUncheckedUpdateWithoutKycAuditTrailsInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1421,7 +1425,7 @@ export type KycApplicationCreateWithoutFinancingContractInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1449,7 +1453,7 @@ export type KycApplicationUncheckedCreateWithoutFinancingContractInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1485,7 +1489,7 @@ export type KycApplicationUpdateWithoutFinancingContractInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1513,7 +1517,7 @@ export type KycApplicationUncheckedUpdateWithoutFinancingContractInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1533,7 +1537,7 @@ export type KycApplicationCreateWithoutInstallmentPlanInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1560,7 +1564,7 @@ export type KycApplicationUncheckedCreateWithoutInstallmentPlanInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1610,7 +1614,7 @@ export type KycApplicationCreateManyUserInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1628,7 +1632,7 @@ export type KycApplicationUpdateWithoutUserInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1655,7 +1659,7 @@ export type KycApplicationUncheckedUpdateWithoutUserInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1679,7 +1683,7 @@ export type KycApplicationUncheckedUpdateManyWithoutUserInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1700,7 +1704,7 @@ export type KycApplicationCreateManyProductInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1718,7 +1722,7 @@ export type KycApplicationUpdateWithoutProductInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1745,7 +1749,7 @@ export type KycApplicationUncheckedUpdateWithoutProductInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1769,7 +1773,7 @@ export type KycApplicationUncheckedUpdateManyWithoutProductInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1790,7 +1794,7 @@ export type KycApplicationCreateManyInstallmentPlanInput = {
   variantId: string
   idType: string
   idNumber: string
-  status?: string
+  status?: $Enums.KycApplicationStatus
   marketerApproved?: boolean
   marketerApprovedAt?: Date | string | null
   adminApproved?: boolean
@@ -1808,7 +1812,7 @@ export type KycApplicationUpdateWithoutInstallmentPlanInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1835,7 +1839,7 @@ export type KycApplicationUncheckedUpdateWithoutInstallmentPlanInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1859,7 +1863,7 @@ export type KycApplicationUncheckedUpdateManyWithoutInstallmentPlanInput = {
   variantId?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumKycApplicationStatusFieldUpdateOperationsInput | $Enums.KycApplicationStatus
   marketerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marketerApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adminApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2060,7 +2064,7 @@ export type $KycApplicationPayload<ExtArgs extends runtime.Types.Extensions.Inte
     variantId: string
     idType: string
     idNumber: string
-    status: string
+    status: $Enums.KycApplicationStatus
     marketerApproved: boolean
     marketerApprovedAt: Date | null
     adminApproved: boolean
@@ -2509,7 +2513,7 @@ export interface KycApplicationFieldRefs {
   readonly variantId: Prisma.FieldRef<"KycApplication", 'String'>
   readonly idType: Prisma.FieldRef<"KycApplication", 'String'>
   readonly idNumber: Prisma.FieldRef<"KycApplication", 'String'>
-  readonly status: Prisma.FieldRef<"KycApplication", 'String'>
+  readonly status: Prisma.FieldRef<"KycApplication", 'KycApplicationStatus'>
   readonly marketerApproved: Prisma.FieldRef<"KycApplication", 'Boolean'>
   readonly marketerApprovedAt: Prisma.FieldRef<"KycApplication", 'DateTime'>
   readonly adminApproved: Prisma.FieldRef<"KycApplication", 'Boolean'>

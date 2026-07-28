@@ -120,6 +120,13 @@ enum ApprovalStatus {
   REJECTED
 }
 
+enum KycApplicationStatus {
+  PENDING
+  APPROVAL_PROCESSING
+  APPROVED
+  REJECTED
+}
+
 enum InternalNotificationType {
   KYC_APPLICATION_SUBMITTED
   INSTALLMENT_OVERDUE
@@ -357,7 +364,7 @@ model KycApplication {
   variantId           String                 @map("variant_id")
   idType              String                 @map("id_type")
   idNumber            String                 @map("id_number")
-  status              String                 @default("PENDING")
+  status              KycApplicationStatus   @default(PENDING)
   marketerApproved    Boolean                @default(false) @map("marketer_approved")
   marketerApprovedAt  DateTime?              @map("marketer_approved_at")
   adminApproved       Boolean                @default(false) @map("admin_approved")

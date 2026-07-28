@@ -392,6 +392,23 @@ export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonNullableFilter<$PrismaModel>
 }
 
+export type EnumKycApplicationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycApplicationStatus | Prisma.EnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycApplicationStatusFilter<$PrismaModel> | $Enums.KycApplicationStatus
+}
+
+export type EnumKycApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycApplicationStatus | Prisma.EnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycApplicationStatusWithAggregatesFilter<$PrismaModel> | $Enums.KycApplicationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKycApplicationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKycApplicationStatusFilter<$PrismaModel>
+}
+
 export type EnumKycOnboardingStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.KycOnboardingStatus | Prisma.EnumKycOnboardingStatusFieldRefInput<$PrismaModel>
   in?: $Enums.KycOnboardingStatus[] | Prisma.ListEnumKycOnboardingStatusFieldRefInput<$PrismaModel>
@@ -1060,6 +1077,23 @@ export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
+}
+
+export type NestedEnumKycApplicationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycApplicationStatus | Prisma.EnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycApplicationStatusFilter<$PrismaModel> | $Enums.KycApplicationStatus
+}
+
+export type NestedEnumKycApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KycApplicationStatus | Prisma.EnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KycApplicationStatus[] | Prisma.ListEnumKycApplicationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKycApplicationStatusWithAggregatesFilter<$PrismaModel> | $Enums.KycApplicationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKycApplicationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKycApplicationStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumKycOnboardingStatusFilter<$PrismaModel = never> = {

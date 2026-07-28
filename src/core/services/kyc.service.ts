@@ -1,4 +1,10 @@
-import { FinancingStatus, Prisma, Role, prisma } from "@/infrastructure/prisma";
+import {
+  FinancingStatus,
+  KycApplicationStatus,
+  Prisma,
+  Role,
+  prisma,
+} from "@/infrastructure/prisma";
 import crypto from "crypto";
 import { z } from "zod";
 import {
@@ -449,13 +455,15 @@ export class KycService {
   }
 
   /**
-   * Maker-Checker Approval Process:
-   * Requires approval from BOTH the assigned Marketer and their creator Admin.
+   * Hierarchical Approval Process:
+   * Step 1: Marketer must approve first (status transitions to APPROVAL_PROCESSING).
+   * Step 2: Only after marketer approval, COMPANY or ADMIN can approve
+   *         (status transitions to APPROVED and deferred user creation runs).
    *
    * Deferred User Creation (PRD Option B): the customer does not yet exist as a
    * `User`. Scoping is read from `application.onboardingSession`. Only when both
-   * signatures land (atomic claim on `status: PENDING -> APPROVED`) is the `User`
-   * created, the FKs backfilled, the session closed, and the `Referral` recorded.
+   * signatures land is the `User` created, the FKs backfilled, the session closed,
+   * and the `Referral` recorded.
    */
   static async approveApplication(applicationId: string, reviewerId: string) {
     const [reviewer, application] = await Promise.all([
@@ -484,12 +492,6 @@ export class KycService {
 
     if (!application) {
       throw new NotFoundError("KYC Application not found.");
-    }
-
-    if (application.status !== "PENDING") {
-      throw new BadRequestError(
-        `Application is already processed: ${application.status}.`,
-      );
     }
 
     const session = application.onboardingSession;
@@ -529,151 +531,195 @@ export class KycService {
     const primaryAsset = application.kycDocumentAssets[0];
     const fileHash = primaryAsset ? primaryAsset.fileHash : "mock-hash";
 
-    const updatedApp = await prisma.$transaction(async (tx) => {
-      const updateData: Prisma.KycApplicationUpdateInput = {};
-      if (isMarketerApproval) {
-        updateData.marketerApproved = true;
-        updateData.marketerApprovedAt = new Date();
-      }
-      if (isAdminApproval) {
-        updateData.adminApproved = true;
-        updateData.adminApprovedAt = new Date();
+    if (isMarketerApproval) {
+      if (application.status !== KycApplicationStatus.PENDING) {
+        throw new BadRequestError(
+          `Marketer approval is only allowed when application is PENDING. Current status: ${application.status}.`,
+        );
       }
 
-      const updated = await tx.kycApplication.update({
-        where: { kycApplicationId: applicationId },
-        data: updateData,
-      });
-
-      await tx.kycAuditTrail.create({
-        data: {
-          kycApplicationId: applicationId,
-          action: isMarketerApproval ? "MARKETER_APPROVED" : "ADMIN_APPROVED",
-          documentType: "BANK_STATEMENT_PDF",
-          fileHash: fileHash,
-          performedById: reviewer.userId,
-          outcome: "SUCCESS",
-          details: `Approved by ${reviewer.role}: ${reviewer.name}`,
-        },
-      });
-
-      if (!updated.marketerApproved || !updated.adminApproved) {
-        return updated;
-      }
-
-      const claim = await tx.kycApplication.updateMany({
-        where: { kycApplicationId: applicationId, status: "PENDING" },
-        data: { status: "APPROVED" },
-      });
-
-      if (claim.count === 0) {
-        return updated;
-      }
-
-      const contract = await tx.financingContract.findUnique({
-        where: { kycApplicationId: applicationId },
-      });
-
-      if (!contract) {
-        throw new NotFoundError("Financing contract not found.");
-      }
-
-      const newUser = await tx.user.create({
-        data: {
-          name: session.name,
-          email: session.email,
-          password: session.passwordHash,
-          role: "CUSTOMER",
-          referredByMarketerId: session.marketerId,
-          companyId: session.companyId,
-          active: true,
-        },
-      });
-
-      await tx.kycApplication.update({
-        where: { kycApplicationId: applicationId },
-        data: { userId: newUser.userId },
-      });
-
-      await tx.financingContract.update({
-        where: { contractId: contract.contractId },
-        data: { userId: newUser.userId },
-      });
-
-      await tx.onboardingSession.update({
-        where: { sessionId: session.sessionId },
-        data: { status: "APPROVED", completedAt: new Date() },
-      });
-
-      await tx.referral.create({
-        data: {
-          marketerId: session.marketerId,
-          referralCode: `REF-${marketer.referralCode}-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
-        },
-      });
-
-      const firstPaymentDate = new Date();
-      firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
-
-      const installmentSchedules =
-        InstallmentService.generateInstallmentSchedule({
-          financingContractId: contract.contractId,
-          totalAmount: Number(contract.totalFinanced),
-          months: contract.approvedDurationMonths,
-          firstPaymentDate,
+      const updated = await prisma.$transaction(async (tx) => {
+        const marked = await tx.kycApplication.update({
+          where: { kycApplicationId: applicationId },
+          data: {
+            marketerApproved: true,
+            marketerApprovedAt: new Date(),
+            status: KycApplicationStatus.APPROVAL_PROCESSING,
+          },
         });
 
-      await tx.installment.createMany({
-        data: installmentSchedules,
-      });
+        await tx.kycAuditTrail.create({
+          data: {
+            kycApplicationId: applicationId,
+            action: "MARKETER_APPROVED",
+            documentType: "BANK_STATEMENT_PDF",
+            fileHash: fileHash,
+            performedById: reviewer.userId,
+            outcome: "SUCCESS",
+            details: `Approved by ${reviewer.role}: ${reviewer.name}`,
+          },
+        });
 
-      await tx.financingContract.update({
-        where: { contractId: contract.contractId },
-        data: {
-          status: FinancingStatus.ACTIVE,
-          activatedAt: new Date(),
-        },
-      });
-
-      // CBN/NDPR: Schedule physical asset deletion instantly (buffer 24 hours or immediate)
-      // Set scheduledDeletionAt to past to allow immediate cleanup worker purging
-      await tx.kycDocumentAsset.updateMany({
-        where: { kycApplicationId: applicationId },
-        data: { scheduledDeletionAt: new Date(Date.now() - 1000) },
+        return marked;
       });
 
       return {
-        ...updated,
-        status: "APPROVED" as const,
-        userId: newUser.userId,
+        success: true,
+        message:
+          "Marketer approval recorded. Awaiting Company/Admin final approval.",
+        status: updated.status,
       };
-    });
-
-    if (updatedApp.status === "APPROVED") {
-      // Deliver credentials via the existing notification channel — the reviewer
-      // (not the customer) called this endpoint, so the token goes to the customer.
-      const activationToken = generateLoginToken(
-        (updatedApp as any).userId,
-        session.email,
-      );
-
-      emitEvent(DomainEvent.USER_REGISTERED, {
-        email: session.email,
-        name: session.name,
-        role: "CUSTOMER",
-        applicationUnderReview: false,
-        activationToken,
-      });
     }
 
-    return {
-      success: true,
-      message:
-        updatedApp.status === "APPROVED"
-          ? "KYC Application fully approved by both Marketer and Admin."
-          : `Approval recorded. Awaiting remaining Maker/Checker signature.`,
-      status: updatedApp.status,
-    };
+    if (isAdminApproval) {
+      if (!application.marketerApproved) {
+        throw new BadRequestError(
+          "Admin/Company approval is only allowed after the Marketer has approved.",
+        );
+      }
+
+      if (application.status !== KycApplicationStatus.APPROVAL_PROCESSING) {
+        throw new BadRequestError(
+          `Admin/Company approval is only allowed when application is in APPROVAL_PROCESSING. Current status: ${application.status}.`,
+        );
+      }
+
+      const updatedApp = await prisma.$transaction(async (tx) => {
+        const updateData: Prisma.KycApplicationUpdateInput = {
+          adminApproved: true,
+          adminApprovedAt: new Date(),
+        };
+
+        const updated = await tx.kycApplication.update({
+          where: { kycApplicationId: applicationId },
+          data: updateData,
+        });
+
+        await tx.kycAuditTrail.create({
+          data: {
+            kycApplicationId: applicationId,
+            action: "ADMIN_APPROVED",
+            documentType: "BANK_STATEMENT_PDF",
+            fileHash: fileHash,
+            performedById: reviewer.userId,
+            outcome: "SUCCESS",
+            details: `Approved by ${reviewer.role}: ${reviewer.name}`,
+          },
+        });
+
+        const claim = await tx.kycApplication.updateMany({
+          where: {
+            kycApplicationId: applicationId,
+            status: KycApplicationStatus.APPROVAL_PROCESSING,
+          },
+          data: { status: KycApplicationStatus.APPROVED },
+        });
+
+        if (claim.count === 0) {
+          return updated;
+        }
+
+        const contract = await tx.financingContract.findUnique({
+          where: { kycApplicationId: applicationId },
+        });
+
+        if (!contract) {
+          throw new NotFoundError("Financing contract not found.");
+        }
+
+        const newUser = await tx.user.create({
+          data: {
+            name: session.name,
+            email: session.email,
+            password: session.passwordHash,
+            role: "CUSTOMER",
+            referredByMarketerId: session.marketerId,
+            companyId: session.companyId,
+            active: true,
+          },
+        });
+
+        await tx.kycApplication.update({
+          where: { kycApplicationId: applicationId },
+          data: { userId: newUser.userId },
+        });
+
+        await tx.financingContract.update({
+          where: { contractId: contract.contractId },
+          data: { userId: newUser.userId },
+        });
+
+        await tx.onboardingSession.update({
+          where: { sessionId: session.sessionId },
+          data: { status: "APPROVED", completedAt: new Date() },
+        });
+
+        await tx.referral.create({
+          data: {
+            marketerId: session.marketerId,
+            referralCode: `REF-${marketer.referralCode}-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
+          },
+        });
+
+        const firstPaymentDate = new Date();
+        firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
+
+        const installmentSchedules =
+          InstallmentService.generateInstallmentSchedule({
+            financingContractId: contract.contractId,
+            totalAmount: Number(contract.totalFinanced),
+            months: contract.approvedDurationMonths,
+            firstPaymentDate,
+          });
+
+        await tx.installment.createMany({
+          data: installmentSchedules,
+        });
+
+        await tx.financingContract.update({
+          where: { contractId: contract.contractId },
+          data: {
+            status: FinancingStatus.ACTIVE,
+            activatedAt: new Date(),
+          },
+        });
+
+        await tx.kycDocumentAsset.updateMany({
+          where: { kycApplicationId: applicationId },
+          data: { scheduledDeletionAt: new Date(Date.now() - 1000) },
+        });
+
+        return {
+          ...updated,
+          status: "APPROVED" as const,
+          userId: newUser.userId,
+        };
+      });
+
+      if (updatedApp.status === "APPROVED") {
+        const activationToken = generateLoginToken(
+          (updatedApp as any).userId,
+          session.email,
+        );
+
+        emitEvent(DomainEvent.USER_REGISTERED, {
+          email: session.email,
+          name: session.name,
+          role: "CUSTOMER",
+          applicationUnderReview: false,
+          activationToken,
+        });
+      }
+
+      return {
+        success: true,
+        message:
+          "KYC Application fully approved by both Marketer and Company/Admin.",
+        status: updatedApp.status,
+      };
+    }
+
+    throw new UnauthorizedError("Unauthorized role credentials.");
   }
 
   /**
@@ -695,26 +741,32 @@ export class KycService {
       );
     }
 
-    const application = await prisma.kycApplication.findUnique({
-      where: { kycApplicationId: applicationId },
+    const application = await prisma.kycApplication.findFirst({
+      where: {
+        kycApplicationId: applicationId,
+        status: {
+          in: [
+            KycApplicationStatus.PENDING,
+            KycApplicationStatus.APPROVAL_PROCESSING,
+          ],
+        },
+      },
       include: {
         kycDocumentAssets: true,
         onboardingSession: {
           include: {
-            marketer: { select: { createdById: true } },
+            marketer: {
+              select: {
+                createdById: true,
+              },
+            },
           },
         },
       },
     });
 
     if (!application) {
-      throw new NotFoundError("KYC Application not found.");
-    }
-
-    if (application.status !== "PENDING") {
-      throw new BadRequestError(
-        `Application is already processed: ${application.status}.`,
-      );
+      throw new NotFoundError("KYC application is not available for approval");
     }
 
     const session = application.onboardingSession;
@@ -906,7 +958,7 @@ export class KycService {
     }
 
     if (status) {
-      where.status = status;
+      where.status = status as KycApplicationStatus;
     }
 
     if (marketerId && reviewerRole !== Role.MARKETER) {

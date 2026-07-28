@@ -170,6 +170,16 @@ export const ApprovalStatus = {
 export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
 
 
+export const KycApplicationStatus = {
+  PENDING: 'PENDING',
+  APPROVAL_PROCESSING: 'APPROVAL_PROCESSING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type KycApplicationStatus = (typeof KycApplicationStatus)[keyof typeof KycApplicationStatus]
+
+
 export const InternalNotificationType = {
   KYC_APPLICATION_SUBMITTED: 'KYC_APPLICATION_SUBMITTED',
   INSTALLMENT_OVERDUE: 'INSTALLMENT_OVERDUE',
