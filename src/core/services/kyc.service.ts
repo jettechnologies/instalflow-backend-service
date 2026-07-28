@@ -436,7 +436,7 @@ export class KycService {
       NotificationEventType.KYC_APPLICATION_SUBMITTED,
       {
         applicationId: application.kycApplicationId,
-        customerName: "Customer",
+        customerName: session.name,
         customerEmail: session.email,
         customer: {
           email: session.email,

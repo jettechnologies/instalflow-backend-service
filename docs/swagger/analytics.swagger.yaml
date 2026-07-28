@@ -1,0 +1,671 @@
+tags:
+  - name: Analytics
+    description: Role-aware dashboard analytics endpoints for Company, Admin, Marketer, and Customer overviews plus shared financing, KYC funnel, collection, and product performance metrics.
+
+paths:
+  /analytics/overview/company:
+    get:
+      summary: Company dashboard overview
+      description: >
+        Returns company-level KPIs including total financed value, payments collected,
+        outstanding balance, active/defaulted contracts, pending KYC approvals,
+        payout pipeline, unread notifications, recent contracts, and active subscription.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Company overview fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Company overview fetched successfully.
+                  data:
+                    $ref: "#/components/schemas/CompanyOverview"
+
+  /analytics/overview/admin:
+    get:
+      summary: Admin dashboard overview
+      description: >
+        Returns admin-level KPIs including created marketers count, referral counts,
+        pending KYC approvals scoped to admin's marketers, revenue generated,
+        pending maker-checker approval requests, and recent KYC applications.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Admin overview fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Admin overview fetched successfully.
+                  data:
+                    $ref: "#/components/schemas/AdminOverview"
+
+  /analytics/overview/marketer:
+    get:
+      summary: Marketer dashboard overview
+      description: >
+        Returns marketer-level KPIs including all-time commissions, available balance,
+        pending/paid payouts, active referrals, pending applications, approved contracts,
+        commission breakdown by product and customer, and unread notifications.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Marketer overview fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Marketer overview fetched successfully.
+                  data:
+                    $ref: "#/components/schemas/MarketerOverview"
+
+  /analytics/overview/customer:
+    get:
+      summary: Customer dashboard overview
+      description: >
+        Returns customer-level KPIs including active contracts, total financed,
+        total paid, remaining balance, overall progress percentage, overdue amount,
+        next payment due, contract-level breakdowns, and referring marketer info.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Customer dashboard fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Customer dashboard fetched successfully.
+                  data:
+                    $ref: "#/components/schemas/CustomerOverview"
+
+  /analytics/financing:
+    get:
+      summary: Shared financing statistics
+      description: >
+        Returns financing contract statistics scoped to the authenticated user's role.
+        Supported roles: COMPANY, ADMIN, MARKETER, CUSTOMER.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Financing stats fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Financing stats fetched successfully.
+                  data:
+                    $ref: "#/components/schemas/FinancingStats"
+        "403":
+          description: Insufficient privileges.
+
+  /analytics/kyc/funnel:
+    get:
+      summary: Shared KYC funnel statistics
+      description: >
+        Returns KYC application funnel counts scoped to the authenticated user's role.
+        Supported roles: COMPANY, ADMIN, MARKETER.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: KYC funnel stats fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: KYC funnel stats fetched successfully.
+                  data:
+                    $ref: "#/components/schemas/KycFunnelStats"
+        "403":
+          description: Insufficient privileges.
+
+  /analytics/collections:
+    get:
+      summary: Company payment collection statistics
+      description: >
+        Returns company-level installment collection metrics including total installments,
+        paid/pending/due/overdue/defaulted counts, collection rate, and overdue amount.
+        Restricted to COMPANY role.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Collection stats fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Collection stats fetched successfully.
+                  data:
+                    $ref: "#/components/schemas/CollectionStats"
+        "403":
+          description: Insufficient privileges.
+
+  /analytics/products/performance:
+    get:
+      summary: Shared product performance statistics
+      description: >
+        Returns product-level performance metrics including contracts count, total financed,
+        and commissions paid. Supported roles: COMPANY, ADMIN.
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Product performance fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product performance fetched successfully.
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductPerformance"
+        "403":
+          description: Insufficient privileges.
+
+components:
+  schemas:
+    CompanyOverview:
+      type: object
+      properties:
+        financials:
+          type: object
+          properties:
+            totalFinanced:
+              type: number
+              example: 25000000
+            totalPaid:
+              type: number
+              example: 8500000
+            outstandingBalance:
+              type: number
+              example: 16500000
+            collectionRate:
+              type: number
+              example: 34.0
+        contracts:
+          type: object
+          properties:
+            active:
+              type: integer
+              example: 120
+            defaulted:
+              type: integer
+              example: 8
+        kyc:
+          type: object
+          properties:
+            pendingApprovals:
+              type: integer
+              example: 5
+        payouts:
+          type: object
+          properties:
+            pipeline:
+              type: object
+              additionalProperties:
+                type: number
+              example:
+                PENDING_ADMIN_APPROVAL: 500000
+                PENDING_COMPANY_APPROVAL: 300000
+                APPROVED: 200000
+                TRANSFER_INITIATED: 150000
+                PAID: 1200000
+            pendingAdmin:
+              type: number
+              example: 500000
+            pendingCompany:
+              type: number
+              example: 300000
+            approved:
+              type: number
+              example: 200000
+            transferInitiated:
+              type: number
+              example: 150000
+            paid:
+              type: number
+              example: 1200000
+            failed:
+              type: number
+              example: 25000
+        notifications:
+          type: object
+          properties:
+            unread:
+              type: integer
+              example: 12
+        subscription:
+          type: object
+          nullable: true
+          properties:
+            subscriptionId:
+              type: string
+            status:
+              type: string
+            startDate:
+              type: string
+              format: date-time
+            endDate:
+              type: string
+              format: date-time
+            plan:
+              type: object
+              properties:
+                name:
+                  type: string
+                interval:
+                  type: string
+        recentContracts:
+          type: array
+          items:
+            type: object
+            properties:
+              contractId:
+                type: string
+              customer:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+              product:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  slug:
+                    type: string
+              totalFinanced:
+                type: number
+              status:
+                type: string
+              paidAmount:
+                type: number
+              createdAt:
+                type: string
+                format: date-time
+
+    AdminOverview:
+      type: object
+      properties:
+        marketers:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 8
+            totalReferrals:
+              type: integer
+              example: 145
+        kyc:
+          type: object
+          properties:
+            pendingApprovals:
+              type: integer
+              example: 3
+            recentApplications:
+              type: array
+              items:
+                type: object
+                properties:
+                  kycApplicationId:
+                    type: string
+                  status:
+                    type: string
+                  product:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      slug:
+                        type: string
+                  onboardingSession:
+                    type: object
+                    properties:
+                      marketer:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          referralCode:
+                            type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+        financials:
+          type: object
+          properties:
+            totalRevenue:
+              type: number
+              example: 18200000
+        approvals:
+          type: object
+          properties:
+            pendingRequests:
+              type: integer
+              example: 2
+
+    MarketerOverview:
+      type: object
+      properties:
+        commissions:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 450000
+            available:
+              type: number
+              example: 120000
+            pendingPayout:
+              type: number
+              example: 85000
+            paidPayout:
+              type: number
+              example: 245000
+        referrals:
+          type: object
+          properties:
+            active:
+              type: integer
+              example: 32
+            pendingApplications:
+              type: integer
+              example: 5
+            approvedContracts:
+              type: integer
+              example: 18
+        breakdown:
+          type: object
+          properties:
+            byProduct:
+              type: array
+              items:
+                type: object
+                properties:
+                  productId:
+                    type: string
+                  productName:
+                    type: string
+                  total:
+                    type: number
+            byCustomer:
+              type: array
+              items:
+                type: object
+                properties:
+                  customerId:
+                    type: string
+                  customerName:
+                    type: string
+                  customerEmail:
+                    type: string
+                  total:
+                    type: number
+        notifications:
+          type: object
+          properties:
+            unread:
+              type: integer
+              example: 7
+
+    CustomerOverview:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            activeContracts:
+              type: integer
+              example: 2
+            totalFinanced:
+              type: number
+              example: 950000
+            totalPaid:
+              type: number
+              example: 320000
+            remainingBalance:
+              type: number
+              example: 630000
+            overallProgress:
+              type: number
+              example: 33.68
+            overdueAmount:
+              type: number
+              example: 45000
+        nextPayment:
+          type: object
+          nullable: true
+          properties:
+            installmentId:
+              type: string
+            amount:
+              type: number
+            dueDate:
+              type: string
+              format: date-time
+            product:
+              type: object
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+        contracts:
+          type: array
+          items:
+            type: object
+            properties:
+              contractId:
+                type: string
+              product:
+                type: object
+                properties:
+                  productId:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  images:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        imageUrl:
+                          type: string
+              totalFinanced:
+                type: number
+              paidAmount:
+                type: number
+              status:
+                type: string
+        referredBy:
+          type: object
+          nullable: true
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            referralCode:
+              type: string
+
+    FinancingStats:
+      type: object
+      properties:
+        totalContracts:
+          type: integer
+          example: 210
+        activeContracts:
+          type: integer
+          example: 180
+        completedContracts:
+          type: integer
+          example: 15
+        defaultedContracts:
+          type: integer
+          example: 8
+        writtenOffContracts:
+          type: integer
+          example: 2
+        totalValue:
+          type: number
+          example: 45000000
+        activeValue:
+          type: number
+          example: 38000000
+        avgDurationMonths:
+          type: number
+          example: 12
+        defaultRate:
+          type: number
+          example: 4.76
+
+    KycFunnelStats:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 120
+        pending:
+          type: integer
+          example: 15
+        processing:
+          type: integer
+          example: 10
+        approved:
+          type: integer
+          example: 85
+        rejected:
+          type: integer
+          example: 10
+        approvalRate:
+          type: number
+          example: 79.17
+
+    CollectionStats:
+      type: object
+      properties:
+        totalInstallments:
+          type: integer
+          example: 2400
+        paidInstallments:
+          type: integer
+          example: 1620
+        pendingInstallments:
+          type: integer
+          example: 420
+        dueInstallments:
+          type: integer
+          example: 180
+        overdueInstallments:
+          type: integer
+          example: 120
+        defaultedInstallments:
+          type: integer
+          example: 60
+        collectionRate:
+          type: number
+          example: 67.5
+        totalDue:
+          type: number
+          example: 18500000
+        totalPaid:
+          type: number
+          example: 12450000
+        totalOverdue:
+          type: number
+          example: 2100000
+
+    ProductPerformance:
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        status:
+          type: string
+        price:
+          type: number
+        commissionRate:
+          type: number
+        contractsCount:
+          type: integer
+          example: 45
+        totalFinanced:
+          type: number
+          example: 12500000
+        commissionsPaid:
+          type: number
+          example: 320000

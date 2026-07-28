@@ -14,6 +14,7 @@ import installmentRoutes from "@/api/routes/installment.routes";
 import commissionRoutes from "@/api/routes/comission.routes";
 import financingRoutes from "@/api/routes/financing.routes";
 import variantRoutes from "@/api/routes/variants.routes";
+import analyticsRoutes from "@/api/routes/analytics.routes";
 
 const router = Router();
 
@@ -39,5 +40,6 @@ router.use("/notifications", internalNotificationRoutes);
 router.use("/installments", installmentRoutes);
 router.use("/commissions", commissionRoutes);
 router.use("/financing", financingRoutes);
+router.use("/analytics", analyticsRoutes);
 
 export default router;
