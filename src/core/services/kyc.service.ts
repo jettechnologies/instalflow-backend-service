@@ -17,10 +17,7 @@ import {
   generateOnboardingToken,
   generateLoginToken,
 } from "@/shared/utils/password-hash-verify";
-import {
-  uploadPdfToCloudinary,
-  deleteFromCloudinary,
-} from "./cloudinary.service";
+import { uploadPdfToCloudinary } from "./cloudinary.service";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 import { KycStorageService } from "./kyc-storage.service";
@@ -270,7 +267,9 @@ export class KycService {
     } catch (err) {
       // Orphan cleanup: if the transaction fails after a successful Cloudinary
       // upload, don't leave the document dangling in storage.
-      await deleteFromCloudinary(uploadResult.public_id).catch(() => {});
+      await KycStorageService.deleteAsset(uploadResult.public_id).catch(
+        () => {},
+      );
       throw err;
     }
   }

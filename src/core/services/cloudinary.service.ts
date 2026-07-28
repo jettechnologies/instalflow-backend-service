@@ -53,6 +53,7 @@ export const uploadPdfToCloudinary = async (
       folder: `${env.cloudinary.base_folder}/${folder}`,
       public_id: `${folder}_${uniqueId}`,
       resource_type: "raw",
+      type: "authenticated",
     });
 
     try {
