@@ -154,9 +154,9 @@ export class PaymentReminderWorker {
         const customer = contract.user;
 
         const payload: Reminder3DayPayload = {
-          customerEmail: customer.email,
-          customerName: customer.name ?? "Customer",
-          customerId: customer.userId,
+          customerEmail: customer?.email ?? "",
+          customerName: customer?.name ?? "Customer",
+          customerId: customer?.userId ?? "",
           installmentId: inst.installmentId,
           sequence: inst.sequence,
           dueDate: formatDate(inst.dueDate),
@@ -211,9 +211,9 @@ export class PaymentReminderWorker {
         const customer = contract.user;
 
         const payload: DueTodayPayload = {
-          customerEmail: customer.email,
-          customerName: customer.name ?? "Customer",
-          customerId: customer.userId,
+          customerEmail: customer?.email ?? "",
+          customerName: customer?.name ?? "Customer",
+          customerId: customer?.userId ?? "",
           installmentId: inst.installmentId,
           sequence: inst.sequence,
           dueDate: formatDate(inst.dueDate),
@@ -271,13 +271,13 @@ export class PaymentReminderWorker {
         const contract = inst.financingContract;
         const customer = contract.user;
 
-        if (!customer.referredByMarketerId) {
+        if (!customer?.referredByMarketerId) {
           console.warn(
-            `[InstallmentPaymentReminder] Customer ${customer.userId} has no marketer — skipping marketer notification for installment ${inst.installmentId}`,
+            `[InstallmentPaymentReminder] Customer ${customer?.userId} has no marketer — skipping marketer notification for installment ${inst.installmentId}`,
           );
         }
 
-        const marketer = customer.referredByMarketerId
+        const marketer = customer?.referredByMarketerId
           ? await prisma.user.findUnique({
               where: {
                 userId: customer.referredByMarketerId,
@@ -292,9 +292,9 @@ export class PaymentReminderWorker {
         );
 
         const payload: Overdue3DayPayload = {
-          customerEmail: customer.email,
-          customerName: customer.name ?? "Customer",
-          customerId: customer.userId,
+          customerEmail: customer?.email ?? "",
+          customerName: customer?.name ?? "Customer",
+          customerId: customer?.userId ?? "",
           installmentId: inst.installmentId,
           sequence: inst.sequence,
           dueDate: formatDate(inst.dueDate),
@@ -355,10 +355,10 @@ export class PaymentReminderWorker {
         const contract = inst.financingContract;
         const customer = contract.user;
 
-        const marketer = customer.referredByMarketerId
+        const marketer = customer?.referredByMarketerId
           ? await prisma.user.findUnique({
               where: {
-                userId: customer.referredByMarketerId,
+                userId: customer?.referredByMarketerId,
                 role: Role.MARKETER,
               },
               select: {
@@ -405,9 +405,9 @@ export class PaymentReminderWorker {
         );
 
         const payload: Overdue7DayPayload = {
-          customerEmail: customer.email,
-          customerName: customer.name ?? "Customer",
-          customerId: customer.userId,
+          customerEmail: customer?.email ?? "",
+          customerName: customer?.name ?? "Customer",
+          customerId: customer?.userId ?? "",
           installmentId: inst.installmentId,
           sequence: inst.sequence,
           dueDate: formatDate(inst.dueDate),

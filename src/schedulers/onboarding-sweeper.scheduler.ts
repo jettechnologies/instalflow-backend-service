@@ -1,41 +1,11 @@
-import { Queue } from "bullmq";
-import { redis } from "@/infrastructure/redis/redis-connect";
 import { QueueNames } from "@/infrastructure/redis/constant";
+import { registerRepeatableJob } from "./register-repeatable-job";
 
-export const onboardingSweeperQueue = new Queue(
-  QueueNames.OnboardingSweeperQueue,
-  {
-    connection: redis,
-    defaultJobOptions: {
-      removeOnComplete: true,
-      removeOnFail: false,
-      attempts: 3,
-      backoff: {
-        type: "exponential",
-        delay: 5000,
-      },
-    },
+registerRepeatableJob({
+  queueName: QueueNames.OnboardingSweeperQueue,
+  jobName: "onboarding-sweep-cron",
+  data: {},
+  repeat: {
+    pattern: "0 0 * * *",
   },
-);
-
-onboardingSweeperQueue
-  .add(
-    "onboarding-sweep-cron",
-    {},
-    {
-      repeat: {
-        pattern: "0 0 * * *",
-      },
-    },
-  )
-  .then(() => {
-    console.log(
-      "⏰ [OnboardingSweeperScheduler] Repeatable sweep cron job successfully registered.",
-    );
-  })
-  .catch((err) => {
-    console.error(
-      "❌ [OnboardingSweeperScheduler] Failed to register cron job:",
-      err.message,
-    );
-  });
+});
