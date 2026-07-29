@@ -30,10 +30,6 @@ export async function registerRepeatableJob({
       removeOnComplete: true,
       removeOnFail: false,
       attempts: 3,
-      // backoff: {
-      //   type: "exponential",
-      //   delay: 5000,
-      // },
       backoff,
     },
   });

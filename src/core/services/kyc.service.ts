@@ -469,7 +469,7 @@ export class KycService {
     const [reviewer, application] = await Promise.all([
       prisma.user.findUnique({
         where: { userId: reviewerId },
-        select: { userId: true, role: true, name: true },
+        select: { userId: true, role: true, name: true, companyId: true },
       }),
       prisma.kycApplication.findUnique({
         where: { kycApplicationId: applicationId },
@@ -511,7 +511,7 @@ export class KycService {
       }
       isMarketerApproval = true;
     } else if (reviewer.role === "COMPANY") {
-      if (session.companyId !== reviewer.userId) {
+      if (session.companyId !== reviewer.companyId) {
         throw new UnauthorizedError(
           "Unauthorized: This customer does not belong to your company.",
         );
