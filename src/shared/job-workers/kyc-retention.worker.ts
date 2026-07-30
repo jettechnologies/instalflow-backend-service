@@ -1,5 +1,7 @@
-import { prisma } from "@/infrastructure/prisma";
+import { prisma, KycApplicationStatus } from "@/infrastructure/prisma";
 import { KycStorageService } from "@/core/services/kyc-storage.service";
+import { emitEvent } from "@/core/events/emitter";
+import { DomainEvent } from "@/core/events/event.types";
 
 export class KycRetentionWorker {
   /**
@@ -76,12 +78,50 @@ export class KycRetentionWorker {
 
       const staleApplications = await prisma.kycApplication.findMany({
         where: {
-          status: "PENDING",
+          status: KycApplicationStatus.PENDING,
           createdAt: { lte: staleThreshold },
           legalHold: false,
           isUnderFraudReview: false,
         },
-        include: { kycDocumentAssets: true },
+        include: {
+          kycDocumentAssets: true,
+          onboardingSession: {
+            select: {
+              name: true,
+              email: true,
+
+              marketer: {
+                select: {
+                  creator: {
+                    select: {
+                      email: true,
+                      name: true,
+                    },
+                  },
+                  userId: true,
+                  name: true,
+                  email: true,
+                },
+              },
+              company: {
+                select: {
+                  companyId: true,
+                  users: {
+                    where: {
+                      role: {
+                        in: ["COMPANY", "ADMIN"],
+                      },
+                    },
+                    select: {
+                      email: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       console.log(
@@ -97,7 +137,7 @@ export class KycRetentionWorker {
             await tx.kycApplication.update({
               where: { kycApplicationId: app.kycApplicationId },
               data: {
-                status: "REJECTED",
+                status: KycApplicationStatus.REJECTED,
                 rejectionReason:
                   "Auto-expired: KYC Application remained pending for more than 15 days without approval.",
               },
@@ -121,6 +161,25 @@ export class KycRetentionWorker {
               where: { kycApplicationId: app.kycApplicationId },
               data: { scheduledDeletionAt: new Date(Date.now() - 1000) },
             });
+          });
+
+          const session = app.onboardingSession;
+          const marketer = session?.marketer;
+          const company = session?.company;
+          const companyUsers = company?.users ?? [];
+          const companyEmails = companyUsers.map((u) => u.email);
+
+          emitEvent(DomainEvent.KYC_APPLICATION_AUTO_EXPIRED, {
+            kycApplicationId: app.kycApplicationId,
+            customerEmail: app.onboardingSession?.email ?? "customer@gmail.com",
+            customerName: app.onboardingSession?.name ?? "Customer",
+            hadOnboardingSession: !!session,
+            marketerId: marketer?.userId ?? "",
+            marketerEmail: marketer?.email ?? "",
+            marketerName: marketer?.name ?? "",
+            companyId: company?.companyId ?? "",
+            companyEmails,
+            dashboard_url: process.env.FRONTEND_URL,
           });
 
           console.log(

@@ -25,6 +25,7 @@ export enum DomainEvent {
   ADMIN_TOGGLE_STATUS = "admin.toggle.status",
   ADMIN_ACCOUNT_DELETED = "admin.account.deleted",
   ONBOARDING_SESSION_EXPIRED = "onboarding.session.expired",
+  KYC_APPLICATION_AUTO_EXPIRED = "kyc.application.auto-expired",
 }
 
 export enum EventStatus {
@@ -225,7 +226,26 @@ export interface DomainEventPayloads {
   [DomainEvent.ONBOARDING_SESSION_EXPIRED]: {
     sessionId: string;
     email: string;
+    customerEmail: string;
+    customerName: string;
     hadKycApplication: boolean;
+    marketerId: string;
+    marketerEmail: string;
+    marketerName: string;
+    companyId: string;
+    companyEmails: string[];
+  };
+  [DomainEvent.KYC_APPLICATION_AUTO_EXPIRED]: {
+    kycApplicationId: string;
+    customerEmail: string;
+    customerName: string;
+    hadOnboardingSession: boolean;
+    marketerId: string;
+    marketerEmail: string;
+    marketerName: string;
+    companyId: string;
+    companyEmails: string[];
+    dashboard_url?: string;
   };
 
   [DomainEvent.INSTALLMENT_REMINDER_3DAY]: Reminder3DayPayload;

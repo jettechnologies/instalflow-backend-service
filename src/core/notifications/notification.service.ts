@@ -1,5 +1,8 @@
 // src/core/notifications/notification.service.ts
-import { NotificationPayload, NotificationChannel } from "@/core/notifications/notification.type";
+import {
+  NotificationPayload,
+  NotificationChannel,
+} from "@/core/notifications/notification.type";
 import { EmailChannel } from "@/core/channels/email.channel";
 
 export class NotificationService {
@@ -8,7 +11,7 @@ export class NotificationService {
       case NotificationChannel.EMAIL:
         if (process.env.NOTIFICATION_HUB_URL) {
           console.log(
-            `[NotificationService] NOTIFICATION_HUB_URL is configured — skipping local email delivery to ${notification.to} (delegating to hub)`
+            `[NotificationService] NOTIFICATION_HUB_URL is configured — skipping local email delivery to ${notification.to} (delegating to hub)`,
           );
           return { success: true, skipped: true };
         }

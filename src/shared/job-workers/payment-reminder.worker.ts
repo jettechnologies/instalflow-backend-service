@@ -14,6 +14,23 @@ import {
   type Overdue7DayPayload,
 } from "@/core/events/event.types";
 import logger from "@/infrastructure/logger/logger";
+import { redis } from "@/infrastructure/redis/redis-connect";
+
+const REMINDER_TTL_SECONDS = 24 * 60 * 60;
+
+function reminderKey(installmentId: string, type: string): string {
+  const day = new Date().toISOString().slice(0, 10);
+  return `reminder:sent:${installmentId}:${type}:${day}`;
+}
+
+async function ensureReminderSent(
+  installmentId: string,
+  type: string,
+): Promise<boolean> {
+  const key = reminderKey(installmentId, type);
+  const result = await redis.set(key, "1", "EX", REMINDER_TTL_SECONDS, "NX");
+  return result === "OK";
+}
 
 const formatAmount = (val: Prisma.Decimal | string | number): string => {
   const num = typeof val === "object" ? val.toNumber() : Number(val);
@@ -168,6 +185,17 @@ export class PaymentReminderWorker {
           dashboard_url: process.env.FRONTEND_URL,
         };
 
+        const alreadySent = await ensureReminderSent(
+          inst.installmentId,
+          "3day",
+        );
+
+        if (!alreadySent) {
+          console.log(
+            `⏭️ [Idempotency] 3-day reminder already sent for installment ${inst.installmentId}`,
+          );
+        }
+
         await emitEvent(DomainEvent.INSTALLMENT_REMINDER_3DAY, payload);
       } catch (err: any) {
         console.error(
@@ -224,6 +252,17 @@ export class PaymentReminderWorker {
           payment_url: process.env.FRONTEND_URL,
           dashboard_url: process.env.FRONTEND_URL,
         };
+
+        const alreadySent = await ensureReminderSent(
+          inst.installmentId,
+          "due-today",
+        );
+
+        if (!alreadySent) {
+          console.log(
+            `⏭️ [Idempotency] Due-today reminder already sent for installment ${inst.installmentId}`,
+          );
+        }
 
         await emitEvent(DomainEvent.INSTALLMENT_DUE_TODAY, payload);
       } catch (err: any) {
@@ -308,6 +347,17 @@ export class PaymentReminderWorker {
           marketerName: marketer?.name ?? "N/A",
           marketerId: marketer?.userId ?? "",
         };
+
+        const alreadySent = await ensureReminderSent(
+          inst.installmentId,
+          "overdue-3day",
+        );
+
+        if (!alreadySent) {
+          console.log(
+            `⏭️ [Idempotency] 3-day overdue reminder already sent for installment ${inst.installmentId}`,
+          );
+        }
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, payload);
       } catch (err: any) {
@@ -424,6 +474,17 @@ export class PaymentReminderWorker {
           adminName: admin.name ?? "Admin",
           adminId: admin.userId,
         };
+
+        const alreadySent = await ensureReminderSent(
+          inst.installmentId,
+          "overdue-7day",
+        );
+
+        if (!alreadySent) {
+          console.log(
+            `⏭️ [Idempotency] 7-day overdue reminder already sent for installment ${inst.installmentId}`,
+          );
+        }
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, payload);
       } catch (err: any) {

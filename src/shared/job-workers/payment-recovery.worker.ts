@@ -7,7 +7,7 @@ import {
 import { PaymentIntentService } from "@/core/services/payment-intent.service";
 import logger from "@/infrastructure/logger/logger";
 
-const RECOVERY_THRESHOLD_MS = 60 * 1000;
+const RECOVERY_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes — prevents false positives when webhooks/payments are delayed transiently
 const RECOVERY_BATCH_SIZE = 20;
 
 export class PaymentRecoveryWorker {

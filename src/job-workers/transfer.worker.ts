@@ -16,6 +16,7 @@ import { QueueNames } from "@/infrastructure/redis/constant";
 import type { TransferJobData } from "@/infrastructure/queues/transfer.queue";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
+import logger from "@/infrastructure/logger/logger";
 
 export const transferWorker = new Worker<TransferJobData>(
   QueueNames.TransferQueue,
@@ -23,7 +24,7 @@ export const transferWorker = new Worker<TransferJobData>(
   async (job) => {
     const { payoutId } = job.data;
 
-    console.log(`[transfer-worker] Processing payoutId=${payoutId}`);
+    logger.info(`[transfer-worker] Processing payoutId=${payoutId}`);
 
     const payout = await prisma.commissionPayoutRequest.findUnique({
       where: { payoutId },
@@ -52,10 +53,17 @@ export const transferWorker = new Worker<TransferJobData>(
       console.warn(
         `[transfer-worker] Payout ${payoutId} has status ${payout.status} — skipping`,
       );
+
+      logger.warn(
+        `[transfer-worker] Payout ${payoutId} has status ${payout.status} — skipping`,
+      );
       return { skipped: true };
     }
 
     if (!payout.marketerBankAccount) {
+      logger.error(
+        `[transfer-worker] No bank account linked to payout ${payoutId}`,
+      );
       throw new Error(
         `[transfer-worker] No bank account linked to payout ${payoutId}`,
       );
@@ -82,47 +90,53 @@ export const transferWorker = new Worker<TransferJobData>(
 
     const amountKobo = Number(payout.amount) * 100;
 
-    const { transferCode } = await PaystackService.initiateTransfer({
-      amountKobo,
-      recipientCode,
-      reference: payout.payoutId,
-      reason: `Commission payout — ${payout.userId}`,
-    });
-
-    await prisma.$transaction(async (tx) => {
-      await tx.commissionPayoutRequest.update({
-        where: { payoutId },
-        data: { transferCode },
+    if (payout.transferCode) {
+      logger.info(
+        `[transfer-worker] Payout ${payoutId} already has transferCode=${payout.transferCode} — skipping Paystack call`,
+      );
+    } else {
+      const { transferCode } = await PaystackService.initiateTransfer({
+        amountKobo,
+        recipientCode,
+        reference: payout.payoutId,
+        reason: `Commission payout — ${payout.userId}`,
       });
 
-      await LedgerService.recordTransaction(
-        {
-          reference: `TRANSFER_INIT_${payoutId}`,
-          description: `Transfer initiated for marketer ${payout.userId}`,
-          companyId: payout.companyId,
-          metadata: { payoutId, transferCode },
-          entries: [
-            {
-              accountName: "COMMISSION_PAYABLE",
-              accountType: AccountType.LIABILITY,
-              debit: payout.amount,
-            },
-            {
-              accountName: "PAYOUTS_IN_TRANSIT",
-              accountType: AccountType.ASSET,
-              credit: payout.amount,
-            },
-          ],
-        },
-        tx,
+      await prisma.$transaction(async (tx) => {
+        await tx.commissionPayoutRequest.update({
+          where: { payoutId },
+          data: { transferCode },
+        });
+
+        await LedgerService.recordTransaction(
+          {
+            reference: `TRANSFER_INIT_${payoutId}`,
+            description: `Transfer initiated for marketer ${payout.userId}`,
+            companyId: payout.companyId,
+            metadata: { payoutId, transferCode },
+            entries: [
+              {
+                accountName: "COMMISSION_PAYABLE",
+                accountType: AccountType.LIABILITY,
+                debit: payout.amount,
+              },
+              {
+                accountName: "PAYOUTS_IN_TRANSIT",
+                accountType: AccountType.ASSET,
+                credit: payout.amount,
+              },
+            ],
+          },
+          tx,
+        );
+      });
+
+      logger.info(
+        `[transfer-worker] SUCCESS payoutId=${payoutId} transferCode=${transferCode}`,
       );
-    });
+    }
 
-    console.log(
-      `[transfer-worker] SUCCESS payoutId=${payoutId} transferCode=${transferCode}`,
-    );
-
-    return { success: true, transferCode };
+    return { success: true, transferCode: payout.transferCode };
   },
 
   {
@@ -141,6 +155,8 @@ transferWorker.on("completed", (job) => {
 
 transferWorker.on("failed", async (job, err) => {
   console.error(`❌ Transfer job failed: ${job?.id}`, err);
+
+  logger.error(`❌ Transfer job failed: ${job?.id}`, err);
 
   if (job?.data?.payoutId && job.attemptsMade >= (job.opts.attempts ?? 3)) {
     const payout = await prisma.commissionPayoutRequest.findUnique({

@@ -699,7 +699,54 @@ onEvent(DomainEvent.ADMIN_ACCOUNT_DELETED, async (payload) => {
       adminName: payload.adminName,
       reqestedBy: payload.requestedBy,
       processedAt: payload.processedAt,
-      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+      dashboard_url: process.env.FRONTEND_URL,
     },
   });
+});
+
+onEvent(DomainEvent.ONBOARDING_SESSION_EXPIRED, async (payload) => {
+  await NotificationOrchestrator.handle(
+    NotificationEventType.ONBOARDING_SESSION_EXPIRED,
+    {
+      sessionId: payload.sessionId,
+      customerEmail: payload.email,
+      customerName: payload.customerName || "Customer",
+      hadKycApplication: payload.hadKycApplication,
+      marketerId: payload.marketerId,
+      marketerEmail: payload.marketerEmail,
+      marketerName: payload.marketerName,
+      companyId: payload.companyId,
+      companyEmails: payload.companyEmails,
+    },
+  );
+});
+
+onEvent(DomainEvent.KYC_APPLICATION_AUTO_EXPIRED, async (payload) => {
+  await NotificationService.send({
+    to: payload.customerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.KYC_APPLICATION_AUTO_EXPIRED,
+    subject: "Your KYC Application Has Expired ⏳",
+    context: {
+      name: payload.customerName,
+      rejectionReason:
+        "Your KYC submission expired because it was not completed within the required timeframe.",
+      dashboard_url: payload.dashboard_url,
+    },
+  });
+
+  await NotificationOrchestrator.handle(
+    NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED,
+    {
+      kycApplicationId: payload.kycApplicationId,
+      customerEmail: payload.customerEmail,
+      customerName: payload.customerName,
+      hadOnboardingSession: payload.hadOnboardingSession,
+      marketerId: payload.marketerId,
+      marketerEmail: payload.marketerEmail,
+      marketerName: payload.marketerName,
+      companyId: payload.companyId,
+      companyEmails: payload.companyEmails,
+    },
+  );
 });

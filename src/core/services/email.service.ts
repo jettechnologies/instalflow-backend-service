@@ -39,6 +39,7 @@ export enum EmailTemplate {
   MARKETER_TOGGLE_STATUS = "marketer-account-toggle",
   ADMIN_ACCOUNT_DELETED = "admin-account-deleted",
   ADMIN_TOGGLE_STATUS = "admin-account-toggle",
+  KYC_APPLICATION_AUTO_EXPIRED = "kyc-application-auto-expired",
 }
 
 interface SendEmailProps {

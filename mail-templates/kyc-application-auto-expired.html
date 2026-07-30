@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your KYC Application Has Expired</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap");
+
+      body {
+        font-family: "Jost", sans-serif;
+        background-color: #0b0f1a;
+        color: #9ca3af;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 24px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+      }
+
+      .header {
+        padding: 2.5rem 1.5rem 1rem;
+        text-align: center;
+      }
+
+      .logo-text {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+        letter-spacing: -0.05rem;
+      }
+
+      .logo-text span {
+        color: #7c3aed;
+      }
+
+      .hero-icon {
+        width: 64px;
+        height: 64px;
+        margin: 1.5rem auto;
+        background: linear-gradient(135deg, #92400e 0%, #f59e0b 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+      }
+
+      .content {
+        padding: 0 2.5rem 2.5rem;
+      }
+
+      .title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+        margin: 0.5rem 0;
+        text-align: center;
+      }
+
+      .subtitle {
+        font-size: 0.875rem;
+        color: #f59e0b;
+        text-transform: uppercase;
+        letter-spacing: 0.1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .message {
+        text-align: left;
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 2rem;
+      }
+
+      .btn-action {
+        display: inline-block;
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+        color: #f9fafb;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+      }
+
+      .footer {
+        background-color: #0b0f1a;
+        border-top: 1px solid #1f2937;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .signature {
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+
+      .signature .product-name {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo-text">Instal<span>flow</span></div>
+
+        <div class="hero-icon">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+
+        <h1 class="title">Your KYC Application Has Expired ⏳</h1>
+        <p class="subtitle">Complete Your Application Again</p>
+      </div>
+
+      <div class="content">
+        <div class="message">
+          <p>Hello <strong>{{name}}</strong>,</p>
+
+          <p>
+            Your KYC submission has expired because it was not completed within
+            the required timeframe.
+          </p>
+
+          {{#if rejectionReason}}
+          <div
+            style="
+              background: rgba(245, 158, 11, 0.08);
+              border-left: 4px solid #f59e0b;
+              border-radius: 8px;
+              padding: 1.2rem;
+              margin: 1.5rem 0;
+              color: #f3f4f6;
+            "
+          >
+            <h4
+              style="
+                margin: 0 0 0.5rem 0;
+                color: #f59e0b;
+                font-weight: 600;
+                font-size: 1rem;
+              "
+            >
+              ⚠️ Expiration Reason
+            </h4>
+
+            <div
+              style="
+                background: rgba(245, 158, 11, 0.12);
+                border-radius: 6px;
+                padding: 0.8rem;
+                font-family: monospace;
+                font-size: 0.9rem;
+                color: #fcd34d;
+                border: 1px dashed rgba(245, 158, 11, 0.3);
+                white-space: pre-wrap;
+              "
+            >
+              {{rejectionReason}}
+            </div>
+          </div>
+          {{/if}}
+
+          <p>
+            You can retry your application by starting the KYC process again.
+            Ensure that all required information and documents are submitted
+            before the application deadline.
+          </p>
+
+          <div
+            style="
+              background: #0b0f1a;
+              border: 1px solid #1f2937;
+              border-radius: 16px;
+              padding: 1.5rem;
+              margin: 2rem 0;
+            "
+          >
+            <p style="margin-top: 0; color: #f9fafb; font-weight: 600">
+              When resubmitting your KYC application:
+            </p>
+
+            <div style="color: #f9fafb; font-size: 0.9rem">
+              <p>✓ Provide accurate personal information</p>
+
+              <p>✓ Upload valid identity documents</p>
+
+              <p>✓ Complete the verification process before expiration</p>
+            </div>
+          </div>
+
+          <p>
+            We're ready to help you complete your application and continue your
+            journey with Instalflow.
+          </p>
+        </div>
+
+        <a href="{{dashboard_url}}" class="btn-action">
+          Retry KYC Application
+        </a>
+      </div>
+
+      <div class="footer">
+        <div class="signature">
+          <p>The <span class="product-name">Instalflow</span> Team</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

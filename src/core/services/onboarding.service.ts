@@ -53,21 +53,29 @@ export class OnboardingService {
       select: {
         sessionId: true,
         email: true,
+        name: true,
         kycApplication: {
           select: { kycApplicationId: true },
         },
+        marketerId: true,
+        companyId: true,
       },
       take: batchSize,
     });
 
     for (const session of stale) {
+      let marketerId: string | null = null;
+      let marketerEmail: string | null = null;
+      let marketerName: string | null = null;
+      let companyId: string | null = null;
+      let companyEmails: string[] = [];
+
       await prisma.$transaction(async (tx) => {
         const finalized = await tx.onboardingSession.updateMany({
           where: { sessionId: session.sessionId, status: "EXPIRING" },
           data: { status: "EXPIRED", completedAt: null },
         });
 
-        // Another worker already finalized this exact row → skip.
         if (finalized.count === 0) return;
 
         if (session.kycApplication) {
@@ -83,15 +91,48 @@ export class OnboardingService {
         }
       });
 
-      // need to create an internal notification for handling the expiration of an onboarding section and also the audit log for it and the notification would be to the user and also the marketer and admin or company role. also would need to look into having the onbaording session been extended cause it would make sense if its about 3 days lasting or the onboarding session might expiry and then the kyc might still stay intact for at least the next 3 days.
+      // Resolve marketer and company context for notifications
+      if (session.marketerId || session.companyId) {
+        const sessionFull = await prisma.onboardingSession.findUnique({
+          where: { sessionId: session.sessionId },
+          include: {
+            marketer: {
+              include: {
+                creator: { select: { email: true, name: true } },
+              },
+            },
+            company: {
+              include: {
+                users: {
+                  where: { role: { in: ["COMPANY", "ADMIN"] } },
+                  select: { email: true, name: true, role: true },
+                },
+              },
+            },
+          },
+        });
 
-      // 3. Decoupled side effects: emit a domain event. Notification, audit,
-      //    metrics and document cleanup are handled by subscribers, not here.
-      // emitEvent(DomainEvent.ONBOARDING_SESSION_EXPIRED, {
-      //   sessionId: session.sessionId,
-      //   email: session.email,
-      //   hadKycApplication: !!session.kycApplication,
-      // });
+        if (sessionFull) {
+          marketerId = sessionFull.marketerId;
+          companyId = sessionFull.companyId;
+          marketerEmail = sessionFull.marketer?.email ?? null;
+          marketerName = sessionFull.marketer?.name ?? null;
+          companyEmails = sessionFull.company?.users.map((u) => u.email) ?? [];
+        }
+      }
+
+      emitEvent(DomainEvent.ONBOARDING_SESSION_EXPIRED, {
+        sessionId: session.sessionId,
+        email: session.email,
+        hadKycApplication: !!session.kycApplication,
+        customerName: session.email,
+        customerEmail: session.name,
+        marketerId: marketerId ?? "",
+        marketerEmail: marketerEmail ?? "",
+        marketerName: marketerName ?? "",
+        companyId: companyId ?? "",
+        companyEmails,
+      });
     }
 
     return stale.length;

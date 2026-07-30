@@ -132,6 +132,18 @@ export class NotificationTemplates {
           message: `Contract for customer "${payload.customerName}" has been written off. Outstanding amount: ₦${Number(payload.outstandingAmount).toLocaleString()}. Reason: ${payload.writeOffReason}.`,
         };
 
+      case NotificationEventType.ONBOARDING_SESSION_EXPIRED:
+        return {
+          title: "Onboarding Session Expired",
+          message: `The onboarding session for customer "${payload.customerName}" (${payload.email}) has expired${payload.hadKycApplication ? " and their KYC application was auto-rejected" : ""}. Referred by: ${payload.marketerName || "direct"}.`,
+        };
+
+      case NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED:
+        return {
+          title: "KYC Application Auto-Expired",
+          message: `KYC application for ${payload.customerName} (${payload.customerEmail}) was auto-rejected after remaining pending for 15+ days${payload.hadOnboardingSession ? " following an expired onboarding session" : ""}. Referred by: ${payload.marketerName || "direct"}.`,
+        };
+
       default:
         return {
           title: "Notification",

@@ -116,6 +116,14 @@ export class NotificationOrchestrator {
           return await this.handleContractWrittenOff(
             payload as NotificationPayloadMap[NotificationEventType.CONTRACT_WRITTEN_OFF],
           );
+        case NotificationEventType.ONBOARDING_SESSION_EXPIRED:
+          return await this.handleOnboardingSessionExpired(
+            payload as NotificationPayloadMap[NotificationEventType.ONBOARDING_SESSION_EXPIRED],
+          );
+        case NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED:
+          return await this.handleKycApplicationAutoExpired(
+            payload as NotificationPayloadMap[NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED],
+          );
       }
     } catch (err: any) {
       // Notifications are non-critical — log and continue
@@ -846,6 +854,88 @@ export class NotificationOrchestrator {
       metadata: payload,
       idempotencyKey: `contract-written-off-${payload.contractId}-${payload.recipientRole}-${payload.recipientId}`,
     });
+  }
+
+  private static async handleOnboardingSessionExpired(
+    payload: NotificationPayloadMap[NotificationEventType.ONBOARDING_SESSION_EXPIRED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.ONBOARDING_SESSION_EXPIRED,
+      payload,
+    );
+
+    const recipients: Array<{
+      userId: string;
+      idempotencyKey: string;
+    }> = [];
+
+    if (payload.hadKycApplication) {
+      recipients.push({
+        userId: payload.marketerId,
+        idempotencyKey: `onboarding-expired-${payload.sessionId}-marketer`,
+      });
+    }
+
+    for (const email of payload.companyEmails) {
+      recipients.push({
+        userId: email,
+        idempotencyKey: `onboarding-expired-${payload.sessionId}-company-${email}`,
+      });
+    }
+
+    await Promise.all(
+      recipients.map(({ userId, idempotencyKey }) =>
+        NotificationRepository.create({
+          userId,
+          type: NotificationEventType.ONBOARDING_SESSION_EXPIRED,
+          title: template.title,
+          message: template.message,
+          metadata: payload,
+          idempotencyKey,
+        }),
+      ),
+    );
+  }
+
+  private static async handleKycApplicationAutoExpired(
+    payload: NotificationPayloadMap[NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED],
+  ) {
+    const template = NotificationTemplates.build(
+      NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED,
+      payload,
+    );
+
+    const recipients: Array<{
+      userId: string;
+      idempotencyKey: string;
+    }> = [];
+
+    if (payload.hadOnboardingSession) {
+      recipients.push({
+        userId: payload.marketerId,
+        idempotencyKey: `kyc-auto-expired-${payload.kycApplicationId}-marketer`,
+      });
+    }
+
+    for (const email of payload.companyEmails) {
+      recipients.push({
+        userId: email,
+        idempotencyKey: `kyc-auto-expired-${payload.kycApplicationId}-company-${email}`,
+      });
+    }
+
+    await Promise.all(
+      recipients.map(({ userId, idempotencyKey }) =>
+        NotificationRepository.create({
+          userId,
+          type: NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED,
+          title: template.title,
+          message: template.message,
+          metadata: payload,
+          idempotencyKey,
+        }),
+      ),
+    );
   }
 }
 

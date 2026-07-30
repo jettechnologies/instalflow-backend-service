@@ -21,6 +21,8 @@ export enum NotificationEventType {
   MARKETER_DELETE_REJECTED = "MARKETER_DELETE_REJECTED",
   CONTRACT_RESTRUCTURED = "CONTRACT_RESTRUCTURED",
   CONTRACT_WRITTEN_OFF = "CONTRACT_WRITTEN_OFF",
+  ONBOARDING_SESSION_EXPIRED = "ONBOARDING_SESSION_EXPIRED",
+  KYC_APPLICATION_AUTO_EXPIRED = "KYC_APPLICATION_AUTO_EXPIRED",
 }
 
 export interface NotificationPayloadMap {
@@ -228,5 +230,27 @@ export interface NotificationPayloadMap {
     recipientName: string;
     recipientEmail: string;
     companyId: string;
+  };
+  [NotificationEventType.ONBOARDING_SESSION_EXPIRED]: {
+    sessionId: string;
+    customerEmail: string;
+    customerName: string;
+    hadKycApplication: boolean;
+    marketerId: string;
+    marketerEmail: string;
+    marketerName: string;
+    companyId: string;
+    companyEmails: string[];
+  };
+  [NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED]: {
+    kycApplicationId: string;
+    customerEmail: string;
+    customerName: string;
+    hadOnboardingSession: boolean;
+    marketerId: string;
+    marketerEmail: string;
+    marketerName: string;
+    companyId: string;
+    companyEmails: string[];
   };
 }
