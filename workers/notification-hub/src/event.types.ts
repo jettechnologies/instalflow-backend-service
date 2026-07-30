@@ -24,6 +24,7 @@ export enum DomainEvent {
 	MARKETER_TOGGLE_STATUS = 'marketer.toggle.status',
 	ADMIN_TOGGLE_STATUS = 'admin.toggle.status',
 	ADMIN_ACCOUNT_DELETED = 'admin.account.deleted',
+	KYC_APPLICATION_AUTO_EXPIRED = 'kyc.application.auto-expired',
 }
 
 export enum EventStatus {

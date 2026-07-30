@@ -497,4 +497,18 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			}),
 		},
 	],
+
+	[DomainEvent.KYC_APPLICATION_AUTO_EXPIRED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.customerEmail,
+			template: 'kyc-application-auto-expired',
+			subject: 'Your KYC Application Has Expired ⏳',
+			context: (p) => ({
+				name: p.customerName,
+				rejectionReason: p.expirationReason ?? 'Your KYC submission expired because it was not completed within the required timeframe.',
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
 };
