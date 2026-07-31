@@ -280,6 +280,180 @@ paths:
                         type: number
                         example: 450000
 
+  /installments/view/{installmentId}:
+    get:
+      tags:
+        - Installment Management
+      summary: Retrieve a single installment by ID
+      description: >
+        Returns a single installment record with its financing contract
+        details and payment history.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: installmentId
+          required: true
+          description: Installment ID
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Installment retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Installment retrieved successfully
+
+                  data:
+                    type: object
+                    properties:
+                      installmentId:
+                        type: string
+                        format: uuid
+
+                      financingContractId:
+                        type: string
+                        format: uuid
+
+                      sequence:
+                        type: integer
+                        example: 1
+
+                      amount:
+                        type: number
+                        example: 50000
+
+                      dueDate:
+                        type: string
+                        format: date-time
+
+                      status:
+                        type: string
+                        enum:
+                          - PENDING
+                          - DUE
+                          - OVERDUE
+                          - DEFAULTED
+                          - PAID
+
+                      paidAt:
+                        type: string
+                        format: date-time
+                        nullable: true
+
+                      overdueAt:
+                        type: string
+                        format: date-time
+                        nullable: true
+
+                      createdAt:
+                        type: string
+                        format: date-time
+
+                      updatedAt:
+                        type: string
+                        format: date-time
+
+                      financingContract:
+                        type: object
+                        properties:
+                          contractId:
+                            type: string
+                            format: uuid
+
+                          totalFinanced:
+                            type: number
+                            example: 450000
+
+                          status:
+                            type: string
+                            enum:
+                              - PENDING_ACTIVATION
+                              - ACTIVE
+                              - COMPLETED
+                              - DEFAULTED
+                              - CANCELLED
+                              - REJECTED
+                              - RESTRUCTURED
+                              - WRITTEN_OFF
+
+                          kycApplication:
+                            type: object
+                            properties:
+                              product:
+                                type: object
+                                properties:
+                                  productId:
+                                    type: string
+                                    format: uuid
+
+                                  name:
+                                    type: string
+                                    example: iPhone 15 Pro Max
+
+                                  slug:
+                                    type: string
+                                    example: iphone-15-pro-max
+
+                              user:
+                                type: object
+                                properties:
+                                  userId:
+                                    type: string
+                                    format: uuid
+
+                                  name:
+                                    type: string
+                                    example: John Doe
+
+                                  email:
+                                    type: string
+                                    format: email
+
+                      payments:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Payment"
+
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "404":
+          description: Installment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /installments/{installmentId}/pay:
     post:
       tags:

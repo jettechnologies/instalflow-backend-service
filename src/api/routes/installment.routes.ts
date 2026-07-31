@@ -14,6 +14,12 @@ router.get(
 );
 
 router.get(
+  "/view/:installmentId",
+  requireRole([Role.CUSTOMER, Role.ADMIN, Role.COMPANY, Role.SUPER_ADMIN]),
+  InstallmentController.getInstallmentById,
+);
+
+router.get(
   "/:contractId",
   requireRole([Role.ADMIN, Role.COMPANY, Role.SUPER_ADMIN]),
   InstallmentController.getCustomerInstallments,

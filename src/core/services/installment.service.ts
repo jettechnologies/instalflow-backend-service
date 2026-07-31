@@ -197,24 +197,21 @@ export class InstallmentService {
   }
 
   static async calculateProgressPercentage(financingContractId: string) {
-    const installments = await prisma.installment.findMany({
-      where: {
-        financingContractId,
-      },
+    const [contract, installments] = await prisma.$transaction([
+      prisma.financingContract.findUnique({
+        where: { contractId: financingContractId },
+        select: { totalFinanced: true },
+      }),
+      prisma.installment.findMany({
+        where: { financingContractId },
+      }),
+    ]);
 
-      include: {
-        financingContract: {
-          select: {
-            totalFinanced: true,
-          },
-        },
-      },
-    });
+    if (!contract) {
+      throw new NotFoundError("Financing contract not found");
+    }
 
-    const totalFinanced = installments.reduce(
-      (sum, item) => sum + Number(item.financingContract.totalFinanced),
-      0,
-    );
+    const totalFinanced = Number(contract.totalFinanced);
 
     const totalPaid = installments
       .filter((i) => i.status === InstallmentStatus.PAID)
@@ -230,6 +227,32 @@ export class InstallmentService {
       totalPaid,
       percentagePaid,
     };
+  }
+
+  static async getInstallmentById(installmentId: string) {
+    return prisma.installment.findUnique({
+      where: { installmentId },
+      include: {
+        financingContract: {
+          select: {
+            contractId: true,
+            totalFinanced: true,
+            status: true,
+            kycApplication: {
+              include: {
+                product: true,
+                user: true,
+              },
+            },
+          },
+        },
+        payments: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
   }
 
   static async initializeInstallmentPayment(

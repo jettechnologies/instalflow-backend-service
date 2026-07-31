@@ -83,6 +83,34 @@ export class InstallmentController {
   }
 
   /**
+   * GET /installments/:installmentId
+   */
+  static async getInstallmentById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const installmentId = req.params.installmentId as string;
+
+      const data = await InstallmentService.getInstallmentById(installmentId);
+
+      if (!data) {
+        return ApiResponse.notFound(res, "Installment not found");
+      }
+
+      return ApiResponse.success(
+        res,
+        200,
+        "Installment retrieved successfully",
+        data,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * POST /installments/:installmentId/pay
    */
   static async initializePayment(req: Request, res: Response) {
