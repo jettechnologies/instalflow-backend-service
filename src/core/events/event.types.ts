@@ -13,7 +13,9 @@ export enum DomainEvent {
   COMPANY_ONBOARDED = "company.onboarded",
   INSTALLMENT_PAID = "installment.paid",
   INSTALLMENT_REMINDER_3DAY = "installment.reminder.3day",
+  INSTALLMENT_REMINDER_1DAY = "installment.reminder.1day",
   INSTALLMENT_DUE_TODAY = "installment.due.today",
+  INSTALLMENT_OVERDUE_RECURRING = "installment.overdue.recurring",
   INSTALLMENT_OVERDUE_3DAY = "installment.overdue.3day",
   INSTALLMENT_OVERDUE_7DAY = "installment.overdue.7day",
   COMMISSION_TRANSFER_INITIATED = "commission.transfer.initiated",
@@ -99,7 +101,13 @@ export interface CommissionTransferReversedPayload {
 
 export interface Reminder3DayPayload extends InstallmentReminderBase {}
 
+export interface Reminder1DayPayload extends InstallmentReminderBase {}
+
 export interface DueTodayPayload extends InstallmentReminderBase {}
+
+export interface OverdueRecurringPayload extends InstallmentReminderBase {
+  daysOverdue: number;
+}
 
 export interface Overdue3DayPayload extends InstallmentReminderBase {
   marketerEmail: string;
@@ -249,7 +257,9 @@ export interface DomainEventPayloads {
   };
 
   [DomainEvent.INSTALLMENT_REMINDER_3DAY]: Reminder3DayPayload;
+  [DomainEvent.INSTALLMENT_REMINDER_1DAY]: Reminder1DayPayload;
   [DomainEvent.INSTALLMENT_DUE_TODAY]: DueTodayPayload;
+  [DomainEvent.INSTALLMENT_OVERDUE_RECURRING]: OverdueRecurringPayload;
   [DomainEvent.INSTALLMENT_OVERDUE_3DAY]: Overdue3DayPayload;
   [DomainEvent.INSTALLMENT_OVERDUE_7DAY]: Overdue7DayPayload;
   [DomainEvent.COMMISSION_TRANSFER_INITIATED]: CommissionTransferInitiatedPayload;

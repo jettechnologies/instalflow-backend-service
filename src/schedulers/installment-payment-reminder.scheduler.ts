@@ -10,7 +10,6 @@ registerRepeatableJob({
   },
   data: {},
   repeat: {
-    // pattern: "0 0 * * *",
-    pattern: "*/10 * * * *",
+    pattern: "0 0 * * *",
   },
 });

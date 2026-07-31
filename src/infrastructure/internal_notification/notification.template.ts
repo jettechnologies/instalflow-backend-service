@@ -54,10 +54,22 @@ export class NotificationTemplates {
           message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due on ${payload.dueDate}. Please ensure your payment is ready.`,
         };
 
+      case NotificationEventType.INSTALLMENT_REMINDER_1DAY:
+        return {
+          title: "Final Payment Reminder — Due Tomorrow",
+          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due tomorrow (${payload.dueDate}). Please make your payment today to avoid any disruption.`,
+        };
+
       case NotificationEventType.INSTALLMENT_DUE_TODAY:
         return {
           title: "Your Payment is Due Today",
           message: `Installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due today. Tap to pay now.`,
+        };
+
+      case NotificationEventType.INSTALLMENT_OVERDUE_RECURRING:
+        return {
+          title: "Payment Overdue — Daily Reminder",
+          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is ${payload.daysOverdue} day(s) overdue (due on ${payload.dueDate}). Please make payment immediately to avoid further escalation.`,
         };
 
       case NotificationEventType.INSTALLMENT_OVERDUE_3DAY:

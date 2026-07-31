@@ -280,6 +280,88 @@ onEvent(DomainEvent.INSTALLMENT_DUE_TODAY, async (payload) => {
   );
 });
 
+// ─── 1 DAY BEFORE DUE — FINAL REMINDER ─────────────────────────────────────────
+
+onEvent(DomainEvent.INSTALLMENT_REMINDER_1DAY, async (payload) => {
+  await NotificationService.send({
+    to: payload.customerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_REMINDER_1DAY,
+    subject: `🔔 Final Reminder: Payment Due Tomorrow`,
+    context: {
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  await NotificationOrchestrator.handle(
+    NotificationEventType.INSTALLMENT_REMINDER_1DAY,
+    {
+      customerId: payload.customerId,
+      customerEmail: payload.customerEmail,
+      customerName: payload.customerName,
+      installmentId: payload.installmentId,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      percentagePaid: payload.percentagePaid,
+      payment_url: payload.payment_url,
+      dashboard_url: payload.dashboard_url,
+    },
+  );
+});
+
+// ─── RECURRING OVERDUE — DAILY DURING OVERDUE PERIOD ─────────────────────────────
+
+onEvent(DomainEvent.INSTALLMENT_OVERDUE_RECURRING, async (payload) => {
+  await NotificationService.send({
+    to: payload.customerEmail,
+    channel: NotificationChannel.EMAIL,
+    template: EmailTemplate.INSTALLMENT_OVERDUE_RECURRING,
+    subject: `⚠️ Payment Overdue — Day ${payload.daysOverdue} Reminder`,
+    context: {
+      customerName: payload.customerName,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      percentagePaid: payload.percentagePaid,
+      daysOverdue: payload.daysOverdue,
+      payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
+      dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
+    },
+  });
+
+  await NotificationOrchestrator.handle(
+    NotificationEventType.INSTALLMENT_OVERDUE_RECURRING,
+    {
+      customerId: payload.customerId,
+      customerEmail: payload.customerEmail,
+      customerName: payload.customerName,
+      installmentId: payload.installmentId,
+      sequence: payload.sequence,
+      dueDate: payload.dueDate,
+      amount: payload.amount,
+      productName: payload.productName,
+      variantName: payload.variantName,
+      percentagePaid: payload.percentagePaid,
+      daysOverdue: payload.daysOverdue,
+      payment_url: payload.payment_url,
+      dashboard_url: payload.dashboard_url,
+    },
+  );
+});
+
 onEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, async (payload) => {
   await NotificationService.send({
     to: payload.customerEmail,

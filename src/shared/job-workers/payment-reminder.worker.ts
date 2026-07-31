@@ -4,12 +4,15 @@ import {
   FinancingStatus,
   Role,
   Prisma,
+  Installment,
 } from "@/infrastructure/prisma";
 import { emitEvent } from "@/core/events/emitter";
 import {
   DomainEvent,
   type Reminder3DayPayload,
+  type Reminder1DayPayload,
   type DueTodayPayload,
+  type OverdueRecurringPayload,
   type Overdue3DayPayload,
   type Overdue7DayPayload,
 } from "@/core/events/event.types";
@@ -96,7 +99,9 @@ export class PaymentReminderWorker {
 
     await Promise.allSettled([
       this.process3DayReminders(),
+      this.process1DayReminders(),
       this.processDueTodayReminders(now),
+      this.processRecurringReminders(),
       this.process3DayOverdue(now),
       this.process7DayOverdue(now),
     ]);
@@ -206,6 +211,74 @@ export class PaymentReminderWorker {
     }
   }
 
+  private static async process1DayReminders(): Promise<void> {
+    const { start, end } = dayWindow(+1);
+
+    const installments = await prisma.installment.findMany({
+      where: {
+        dueDate: { gte: start, lt: end },
+        status: { in: [InstallmentStatus.PENDING, InstallmentStatus.DUE] },
+        financingContract: { status: FinancingStatus.ACTIVE },
+      },
+      include: {
+        financingContract: {
+          include: {
+            user: { select: { userId: true, email: true, name: true } },
+            product: { select: { name: true } },
+            variant: { select: { sku: true } },
+          },
+        },
+      },
+    });
+
+    console.log(
+      `📅 [InstallmentPaymentReminder] 1-day reminders: ${installments.length} installment(s)`,
+    );
+
+    for (const inst of installments) {
+      try {
+        const { percentagePaid } = await calculateProgress(
+          inst.financingContractId,
+        );
+        const contract = inst.financingContract;
+        const customer = contract.user;
+
+        const payload: Reminder1DayPayload = {
+          customerEmail: customer?.email ?? "",
+          customerName: customer?.name ?? "Customer",
+          customerId: customer?.userId ?? "",
+          installmentId: inst.installmentId,
+          sequence: inst.sequence,
+          dueDate: formatDate(inst.dueDate),
+          amount: formatAmount(inst.amount),
+          productName: contract.product.name,
+          variantName: contract.variant?.sku,
+          percentagePaid,
+          payment_url: process.env.FRONTEND_URL,
+          dashboard_url: process.env.FRONTEND_URL,
+        };
+
+        const alreadySent = await ensureReminderSent(
+          inst.installmentId,
+          "1day",
+        );
+
+        if (!alreadySent) {
+          console.log(
+            `⏭️ [Idempotency] 1-day reminder already sent for installment ${inst.installmentId}`,
+          );
+        }
+
+        await emitEvent(DomainEvent.INSTALLMENT_REMINDER_1DAY, payload);
+      } catch (err: any) {
+        console.error(
+          `❌ [InstallmentPaymentReminder] 1-day reminder failed for installment ${inst.installmentId}:`,
+          err.message,
+        );
+      }
+    }
+  }
+
   private static async processDueTodayReminders(now: Date): Promise<void> {
     const { start, end } = dayWindow(0);
 
@@ -268,6 +341,108 @@ export class PaymentReminderWorker {
       } catch (err: any) {
         console.error(
           `❌ [InstallmentPaymentReminder] Due-today reminder failed for installment ${inst.installmentId}:`,
+          err.message,
+        );
+      }
+    }
+  }
+
+  private static async processRecurringReminders(): Promise<void> {
+    const now = new Date();
+    const todayStart = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
+
+    const firstInstallmentRows = await prisma.$queryRaw<
+      Pick<Installment, "installmentId">[]
+    >`
+      SELECT DISTINCT ON ("financingContractId") "installmentId"
+      FROM "Installment"
+      WHERE status IN ('PENDING', 'DUE', 'OVERDUE')
+        AND "financingContractId" IN (
+          SELECT "contractId" FROM "FinancingContract" WHERE status = 'ACTIVE'
+        )
+      ORDER BY "financingContractId", sequence ASC
+    `;
+
+    if (firstInstallmentRows.length === 0) {
+      console.log(
+        `🔄 [InstallmentPaymentReminder] Recurring overdue reminders: 0 installment(s)`,
+      );
+      return;
+    }
+
+    const installmentIds = firstInstallmentRows.map((r) => r.installmentId);
+
+    const installments = await prisma.installment.findMany({
+      where: { installmentId: { in: installmentIds } },
+      include: {
+        financingContract: {
+          include: {
+            user: {
+              select: {
+                userId: true,
+                email: true,
+                name: true,
+              },
+            },
+            product: { select: { name: true } },
+            variant: { select: { sku: true } },
+          },
+        },
+      },
+    });
+
+    console.log(
+      `🔄 [InstallmentPaymentReminder] Recurring overdue reminders: ${installments.length} installment(s)`,
+    );
+
+    for (const inst of installments) {
+      try {
+        const dueDate = new Date(inst.dueDate);
+        const daysOverdue = Math.floor(
+          (todayStart.getTime() - dueDate.getTime()) / (24 * 60 * 60 * 1000),
+        );
+
+        if (daysOverdue < 1) continue;
+
+        const { percentagePaid } = await calculateProgress(
+          inst.financingContractId,
+        );
+        const contract = inst.financingContract;
+        const customer = contract?.user;
+
+        const payload: OverdueRecurringPayload = {
+          customerEmail: customer?.email ?? "",
+          customerName: customer?.name ?? "Customer",
+          customerId: customer?.userId ?? "",
+          installmentId: inst.installmentId,
+          sequence: inst.sequence,
+          dueDate: formatDate(inst.dueDate),
+          amount: formatAmount(inst.amount),
+          productName: contract?.product?.name ?? "",
+          variantName: contract?.variant?.sku,
+          percentagePaid,
+          daysOverdue,
+          payment_url: process.env.FRONTEND_URL,
+          dashboard_url: process.env.FRONTEND_URL,
+        };
+
+        const alreadySent = await ensureReminderSent(
+          inst.installmentId,
+          `recurring-${daysOverdue}`,
+        );
+
+        if (!alreadySent) {
+          console.log(
+            `⏭️ [Idempotency] Recurring overdue reminder already sent for installment ${inst.installmentId} (day ${daysOverdue})`,
+          );
+        }
+
+        await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_RECURRING, payload);
+      } catch (err: any) {
+        console.error(
+          `❌ [InstallmentPaymentReminder] Recurring overdue failed for installment ${inst.installmentId}:`,
           err.message,
         );
       }

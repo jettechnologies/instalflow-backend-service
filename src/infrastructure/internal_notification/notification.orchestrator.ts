@@ -51,9 +51,17 @@ export class NotificationOrchestrator {
           return await this.handleInstallmentReminder3Day(
             payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_REMINDER_3DAY],
           );
+        case NotificationEventType.INSTALLMENT_REMINDER_1DAY:
+          return await this.handleInstallmentReminder1Day(
+            payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_REMINDER_1DAY],
+          );
         case NotificationEventType.INSTALLMENT_DUE_TODAY:
           return await this.handleInstallmentDueToday(
             payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_DUE_TODAY],
+          );
+        case NotificationEventType.INSTALLMENT_OVERDUE_RECURRING:
+          return await this.handleInstallmentOverdueRecurring(
+            payload as NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_RECURRING],
           );
         case NotificationEventType.INSTALLMENT_OVERDUE_3DAY:
           return await this.handleInstallmentOverdue3Day(
@@ -381,25 +389,62 @@ export class NotificationOrchestrator {
     });
   }
 
-  private static async handleInstallmentDueToday(
-    payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_DUE_TODAY],
-  ) {
-    await NotificationRepository.create({
-      userId: payload.customerId,
-      type: NotificationEventType.INSTALLMENT_DUE_TODAY,
-      title: "Your Payment is Due Today",
-      message: `Installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due today. Tap to pay now.`,
-      metadata: {
-        installmentId: payload.installmentId,
-        sequence: payload.sequence,
-        amount: payload.amount,
-        payment_url: payload.payment_url,
-      },
-      idempotencyKey: `due-today-${payload.installmentId}`,
-    });
-  }
+   private static async handleInstallmentDueToday(
+     payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_DUE_TODAY],
+   ) {
+     await NotificationRepository.create({
+       userId: payload.customerId,
+       type: NotificationEventType.INSTALLMENT_DUE_TODAY,
+       title: "Your Payment is Due Today",
+       message: `Installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due today. Tap to pay now.`,
+       metadata: {
+         installmentId: payload.installmentId,
+         sequence: payload.sequence,
+         amount: payload.amount,
+         payment_url: payload.payment_url,
+       },
+       idempotencyKey: `due-today-${payload.installmentId}`,
+     });
+   }
 
-  private static async handleInstallmentOverdue3Day(
+   private static async handleInstallmentReminder1Day(
+     payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_REMINDER_1DAY],
+   ) {
+     await NotificationRepository.create({
+       userId: payload.customerId,
+       type: NotificationEventType.INSTALLMENT_REMINDER_1DAY,
+       title: "Final Payment Reminder — Due Tomorrow",
+       message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due tomorrow (${payload.dueDate}). Please make your payment today to avoid any disruption.`,
+       metadata: {
+         installmentId: payload.installmentId,
+         sequence: payload.sequence,
+         dueDate: payload.dueDate,
+         amount: payload.amount,
+       },
+       idempotencyKey: `reminder-1day-${payload.installmentId}`,
+     });
+   }
+
+   private static async handleInstallmentOverdueRecurring(
+     payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_RECURRING],
+   ) {
+     await NotificationRepository.create({
+       userId: payload.customerId,
+       type: NotificationEventType.INSTALLMENT_OVERDUE_RECURRING,
+       title: "Payment Overdue — Daily Reminder",
+       message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is ${payload.daysOverdue} day(s) overdue (due on ${payload.dueDate}). Please make payment immediately to avoid further escalation.`,
+       metadata: {
+         installmentId: payload.installmentId,
+         sequence: payload.sequence,
+         dueDate: payload.dueDate,
+         amount: payload.amount,
+         daysOverdue: payload.daysOverdue,
+       },
+       idempotencyKey: `overdue-recurring-${payload.installmentId}-${payload.daysOverdue}`,
+     });
+   }
+
+   private static async handleInstallmentOverdue3Day(
     payload: NotificationPayloadMap[NotificationEventType.INSTALLMENT_OVERDUE_3DAY],
   ) {
     await Promise.all([

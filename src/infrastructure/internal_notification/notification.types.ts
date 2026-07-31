@@ -6,7 +6,9 @@ export enum NotificationEventType {
   COMMISSION_TRANSFER_REQUEST = "COMMISSION_TRANSFER_REQUEST",
   COMMISSION_REQUEST_APPROVAL = "COMMISSION_REQUEST_APPROVAL",
   INSTALLMENT_REMINDER_3DAY = "INSTALLMENT_REMINDER_3DAY",
+  INSTALLMENT_REMINDER_1DAY = "INSTALLMENT_REMINDER_1DAY",
   INSTALLMENT_DUE_TODAY = "INSTALLMENT_DUE_TODAY",
+  INSTALLMENT_OVERDUE_RECURRING = "INSTALLMENT_OVERDUE_RECURRING",
   INSTALLMENT_OVERDUE_3DAY = "INSTALLMENT_OVERDUE_3DAY",
   INSTALLMENT_OVERDUE_7DAY = "INSTALLMENT_OVERDUE_7DAY",
   COMMISSION_TRANSFER_INITIATED = "COMMISSION_TRANSFER_INITIATED",
@@ -75,6 +77,20 @@ export interface NotificationPayloadMap {
     payment_url?: string;
     dashboard_url?: string;
   };
+  [NotificationEventType.INSTALLMENT_REMINDER_1DAY]: {
+    customerId: string;
+    customerEmail: string;
+    customerName: string;
+    installmentId: string;
+    sequence: number;
+    dueDate: string;
+    amount: string;
+    productName: string;
+    variantName?: string;
+    percentagePaid: number;
+    payment_url?: string;
+    dashboard_url?: string;
+  };
   [NotificationEventType.INSTALLMENT_DUE_TODAY]: {
     customerId: string;
     customerEmail: string;
@@ -86,6 +102,21 @@ export interface NotificationPayloadMap {
     productName: string;
     variantName?: string;
     percentagePaid: number;
+    payment_url?: string;
+    dashboard_url?: string;
+  };
+  [NotificationEventType.INSTALLMENT_OVERDUE_RECURRING]: {
+    customerId: string;
+    customerEmail: string;
+    customerName: string;
+    installmentId: string;
+    sequence: number;
+    dueDate: string;
+    amount: string;
+    productName: string;
+    variantName?: string;
+    percentagePaid: number;
+    daysOverdue: number;
     payment_url?: string;
     dashboard_url?: string;
   };

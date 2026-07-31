@@ -228,6 +228,26 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		},
 	],
 
+	[DomainEvent.INSTALLMENT_REMINDER_1DAY]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.customerEmail,
+			template: 'installment-1day-reminder',
+			subject: (p) => `🔔 Final Reminder: Payment Due Tomorrow`,
+			context: (p) => ({
+				customerName: p.customerName,
+				productName: p.productName,
+				variantName: p.variantName,
+				sequence: p.sequence,
+				dueDate: p.dueDate,
+				amount: p.amount,
+				percentagePaid: p.percentagePaid,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
 	[DomainEvent.INSTALLMENT_DUE_TODAY]: [
 		{
 			channels: [NotificationChannel.EMAIL],
@@ -243,6 +263,27 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
 				payment_url: p.payment_url,
+			}),
+		},
+	],
+
+	[DomainEvent.INSTALLMENT_OVERDUE_RECURRING]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.customerEmail,
+			template: 'installment-overdue-recurring',
+			subject: (p) => `⚠️ Payment Overdue — Day ${p.daysOverdue} Reminder`,
+			context: (p) => ({
+				customerName: p.customerName,
+				productName: p.productName,
+				variantName: p.variantName,
+				sequence: p.sequence,
+				dueDate: p.dueDate,
+				amount: p.amount,
+				percentagePaid: p.percentagePaid,
+				daysOverdue: p.daysOverdue,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
 			}),
 		},
 	],
