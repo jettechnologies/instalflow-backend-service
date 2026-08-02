@@ -29,11 +29,13 @@ export type AggregatePaymentIntent = {
 export type PaymentIntentAvgAggregateOutputType = {
   id: number | null
   amount: runtime.Decimal | null
+  recoveryAttempts: number | null
 }
 
 export type PaymentIntentSumAggregateOutputType = {
   id: bigint | null
   amount: runtime.Decimal | null
+  recoveryAttempts: number | null
 }
 
 export type PaymentIntentMinAggregateOutputType = {
@@ -54,6 +56,9 @@ export type PaymentIntentMinAggregateOutputType = {
   reservationKey: string | null
   idempotencyKey: string | null
   expiresAt: Date | null
+  recoveryClaimedAt: Date | null
+  recoveryAttempts: number | null
+  lastRecoveryError: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -76,6 +81,9 @@ export type PaymentIntentMaxAggregateOutputType = {
   reservationKey: string | null
   idempotencyKey: string | null
   expiresAt: Date | null
+  recoveryClaimedAt: Date | null
+  recoveryAttempts: number | null
+  lastRecoveryError: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -98,6 +106,10 @@ export type PaymentIntentCountAggregateOutputType = {
   reservationKey: number
   idempotencyKey: number
   expiresAt: number
+  initializationPayload: number
+  recoveryClaimedAt: number
+  recoveryAttempts: number
+  lastRecoveryError: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -107,11 +119,13 @@ export type PaymentIntentCountAggregateOutputType = {
 export type PaymentIntentAvgAggregateInputType = {
   id?: true
   amount?: true
+  recoveryAttempts?: true
 }
 
 export type PaymentIntentSumAggregateInputType = {
   id?: true
   amount?: true
+  recoveryAttempts?: true
 }
 
 export type PaymentIntentMinAggregateInputType = {
@@ -132,6 +146,9 @@ export type PaymentIntentMinAggregateInputType = {
   reservationKey?: true
   idempotencyKey?: true
   expiresAt?: true
+  recoveryClaimedAt?: true
+  recoveryAttempts?: true
+  lastRecoveryError?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +171,9 @@ export type PaymentIntentMaxAggregateInputType = {
   reservationKey?: true
   idempotencyKey?: true
   expiresAt?: true
+  recoveryClaimedAt?: true
+  recoveryAttempts?: true
+  lastRecoveryError?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -176,6 +196,10 @@ export type PaymentIntentCountAggregateInputType = {
   reservationKey?: true
   idempotencyKey?: true
   expiresAt?: true
+  initializationPayload?: true
+  recoveryClaimedAt?: true
+  recoveryAttempts?: true
+  lastRecoveryError?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -285,6 +309,10 @@ export type PaymentIntentGroupByOutputType = {
   reservationKey: string
   idempotencyKey: string
   expiresAt: Date
+  initializationPayload: runtime.JsonValue | null
+  recoveryClaimedAt: Date | null
+  recoveryAttempts: number
+  lastRecoveryError: string | null
   createdAt: Date
   updatedAt: Date
   _count: PaymentIntentCountAggregateOutputType | null
@@ -330,6 +358,10 @@ export type PaymentIntentWhereInput = {
   reservationKey?: Prisma.StringFilter<"PaymentIntent"> | string
   idempotencyKey?: Prisma.StringFilter<"PaymentIntent"> | string
   expiresAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
+  initializationPayload?: Prisma.JsonNullableFilter<"PaymentIntent">
+  recoveryClaimedAt?: Prisma.DateTimeNullableFilter<"PaymentIntent"> | Date | string | null
+  recoveryAttempts?: Prisma.IntFilter<"PaymentIntent"> | number
+  lastRecoveryError?: Prisma.StringNullableFilter<"PaymentIntent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
 }
@@ -352,6 +384,10 @@ export type PaymentIntentOrderByWithRelationInput = {
   reservationKey?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  initializationPayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  recoveryClaimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  recoveryAttempts?: Prisma.SortOrder
+  lastRecoveryError?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -377,6 +413,10 @@ export type PaymentIntentWhereUniqueInput = Prisma.AtLeast<{
   planId?: Prisma.StringNullableFilter<"PaymentIntent"> | string | null
   reservationKey?: Prisma.StringFilter<"PaymentIntent"> | string
   expiresAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
+  initializationPayload?: Prisma.JsonNullableFilter<"PaymentIntent">
+  recoveryClaimedAt?: Prisma.DateTimeNullableFilter<"PaymentIntent"> | Date | string | null
+  recoveryAttempts?: Prisma.IntFilter<"PaymentIntent"> | number
+  lastRecoveryError?: Prisma.StringNullableFilter<"PaymentIntent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
 }, "id" | "intentId" | "reference" | "idempotencyKey">
@@ -399,6 +439,10 @@ export type PaymentIntentOrderByWithAggregationInput = {
   reservationKey?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  initializationPayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  recoveryClaimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  recoveryAttempts?: Prisma.SortOrder
+  lastRecoveryError?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PaymentIntentCountOrderByAggregateInput
@@ -429,6 +473,10 @@ export type PaymentIntentScalarWhereWithAggregatesInput = {
   reservationKey?: Prisma.StringWithAggregatesFilter<"PaymentIntent"> | string
   idempotencyKey?: Prisma.StringWithAggregatesFilter<"PaymentIntent"> | string
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentIntent"> | Date | string
+  initializationPayload?: Prisma.JsonNullableWithAggregatesFilter<"PaymentIntent">
+  recoveryClaimedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PaymentIntent"> | Date | string | null
+  recoveryAttempts?: Prisma.IntWithAggregatesFilter<"PaymentIntent"> | number
+  lastRecoveryError?: Prisma.StringNullableWithAggregatesFilter<"PaymentIntent"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentIntent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentIntent"> | Date | string
 }
@@ -451,6 +499,10 @@ export type PaymentIntentCreateInput = {
   reservationKey: string
   idempotencyKey: string
   expiresAt: Date | string
+  initializationPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  recoveryClaimedAt?: Date | string | null
+  recoveryAttempts?: number
+  lastRecoveryError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -473,6 +525,10 @@ export type PaymentIntentUncheckedCreateInput = {
   reservationKey: string
   idempotencyKey: string
   expiresAt: Date | string
+  initializationPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  recoveryClaimedAt?: Date | string | null
+  recoveryAttempts?: number
+  lastRecoveryError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -495,6 +551,10 @@ export type PaymentIntentUpdateInput = {
   reservationKey?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  initializationPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  recoveryClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recoveryAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastRecoveryError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -517,6 +577,10 @@ export type PaymentIntentUncheckedUpdateInput = {
   reservationKey?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  initializationPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  recoveryClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recoveryAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastRecoveryError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -539,6 +603,10 @@ export type PaymentIntentCreateManyInput = {
   reservationKey: string
   idempotencyKey: string
   expiresAt: Date | string
+  initializationPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  recoveryClaimedAt?: Date | string | null
+  recoveryAttempts?: number
+  lastRecoveryError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -561,6 +629,10 @@ export type PaymentIntentUpdateManyMutationInput = {
   reservationKey?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  initializationPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  recoveryClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recoveryAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastRecoveryError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -583,6 +655,10 @@ export type PaymentIntentUncheckedUpdateManyInput = {
   reservationKey?: Prisma.StringFieldUpdateOperationsInput | string
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  initializationPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  recoveryClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recoveryAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastRecoveryError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -605,6 +681,10 @@ export type PaymentIntentCountOrderByAggregateInput = {
   reservationKey?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  initializationPayload?: Prisma.SortOrder
+  recoveryClaimedAt?: Prisma.SortOrder
+  recoveryAttempts?: Prisma.SortOrder
+  lastRecoveryError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -612,6 +692,7 @@ export type PaymentIntentCountOrderByAggregateInput = {
 export type PaymentIntentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  recoveryAttempts?: Prisma.SortOrder
 }
 
 export type PaymentIntentMaxOrderByAggregateInput = {
@@ -632,6 +713,9 @@ export type PaymentIntentMaxOrderByAggregateInput = {
   reservationKey?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  recoveryClaimedAt?: Prisma.SortOrder
+  recoveryAttempts?: Prisma.SortOrder
+  lastRecoveryError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -654,6 +738,9 @@ export type PaymentIntentMinOrderByAggregateInput = {
   reservationKey?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  recoveryClaimedAt?: Prisma.SortOrder
+  recoveryAttempts?: Prisma.SortOrder
+  lastRecoveryError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -661,6 +748,7 @@ export type PaymentIntentMinOrderByAggregateInput = {
 export type PaymentIntentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  recoveryAttempts?: Prisma.SortOrder
 }
 
 export type EnumPaymentIntentTypeFieldUpdateOperationsInput = {
@@ -691,6 +779,10 @@ export type PaymentIntentSelect<ExtArgs extends runtime.Types.Extensions.Interna
   reservationKey?: boolean
   idempotencyKey?: boolean
   expiresAt?: boolean
+  initializationPayload?: boolean
+  recoveryClaimedAt?: boolean
+  recoveryAttempts?: boolean
+  lastRecoveryError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["paymentIntent"]>
@@ -713,6 +805,10 @@ export type PaymentIntentSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   reservationKey?: boolean
   idempotencyKey?: boolean
   expiresAt?: boolean
+  initializationPayload?: boolean
+  recoveryClaimedAt?: boolean
+  recoveryAttempts?: boolean
+  lastRecoveryError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["paymentIntent"]>
@@ -735,6 +831,10 @@ export type PaymentIntentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   reservationKey?: boolean
   idempotencyKey?: boolean
   expiresAt?: boolean
+  initializationPayload?: boolean
+  recoveryClaimedAt?: boolean
+  recoveryAttempts?: boolean
+  lastRecoveryError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["paymentIntent"]>
@@ -757,11 +857,15 @@ export type PaymentIntentSelectScalar = {
   reservationKey?: boolean
   idempotencyKey?: boolean
   expiresAt?: boolean
+  initializationPayload?: boolean
+  recoveryClaimedAt?: boolean
+  recoveryAttempts?: boolean
+  lastRecoveryError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "intentId" | "type" | "reference" | "authorizationUrl" | "status" | "amount" | "currency" | "customerId" | "companyId" | "installmentId" | "onboardingId" | "subscriptionId" | "planId" | "reservationKey" | "idempotencyKey" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentIntent"]>
+export type PaymentIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "intentId" | "type" | "reference" | "authorizationUrl" | "status" | "amount" | "currency" | "customerId" | "companyId" | "installmentId" | "onboardingId" | "subscriptionId" | "planId" | "reservationKey" | "idempotencyKey" | "expiresAt" | "initializationPayload" | "recoveryClaimedAt" | "recoveryAttempts" | "lastRecoveryError" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentIntent"]>
 
 export type $PaymentIntentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PaymentIntent"
@@ -784,6 +888,10 @@ export type $PaymentIntentPayload<ExtArgs extends runtime.Types.Extensions.Inter
     reservationKey: string
     idempotencyKey: string
     expiresAt: Date
+    initializationPayload: runtime.JsonValue | null
+    recoveryClaimedAt: Date | null
+    recoveryAttempts: number
+    lastRecoveryError: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["paymentIntent"]>
@@ -1226,6 +1334,10 @@ export interface PaymentIntentFieldRefs {
   readonly reservationKey: Prisma.FieldRef<"PaymentIntent", 'String'>
   readonly idempotencyKey: Prisma.FieldRef<"PaymentIntent", 'String'>
   readonly expiresAt: Prisma.FieldRef<"PaymentIntent", 'DateTime'>
+  readonly initializationPayload: Prisma.FieldRef<"PaymentIntent", 'Json'>
+  readonly recoveryClaimedAt: Prisma.FieldRef<"PaymentIntent", 'DateTime'>
+  readonly recoveryAttempts: Prisma.FieldRef<"PaymentIntent", 'Int'>
+  readonly lastRecoveryError: Prisma.FieldRef<"PaymentIntent", 'String'>
   readonly createdAt: Prisma.FieldRef<"PaymentIntent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PaymentIntent", 'DateTime'>
 }

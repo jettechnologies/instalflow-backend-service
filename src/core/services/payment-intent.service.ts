@@ -11,6 +11,10 @@ import {
   NotFoundError,
 } from "@/shared/utils/AppError";
 import { randomUUID } from "crypto";
+import {
+  PaymentInitializationPayload,
+  assertValidInitializationPayload,
+} from "@/shared/types/payment-intent-payload.types";
 
 const INTENT_EXPIRATION_MS = 10 * 60 * 1000;
 
@@ -25,13 +29,11 @@ interface ReserveIntentParams {
   planId?: string;
   idempotencyKey?: string;
   clientIdempotencyKey?: string;
+  initializationPayload: PaymentInitializationPayload;
 }
 
-interface InitializeIntentParams {
-  email: string;
-  metadata?: Record<string, unknown>;
-  callbackUrl?: string;
-  intentId?: string;
+interface InitializePaystackOptions {
+  markFailedOnError?: boolean; // default: true
 }
 
 export class PaymentIntentService {
@@ -54,6 +56,10 @@ export class PaymentIntentService {
     isExisting: boolean;
     message?: string;
   }> {
+    assertValidInitializationPayload(
+      params.initializationPayload,
+      "PaymentIntentService.reserve",
+    );
     return this.reserveInternal(params, true);
   }
 
@@ -67,7 +73,6 @@ export class PaymentIntentService {
   }> {
     const reservationKey = this.buildReservationKey(params);
 
-    // Client idempotency layer
     if (params.clientIdempotencyKey) {
       const existing = await this.findByIdempotencyKey(
         params.clientIdempotencyKey,
@@ -100,6 +105,8 @@ export class PaymentIntentService {
           status: PaymentInitStatus.INITIALIZING,
           idempotencyKey,
           expiresAt: new Date(Date.now() + INTENT_EXPIRATION_MS),
+          initializationPayload:
+            params.initializationPayload as unknown as Prisma.InputJsonValue,
         },
       });
 
@@ -164,16 +171,6 @@ export class PaymentIntentService {
     return false;
   }
 
-  /**
-   * Shared guarded-transition primitive used by every `mark*` method (and by
-   * `cancel`). Performs a single conditional UPDATE — `WHERE status NOT IN
-   * (terminal states)` — and inspects the affected row count instead of doing
-   * a read-then-write, so a concurrent worker can never flip a row that has
-   * already reached a terminal state (SUCCESS/FAILED/EXPIRED/CANCELLED).
-   *
-   * Per architecture rule: "No code path may UPDATE a PaymentIntent already
-   * in a terminal state."
-   */
   private static async transitionStatus(
     intentId: string,
     toStatus: PaymentInitStatus,
@@ -204,8 +201,6 @@ export class PaymentIntentService {
       );
     }
 
-    // updateMany doesn't return the row; re-fetch the row we just guaranteed
-    // we (and only we) just wrote.
     return prisma.paymentIntent.findUniqueOrThrow({ where: { intentId } });
   }
 
@@ -213,6 +208,7 @@ export class PaymentIntentService {
     try {
       await this.transitionStatus(intentionId, PaymentInitStatus.CANCELLED, {
         authorizationUrl: reason ?? undefined,
+        recoveryClaimedAt: null,
       });
       return { cancelled: true };
     } catch (err) {
@@ -233,6 +229,7 @@ export class PaymentIntentService {
     return this.transitionStatus(intentId, PaymentInitStatus.INITIALIZED, {
       reference: providerData.reference,
       authorizationUrl: providerData.authorizationUrl,
+      recoveryClaimedAt: null,
     });
   }
 
@@ -240,10 +237,6 @@ export class PaymentIntentService {
     return this.transitionStatus(intentId, PaymentInitStatus.PENDING);
   }
 
-  /**
-   * New in PR-2: "webhook received and resolved against DB, verification in
-   * flight." Sits between PENDING and SUCCESS/FAILED in the state machine.
-   */
   static async markProcessing(intentId: string) {
     return this.transitionStatus(intentId, PaymentInitStatus.PROCESSING);
   }
@@ -252,8 +245,36 @@ export class PaymentIntentService {
     return this.transitionStatus(intentId, PaymentInitStatus.SUCCESS);
   }
 
-  static async markFailed(intentId: string) {
-    return this.transitionStatus(intentId, PaymentInitStatus.FAILED);
+  static async markFailed(intentId: string, reason?: string) {
+    return this.transitionStatus(intentId, PaymentInitStatus.FAILED, {
+      recoveryClaimedAt: null,
+      lastRecoveryError: reason ?? undefined,
+    });
+  }
+
+  static async markExpired(intentId: string) {
+    return this.transitionStatus(intentId, PaymentInitStatus.EXPIRED, {
+      recoveryClaimedAt: null,
+    });
+  }
+
+  /**
+   * Objective 7: release a recovery claim after a failed replay attempt
+   * WITHOUT terminal-failing the intent. Leaves status as INITIALIZING so
+   * the next sweep can pick it up again, up to the configured max attempts
+   * (enforced by the worker before it calls initializePaystack again).
+   */
+  static async recordRecoveryFailure(intentId: string, errorMessage: string) {
+    await prisma.paymentIntent.updateMany({
+      where: {
+        intentId,
+        status: PaymentInitStatus.INITIALIZING,
+      },
+      data: {
+        recoveryClaimedAt: null,
+        lastRecoveryError: errorMessage.slice(0, 2000),
+      },
+    });
   }
 
   static async expireStale() {
@@ -275,7 +296,7 @@ export class PaymentIntentService {
         },
         expiresAt: { lt: now },
       },
-      data: { status: PaymentInitStatus.EXPIRED },
+      data: { status: PaymentInitStatus.EXPIRED, recoveryClaimedAt: null },
     });
 
     return { expiredCount: result.count, expiredIntents };
@@ -285,10 +306,6 @@ export class PaymentIntentService {
     return prisma.paymentIntent.findUnique({
       where: { reference },
     });
-  }
-
-  static async markExpired(intentId: string) {
-    return this.transitionStatus(intentId, PaymentInitStatus.EXPIRED);
   }
 
   static async findByIdempotencyKey(idempotencyKey: string) {
@@ -344,10 +361,6 @@ export class PaymentIntentService {
     });
   }
 
-  /**
-   * Read-only helper retained per §5/PR-2: may still be used elsewhere in the
-   * codebase, but `reserve()` must never call this before inserting.
-   */
   static async findActiveIntent(params: ReserveIntentParams) {
     const activeStatuses = [
       PaymentInitStatus.INITIALIZING,
@@ -395,9 +408,11 @@ export class PaymentIntentService {
 
   static async initializePaystack(
     intentId: string,
-    params: InitializeIntentParams,
     context?: RequestContext,
+    options: InitializePaystackOptions = {},
   ) {
+    const markFailedOnError = options.markFailedOnError ?? true;
+
     const intent = await prisma.paymentIntent.findUnique({
       where: { intentId },
     });
@@ -406,16 +421,23 @@ export class PaymentIntentService {
       throw new NotFoundError("Payment intent not found");
     }
 
+    assertValidInitializationPayload(
+      intent.initializationPayload,
+      `PaymentIntentService.initializePaystack:${intentId}`,
+    );
+    const payload =
+      intent.initializationPayload as unknown as PaymentInitializationPayload;
+
     try {
       const providerResponse = await PaystackHttpClient.initializeTransaction({
-        email: params.email,
+        email: payload.email,
         amountKobo: Number(intent.amount) * 100,
         metadata: {
-          ...params.metadata,
+          ...payload.metadata,
           paymentIntentId: intent.intentId,
           type: this.mapMetadataType(intent.type),
         },
-        callbackUrl: params.callbackUrl,
+        callbackUrl: payload.callbackUrl,
         context,
       });
 
@@ -430,7 +452,9 @@ export class PaymentIntentService {
         access_code: providerResponse.access_code,
       };
     } catch (error: any) {
-      await this.markFailed(intentId);
+      if (markFailedOnError) {
+        await this.markFailed(intentId, error?.message);
+      }
       if (error.code === PaystackErrorCode.TIMEOUT) {
         throw new BadRequestError("Payment provider timeout, please retry");
       }
@@ -510,14 +534,30 @@ export class PaymentIntentService {
 //     PaymentInitStatus.CANCELLED,
 //   ];
 
-//   static async reserve(params: ReserveIntentParams) {
-//     const reservationKey = this.buildReservationKey(params);
-//     const idempotencyKey = params.clientIdempotencyKey ?? randomUUID();
+//   static async reserve(params: ReserveIntentParams): Promise<{
+//     intent: Prisma.PaymentIntentGetPayload<{}>;
+//     isExisting: boolean;
+//     message?: string;
+//   }> {
+//     return this.reserveInternal(params, true);
+//   }
 
-//     // Client (double-submit) layer: short-circuit before the reservation insert
-//     // when a caller-supplied idempotency key was already persisted.
+//   private static async reserveInternal(
+//     params: ReserveIntentParams,
+//     allowRetry: boolean,
+//   ): Promise<{
+//     intent: Prisma.PaymentIntentGetPayload<{}>;
+//     isExisting: boolean;
+//     message?: string;
+//   }> {
+//     const reservationKey = this.buildReservationKey(params);
+
+//     // Client idempotency layer
 //     if (params.clientIdempotencyKey) {
-//       const existing = await this.findByIdempotencyKey(idempotencyKey);
+//       const existing = await this.findByIdempotencyKey(
+//         params.clientIdempotencyKey,
+//       );
+
 //       if (existing) {
 //         return {
 //           intent: existing,
@@ -526,6 +566,8 @@ export class PaymentIntentService {
 //         };
 //       }
 //     }
+
+//     const idempotencyKey = params.clientIdempotencyKey ?? randomUUID();
 
 //     try {
 //       const intent = await prisma.paymentIntent.create({
@@ -546,26 +588,39 @@ export class PaymentIntentService {
 //         },
 //       });
 
-//       return { intent, isExisting: false };
+//       return {
+//         intent,
+//         isExisting: false,
+//       };
 //     } catch (err) {
-//       if (this.isUniqueReservationViolation(err)) {
-//         // The partial unique index rejected the insert because an active
-//         // intent already exists for this reservation key. Return the winner.
-//         const existing = await prisma.paymentIntent.findFirst({
-//           where: { reservationKey, status: { in: this.ACTIVE_STATUSES } },
-//         });
-//         if (existing) {
-//           return {
-//             intent: existing,
-//             isExisting: true,
-//             message: this.getStatusMessage(existing.status),
-//           };
-//         }
-//         // The conflicting row transitioned to a terminal state between our
-//         // insert attempt and this read — retry once with a fresh idempotency key.
-//         return this.reserve({ ...params, clientIdempotencyKey: undefined });
+//       if (!this.isUniqueReservationViolation(err)) {
+//         throw err;
 //       }
-//       throw err;
+
+//       const existing = await prisma.paymentIntent.findFirst({
+//         where: {
+//           reservationKey,
+//           status: {
+//             in: this.ACTIVE_STATUSES,
+//           },
+//         },
+//       });
+
+//       if (existing) {
+//         return {
+//           intent: existing,
+//           isExisting: true,
+//           message: this.getStatusMessage(existing.status),
+//         };
+//       }
+
+//       if (!allowRetry) {
+//         throw new ConflictError(
+//           "Unable to reserve payment intent because the reservation changed during processing.",
+//         );
+//       }
+
+//       return this.reserveInternal(params, false);
 //     }
 //   }
 
@@ -594,76 +649,96 @@ export class PaymentIntentService {
 //     return false;
 //   }
 
-//   static async cancel(intentionId: string, reason?: string) {
-//     const intent = await prisma.paymentIntent.findUnique({
-//       where: { intentId: intentionId },
-//     });
-
-//     if (!intent) {
-//       return { cancelled: false, reason: "Intent not found" };
-//     }
-
-//     if (
-//       intent.status === PaymentInitStatus.SUCCESS ||
-//       intent.status === PaymentInitStatus.FAILED ||
-//       intent.status === PaymentInitStatus.CANCELLED ||
-//       intent.status === PaymentInitStatus.EXPIRED
-//     ) {
-//       return { cancelled: false, reason: "Intent already terminal" };
-//     }
-
-//     await prisma.paymentIntent.update({
-//       where: { intentId: intentionId },
+//   /**
+//    * Shared guarded-transition primitive used by every `mark*` method (and by
+//    * `cancel`). Performs a single conditional UPDATE — `WHERE status NOT IN
+//    * (terminal states)` — and inspects the affected row count instead of doing
+//    * a read-then-write, so a concurrent worker can never flip a row that has
+//    * already reached a terminal state (SUCCESS/FAILED/EXPIRED/CANCELLED).
+//    *
+//    * Per architecture rule: "No code path may UPDATE a PaymentIntent already
+//    * in a terminal state."
+//    */
+//   private static async transitionStatus(
+//     intentId: string,
+//     toStatus: PaymentInitStatus,
+//     extraData: Prisma.PaymentIntentUpdateManyMutationInput = {},
+//   ) {
+//     const result = await prisma.paymentIntent.updateMany({
+//       where: {
+//         intentId,
+//         status: { notIn: this.TERMINAL_STATUSES },
+//       },
 //       data: {
-//         status: PaymentInitStatus.CANCELLED,
-//         authorizationUrl: reason ?? undefined,
+//         status: toStatus,
+//         ...extraData,
 //       },
 //     });
 
-//     return { cancelled: true };
+//     if (result.count === 0) {
+//       const current = await prisma.paymentIntent.findUnique({
+//         where: { intentId },
+//       });
+
+//       if (!current) {
+//         throw new NotFoundError("Payment intent not found");
+//       }
+
+//       throw new ConflictError(
+//         `Cannot transition intent ${intentId} to ${toStatus}: already in terminal state ${current.status}`,
+//       );
+//     }
+
+//     // updateMany doesn't return the row; re-fetch the row we just guaranteed
+//     // we (and only we) just wrote.
+//     return prisma.paymentIntent.findUniqueOrThrow({ where: { intentId } });
+//   }
+
+//   static async cancel(intentionId: string, reason?: string) {
+//     try {
+//       await this.transitionStatus(intentionId, PaymentInitStatus.CANCELLED, {
+//         authorizationUrl: reason ?? undefined,
+//       });
+//       return { cancelled: true };
+//     } catch (err) {
+//       if (err instanceof NotFoundError) {
+//         return { cancelled: false, reason: "Intent not found" };
+//       }
+//       if (err instanceof ConflictError) {
+//         return { cancelled: false, reason: "Intent already terminal" };
+//       }
+//       throw err;
+//     }
 //   }
 
 //   static async markInitialized(
 //     intentId: string,
 //     providerData: { reference: string; authorizationUrl: string },
 //   ) {
-//     const intent = await prisma.paymentIntent.update({
-//       where: { intentId },
-//       data: {
-//         status: PaymentInitStatus.INITIALIZED,
-//         reference: providerData.reference,
-//         authorizationUrl: providerData.authorizationUrl,
-//       },
+//     return this.transitionStatus(intentId, PaymentInitStatus.INITIALIZED, {
+//       reference: providerData.reference,
+//       authorizationUrl: providerData.authorizationUrl,
 //     });
-
-//     return intent;
 //   }
 
 //   static async markPending(intentId: string) {
-//     const intent = await prisma.paymentIntent.update({
-//       where: { intentId },
-//       data: { status: PaymentInitStatus.PENDING },
-//     });
+//     return this.transitionStatus(intentId, PaymentInitStatus.PENDING);
+//   }
 
-//     return intent;
+//   /**
+//    * New in PR-2: "webhook received and resolved against DB, verification in
+//    * flight." Sits between PENDING and SUCCESS/FAILED in the state machine.
+//    */
+//   static async markProcessing(intentId: string) {
+//     return this.transitionStatus(intentId, PaymentInitStatus.PROCESSING);
 //   }
 
 //   static async markSuccess(intentId: string) {
-//     const intent = await prisma.paymentIntent.update({
-//       where: { intentId },
-//       data: { status: PaymentInitStatus.SUCCESS },
-//     });
-
-//     return intent;
+//     return this.transitionStatus(intentId, PaymentInitStatus.SUCCESS);
 //   }
 
 //   static async markFailed(intentId: string) {
-//     const intent = await prisma.paymentIntent.update({
-//       where: { intentId },
-//       data: { status: PaymentInitStatus.FAILED },
-//     });
-
-//     return intent;
+//     return this.transitionStatus(intentId, PaymentInitStatus.FAILED);
 //   }
 
 //   static async expireStale() {
@@ -695,6 +770,10 @@ export class PaymentIntentService {
 //     return prisma.paymentIntent.findUnique({
 //       where: { reference },
 //     });
+//   }
+
+//   static async markExpired(intentId: string) {
+//     return this.transitionStatus(intentId, PaymentInitStatus.EXPIRED);
 //   }
 
 //   static async findByIdempotencyKey(idempotencyKey: string) {
@@ -750,7 +829,11 @@ export class PaymentIntentService {
 //     });
 //   }
 
-//   private static async findActiveIntent(params: ReserveIntentParams) {
+//   /**
+//    * Read-only helper retained per §5/PR-2: may still be used elsewhere in the
+//    * codebase, but `reserve()` must never call this before inserting.
+//    */
+//   static async findActiveIntent(params: ReserveIntentParams) {
 //     const activeStatuses = [
 //       PaymentInitStatus.INITIALIZING,
 //       PaymentInitStatus.INITIALIZED,
@@ -775,7 +858,9 @@ export class PaymentIntentService {
 //         break;
 //     }
 
-//     return this.findByIdempotencyKey(params.idempotencyKey);
+//     if (params.idempotencyKey) {
+//       return this.findByIdempotencyKey(params.idempotencyKey);
+//     }
 //   }
 
 //   private static getStatusMessage(status: PaymentInitStatus): string {
@@ -786,6 +871,8 @@ export class PaymentIntentService {
 //         return "Payment already initialized, complete the payment";
 //       case PaymentInitStatus.PENDING:
 //         return "Payment is being processed";
+//       case PaymentInitStatus.PROCESSING:
+//         return "Payment is being verified";
 //       default:
 //         return "Payment intent exists";
 //     }
@@ -819,13 +906,13 @@ export class PaymentIntentService {
 
 //       await this.markInitialized(intentId, {
 //         reference: providerResponse.reference,
-//         authorizationUrl: providerResponse.authorizationUrl,
+//         authorizationUrl: providerResponse.authorization_url,
 //       });
 
 //       return {
-//         authorizationUrl: providerResponse.authorizationUrl,
+//         authorization_url: providerResponse.authorization_url,
 //         reference: providerResponse.reference,
-//         accessCode: providerResponse.accessCode,
+//         access_code: providerResponse.access_code,
 //       };
 //     } catch (error: any) {
 //       await this.markFailed(intentId);

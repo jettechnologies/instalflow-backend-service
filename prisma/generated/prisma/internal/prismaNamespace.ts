@@ -3271,6 +3271,10 @@ export const PaymentIntentScalarFieldEnum = {
   reservationKey: 'reservationKey',
   idempotencyKey: 'idempotencyKey',
   expiresAt: 'expiresAt',
+  initializationPayload: 'initializationPayload',
+  recoveryClaimedAt: 'recoveryClaimedAt',
+  recoveryAttempts: 'recoveryAttempts',
+  lastRecoveryError: 'lastRecoveryError',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

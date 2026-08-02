@@ -13,12 +13,14 @@ export class InstallmentController {
 
       const page = Number(req.query.page || 1);
       const limit = Number(req.query.limit || 10);
+      const sortOrder = req.query.sortOrder as "asc" | "desc";
 
       const data = await InstallmentService.getRelatedCustomersInstallments(
         userId,
         {
           page,
           limit,
+          sortOrder,
         },
       );
 

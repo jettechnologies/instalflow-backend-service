@@ -552,6 +552,11 @@ model PaymentIntent {
   idempotencyKey String   @unique
   expiresAt      DateTime
 
+  initializationPayload Json?
+  recoveryClaimedAt     DateTime?
+  recoveryAttempts      Int       @default(0)
+  lastRecoveryError     String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -562,6 +567,7 @@ model PaymentIntent {
   @@index([installmentId, status])
   @@index([planId, type])
   @@index([reservationKey])
+  @@index([status, recoveryClaimedAt])
 }
 
 model Commission {
