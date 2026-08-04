@@ -8,25 +8,21 @@ const router = Router();
 router.use(requireAuth);
 
 router.post(
-  "/bank-accounts",
+  "/create",
   requireRole([Role.MARKETER]),
   BankController.addBankAccount,
 );
 
-router.get(
-  "/bank-accounts",
-  requireRole([Role.MARKETER]),
-  BankController.listBankAccounts,
-);
+router.get("/", requireRole([Role.MARKETER]), BankController.listBankAccounts);
 
 router.patch(
-  "/bank-accounts/primary",
+  "/set-primary",
   requireRole([Role.MARKETER]),
   BankController.switchPrimaryBankAccount,
 );
 
 router.delete(
-  "/bank-accounts",
+  "/",
   requireRole([Role.MARKETER]),
   BankController.removeBankAccount,
 );

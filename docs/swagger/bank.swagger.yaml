@@ -8,7 +8,8 @@ paths:
   /bank-accounts:
     get:
       summary: List marketer bank accounts
-      tags: [Bank Accounts]
+      tags:
+        - Bank Accounts
       security:
         - bearerAuth: []
       responses:
@@ -21,8 +22,10 @@ paths:
                 properties:
                   success:
                     type: boolean
+                    example: true
                   message:
                     type: string
+                    example: Bank accounts retrieved successfully
                   data:
                     type: array
                     items:
@@ -30,18 +33,28 @@ paths:
                       properties:
                         accountId:
                           type: string
+                          format: uuid
+                        userId:
+                          type: string
+                          format: uuid
                         bankName:
                           type: string
+                          example: GTBank
                         bankCode:
                           type: string
+                          example: "058"
                         accountName:
                           type: string
+                          example: John Doe
                         accountNumber:
                           type: string
+                          example: "0123456789"
                         isPrimary:
                           type: boolean
+                          example: true
                         isVerified:
                           type: boolean
+                          example: true
                         createdAt:
                           type: string
                           format: date-time
@@ -50,9 +63,53 @@ paths:
         "403":
           description: Forbidden
 
+    delete:
+      summary: Remove a bank account
+      tags:
+        - Bank Accounts
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountId
+              properties:
+                accountId:
+                  type: string
+                  format: uuid
+                  example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        "200":
+          description: Bank account removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Bank account removed successfully
+        "400":
+          description: Cannot delete the primary bank account or a bank account with an active transfer in progress
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Bank account not found
+
+  /bank-accounts/create:
     post:
       summary: Add a new bank account
-      tags: [Bank Accounts]
+      tags:
+        - Bank Accounts
       security:
         - bearerAuth: []
       requestBody:
@@ -68,7 +125,7 @@ paths:
               properties:
                 bankName:
                   type: string
-                  example: "GTBank"
+                  example: GTBank
                 bankCode:
                   type: string
                   example: "058"
@@ -89,29 +146,40 @@ paths:
                 properties:
                   success:
                     type: boolean
+                    example: true
                   message:
                     type: string
+                    example: Bank account added successfully
                   data:
                     type: object
                     properties:
                       id:
                         type: integer
+                        example: 1
                       accountId:
                         type: string
+                        format: uuid
                       userId:
                         type: string
+                        format: uuid
                       bankName:
                         type: string
+                        example: GTBank
                       bankCode:
                         type: string
+                        example: "058"
                       accountName:
                         type: string
+                        example: John Doe
                       accountNumber:
                         type: string
+                        example: "0123456789"
                       isPrimary:
                         type: boolean
+                        example: false
                       isVerified:
                         type: boolean
+                        example: true
                       createdAt:
                         type: string
                         format: date-time
@@ -122,41 +190,13 @@ paths:
         "403":
           description: Forbidden
         "409":
-          description: Account number already registered
+          description: Bank account already exists or account number is already registered
 
-    delete:
-      summary: Remove a bank account
-      tags: [Bank Accounts]
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - accountId
-              properties:
-                accountId:
-                  type: string
-                  example: "550e8400-e29b-41d4-a716-446655440000"
-      responses:
-        "200":
-          description: Bank account removed successfully
-        "400":
-          description: Cannot delete primary account or active transfer in progress
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Bank account not found
-
-  /bank-accounts/primary:
+  /bank-accounts/set-primary:
     patch:
-      summary: Switch primary bank account
-      tags: [Bank Accounts]
+      summary: Set a bank account as the primary account
+      tags:
+        - Bank Accounts
       security:
         - bearerAuth: []
       requestBody:
@@ -170,10 +210,22 @@ paths:
               properties:
                 accountId:
                   type: string
-                  example: "550e8400-e29b-41d4-a716-446655440000"
+                  format: uuid
+                  example: 550e8400-e29b-41d4-a716-446655440000
       responses:
         "200":
           description: Primary bank account updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Primary bank account updated successfully
         "400":
           description: Invalid request body
         "401":
