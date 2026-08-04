@@ -1,0 +1,191 @@
+openapi: 3.0.0
+
+info:
+  title: Bank Account API
+  version: 1.0.0
+
+paths:
+  /bank-accounts:
+    get:
+      summary: List marketer bank accounts
+      tags: [Bank Accounts]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Bank accounts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accountId:
+                          type: string
+                        bankName:
+                          type: string
+                        bankCode:
+                          type: string
+                        accountName:
+                          type: string
+                        accountNumber:
+                          type: string
+                        isPrimary:
+                          type: boolean
+                        isVerified:
+                          type: boolean
+                        createdAt:
+                          type: string
+                          format: date-time
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+
+    post:
+      summary: Add a new bank account
+      tags: [Bank Accounts]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bankName
+                - bankCode
+                - accountNumber
+              properties:
+                bankName:
+                  type: string
+                  example: "GTBank"
+                bankCode:
+                  type: string
+                  example: "058"
+                accountNumber:
+                  type: string
+                  example: "0123456789"
+                isPrimary:
+                  type: boolean
+                  default: false
+                  example: false
+      responses:
+        "201":
+          description: Bank account added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      accountId:
+                        type: string
+                      userId:
+                        type: string
+                      bankName:
+                        type: string
+                      bankCode:
+                        type: string
+                      accountName:
+                        type: string
+                      accountNumber:
+                        type: string
+                      isPrimary:
+                        type: boolean
+                      isVerified:
+                        type: boolean
+                      createdAt:
+                        type: string
+                        format: date-time
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "409":
+          description: Account number already registered
+
+    delete:
+      summary: Remove a bank account
+      tags: [Bank Accounts]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountId
+              properties:
+                accountId:
+                  type: string
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        "200":
+          description: Bank account removed successfully
+        "400":
+          description: Cannot delete primary account or active transfer in progress
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Bank account not found
+
+  /bank-accounts/primary:
+    patch:
+      summary: Switch primary bank account
+      tags: [Bank Accounts]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountId
+              properties:
+                accountId:
+                  type: string
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        "200":
+          description: Primary bank account updated successfully
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Bank account not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

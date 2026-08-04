@@ -15,6 +15,7 @@ import commissionRoutes from "@/api/routes/comission.routes";
 import financingRoutes from "@/api/routes/financing.routes";
 import variantRoutes from "@/api/routes/variants.routes";
 import analyticsRoutes from "@/api/routes/analytics.routes";
+import bankRoutes from "@/api/routes/bank.routes";
 
 const router = Router();
 
@@ -41,5 +42,6 @@ router.use("/installments", installmentRoutes);
 router.use("/commissions", commissionRoutes);
 router.use("/financing", financingRoutes);
 router.use("/analytics", analyticsRoutes);
+router.use("/bank-accounts", bankRoutes);
 
 export default router;

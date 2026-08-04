@@ -27,23 +27,25 @@ export class BankAccountService {
       bankCode: data.bankCode,
     });
 
-    if (data.isPrimary) {
-      await prisma.marketerBankAccount.updateMany({
-        where: { userId: marketerId, isPrimary: true },
-        data: { isPrimary: false },
-      });
-    }
+    const account = await prisma.$transaction(async (tx) => {
+      if (data.isPrimary) {
+        await tx.marketerBankAccount.updateMany({
+          where: { userId: marketerId, isPrimary: true },
+          data: { isPrimary: false },
+        });
+      }
 
-    const account = await prisma.marketerBankAccount.create({
-      data: {
-        userId: marketerId,
-        bankName: data.bankName,
-        bankCode: data.bankCode,
-        accountName: resolved.accountName,
-        accountNumber: data.accountNumber,
-        isPrimary: data.isPrimary,
-        isVerified: true,
-      },
+      return tx.marketerBankAccount.create({
+        data: {
+          userId: marketerId,
+          bankName: data.bankName,
+          bankCode: data.bankCode,
+          accountName: resolved.accountName,
+          accountNumber: data.accountNumber,
+          isPrimary: data.isPrimary,
+          isVerified: true,
+        },
+      });
     });
 
     return account;
@@ -100,6 +102,12 @@ export class BankAccountService {
 
     if (!account || account.userId !== marketerId) {
       throw new NotFoundError("Bank account not found");
+    }
+
+    if (account.isPrimary) {
+      throw new BadRequestError(
+        "Cannot delete the primary bank account. Please set another account as primary first.",
+      );
     }
 
     const activePayout = await prisma.commissionPayoutRequest.findFirst({

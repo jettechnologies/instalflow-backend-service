@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import ApiResponse from "@/shared/utils/ApiResponse";
 import { CommissionService } from "@/core/services/commission.service";
+import { CommissionPayoutStatus } from "@/infrastructure/prisma";
 
 export class CommissionController {
   static async allTime(req: Request, res: Response, next: NextFunction) {
@@ -175,7 +176,13 @@ export class CommissionController {
       const userId = (req as any).user.userId;
       const role = (req as any).user.role;
 
-      const result = await CommissionService.getPayoutRequests(userId, role);
+      const { status, page, limit } = req.query;
+
+      const result = await CommissionService.getPayoutRequests(userId, role, {
+        status: status as CommissionPayoutStatus | undefined,
+        page: page ? parseInt(page as string, 10) : undefined,
+        limit: limit ? parseInt(limit as string, 10) : undefined,
+      });
 
       return ApiResponse.success(
         res,

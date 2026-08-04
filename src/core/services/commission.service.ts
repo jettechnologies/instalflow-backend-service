@@ -698,6 +698,7 @@ export class CommissionService {
 
     const targetBankAccount = await prisma.marketerBankAccount.findFirst({
       where: { userId: payout.userId, isPrimary: true },
+      orderBy: { createdAt: "asc" },
     });
 
     if (!targetBankAccount) {
