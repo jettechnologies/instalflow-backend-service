@@ -442,11 +442,11 @@ export class CommissionService {
 
     const payoutRequest = await prisma.$transaction(async (tx) => {
       const lockedCommissions = await tx.$queryRaw<LockedCommissionRow[]>`
-      SELECT "commissionId", "amount", "reservedAmount"
+      SELECT "commissionId", "amount", "reserved_amount" AS "reservedAmount"
       FROM "Commission"
       WHERE "userId" = ${userId}
         AND "status" NOT IN ('PAID', 'FROZEN')
-        AND "reservedAmount" < "amount"
+        AND "reserved_amount" < "amount"
       ORDER BY "createdAt" ASC
       FOR UPDATE
     `;
