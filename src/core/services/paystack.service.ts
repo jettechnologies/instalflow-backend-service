@@ -1,6 +1,7 @@
 import {
   PaystackHttpClient,
   PaystackErrorCode,
+  RequestContext,
 } from "@/infrastructure/paystack/PaystackHttpClient";
 
 export { PaystackErrorCode };
@@ -39,10 +40,16 @@ export class PaystackService {
     accountNumber: string;
     bankCode: string;
   }): Promise<{ accountName: string }> {
-    return PaystackHttpClient.resolveAccount({
-      accountNumber: params.accountNumber,
-      bankCode: params.bankCode,
+    const { accountNumber, bankCode } = params;
+
+    const data = await PaystackHttpClient.resolveAccount({
+      accountNumber,
+      bankCode,
     });
+
+    return {
+      accountName: data.account_name,
+    };
   }
 
   static verifyWebhookSignature(payload: string, signature: string): boolean {

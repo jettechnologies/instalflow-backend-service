@@ -364,8 +364,14 @@ export class PaystackHttpClient {
   static async resolveAccount(params: {
     accountNumber: string;
     bankCode: string;
-    context?: RequestContext;
-  }): Promise<{ accountName: string }> {
+    context?: Omit<RequestContext, "paymentIntentId">;
+  }): Promise<{
+    account_number: string;
+    account_name: string;
+    bank_id: number;
+    bank_code: string;
+    bank_name: string;
+  }> {
     const { accountNumber, bankCode, context } = params;
     const traceId = context?.traceId ?? this.generateTraceId();
 
@@ -374,7 +380,6 @@ export class PaystackHttpClient {
       params: { account_number: accountNumber, bank_code: bankCode },
       context: {
         traceId,
-        paymentIntentId: context?.paymentIntentId,
         idempotencyKey: context?.idempotencyKey,
       },
     });
