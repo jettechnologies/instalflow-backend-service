@@ -158,7 +158,7 @@ export class UserManagementService {
     }
     const marketerIds = admin.createdUsers.map((marketer) => marketer.userId);
 
-    const [customerCount, financingContractCount, commissionStats] =
+    const [customerCount, financingContractStats, commissionStats] =
       await prisma.$transaction([
         prisma.user.count({
           where: {
@@ -168,7 +168,7 @@ export class UserManagementService {
           },
         }),
 
-        prisma.financingContract.count({
+        prisma.financingContract.aggregate({
           where: {
             user: {
               referredByMarketerId: {
@@ -176,6 +176,11 @@ export class UserManagementService {
               },
             },
           },
+          _sum: {
+            totalFinanced: true,
+          },
+
+          _count: true,
         }),
 
         prisma.commission.aggregate({
@@ -198,7 +203,10 @@ export class UserManagementService {
       stats: {
         marketerCount: admin.createdUsers.length,
         customerCount,
-        financingContractCount,
+        financingContractGenerated: Number(
+          financingContractStats._sum.totalFinanced || 0,
+        ),
+        financingContractCount: financingContractStats._count,
         totalCommissionGenerated: Number(commissionStats._sum.amount || 0),
         totalCommissionRecords: commissionStats._count,
       },

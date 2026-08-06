@@ -739,6 +739,10 @@ components:
               type: integer
               example: 120
 
+            financingContractGenerated:
+              type: integer
+              example: 95
+
             financingContractCount:
               type: integer
               example: 95
