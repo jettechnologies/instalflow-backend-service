@@ -128,58 +128,6 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 		},
 	],
 
-	// ─── Orders ─────────────────────────────────────────────────────────────────
-
-	[DomainEvent.ORDER_CREATED]: [
-		{
-			channels: [NotificationChannel.EMAIL],
-			template: 'order-confirmation',
-			subject: (p) => `Order Confirmation - #${p.orderId}`,
-			context: (p) => ({
-				orderId: p.orderId,
-				amount: p.amount,
-				date: p.date,
-				dashboard_url: p.dashboard_url,
-			}),
-		},
-		// {
-		//   channels: [NotificationChannel.SMS],
-		//   template: "order-created-sms",
-		//   subject: "",
-		//   phone: (p) => p.phone,
-		//   context: (p) => ({
-		//     message: `Your Instalflow order #${p.orderId} has been placed!`,
-		//   }),
-		// },
-	],
-
-	[DomainEvent.ORDER_CANCELLED]: [
-		{
-			channels: [NotificationChannel.EMAIL],
-			template: 'order-cancelled',
-			subject: (p) => `Order Cancelled - #${p.orderId}`,
-			context: (p) => ({ orderId: p.orderId }),
-		},
-	],
-
-	[DomainEvent.ORDER_STATUS_UPDATED]: [
-		{
-			channels: [NotificationChannel.EMAIL],
-			template: 'order-status-update',
-			subject: (p) => `Order Update - #${p.orderId}`,
-			context: (p) => ({ orderId: p.orderId, newStatus: p.newStatus }),
-		},
-		// {
-		//   channels: [NotificationChannel.SMS],
-		//   template: "order-status-sms",
-		//   subject: "",
-		//   phone: (p) => p.phone,
-		//   context: (p) => ({
-		//     message: `Order #${p.orderId} is now: ${p.newStatus}`,
-		//   }),
-		// },
-	],
-
 	// ─── Installments ────────────────────────────────────────────────────────────
 
 	[DomainEvent.INSTALLMENT_PAID]: [
@@ -356,6 +304,50 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
 				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	// ─── Contract Lifecycle ────────────────────────────────────────────────────
+
+	[DomainEvent.CONTRACT_RESTRUCTURED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.marketerEmail,
+			template: 'contract-restructured',
+			subject: (p) => `Contract Restructured — ${p.customerName}`,
+			context: (p) => ({
+				contractId: p.contractId,
+				customerName: p.customerName,
+				newTotalFinanced: p.newTotalFinanced,
+				restructuredBy: p.restructuredBy,
+				restructuredAt: p.restructuredAt,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.CONTRACT_WRITTEN_OFF]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.recipientEmail,
+			template: 'contract-written-off',
+			subject: (p) => `Contract Written Off — ${p.customerName}`,
+			context: (p) => ({
+				contractId: p.contractId,
+				customerName: p.customerName,
+				recipientName: p.recipientName,
+				outstandingAmount: p.outstandingAmount,
+				writeOffReason: p.writeOffReason,
+				writtenOffBy: p.writtenOffBy,
+				writtenOffAt: p.writtenOffAt,
+				dashboard_url: p.dashboard_url,
+				roleContext:
+					p.recipientRole === 'MARKETER'
+						? 'a contract belonging to your referred customer'
+						: p.recipientRole === 'ADMIN'
+							? "a contract referred by a marketer under your supervision"
+							: 'a contract for your company',
 			}),
 		},
 	],

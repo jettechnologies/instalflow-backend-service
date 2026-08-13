@@ -117,55 +117,6 @@ onEvent(DomainEvent.PASSWORD_CHANGED, async (payload) => {
 });
 
 /**
- * ORDER CREATED
- */
-onEvent(DomainEvent.ORDER_CREATED, async (payload) => {
-  await NotificationService.send({
-    to: payload.email,
-    channel: NotificationChannel.EMAIL,
-    template: EmailTemplate.ORDER_CONFIRMATION,
-    subject: `Order Confirmation - #${payload.orderId}`,
-    context: {
-      orderId: payload.orderId,
-      amount: payload.amount,
-      date: payload.date,
-      dashboard_url: process.env.FRONTEND_URL,
-    },
-  });
-});
-
-/**
- * ORDER CANCELLED
- */
-onEvent(DomainEvent.ORDER_CANCELLED, async (payload) => {
-  await NotificationService.send({
-    to: payload.email,
-    channel: NotificationChannel.EMAIL,
-    template: EmailTemplate.ORDER_CANCELLED,
-    subject: `Order Cancelled - #${payload.orderId}`,
-    context: {
-      orderId: payload.orderId,
-    },
-  });
-});
-
-/**
- * ORDER STATUS UPDATED (NEW)
- */
-onEvent(DomainEvent.ORDER_STATUS_UPDATED, async (payload) => {
-  await NotificationService.send({
-    to: payload.email,
-    channel: NotificationChannel.EMAIL,
-    template: EmailTemplate.ORDER_STATUS_UPDATE,
-    subject: `Order Update - #${payload.orderId}`,
-    context: {
-      orderId: payload.orderId,
-      newStatus: payload.newStatus,
-    },
-  });
-});
-
-/**
  * COMPANY ONBOARDED
  */
 onEvent(DomainEvent.COMPANY_ONBOARDED, async (payload) => {

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { KycController } from "@/api/controllers/kyc.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
+import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
 import { Role } from "@/infrastructure/prisma";
 import { uploadSinglePdf } from "@/api/middlewares/multer.middlewares";
 import { requireOnboardingToken } from "@/api/middlewares/kyc-onboarding.guard";
@@ -18,7 +19,7 @@ router.post(
   KycController.submitApplication,
 );
 
-router.use(requireAuth);
+router.use(requireAuth, requireActiveSubscription);
 
 router.post(
   "/referral-link",

@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { InstallmentController } from "@/api/controllers/installment.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
+import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
 import { Role } from "@/infrastructure/prisma";
 
 const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireActiveSubscription);
 
 router.get(
   "/customer",

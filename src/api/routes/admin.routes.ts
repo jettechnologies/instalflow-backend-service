@@ -2,12 +2,13 @@ import { Router } from "express";
 import { AdminController } from "@/api/controllers/admin.controller";
 // import { authGuard, roleGuard } from "@/api/middlewares/auth.middleware";
 import { requireAuth, requireRole } from "../middlewares/auth.guard";
+import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
 import { Role } from "@/infrastructure/prisma";
 
 const router = Router();
 
 // All routes require authentication and ADMIN role
-router.use(requireAuth);
+router.use(requireAuth, requireActiveSubscription);
 
 router.get(
   "/marketers",

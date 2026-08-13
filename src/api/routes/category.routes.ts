@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { CategoryController } from "@/api/controllers/category.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
+import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
 import { Role } from "@/infrastructure/prisma";
 
 const router = Router();
@@ -10,7 +11,7 @@ router.get("/", requireAuth, CategoryController.getCategories);
 router.get("/:id", requireAuth, CategoryController.getCategoryById);
 
 // Write routes: Protected to ADMIN and COMPANY roles
-router.use(requireAuth);
+router.use(requireAuth, requireActiveSubscription);
 router.use(requireRole([Role.COMPANY, Role.ADMIN, Role.SUPER_ADMIN]));
 
 router.post("/", CategoryController.createCategory);

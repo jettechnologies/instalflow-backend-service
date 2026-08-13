@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { CommissionController } from "@/api/controllers/comission.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
+import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
 import { Role } from "@/infrastructure/prisma";
 import { COMMISSION_ELIGIBLE_ROLES } from "@/shared/utils/helpers/commission-eligibility";
 
 const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireActiveSubscription);
 
 router.get(
   "/all-time",

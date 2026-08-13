@@ -2,11 +2,12 @@ import { Router } from "express";
 import { VariantController } from "@/api/controllers/variant.controller";
 import { ProductImageController } from "@/api/controllers/product-image.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
+import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
 import { Role } from "@/infrastructure/prisma";
 
 const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireActiveSubscription);
 router.use(requireRole([Role.COMPANY, Role.ADMIN, Role.SUPER_ADMIN]));
 
 router.post("/:productId", VariantController.createVariant);

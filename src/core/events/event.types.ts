@@ -7,9 +7,6 @@ export enum DomainEvent {
   PASSWORD_RESET_REQUESTED = "auth.password.reset.requested",
   PASSWORD_RESET_COMPLETED = "auth.password.reset.completed",
   PASSWORD_CHANGED = "auth.password.changed",
-  ORDER_CREATED = "order.created",
-  ORDER_CANCELLED = "order.cancelled",
-  ORDER_STATUS_UPDATED = "order.status.updated",
   COMPANY_ONBOARDED = "company.onboarded",
   INSTALLMENT_PAID = "installment.paid",
   INSTALLMENT_REMINDER_3DAY = "installment.reminder.3day",
@@ -18,6 +15,8 @@ export enum DomainEvent {
   INSTALLMENT_OVERDUE_RECURRING = "installment.overdue.recurring",
   INSTALLMENT_OVERDUE_3DAY = "installment.overdue.3day",
   INSTALLMENT_OVERDUE_7DAY = "installment.overdue.7day",
+  CONTRACT_RESTRUCTURED = "contract.restructured",
+  CONTRACT_WRITTEN_OFF = "contract.written_off",
   COMMISSION_TRANSFER_INITIATED = "commission.transfer.initiated",
   COMMISSION_TRANSFER_SUCCESS = "commission.transfer.success",
   COMMISSION_TRANSFER_FAILED = "commission.transfer.failed",
@@ -240,22 +239,6 @@ export interface DomainEventPayloads {
     email: string;
     deactivate_url?: string;
   };
-  [DomainEvent.ORDER_CREATED]: {
-    email: string;
-    orderId: string;
-    amount: number | string;
-    date: string;
-    dashboard_url?: string;
-  };
-  [DomainEvent.ORDER_CANCELLED]: {
-    email: string;
-    orderId: string;
-  };
-  [DomainEvent.ORDER_STATUS_UPDATED]: {
-    email: string;
-    orderId: string;
-    newStatus: string;
-  };
   [DomainEvent.COMPANY_ONBOARDED]: {
     email: string;
     adminName: string;
@@ -340,6 +323,28 @@ export interface DomainEventPayloads {
   [DomainEvent.INSTALLMENT_OVERDUE_RECURRING]: OverdueRecurringPayload;
   [DomainEvent.INSTALLMENT_OVERDUE_3DAY]: Overdue3DayPayload;
   [DomainEvent.INSTALLMENT_OVERDUE_7DAY]: Overdue7DayPayload;
+  [DomainEvent.CONTRACT_RESTRUCTURED]: {
+    contractId: string;
+    customerName: string;
+    newTotalFinanced: number;
+    restructuredBy: string;
+    restructuredAt: string;
+    marketerEmail: string;
+    marketerName: string;
+    dashboard_url?: string;
+  };
+  [DomainEvent.CONTRACT_WRITTEN_OFF]: {
+    contractId: string;
+    customerName: string;
+    outstandingAmount: number;
+    writeOffReason: string;
+    writtenOffBy: string;
+    writtenOffAt: string;
+    recipientRole: "MARKETER" | "ADMIN" | "COMPANY";
+    recipientEmail: string;
+    recipientName: string;
+    dashboard_url?: string;
+  };
   [DomainEvent.COMMISSION_TRANSFER_INITIATED]: CommissionTransferInitiatedPayload;
   [DomainEvent.COMMISSION_TRANSFER_SUCCESS]: CommissionTransferSuccessPayload;
   [DomainEvent.COMMISSION_TRANSFER_FAILED]: CommissionTransferFailedPayload;

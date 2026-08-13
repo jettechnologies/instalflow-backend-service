@@ -10,6 +10,8 @@ import { LedgerService } from "./ledger.service";
 import { InstallmentService } from "./installment.service";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
+import { emitEvent } from "@/core/events/emitter";
+import { DomainEvent } from "@/core/events/event.types";
 import {
   RestructureContractSchema,
   WriteOffContractSchema,
@@ -149,6 +151,17 @@ export class FinancingService {
             marketerName: marketer.name ?? "Marketer",
           },
         );
+
+        emitEvent(DomainEvent.CONTRACT_RESTRUCTURED, {
+          contractId,
+          customerName: customer.name ?? "Customer",
+          newTotalFinanced: Number(newTotalFinanced),
+          restructuredBy: admin.name ?? "Admin",
+          restructuredAt: new Date().toISOString(),
+          marketerEmail: marketer.email,
+          marketerName: marketer.name ?? "Marketer",
+          dashboard_url: process.env.FRONTEND_URL,
+        });
       }
 
       return {
@@ -293,6 +306,19 @@ export class FinancingService {
             companyId: contract.user.companyId || "",
           },
         );
+
+        emitEvent(DomainEvent.CONTRACT_WRITTEN_OFF, {
+          contractId,
+          customerName: customer.name ?? "Customer",
+          outstandingAmount: Number(outstandingAmount),
+          writeOffReason: validated.reason,
+          writtenOffBy: approver.name ?? "Company",
+          writtenOffAt: new Date().toISOString(),
+          recipientRole: "MARKETER",
+          recipientName: marketer.name ?? "Marketer",
+          recipientEmail: marketer.email,
+          dashboard_url: process.env.FRONTEND_URL,
+        });
       }
 
       if (targetAdmin) {
@@ -313,6 +339,19 @@ export class FinancingService {
             companyId: contract.user.companyId || "",
           },
         );
+
+        emitEvent(DomainEvent.CONTRACT_WRITTEN_OFF, {
+          contractId,
+          customerName: customer.name ?? "Customer",
+          outstandingAmount: Number(outstandingAmount),
+          writeOffReason: validated.reason,
+          writtenOffBy: approver.name ?? "Company",
+          writtenOffAt: new Date().toISOString(),
+          recipientRole: "ADMIN",
+          recipientName: targetAdmin.name ?? "Admin",
+          recipientEmail: targetAdmin.email,
+          dashboard_url: process.env.FRONTEND_URL,
+        });
       }
 
       await NotificationOrchestrator.handle(
@@ -332,6 +371,19 @@ export class FinancingService {
           companyId: contract.user.companyId || "",
         },
       );
+
+      emitEvent(DomainEvent.CONTRACT_WRITTEN_OFF, {
+        contractId,
+        customerName: customer.name ?? "Customer",
+        outstandingAmount: Number(outstandingAmount),
+        writeOffReason: validated.reason,
+        writtenOffBy: approver.name ?? "Company",
+        writtenOffAt: new Date().toISOString(),
+        recipientRole: "COMPANY",
+        recipientName: approver.name ?? "Company",
+        recipientEmail: approver.email,
+        dashboard_url: process.env.FRONTEND_URL,
+      });
 
       return {
         contractId,
