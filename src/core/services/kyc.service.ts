@@ -16,6 +16,7 @@ import {
 import {
   GenerateReferralLinkSchema,
   InviteRegisterSchema,
+  DirectRegisterSchema,
   SubmitApplicationSchema,
 } from "@/shared/schemas/kyc.schema";
 import {
@@ -133,25 +134,20 @@ export class KycService {
    * If the person abandons or the network drops, the session expires via the
    * sweeper and the email is freed — no permanent `User` row, no consumed email.
    */
-  static async registerViaReferral(data: z.infer<typeof InviteRegisterSchema>) {
-    const email = data.email.toLowerCase().trim();
-
-    const marketer = await prisma.user.findUnique({
-      where: { referralCode: data.referredByCode, role: "MARKETER" },
-    });
-
-    if (!marketer) {
-      throw new BadRequestError("Invalid referral code: Marketer not found.");
-    }
-
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      throw new ConflictError("Email is already in use.");
-    }
-
+  /**
+   * Shared session create/resume step for every registration entry point
+   * (marketer referral, company public code, staff-assisted direct).
+   */
+  private static async createOrResumeOnboardingSession(params: {
+    name: string;
+    email: string;
+    password: string;
+    marketerId: string | null;
+    companyId: string | null;
+  }) {
     const activeSession = await prisma.onboardingSession.findFirst({
       where: {
-        email,
+        email: params.email,
         status: { in: ["PENDING_KYC", "KYC_SUBMITTED"] },
         expiresAt: { gt: new Date() },
       },
@@ -160,22 +156,65 @@ export class KycService {
     const EXPIRY_HOURS = 24;
     const expiresAt = new Date(Date.now() + EXPIRY_HOURS * 60 * 60 * 1000);
 
-    const session = activeSession
-      ? await prisma.onboardingSession.update({
+    return activeSession
+      ? prisma.onboardingSession.update({
           where: { sessionId: activeSession.sessionId },
           data: { expiresAt },
         })
-      : await prisma.onboardingSession.create({
+      : prisma.onboardingSession.create({
           data: {
-            name: data.name,
-            email,
-            passwordHash: await bcryptHash(data.password),
-            marketerId: marketer.userId,
-            companyId: marketer.companyId,
+            name: params.name,
+            email: params.email,
+            passwordHash: await bcryptHash(params.password),
+            marketerId: params.marketerId,
+            companyId: params.companyId,
             status: "PENDING_KYC",
             expiresAt,
           },
         });
+  }
+
+  static async registerViaReferral(data: z.infer<typeof InviteRegisterSchema>) {
+    const email = data.email.toLowerCase().trim();
+
+    let marketerId: string | null = null;
+    let companyId: string | null = null;
+
+    if (data.referredByCode) {
+      const marketer = await prisma.user.findUnique({
+        where: { referralCode: data.referredByCode, role: "MARKETER" },
+      });
+
+      if (!marketer) {
+        throw new BadRequestError("Invalid referral code: Marketer not found.");
+      }
+
+      marketerId = marketer.userId;
+      companyId = marketer.companyId;
+    } else {
+      const company = await prisma.company.findUnique({
+        where: { publicSignupCode: data.companyCode },
+      });
+
+      if (!company) {
+        throw new BadRequestError("Invalid company invite code.");
+      }
+
+      companyId = company.companyId;
+    }
+
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      throw new ConflictError("Email is already in use.");
+    }
+
+    const session = await this.createOrResumeOnboardingSession({
+      name: data.name,
+      email,
+      password: data.password,
+      marketerId,
+      companyId,
+    });
 
     // Issue a short-lived onboarding token (scoped to the session, not a User)
     const onboardingToken = generateOnboardingToken(session.sessionId);
@@ -183,9 +222,106 @@ export class KycService {
     return {
       success: true,
       message:
-        "Referral accepted. Use the onboardingToken to complete your KYC application.",
+        "Registration accepted. Use the onboardingToken to complete your KYC application.",
       onboardingToken,
     };
+  }
+
+  /**
+   * Staff-assisted registration with no marketer referral. An ADMIN reviewer
+   * becomes the customer's commission-eligible referrer (same mechanism a
+   * marketer referral uses); a COMPANY reviewer never earns commission — the
+   * company is already the settlement beneficiary on its own sales.
+   */
+  static async registerDirect(
+    reviewerId: string,
+    data: z.infer<typeof DirectRegisterSchema>,
+  ) {
+    const reviewer = await prisma.user.findUnique({
+      where: { userId: reviewerId },
+      select: { userId: true, role: true, companyId: true },
+    });
+
+    if (!reviewer || !reviewer.companyId) {
+      throw new UnauthorizedError(
+        "Only company staff with an associated company can register a customer directly.",
+      );
+    }
+
+    if (reviewer.role !== "COMPANY" && reviewer.role !== "ADMIN") {
+      throw new UnauthorizedError(
+        "Only COMPANY or ADMIN users can register a customer directly.",
+      );
+    }
+
+    const email = data.email.toLowerCase().trim();
+
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      throw new ConflictError("Email is already in use.");
+    }
+
+    const session = await this.createOrResumeOnboardingSession({
+      name: data.name,
+      email,
+      password: data.password,
+      marketerId: reviewer.role === "ADMIN" ? reviewer.userId : null,
+      companyId: reviewer.companyId,
+    });
+
+    const onboardingToken = generateOnboardingToken(session.sessionId);
+
+    return {
+      success: true,
+      message:
+        "Registration accepted. Use the onboardingToken to complete your KYC application.",
+      onboardingToken,
+    };
+  }
+
+  /**
+   * Lazily generates a company-level public signup code (mirrors
+   * generateReferralLink's marketer-code generation) enabling a genuinely
+   * marketer-free public invite link.
+   */
+  static async generateCompanySignupCode(companyUserId: string) {
+    const companyUser = await prisma.user.findUnique({
+      where: { userId: companyUserId, role: "COMPANY" },
+      select: { companyId: true },
+    });
+
+    if (!companyUser || !companyUser.companyId) {
+      throw new UnauthorizedError(
+        "Only a company owner can generate a signup code.",
+      );
+    }
+
+    const company = await prisma.company.findUnique({
+      where: { companyId: companyUser.companyId },
+    });
+
+    if (!company) {
+      throw new NotFoundError("Company not found.");
+    }
+
+    let signupCode = company.publicSignupCode;
+
+    if (!signupCode) {
+      const cleanName = company.name
+        ? company.name.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()
+        : "COMPANY";
+      signupCode = `IFL-CO-${cleanName}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
+
+      await prisma.company.update({
+        where: { companyId: company.companyId },
+        data: { publicSignupCode: signupCode },
+      });
+    }
+
+    const frontendUrl = process.env.FRONTEND_URL || "https://instalflow.com";
+    const signupLink = `${frontendUrl}/invite?companyCode=${signupCode}`;
+
+    return { signupCode, signupLink };
   }
 
   /**
@@ -500,6 +636,7 @@ export class KycService {
     }
 
     const marketer = session.marketer;
+    const requiresMarketerApproval = !!session.marketerId;
     let isMarketerApproval = false;
     let isAdminApproval = false;
 
@@ -572,15 +709,23 @@ export class KycService {
     }
 
     if (isAdminApproval) {
-      if (!application.marketerApproved) {
-        throw new BadRequestError(
-          "Admin/Company approval is only allowed after the Marketer has approved.",
-        );
-      }
+      if (requiresMarketerApproval) {
+        if (!application.marketerApproved) {
+          throw new BadRequestError(
+            "Admin/Company approval is only allowed after the Marketer has approved.",
+          );
+        }
 
-      if (application.status !== KycApplicationStatus.APPROVAL_PROCESSING) {
+        if (application.status !== KycApplicationStatus.APPROVAL_PROCESSING) {
+          throw new BadRequestError(
+            `Admin/Company approval is only allowed when application is in APPROVAL_PROCESSING. Current status: ${application.status}.`,
+          );
+        }
+      } else if (application.status !== KycApplicationStatus.PENDING) {
+        // No marketer attached (registerDirect/company-code flow) — single-approver
+        // path, so the precondition is simply that nobody has approved yet.
         throw new BadRequestError(
-          `Admin/Company approval is only allowed when application is in APPROVAL_PROCESSING. Current status: ${application.status}.`,
+          `Approval is only allowed when application is PENDING. Current status: ${application.status}.`,
         );
       }
 
@@ -588,6 +733,9 @@ export class KycService {
         const updateData: Prisma.KycApplicationUpdateInput = {
           adminApproved: true,
           adminApprovedAt: new Date(),
+          ...(requiresMarketerApproval
+            ? {}
+            : { marketerApproved: true, marketerApprovedAt: new Date() }),
         };
 
         const updated = await tx.kycApplication.update({
@@ -603,14 +751,18 @@ export class KycService {
             fileHash: fileHash,
             performedById: reviewer.userId,
             outcome: "SUCCESS",
-            details: `Approved by ${reviewer.role}: ${reviewer.name}`,
+            details: requiresMarketerApproval
+              ? `Approved by ${reviewer.role}: ${reviewer.name}`
+              : `Approved by ${reviewer.role}: ${reviewer.name}. No marketer attached — single-approver flow.`,
           },
         });
 
         const claim = await tx.kycApplication.updateMany({
           where: {
             kycApplicationId: applicationId,
-            status: KycApplicationStatus.APPROVAL_PROCESSING,
+            status: requiresMarketerApproval
+              ? KycApplicationStatus.APPROVAL_PROCESSING
+              : KycApplicationStatus.PENDING,
           },
           data: { status: KycApplicationStatus.APPROVED },
         });
@@ -654,12 +806,14 @@ export class KycService {
           data: { status: "APPROVED", completedAt: new Date() },
         });
 
-        await tx.referral.create({
-          data: {
-            marketerId: session.marketerId,
-            referralCode: `REF-${marketer.referralCode}-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
-          },
-        });
+        if (session.marketerId && marketer) {
+          await tx.referral.create({
+            data: {
+              marketerId: session.marketerId,
+              referralCode: `REF-${marketer.referralCode}-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
+            },
+          });
+        }
 
         const firstPaymentDate = new Date();
         firstPaymentDate.setDate(firstPaymentDate.getDate() + 3);
@@ -859,7 +1013,7 @@ export class KycService {
       where: { kycApplicationId: applicationId },
       include: {
         kycDocumentAssets: true,
-        onboardingSession: { select: { marketerId: true } },
+        onboardingSession: { select: { marketerId: true, companyId: true } },
       },
     });
 
@@ -885,6 +1039,12 @@ export class KycService {
             "Unauthorized: You are not the Admin associated with this marketer.",
           );
         }
+      } else if (session?.companyId !== reviewer.companyId) {
+        // No marketer attached (direct/company-code registration) — fall back
+        // to tenant scoping so cross-company access isn't silently allowed.
+        throw new UnauthorizedError(
+          "Unauthorized: This customer does not belong to your company.",
+        );
       }
     }
 
@@ -937,8 +1097,13 @@ export class KycService {
         where.onboardingSession = { marketerId: reviewerId };
         break;
       case Role.ADMIN:
+        // Includes both: customers referred by a marketer this admin created,
+        // and customers this admin registered directly (no marketer attached).
         where.onboardingSession = {
-          marketer: { createdById: reviewerId },
+          OR: [
+            { marketer: { createdById: reviewerId } },
+            { marketerId: reviewerId },
+          ],
         };
         break;
       case Role.COMPANY:

@@ -17,23 +17,10 @@ import {
   type Overdue7DayPayload,
 } from "@/core/events/event.types";
 import logger from "@/infrastructure/logger/logger";
-import { redis } from "@/infrastructure/redis/redis-connect";
-
-const REMINDER_TTL_SECONDS = 24 * 60 * 60;
-
-function reminderKey(installmentId: string, type: string): string {
-  const day = new Date().toISOString().slice(0, 10);
-  return `reminder:sent:${installmentId}:${type}:${day}`;
-}
-
-async function ensureReminderSent(
-  installmentId: string,
-  type: string,
-): Promise<boolean> {
-  const key = reminderKey(installmentId, type);
-  const result = await redis.set(key, "1", "EX", REMINDER_TTL_SECONDS, "NX");
-  return result === "OK";
-}
+import {
+  dayWindow,
+  ensureReminderSent,
+} from "@/shared/utils/helpers/date-window";
 
 const formatAmount = (val: Prisma.Decimal | string | number): string => {
   const num = typeof val === "object" ? val.toNumber() : Number(val);
@@ -46,19 +33,6 @@ const formatDate = (d: Date): string =>
     month: "long",
     year: "numeric",
   });
-
-function dayWindow(offsetDays: number): { start: Date; end: Date } {
-  const now = new Date();
-  const target = new Date(
-    Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() + offsetDays,
-    ),
-  );
-  const next = new Date(target.getTime() + 24 * 60 * 60 * 1000);
-  return { start: target, end: next };
-}
 
 async function calculateProgress(contractId: string) {
   const contract = await prisma.financingContract.findFirst({

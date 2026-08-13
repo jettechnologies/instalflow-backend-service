@@ -2,6 +2,7 @@ import { Router } from "express";
 import { CommissionController } from "@/api/controllers/comission.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { Role } from "@/infrastructure/prisma";
+import { COMMISSION_ELIGIBLE_ROLES } from "@/shared/utils/helpers/commission-eligibility";
 
 const router = Router();
 
@@ -9,25 +10,25 @@ router.use(requireAuth);
 
 router.get(
   "/all-time",
-  requireRole([Role.MARKETER]),
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
   CommissionController.allTime,
 );
 
 router.get(
   "/per-customer",
-  requireRole([Role.MARKETER]),
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
   CommissionController.perCustomer,
 );
 
 router.get(
   "/per-product",
-  requireRole([Role.MARKETER]),
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
   CommissionController.perProduct,
 );
 
 router.post(
   "/request-payout",
-  requireRole([Role.MARKETER]),
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
   CommissionController.requestPayout,
 );
 

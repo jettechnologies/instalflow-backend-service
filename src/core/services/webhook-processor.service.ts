@@ -2,6 +2,8 @@ import {
   AccountType,
   CommissionAllocationStatus,
   CommissionPayoutStatus,
+  MerchantSettlementStatus,
+  SettlementAuditActor,
   Prisma,
   prisma,
 } from "@/infrastructure/prisma";
@@ -18,6 +20,13 @@ import {
   derivePostPaymentStatus,
   deriveReservationStatus,
 } from "@/shared/utils/helpers/commission-helper";
+
+// Prefix set by merchant-settlement-transfer.worker.ts on the Paystack
+// transfer reference — lets the shared transfer.* webhooks below tell a
+// settlement transfer apart from a commission payout transfer, since both
+// use the same Paystack event types. Existing commissionPayoutRequest
+// payoutIds are raw UUIDs and never carry this prefix.
+const SETTLEMENT_REFERENCE_PREFIX = "MST-";
 
 export class WebhookProcessor {
   static async handleChargeSuccess(data: any): Promise<void> {
@@ -152,7 +161,13 @@ export class WebhookProcessor {
   }
 
   static async handleTransferSuccess(data: any): Promise<void> {
-    const payoutId = data.reference as string;
+    const reference = data.reference as string;
+
+    if (reference?.startsWith(SETTLEMENT_REFERENCE_PREFIX)) {
+      return this.handleSettlementTransferSuccess(data);
+    }
+
+    const payoutId = reference;
     const transferCode = data.transfer_code as string;
 
     logger.info("[webhook] transfer.success", { payoutId, transferCode });
@@ -277,7 +292,13 @@ export class WebhookProcessor {
   }
 
   static async handleTransferFailed(data: any): Promise<void> {
-    const payoutId = data.reference as string;
+    const reference = data.reference as string;
+
+    if (reference?.startsWith(SETTLEMENT_REFERENCE_PREFIX)) {
+      return this.handleSettlementTransferFailed(data);
+    }
+
+    const payoutId = reference;
     const failReason =
       (data.failures?.[0]?.reason as string) ?? "Transfer failed";
 
@@ -380,7 +401,13 @@ export class WebhookProcessor {
   }
 
   static async handleTransferReversed(data: any): Promise<void> {
-    const payoutId = data.reference as string;
+    const reference = data.reference as string;
+
+    if (reference?.startsWith(SETTLEMENT_REFERENCE_PREFIX)) {
+      return this.handleSettlementTransferReversed(data);
+    }
+
+    const payoutId = reference;
 
     logger.warn("[webhook] transfer.reversed", { payoutId });
 
@@ -477,5 +504,315 @@ export class WebhookProcessor {
     logger.warn("[webhook] transfer.reversed — reservations restored", {
       payoutId,
     });
+  }
+
+  // ── Merchant settlement transfer webhooks ────────────────────────────────
+  // These are the final authority for settlement completion (§12 of the
+  // revised business model) — the transfer worker only records that it
+  // *called* Paystack, never that the transfer succeeded.
+
+  private static async handleSettlementTransferSuccess(
+    data: any,
+  ): Promise<void> {
+    const settlementId = (data.reference as string).replace(
+      SETTLEMENT_REFERENCE_PREFIX,
+      "",
+    );
+    const transferCode = data.transfer_code as string;
+
+    logger.info("[webhook] settlement transfer.success", {
+      settlementId,
+      transferCode,
+    });
+
+    const settlement = await prisma.merchantSettlementRequest.findUnique({
+      where: { settlementId },
+      include: { companyBankAccount: true },
+    });
+
+    if (!settlement) {
+      logger.error(
+        "[webhook] settlement transfer.success — settlement not found",
+        { settlementId },
+      );
+      return;
+    }
+
+    if (settlement.status === MerchantSettlementStatus.TRANSFER_SUCCESS) {
+      logger.info(
+        "[webhook] settlement transfer.success — already TRANSFER_SUCCESS, skipping",
+        { settlementId },
+      );
+      return;
+    }
+
+    await prisma.$transaction(async (tx) => {
+      const now = new Date();
+
+      await tx.merchantSettlementRequest.update({
+        where: { settlementId },
+        data: {
+          status: MerchantSettlementStatus.TRANSFER_SUCCESS,
+          webhookReceivedAt: now,
+          transferCompletedAt: now,
+        },
+      });
+
+      await tx.merchantSettlementAuditTrail.create({
+        data: {
+          settlementId,
+          action: "WEBHOOK_RECEIVED",
+          actorType: SettlementAuditActor.WEBHOOK,
+          outcome: "SUCCESS",
+          details: `transfer.success received, transferCode=${transferCode}.`,
+        },
+      });
+
+      await tx.merchantSettlementAuditTrail.create({
+        data: {
+          settlementId,
+          action: "TRANSFER_SUCCESS",
+          actorType: SettlementAuditActor.WEBHOOK,
+          outcome: "SUCCESS",
+          details: "Settlement marked complete by verified Paystack webhook.",
+        },
+      });
+
+      await LedgerService.recordTransaction(
+        {
+          reference: `SETTLEMENT_TRANSFER_SUCCESS_${settlementId}`,
+          description: `Settlement transfer confirmed for company ${settlement.companyId}`,
+          companyId: settlement.companyId,
+          metadata: { settlementId, transferCode },
+          entries: [
+            {
+              accountName: "PAYOUTS_IN_TRANSIT",
+              accountType: AccountType.ASSET,
+              debit: settlement.amount,
+            },
+            {
+              accountName: "BANK_SETTLED",
+              accountType: AccountType.ASSET,
+              credit: settlement.amount,
+            },
+          ],
+        },
+        tx,
+      );
+    });
+
+    const companyUsers = await prisma.user.findMany({
+      where: { companyId: settlement.companyId, role: "COMPANY" },
+      select: { email: true },
+    });
+
+    const maskedAccount =
+      settlement.companyBankAccount?.accountNumber
+        ?.slice(-4)
+        .padStart(
+          settlement.companyBankAccount.accountNumber.length,
+          "*",
+        ) ?? "****";
+
+    emitEvent(DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_SUCCESS, {
+      companyId: settlement.companyId,
+      companyEmails: companyUsers.map((u) => u.email),
+      settlementId,
+      amount: Number(settlement.amount),
+      transferCode,
+      bankName: settlement.companyBankAccount?.bankName ?? "Bank",
+      maskedAccount,
+      dashboard_url: process.env.FRONTEND_URL,
+    });
+
+    logger.info("[webhook] settlement transfer.success — TRANSFER_SUCCESS", {
+      settlementId,
+    });
+  }
+
+  private static async handleSettlementTransferFailed(
+    data: any,
+  ): Promise<void> {
+    const settlementId = (data.reference as string).replace(
+      SETTLEMENT_REFERENCE_PREFIX,
+      "",
+    );
+    const failReason =
+      (data.failures?.[0]?.reason as string) ?? "Transfer failed";
+
+    logger.warn("[webhook] settlement transfer.failed", {
+      settlementId,
+      failReason,
+    });
+
+    const settlement = await prisma.merchantSettlementRequest.findUnique({
+      where: { settlementId },
+    });
+
+    if (!settlement) {
+      logger.error(
+        "[webhook] settlement transfer.failed — settlement not found",
+        { settlementId },
+      );
+      return;
+    }
+
+    if (settlement.status === MerchantSettlementStatus.TRANSFER_FAILED) return;
+
+    await prisma.$transaction(async (tx) => {
+      const now = new Date();
+
+      await tx.merchantSettlementRequest.update({
+        where: { settlementId },
+        data: {
+          status: MerchantSettlementStatus.TRANSFER_FAILED,
+          webhookReceivedAt: now,
+          transferFailedAt: now,
+          transferFailReason: failReason,
+        },
+      });
+
+      await tx.merchantSettlementAuditTrail.create({
+        data: {
+          settlementId,
+          action: "TRANSFER_FAILED",
+          actorType: SettlementAuditActor.WEBHOOK,
+          outcome: "FAILURE",
+          details: failReason,
+        },
+      });
+
+      await LedgerService.recordTransaction(
+        {
+          reference: `SETTLEMENT_TRANSFER_FAILED_${settlementId}`,
+          description: `Settlement transfer failed — restoring merchant liability for company ${settlement.companyId}`,
+          companyId: settlement.companyId,
+          metadata: { settlementId, reason: failReason },
+          entries: [
+            {
+              accountName: "PAYOUTS_IN_TRANSIT",
+              accountType: AccountType.ASSET,
+              debit: settlement.amount,
+            },
+            {
+              accountName: "MERCHANT_PAYABLE",
+              accountType: AccountType.LIABILITY,
+              credit: settlement.amount,
+            },
+          ],
+        },
+        tx,
+      );
+    });
+
+    const companyUsers = await prisma.user.findMany({
+      where: { companyId: settlement.companyId, role: "COMPANY" },
+      select: { email: true },
+    });
+
+    emitEvent(DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_FAILED, {
+      companyId: settlement.companyId,
+      companyEmails: companyUsers.map((u) => u.email),
+      settlementId,
+      amount: Number(settlement.amount),
+      reason: failReason,
+      dashboard_url: process.env.FRONTEND_URL,
+    });
+
+    logger.warn(
+      "[webhook] settlement transfer.failed — merchant liability restored",
+      { settlementId },
+    );
+  }
+
+  private static async handleSettlementTransferReversed(
+    data: any,
+  ): Promise<void> {
+    const settlementId = (data.reference as string).replace(
+      SETTLEMENT_REFERENCE_PREFIX,
+      "",
+    );
+
+    logger.warn("[webhook] settlement transfer.reversed", { settlementId });
+
+    const settlement = await prisma.merchantSettlementRequest.findUnique({
+      where: { settlementId },
+    });
+
+    if (!settlement) {
+      logger.error(
+        "[webhook] settlement transfer.reversed — settlement not found",
+        { settlementId },
+      );
+      return;
+    }
+
+    if (settlement.status === MerchantSettlementStatus.TRANSFER_REVERSED) {
+      return;
+    }
+
+    await prisma.$transaction(async (tx) => {
+      const now = new Date();
+
+      await tx.merchantSettlementRequest.update({
+        where: { settlementId },
+        data: {
+          status: MerchantSettlementStatus.TRANSFER_REVERSED,
+          webhookReceivedAt: now,
+          transferFailedAt: now,
+          transferFailReason: "Transfer reversed by Paystack",
+        },
+      });
+
+      await tx.merchantSettlementAuditTrail.create({
+        data: {
+          settlementId,
+          action: "TRANSFER_REVERSED",
+          actorType: SettlementAuditActor.WEBHOOK,
+          outcome: "FAILURE",
+          details: "Transfer reversed by Paystack.",
+        },
+      });
+
+      await LedgerService.recordTransaction(
+        {
+          reference: `SETTLEMENT_TRANSFER_REVERSED_${settlementId}`,
+          description: `Settlement transfer reversed — merchant liability restored for company ${settlement.companyId}`,
+          companyId: settlement.companyId,
+          metadata: { settlementId },
+          entries: [
+            {
+              accountName: "BANK_SETTLED",
+              accountType: AccountType.ASSET,
+              debit: settlement.amount,
+            },
+            {
+              accountName: "MERCHANT_PAYABLE",
+              accountType: AccountType.LIABILITY,
+              credit: settlement.amount,
+            },
+          ],
+        },
+        tx,
+      );
+    });
+
+    const companyUsers = await prisma.user.findMany({
+      where: { companyId: settlement.companyId, role: "COMPANY" },
+      select: { email: true },
+    });
+
+    emitEvent(DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_REVERSED, {
+      companyId: settlement.companyId,
+      companyEmails: companyUsers.map((u) => u.email),
+      settlementId,
+      amount: Number(settlement.amount),
+      dashboard_url: process.env.FRONTEND_URL,
+    });
+
+    logger.warn(
+      "[webhook] settlement transfer.reversed — reservations restored",
+      { settlementId },
+    );
   }
 }

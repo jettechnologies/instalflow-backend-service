@@ -589,6 +589,40 @@ export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBigIntNullableFilter<$PrismaModel>
 }
 
+export type EnumMerchantSettlementStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.MerchantSettlementStatus | Prisma.EnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMerchantSettlementStatusFilter<$PrismaModel> | $Enums.MerchantSettlementStatus
+}
+
+export type EnumMerchantSettlementStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MerchantSettlementStatus | Prisma.EnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMerchantSettlementStatusWithAggregatesFilter<$PrismaModel> | $Enums.MerchantSettlementStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMerchantSettlementStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMerchantSettlementStatusFilter<$PrismaModel>
+}
+
+export type EnumSettlementAuditActorFilter<$PrismaModel = never> = {
+  equals?: $Enums.SettlementAuditActor | Prisma.EnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  in?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSettlementAuditActorFilter<$PrismaModel> | $Enums.SettlementAuditActor
+}
+
+export type EnumSettlementAuditActorWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SettlementAuditActor | Prisma.EnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  in?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSettlementAuditActorWithAggregatesFilter<$PrismaModel> | $Enums.SettlementAuditActor
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSettlementAuditActorFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSettlementAuditActorFilter<$PrismaModel>
+}
+
 export type EnumTransactionTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.TransactionType | Prisma.EnumTransactionTypeFieldRefInput<$PrismaModel>
   in?: $Enums.TransactionType[] | Prisma.ListEnumTransactionTypeFieldRefInput<$PrismaModel>
@@ -1285,6 +1319,40 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumMerchantSettlementStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.MerchantSettlementStatus | Prisma.EnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMerchantSettlementStatusFilter<$PrismaModel> | $Enums.MerchantSettlementStatus
+}
+
+export type NestedEnumMerchantSettlementStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MerchantSettlementStatus | Prisma.EnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MerchantSettlementStatus[] | Prisma.ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMerchantSettlementStatusWithAggregatesFilter<$PrismaModel> | $Enums.MerchantSettlementStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMerchantSettlementStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMerchantSettlementStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSettlementAuditActorFilter<$PrismaModel = never> = {
+  equals?: $Enums.SettlementAuditActor | Prisma.EnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  in?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSettlementAuditActorFilter<$PrismaModel> | $Enums.SettlementAuditActor
+}
+
+export type NestedEnumSettlementAuditActorWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SettlementAuditActor | Prisma.EnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  in?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SettlementAuditActor[] | Prisma.ListEnumSettlementAuditActorFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSettlementAuditActorWithAggregatesFilter<$PrismaModel> | $Enums.SettlementAuditActor
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSettlementAuditActorFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSettlementAuditActorFilter<$PrismaModel>
 }
 
 export type NestedEnumTransactionTypeFilter<$PrismaModel = never> = {

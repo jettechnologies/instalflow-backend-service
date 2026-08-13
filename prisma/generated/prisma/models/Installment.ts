@@ -274,6 +274,7 @@ export type InstallmentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
   financingContract?: Prisma.XOR<Prisma.FinancingContractScalarRelationFilter, Prisma.FinancingContractWhereInput>
   payments?: Prisma.PaymentListRelationFilter
+  merchantSettlementLine?: Prisma.XOR<Prisma.MerchantSettlementLineNullableScalarRelationFilter, Prisma.MerchantSettlementLineWhereInput> | null
 }
 
 export type InstallmentOrderByWithRelationInput = {
@@ -290,6 +291,7 @@ export type InstallmentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   financingContract?: Prisma.FinancingContractOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineOrderByWithRelationInput
 }
 
 export type InstallmentWhereUniqueInput = Prisma.AtLeast<{
@@ -310,6 +312,7 @@ export type InstallmentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Installment"> | Date | string
   financingContract?: Prisma.XOR<Prisma.FinancingContractScalarRelationFilter, Prisma.FinancingContractWhereInput>
   payments?: Prisma.PaymentListRelationFilter
+  merchantSettlementLine?: Prisma.XOR<Prisma.MerchantSettlementLineNullableScalarRelationFilter, Prisma.MerchantSettlementLineWhereInput> | null
 }, "id" | "installmentId" | "financingContractId_sequence">
 
 export type InstallmentOrderByWithAggregationInput = {
@@ -361,6 +364,7 @@ export type InstallmentCreateInput = {
   updatedAt?: Date | string
   financingContract: Prisma.FinancingContractCreateNestedOneWithoutInstallmentsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutInstallmentInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineCreateNestedOneWithoutInstallmentInput
 }
 
 export type InstallmentUncheckedCreateInput = {
@@ -376,6 +380,7 @@ export type InstallmentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInstallmentInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUncheckedCreateNestedOneWithoutInstallmentInput
 }
 
 export type InstallmentUpdateInput = {
@@ -391,6 +396,7 @@ export type InstallmentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   financingContract?: Prisma.FinancingContractUpdateOneRequiredWithoutInstallmentsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutInstallmentNestedInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUpdateOneWithoutInstallmentNestedInput
 }
 
 export type InstallmentUncheckedUpdateInput = {
@@ -406,6 +412,7 @@ export type InstallmentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutInstallmentNestedInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUncheckedUpdateOneWithoutInstallmentNestedInput
 }
 
 export type InstallmentCreateManyInput = {
@@ -583,6 +590,20 @@ export type InstallmentUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstallmentUpdateToOneWithWhereWithoutPaymentsInput, Prisma.InstallmentUpdateWithoutPaymentsInput>, Prisma.InstallmentUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type InstallmentCreateNestedOneWithoutMerchantSettlementLineInput = {
+  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutMerchantSettlementLineInput, Prisma.InstallmentUncheckedCreateWithoutMerchantSettlementLineInput>
+  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutMerchantSettlementLineInput
+  connect?: Prisma.InstallmentWhereUniqueInput
+}
+
+export type InstallmentUpdateOneRequiredWithoutMerchantSettlementLineNestedInput = {
+  create?: Prisma.XOR<Prisma.InstallmentCreateWithoutMerchantSettlementLineInput, Prisma.InstallmentUncheckedCreateWithoutMerchantSettlementLineInput>
+  connectOrCreate?: Prisma.InstallmentCreateOrConnectWithoutMerchantSettlementLineInput
+  upsert?: Prisma.InstallmentUpsertWithoutMerchantSettlementLineInput
+  connect?: Prisma.InstallmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InstallmentUpdateToOneWithWhereWithoutMerchantSettlementLineInput, Prisma.InstallmentUpdateWithoutMerchantSettlementLineInput>, Prisma.InstallmentUncheckedUpdateWithoutMerchantSettlementLineInput>
+}
+
 export type InstallmentCreateWithoutFinancingContractInput = {
   id?: bigint | number
   installmentId?: string
@@ -595,6 +616,7 @@ export type InstallmentCreateWithoutFinancingContractInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentCreateNestedManyWithoutInstallmentInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineCreateNestedOneWithoutInstallmentInput
 }
 
 export type InstallmentUncheckedCreateWithoutFinancingContractInput = {
@@ -609,6 +631,7 @@ export type InstallmentUncheckedCreateWithoutFinancingContractInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInstallmentInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUncheckedCreateNestedOneWithoutInstallmentInput
 }
 
 export type InstallmentCreateOrConnectWithoutFinancingContractInput = {
@@ -666,6 +689,7 @@ export type InstallmentCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   financingContract: Prisma.FinancingContractCreateNestedOneWithoutInstallmentsInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineCreateNestedOneWithoutInstallmentInput
 }
 
 export type InstallmentUncheckedCreateWithoutPaymentsInput = {
@@ -680,6 +704,7 @@ export type InstallmentUncheckedCreateWithoutPaymentsInput = {
   overdueAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUncheckedCreateNestedOneWithoutInstallmentInput
 }
 
 export type InstallmentCreateOrConnectWithoutPaymentsInput = {
@@ -710,6 +735,7 @@ export type InstallmentUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   financingContract?: Prisma.FinancingContractUpdateOneRequiredWithoutInstallmentsNestedInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUpdateOneWithoutInstallmentNestedInput
 }
 
 export type InstallmentUncheckedUpdateWithoutPaymentsInput = {
@@ -724,6 +750,83 @@ export type InstallmentUncheckedUpdateWithoutPaymentsInput = {
   overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUncheckedUpdateOneWithoutInstallmentNestedInput
+}
+
+export type InstallmentCreateWithoutMerchantSettlementLineInput = {
+  id?: bigint | number
+  installmentId?: string
+  dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
+  status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  financingContract: Prisma.FinancingContractCreateNestedOneWithoutInstallmentsInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutInstallmentInput
+}
+
+export type InstallmentUncheckedCreateWithoutMerchantSettlementLineInput = {
+  id?: bigint | number
+  installmentId?: string
+  financingContractId: string
+  dueDate: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence: number
+  status?: $Enums.InstallmentStatus
+  paidAt?: Date | string | null
+  overdueAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInstallmentInput
+}
+
+export type InstallmentCreateOrConnectWithoutMerchantSettlementLineInput = {
+  where: Prisma.InstallmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.InstallmentCreateWithoutMerchantSettlementLineInput, Prisma.InstallmentUncheckedCreateWithoutMerchantSettlementLineInput>
+}
+
+export type InstallmentUpsertWithoutMerchantSettlementLineInput = {
+  update: Prisma.XOR<Prisma.InstallmentUpdateWithoutMerchantSettlementLineInput, Prisma.InstallmentUncheckedUpdateWithoutMerchantSettlementLineInput>
+  create: Prisma.XOR<Prisma.InstallmentCreateWithoutMerchantSettlementLineInput, Prisma.InstallmentUncheckedCreateWithoutMerchantSettlementLineInput>
+  where?: Prisma.InstallmentWhereInput
+}
+
+export type InstallmentUpdateToOneWithWhereWithoutMerchantSettlementLineInput = {
+  where?: Prisma.InstallmentWhereInput
+  data: Prisma.XOR<Prisma.InstallmentUpdateWithoutMerchantSettlementLineInput, Prisma.InstallmentUncheckedUpdateWithoutMerchantSettlementLineInput>
+}
+
+export type InstallmentUpdateWithoutMerchantSettlementLineInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  installmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  financingContract?: Prisma.FinancingContractUpdateOneRequiredWithoutInstallmentsNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutInstallmentNestedInput
+}
+
+export type InstallmentUncheckedUpdateWithoutMerchantSettlementLineInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  installmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  financingContractId?: Prisma.StringFieldUpdateOperationsInput | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumInstallmentStatusFieldUpdateOperationsInput | $Enums.InstallmentStatus
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  overdueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInstallmentNestedInput
 }
 
 export type InstallmentCreateManyFinancingContractInput = {
@@ -751,6 +854,7 @@ export type InstallmentUpdateWithoutFinancingContractInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUpdateManyWithoutInstallmentNestedInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUpdateOneWithoutInstallmentNestedInput
 }
 
 export type InstallmentUncheckedUpdateWithoutFinancingContractInput = {
@@ -765,6 +869,7 @@ export type InstallmentUncheckedUpdateWithoutFinancingContractInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutInstallmentNestedInput
+  merchantSettlementLine?: Prisma.MerchantSettlementLineUncheckedUpdateOneWithoutInstallmentNestedInput
 }
 
 export type InstallmentUncheckedUpdateManyWithoutFinancingContractInput = {
@@ -825,6 +930,7 @@ export type InstallmentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   updatedAt?: boolean
   financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Installment$paymentsArgs<ExtArgs>
+  merchantSettlementLine?: boolean | Prisma.Installment$merchantSettlementLineArgs<ExtArgs>
   _count?: boolean | Prisma.InstallmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["installment"]>
 
@@ -876,6 +982,7 @@ export type InstallmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type InstallmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   financingContract?: boolean | Prisma.FinancingContractDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Installment$paymentsArgs<ExtArgs>
+  merchantSettlementLine?: boolean | Prisma.Installment$merchantSettlementLineArgs<ExtArgs>
   _count?: boolean | Prisma.InstallmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstallmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -890,6 +997,7 @@ export type $InstallmentPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     financingContract: Prisma.$FinancingContractPayload<ExtArgs>
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    merchantSettlementLine: Prisma.$MerchantSettlementLinePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -1299,6 +1407,7 @@ export interface Prisma__InstallmentClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   financingContract<T extends Prisma.FinancingContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancingContractDefaultArgs<ExtArgs>>): Prisma.Prisma__FinancingContractClient<runtime.Types.Result.GetResult<Prisma.$FinancingContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.Installment$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Installment$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  merchantSettlementLine<T extends Prisma.Installment$merchantSettlementLineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Installment$merchantSettlementLineArgs<ExtArgs>>): Prisma.Prisma__MerchantSettlementLineClient<runtime.Types.Result.GetResult<Prisma.$MerchantSettlementLinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1761,6 +1870,25 @@ export type Installment$paymentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Installment.merchantSettlementLine
+ */
+export type Installment$merchantSettlementLineArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MerchantSettlementLine
+   */
+  select?: Prisma.MerchantSettlementLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MerchantSettlementLine
+   */
+  omit?: Prisma.MerchantSettlementLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MerchantSettlementLineInclude<ExtArgs> | null
+  where?: Prisma.MerchantSettlementLineWhereInput
 }
 
 /**

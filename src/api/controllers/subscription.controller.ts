@@ -73,6 +73,28 @@ export class SubscriptionController {
   }
 
   /**
+   * Click-to-renew — triggered from a renewal reminder email link.
+   */
+  static async renew(req: Request, res: Response) {
+    const { companyId } = req.user!;
+    const { planId } = req.body ?? {};
+
+    if (!companyId) {
+      return ApiResponse.forbidden(
+        res,
+        "Only company accounts can renew subscriptions",
+      );
+    }
+
+    const data = await SubscriptionService.renewSubscription(
+      companyId,
+      planId,
+    );
+
+    return ApiResponse.success(res, 200, "Subscription renewal initialized", data);
+  }
+
+  /**
    * Verify a subscription payment
    */
   static async verify(req: Request, res: Response) {

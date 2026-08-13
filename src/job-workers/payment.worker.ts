@@ -14,6 +14,7 @@ import {
 import { LedgerService } from "@/core/services/ledger.service";
 import { PaymentIntentService } from "@/core/services/payment-intent.service";
 import { ConflictError } from "@/shared/utils/AppError";
+import { isCommissionEligible } from "@/shared/utils/helpers/commission-eligibility";
 
 import { QueueNames } from "@/infrastructure/redis/constant";
 
@@ -48,6 +49,9 @@ export const paymentWorker = new Worker(
                 name: true,
                 email: true,
                 referredByMarketerId: true,
+                referredByMarketer: {
+                  select: { userId: true, role: true },
+                },
                 companyId: true,
               },
             },
@@ -152,10 +156,15 @@ export const paymentWorker = new Worker(
       let commissionAmount = new Prisma.Decimal(0);
 
       const marketerId = contract.user?.referredByMarketerId;
+      const referrerRole = contract.user?.referredByMarketer?.role;
 
       const commissionRate = contract.product.commissionRate || 0;
 
-      if (marketerId && new Prisma.Decimal(commissionRate).greaterThan(0)) {
+      if (
+        marketerId &&
+        isCommissionEligible(referrerRole) &&
+        new Prisma.Decimal(commissionRate).greaterThan(0)
+      ) {
         commissionAmount = installment.amount.times(
           new Prisma.Decimal(commissionRate).div(100),
         );
@@ -222,6 +231,28 @@ export const paymentWorker = new Worker(
                     accountName: "COMMISSION_PAYABLE",
                     accountType: AccountType.LIABILITY,
                     credit: commissionAmount,
+                  },
+                ]
+              : []),
+
+            // Merchant's share of this payment — self-contained EXPENSE/LIABILITY
+            // pair mirroring the commission entries above. Does NOT touch
+            // PAYSTACK_CLEARING again (it's already debited the full amount
+            // above); together with COMMISSION_PAYABLE this earmarks 100% of
+            // the collected cash between the marketer/admin referrer and the
+            // merchant. See MerchantSettlementService for the payout side.
+            ...(installment.amount.minus(commissionAmount).greaterThan(0)
+              ? [
+                  {
+                    accountName: "MERCHANT_SETTLEMENT_EXPENSE",
+                    accountType: AccountType.EXPENSE,
+                    debit: installment.amount.minus(commissionAmount),
+                  },
+
+                  {
+                    accountName: "MERCHANT_PAYABLE",
+                    accountType: AccountType.LIABILITY,
+                    credit: installment.amount.minus(commissionAmount),
                   },
                 ]
               : []),

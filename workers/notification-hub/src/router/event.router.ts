@@ -552,4 +552,184 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			}),
 		},
 	],
+
+	// ─── Merchant Settlement ────────────────────────────────────────────────────
+
+	[DomainEvent.MERCHANT_SETTLEMENT_GENERATED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'merchant-settlement-generated',
+			subject: 'Your Settlement Has Been Generated 🧾',
+			context: (p) => ({
+				settlementId: p.settlementId,
+				amount: p.amount,
+				periodStart: p.periodStart,
+				periodEnd: p.periodEnd,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_INITIATED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'merchant-settlement-transfer-initiated',
+			subject: 'Your Settlement Is On Its Way 🔄',
+			context: (p) => ({
+				settlementId: p.settlementId,
+				amount: p.amount,
+				bankName: p.bankName,
+				maskedAccount: p.maskedAccount,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_SUCCESS]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'merchant-settlement-transfer-success',
+			subject: 'Your Settlement Has Been Paid! 💸',
+			context: (p) => ({
+				settlementId: p.settlementId,
+				amount: p.amount,
+				transferCode: p.transferCode,
+				bankName: p.bankName,
+				maskedAccount: p.maskedAccount,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_FAILED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'merchant-settlement-transfer-failed',
+			subject: '⚠️ Settlement Transfer Failed',
+			context: (p) => ({
+				settlementId: p.settlementId,
+				amount: p.amount,
+				reason: p.reason,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_REVERSED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'merchant-settlement-transfer-reversed',
+			subject: '⚠️ Settlement Transfer Reversed',
+			context: (p) => ({
+				settlementId: p.settlementId,
+				amount: p.amount,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	// ─── Subscription Billing ───────────────────────────────────────────────────
+
+	[DomainEvent.SUBSCRIPTION_RENEWAL_REMINDER_7DAY]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'subscription-renewal-reminder-7day',
+			subject: 'Your Subscription Renews in 7 Days',
+			context: (p) => ({
+				companyName: p.companyName,
+				planName: p.planName,
+				endDate: p.endDate,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.SUBSCRIPTION_RENEWAL_REMINDER_3DAY]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'subscription-renewal-reminder-3day',
+			subject: '⏰ Your Subscription Renews in 3 Days',
+			context: (p) => ({
+				companyName: p.companyName,
+				planName: p.planName,
+				endDate: p.endDate,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.SUBSCRIPTION_EXPIRES_TODAY]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'subscription-expires-today',
+			subject: '⏰ Your Subscription Expires Today',
+			context: (p) => ({
+				companyName: p.companyName,
+				planName: p.planName,
+				endDate: p.endDate,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.SUBSCRIPTION_GRACE_PERIOD_STARTED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'subscription-grace-period-started',
+			subject: 'Your Subscription Has Expired — Grace Period Active',
+			context: (p) => ({
+				companyName: p.companyName,
+				planName: p.planName,
+				endDate: p.endDate,
+				gracePeriodDays: p.gracePeriodDays,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.SUBSCRIPTION_GRACE_PERIOD_EXPIRING]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'subscription-grace-period-expiring',
+			subject: '🚨 Final Notice: Grace Period Ends Tomorrow',
+			context: (p) => ({
+				companyName: p.companyName,
+				planName: p.planName,
+				endDate: p.endDate,
+				gracePeriodDays: p.gracePeriodDays,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
+
+	[DomainEvent.SUBSCRIPTION_RESTRICTED]: [
+		{
+			channels: [NotificationChannel.EMAIL],
+			to: (p) => p.companyEmails,
+			template: 'subscription-restricted',
+			subject: '🔒 Your Account Has Been Restricted',
+			context: (p) => ({
+				companyName: p.companyName,
+				planName: p.planName,
+				endDate: p.endDate,
+				payment_url: p.payment_url,
+				dashboard_url: p.dashboard_url,
+			}),
+		},
+	],
 };

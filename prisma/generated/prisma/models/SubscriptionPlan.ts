@@ -31,6 +31,7 @@ export type SubscriptionPlanAvgAggregateOutputType = {
   price: runtime.Decimal | null
   discountPrice: runtime.Decimal | null
   discountPercentage: runtime.Decimal | null
+  gracePeriodDays: number | null
 }
 
 export type SubscriptionPlanSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type SubscriptionPlanSumAggregateOutputType = {
   price: runtime.Decimal | null
   discountPrice: runtime.Decimal | null
   discountPercentage: runtime.Decimal | null
+  gracePeriodDays: number | null
 }
 
 export type SubscriptionPlanMinAggregateOutputType = {
@@ -50,6 +52,7 @@ export type SubscriptionPlanMinAggregateOutputType = {
   discountPercentage: runtime.Decimal | null
   interval: $Enums.SubscriptionInterval | null
   active: boolean | null
+  gracePeriodDays: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +67,7 @@ export type SubscriptionPlanMaxAggregateOutputType = {
   discountPercentage: runtime.Decimal | null
   interval: $Enums.SubscriptionInterval | null
   active: boolean | null
+  gracePeriodDays: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,6 +82,7 @@ export type SubscriptionPlanCountAggregateOutputType = {
   discountPercentage: number
   interval: number
   active: number
+  gracePeriodDays: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -89,6 +94,7 @@ export type SubscriptionPlanAvgAggregateInputType = {
   price?: true
   discountPrice?: true
   discountPercentage?: true
+  gracePeriodDays?: true
 }
 
 export type SubscriptionPlanSumAggregateInputType = {
@@ -96,6 +102,7 @@ export type SubscriptionPlanSumAggregateInputType = {
   price?: true
   discountPrice?: true
   discountPercentage?: true
+  gracePeriodDays?: true
 }
 
 export type SubscriptionPlanMinAggregateInputType = {
@@ -108,6 +115,7 @@ export type SubscriptionPlanMinAggregateInputType = {
   discountPercentage?: true
   interval?: true
   active?: true
+  gracePeriodDays?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -122,6 +130,7 @@ export type SubscriptionPlanMaxAggregateInputType = {
   discountPercentage?: true
   interval?: true
   active?: true
+  gracePeriodDays?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -136,6 +145,7 @@ export type SubscriptionPlanCountAggregateInputType = {
   discountPercentage?: true
   interval?: true
   active?: true
+  gracePeriodDays?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -237,6 +247,7 @@ export type SubscriptionPlanGroupByOutputType = {
   discountPercentage: runtime.Decimal | null
   interval: $Enums.SubscriptionInterval
   active: boolean
+  gracePeriodDays: number
   createdAt: Date
   updatedAt: Date
   _count: SubscriptionPlanCountAggregateOutputType | null
@@ -274,6 +285,7 @@ export type SubscriptionPlanWhereInput = {
   discountPercentage?: Prisma.DecimalNullableFilter<"SubscriptionPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFilter<"SubscriptionPlan"> | $Enums.SubscriptionInterval
   active?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
+  gracePeriodDays?: Prisma.IntFilter<"SubscriptionPlan"> | number
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
@@ -290,6 +302,7 @@ export type SubscriptionPlanOrderByWithRelationInput = {
   discountPercentage?: Prisma.SortOrderInput | Prisma.SortOrder
   interval?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  gracePeriodDays?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   subscriptions?: Prisma.CompanySubscriptionOrderByRelationAggregateInput
@@ -309,6 +322,7 @@ export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
   discountPercentage?: Prisma.DecimalNullableFilter<"SubscriptionPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFilter<"SubscriptionPlan"> | $Enums.SubscriptionInterval
   active?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
+  gracePeriodDays?: Prisma.IntFilter<"SubscriptionPlan"> | number
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
@@ -325,6 +339,7 @@ export type SubscriptionPlanOrderByWithAggregationInput = {
   discountPercentage?: Prisma.SortOrderInput | Prisma.SortOrder
   interval?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  gracePeriodDays?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SubscriptionPlanCountOrderByAggregateInput
@@ -347,6 +362,7 @@ export type SubscriptionPlanScalarWhereWithAggregatesInput = {
   discountPercentage?: Prisma.DecimalNullableWithAggregatesFilter<"SubscriptionPlan"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalWithAggregatesFilter<"SubscriptionPlan"> | $Enums.SubscriptionInterval
   active?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
+  gracePeriodDays?: Prisma.IntWithAggregatesFilter<"SubscriptionPlan"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPlan"> | Date | string
 }
@@ -361,6 +377,7 @@ export type SubscriptionPlanCreateInput = {
   discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: $Enums.SubscriptionInterval
   active?: boolean
+  gracePeriodDays?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutPlanInput
@@ -377,6 +394,7 @@ export type SubscriptionPlanUncheckedCreateInput = {
   discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: $Enums.SubscriptionInterval
   active?: boolean
+  gracePeriodDays?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutPlanInput
@@ -393,6 +411,7 @@ export type SubscriptionPlanUpdateInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutPlanNestedInput
@@ -409,6 +428,7 @@ export type SubscriptionPlanUncheckedUpdateInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutPlanNestedInput
@@ -425,6 +445,7 @@ export type SubscriptionPlanCreateManyInput = {
   discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: $Enums.SubscriptionInterval
   active?: boolean
+  gracePeriodDays?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -439,6 +460,7 @@ export type SubscriptionPlanUpdateManyMutationInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -453,6 +475,7 @@ export type SubscriptionPlanUncheckedUpdateManyInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -467,6 +490,7 @@ export type SubscriptionPlanCountOrderByAggregateInput = {
   discountPercentage?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  gracePeriodDays?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -476,6 +500,7 @@ export type SubscriptionPlanAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   discountPrice?: Prisma.SortOrder
   discountPercentage?: Prisma.SortOrder
+  gracePeriodDays?: Prisma.SortOrder
 }
 
 export type SubscriptionPlanMaxOrderByAggregateInput = {
@@ -488,6 +513,7 @@ export type SubscriptionPlanMaxOrderByAggregateInput = {
   discountPercentage?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  gracePeriodDays?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -502,6 +528,7 @@ export type SubscriptionPlanMinOrderByAggregateInput = {
   discountPercentage?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  gracePeriodDays?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -511,6 +538,7 @@ export type SubscriptionPlanSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   discountPrice?: Prisma.SortOrder
   discountPercentage?: Prisma.SortOrder
+  gracePeriodDays?: Prisma.SortOrder
 }
 
 export type SubscriptionPlanScalarRelationFilter = {
@@ -560,6 +588,7 @@ export type SubscriptionPlanCreateWithoutSubscriptionsInput = {
   discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: $Enums.SubscriptionInterval
   active?: boolean
+  gracePeriodDays?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   onboardingIntents?: Prisma.OnboardingIntentCreateNestedManyWithoutPlanInput
@@ -575,6 +604,7 @@ export type SubscriptionPlanUncheckedCreateWithoutSubscriptionsInput = {
   discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: $Enums.SubscriptionInterval
   active?: boolean
+  gracePeriodDays?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   onboardingIntents?: Prisma.OnboardingIntentUncheckedCreateNestedManyWithoutPlanInput
@@ -606,6 +636,7 @@ export type SubscriptionPlanUpdateWithoutSubscriptionsInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   onboardingIntents?: Prisma.OnboardingIntentUpdateManyWithoutPlanNestedInput
@@ -621,6 +652,7 @@ export type SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   onboardingIntents?: Prisma.OnboardingIntentUncheckedUpdateManyWithoutPlanNestedInput
@@ -636,6 +668,7 @@ export type SubscriptionPlanCreateWithoutOnboardingIntentsInput = {
   discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: $Enums.SubscriptionInterval
   active?: boolean
+  gracePeriodDays?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutPlanInput
@@ -651,6 +684,7 @@ export type SubscriptionPlanUncheckedCreateWithoutOnboardingIntentsInput = {
   discountPercentage?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: $Enums.SubscriptionInterval
   active?: boolean
+  gracePeriodDays?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutPlanInput
@@ -682,6 +716,7 @@ export type SubscriptionPlanUpdateWithoutOnboardingIntentsInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutPlanNestedInput
@@ -697,6 +732,7 @@ export type SubscriptionPlanUncheckedUpdateWithoutOnboardingIntentsInput = {
   discountPercentage?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   interval?: Prisma.EnumSubscriptionIntervalFieldUpdateOperationsInput | $Enums.SubscriptionInterval
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gracePeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutPlanNestedInput
@@ -752,6 +788,7 @@ export type SubscriptionPlanSelect<ExtArgs extends runtime.Types.Extensions.Inte
   discountPercentage?: boolean
   interval?: boolean
   active?: boolean
+  gracePeriodDays?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subscriptions?: boolean | Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>
@@ -769,6 +806,7 @@ export type SubscriptionPlanSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   discountPercentage?: boolean
   interval?: boolean
   active?: boolean
+  gracePeriodDays?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["subscriptionPlan"]>
@@ -783,6 +821,7 @@ export type SubscriptionPlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   discountPercentage?: boolean
   interval?: boolean
   active?: boolean
+  gracePeriodDays?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["subscriptionPlan"]>
@@ -797,11 +836,12 @@ export type SubscriptionPlanSelectScalar = {
   discountPercentage?: boolean
   interval?: boolean
   active?: boolean
+  gracePeriodDays?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SubscriptionPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "planId" | "name" | "description" | "price" | "discountPrice" | "discountPercentage" | "interval" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
+export type SubscriptionPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "planId" | "name" | "description" | "price" | "discountPrice" | "discountPercentage" | "interval" | "active" | "gracePeriodDays" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
 export type SubscriptionPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscriptions?: boolean | Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>
   onboardingIntents?: boolean | Prisma.SubscriptionPlan$onboardingIntentsArgs<ExtArgs>
@@ -826,6 +866,7 @@ export type $SubscriptionPlanPayload<ExtArgs extends runtime.Types.Extensions.In
     discountPercentage: runtime.Decimal | null
     interval: $Enums.SubscriptionInterval
     active: boolean
+    gracePeriodDays: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["subscriptionPlan"]>
@@ -1262,6 +1303,7 @@ export interface SubscriptionPlanFieldRefs {
   readonly discountPercentage: Prisma.FieldRef<"SubscriptionPlan", 'Decimal'>
   readonly interval: Prisma.FieldRef<"SubscriptionPlan", 'SubscriptionInterval'>
   readonly active: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
+  readonly gracePeriodDays: Prisma.FieldRef<"SubscriptionPlan", 'Int'>
   readonly createdAt: Prisma.FieldRef<"SubscriptionPlan", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SubscriptionPlan", 'DateTime'>
 }

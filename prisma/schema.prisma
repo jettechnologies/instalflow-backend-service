@@ -90,6 +90,8 @@ enum SubscriptionInterval {
 enum SubscriptionStatus {
   PENDING
   ACTIVE
+  GRACE_PERIOD
+  RESTRICTED
   EXPIRED
   CANCELLED
 }
@@ -192,14 +194,34 @@ enum CommissionPayoutStatus {
   TRANSFER_REVERSED
 }
 
+// Merchant settlement is fully automatic — no manual approval state exists
+// (unlike CommissionPayoutStatus above). See DOMAIN_MODEL.md "Merchant Settlement".
+enum MerchantSettlementStatus {
+  GENERATED
+  APPROVED
+  TRANSFER_INITIATED
+  TRANSFER_SUCCESS
+  TRANSFER_FAILED
+  TRANSFER_REVERSED
+}
+
+enum SettlementAuditActor {
+  SYSTEM
+  SCHEDULER
+  WORKER
+  WEBHOOK
+  USER
+}
+
 model Company {
-  id        BigInt   @id @default(autoincrement())
-  companyId String   @unique @default(uuid())
-  name      String
-  plan      String   @default("FREE")
-  logoUrl   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               BigInt   @id @default(autoincrement())
+  companyId        String   @unique @default(uuid())
+  name             String
+  plan             String   @default("FREE")
+  logoUrl          String?
+  publicSignupCode String?  @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   users                    User[]
   products                 Product[]
@@ -208,6 +230,8 @@ model Company {
   approvalRequests         ApprovalRequest[]
   commissionPayoutRequests CommissionPayoutRequest[]
   onboardingSessions       OnboardingSession[]
+  bankAccounts             CompanyBankAccount[]
+  settlementRequests       MerchantSettlementRequest[]
 }
 
 model User {
@@ -256,6 +280,9 @@ model User {
   companyApprovedPayouts      CommissionPayoutRequest[] @relation("CommissionCompanyApprover")
   marketerBankAccounts        MarketerBankAccount[]
   commissionTransferInitiator CommissionPayoutRequest[] @relation("TransferInitiator")
+
+  merchantSettlementRetryInitiator MerchantSettlementRequest[]    @relation("MerchantSettlementRetryInitiator")
+  merchantSettlementAuditActions   MerchantSettlementAuditTrail[]
 
   @@index([companyId])
   @@index([referredByMarketerId])
@@ -397,8 +424,8 @@ model OnboardingSession {
   name         String
   email        String
   passwordHash String
-  marketerId   String
-  marketer     User                @relation("MarketerOnboardingSessions", fields: [marketerId], references: [userId])
+  marketerId   String?
+  marketer     User?               @relation("MarketerOnboardingSessions", fields: [marketerId], references: [userId])
   companyId    String?
   company      Company?            @relation(fields: [companyId], references: [companyId])
   status       KycOnboardingStatus @default(PENDING_KYC)
@@ -510,7 +537,8 @@ model Installment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  payments Payment[]
+  payments               Payment[]
+  merchantSettlementLine MerchantSettlementLine?
 
   @@unique([financingContractId, sequence])
 }
@@ -652,6 +680,105 @@ model MarketerBankAccount {
   @@index([userId])
 }
 
+model CompanyBankAccount {
+  id            BigInt   @id @default(autoincrement())
+  accountId     String   @unique @default(uuid()) @map("account_id")
+  companyId     String   @map("company_id")
+  company       Company  @relation(fields: [companyId], references: [companyId], onDelete: Cascade)
+  bankName      String   @map("bank_name")
+  bankCode      String   @map("bank_code")
+  accountName   String   @map("account_name")
+  accountNumber String   @map("account_number")
+  isPrimary     Boolean  @default(false) @map("is_primary")
+  recipientCode String?  @map("recipient_code")
+  isVerified    Boolean  @default(false) @map("is_verified")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  settlementRequests MerchantSettlementRequest[]
+
+  @@unique([companyId, accountNumber])
+  @@index([companyId])
+}
+
+// Fully automatic settlement of a company's share of collected installment
+// payments. No manual approval step — see DOMAIN_MODEL.md "Merchant Settlement"
+// and PROJECT_WORKFLOW.md. Distinct from CommissionPayoutRequest (marketer/admin
+// referral earnings) even though both ultimately use Paystack transfers.
+model MerchantSettlementRequest {
+  id                   BigInt                   @id @default(autoincrement())
+  settlementId         String                   @unique @default(uuid())
+  companyId            String
+  company              Company                  @relation(fields: [companyId], references: [companyId])
+  periodStart          DateTime
+  periodEnd            DateTime
+  amount               Decimal
+  status               MerchantSettlementStatus @default(GENERATED)
+  transferCode         String?
+  companyBankAccountId BigInt?
+  companyBankAccount   CompanyBankAccount?      @relation(fields: [companyBankAccountId], references: [id])
+
+  // Full audit timestamp trail — not collapsed into updatedAt, so SUPER_ADMIN
+  // can reconstruct the exact lifecycle of any settlement.
+  generatedAt            DateTime  @default(now())
+  approvedAt             DateTime?
+  transferQueuedAt       DateTime?
+  transferInitiatedAt    DateTime?
+  transferCodeReceivedAt DateTime?
+  webhookReceivedAt      DateTime?
+  transferCompletedAt    DateTime?
+  transferFailedAt       DateTime?
+  transferFailReason     String?
+  lastRetryAt            DateTime?
+  retryCount             Int       @default(0)
+  retryInitiatedById     String?
+  retryInitiatedBy       User?     @relation("MerchantSettlementRetryInitiator", fields: [retryInitiatedById], references: [userId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  settlementLines MerchantSettlementLine[]
+  auditTrail      MerchantSettlementAuditTrail[]
+
+  @@index([companyId, status])
+}
+
+model MerchantSettlementLine {
+  id           BigInt                    @id @default(autoincrement())
+  lineId       String                    @unique @default(uuid())
+  settlementId String
+  settlement   MerchantSettlementRequest @relation(fields: [settlementId], references: [settlementId])
+
+  // Globally unique — an installment may belong to at most one settlement,
+  // ever. This is the DB-enforced guarantee against double-settlement.
+  installmentId String      @unique
+  installment   Installment @relation(fields: [installmentId], references: [installmentId])
+
+  grossAmount        Decimal
+  commissionDeducted Decimal  @default(0)
+  netAmount          Decimal
+  createdAt          DateTime @default(now())
+}
+
+// Mirrors KycAuditTrail's established pattern, extended with an explicit
+// actor type so SUPER_ADMIN can distinguish system/scheduler/worker/webhook
+// activity from human action when investigating a settlement.
+model MerchantSettlementAuditTrail {
+  id            BigInt                    @id @default(autoincrement())
+  auditId       String                    @unique @default(uuid())
+  settlementId  String
+  settlement    MerchantSettlementRequest @relation(fields: [settlementId], references: [settlementId], onDelete: Cascade)
+  action        String
+  actorType     SettlementAuditActor
+  performedById String?
+  performedBy   User?                     @relation(fields: [performedById], references: [userId])
+  outcome       String
+  details       String?
+  createdAt     DateTime                  @default(now())
+
+  @@index([settlementId, createdAt])
+}
+
 model LedgerTransaction {
   id            BigInt          @id @default(autoincrement())
   transactionId String          @unique @default(uuid())
@@ -685,6 +812,7 @@ model SubscriptionPlan {
   discountPercentage Decimal?
   interval           SubscriptionInterval @default(MONTHLY)
   active             Boolean              @default(true)
+  gracePeriodDays    Int                  @default(7)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 

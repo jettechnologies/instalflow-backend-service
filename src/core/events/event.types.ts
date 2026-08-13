@@ -28,6 +28,22 @@ export enum DomainEvent {
   ADMIN_ACCOUNT_DELETED = "admin.account.deleted",
   ONBOARDING_SESSION_EXPIRED = "onboarding.session.expired",
   KYC_APPLICATION_AUTO_EXPIRED = "kyc.application.auto-expired",
+
+  // Merchant settlement — fully automatic, no manual approval. Informational
+  // only for COMPANY (nothing actionable), audit-relevant for SUPER_ADMIN.
+  MERCHANT_SETTLEMENT_GENERATED = "merchant_settlement.generated",
+  MERCHANT_SETTLEMENT_TRANSFER_INITIATED = "merchant_settlement.transfer.initiated",
+  MERCHANT_SETTLEMENT_TRANSFER_SUCCESS = "merchant_settlement.transfer.success",
+  MERCHANT_SETTLEMENT_TRANSFER_FAILED = "merchant_settlement.transfer.failed",
+  MERCHANT_SETTLEMENT_TRANSFER_REVERSED = "merchant_settlement.transfer.reversed",
+
+  // Company SaaS subscription renewal — distinct from installment reminders above.
+  SUBSCRIPTION_RENEWAL_REMINDER_7DAY = "subscription.renewal.reminder.7day",
+  SUBSCRIPTION_RENEWAL_REMINDER_3DAY = "subscription.renewal.reminder.3day",
+  SUBSCRIPTION_EXPIRES_TODAY = "subscription.expires.today",
+  SUBSCRIPTION_GRACE_PERIOD_STARTED = "subscription.grace_period.started",
+  SUBSCRIPTION_GRACE_PERIOD_EXPIRING = "subscription.grace_period.expiring",
+  SUBSCRIPTION_RESTRICTED = "subscription.restricted",
 }
 
 export enum EventStatus {
@@ -97,6 +113,68 @@ export interface CommissionTransferReversedPayload {
   companyId: string;
   companyEmails: string[];
   dashboard_url?: string;
+}
+
+export interface MerchantSettlementGeneratedPayload {
+  companyId: string;
+  companyEmails: string[];
+  settlementId: string;
+  amount: number;
+  periodStart: string;
+  periodEnd: string;
+  dashboard_url?: string;
+}
+
+export interface MerchantSettlementTransferInitiatedPayload {
+  companyId: string;
+  companyEmails: string[];
+  settlementId: string;
+  amount: number;
+  bankName: string;
+  maskedAccount: string;
+  dashboard_url?: string;
+}
+
+export interface MerchantSettlementTransferSuccessPayload {
+  companyId: string;
+  companyEmails: string[];
+  settlementId: string;
+  amount: number;
+  transferCode: string;
+  bankName: string;
+  maskedAccount: string;
+  dashboard_url?: string;
+}
+
+export interface MerchantSettlementTransferFailedPayload {
+  companyId: string;
+  companyEmails: string[];
+  settlementId: string;
+  amount: number;
+  reason: string;
+  dashboard_url?: string;
+}
+
+export interface MerchantSettlementTransferReversedPayload {
+  companyId: string;
+  companyEmails: string[];
+  settlementId: string;
+  amount: number;
+  dashboard_url?: string;
+}
+
+export interface SubscriptionRenewalBase {
+  companyId: string;
+  companyEmails: string[];
+  companyName: string;
+  planName: string;
+  endDate: string;
+  payment_url?: string;
+  dashboard_url?: string;
+}
+
+export interface SubscriptionGracePeriodPayload extends SubscriptionRenewalBase {
+  gracePeriodDays: number;
 }
 
 export interface Reminder3DayPayload extends InstallmentReminderBase {}
@@ -266,4 +344,17 @@ export interface DomainEventPayloads {
   [DomainEvent.COMMISSION_TRANSFER_SUCCESS]: CommissionTransferSuccessPayload;
   [DomainEvent.COMMISSION_TRANSFER_FAILED]: CommissionTransferFailedPayload;
   [DomainEvent.COMMISSION_TRANSFER_REVERSED]: CommissionTransferReversedPayload;
+
+  [DomainEvent.MERCHANT_SETTLEMENT_GENERATED]: MerchantSettlementGeneratedPayload;
+  [DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_INITIATED]: MerchantSettlementTransferInitiatedPayload;
+  [DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_SUCCESS]: MerchantSettlementTransferSuccessPayload;
+  [DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_FAILED]: MerchantSettlementTransferFailedPayload;
+  [DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_REVERSED]: MerchantSettlementTransferReversedPayload;
+
+  [DomainEvent.SUBSCRIPTION_RENEWAL_REMINDER_7DAY]: SubscriptionRenewalBase;
+  [DomainEvent.SUBSCRIPTION_RENEWAL_REMINDER_3DAY]: SubscriptionRenewalBase;
+  [DomainEvent.SUBSCRIPTION_EXPIRES_TODAY]: SubscriptionRenewalBase;
+  [DomainEvent.SUBSCRIPTION_GRACE_PERIOD_STARTED]: SubscriptionGracePeriodPayload;
+  [DomainEvent.SUBSCRIPTION_GRACE_PERIOD_EXPIRING]: SubscriptionGracePeriodPayload;
+  [DomainEvent.SUBSCRIPTION_RESTRICTED]: SubscriptionRenewalBase;
 }

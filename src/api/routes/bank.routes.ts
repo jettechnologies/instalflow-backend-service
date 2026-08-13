@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { BankController } from "@/api/controllers/bank.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
-import { Role } from "@/infrastructure/prisma";
+import { COMMISSION_ELIGIBLE_ROLES } from "@/shared/utils/helpers/commission-eligibility";
 
 const router = Router();
 
@@ -9,21 +9,25 @@ router.use(requireAuth);
 
 router.post(
   "/create",
-  requireRole([Role.MARKETER]),
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
   BankController.addBankAccount,
 );
 
-router.get("/", requireRole([Role.MARKETER]), BankController.listBankAccounts);
+router.get(
+  "/",
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
+  BankController.listBankAccounts,
+);
 
 router.patch(
   "/set-primary",
-  requireRole([Role.MARKETER]),
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
   BankController.switchPrimaryBankAccount,
 );
 
 router.delete(
   "/",
-  requireRole([Role.MARKETER]),
+  requireRole(COMMISSION_ELIGIBLE_ROLES),
   BankController.removeBankAccount,
 );
 

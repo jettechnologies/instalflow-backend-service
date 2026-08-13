@@ -6,11 +6,24 @@ export const GenerateReferralLinkSchema = z.object({
   planId: z.string().uuid().optional(),
 });
 
-export const InviteRegisterSchema = z.object({
+export const InviteRegisterSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    referredByCode: z.string().min(1).optional(),
+    companyCode: z.string().min(1).optional(),
+  })
+  .refine((data) => !!data.referredByCode || !!data.companyCode, {
+    message:
+      "Either a marketer referral code or a company invite code is required.",
+    path: ["referredByCode"],
+  });
+
+export const DirectRegisterSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  referredByCode: z.string().min(1, "Marketer referral code is required"),
 });
 
 export const SubmitApplicationSchema = z.object({

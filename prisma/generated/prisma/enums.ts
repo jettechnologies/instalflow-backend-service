@@ -125,6 +125,8 @@ export type SubscriptionInterval = (typeof SubscriptionInterval)[keyof typeof Su
 export const SubscriptionStatus = {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
+  GRACE_PERIOD: 'GRACE_PERIOD',
+  RESTRICTED: 'RESTRICTED',
   EXPIRED: 'EXPIRED',
   CANCELLED: 'CANCELLED'
 } as const
@@ -258,3 +260,26 @@ export const CommissionPayoutStatus = {
 } as const
 
 export type CommissionPayoutStatus = (typeof CommissionPayoutStatus)[keyof typeof CommissionPayoutStatus]
+
+
+export const MerchantSettlementStatus = {
+  GENERATED: 'GENERATED',
+  APPROVED: 'APPROVED',
+  TRANSFER_INITIATED: 'TRANSFER_INITIATED',
+  TRANSFER_SUCCESS: 'TRANSFER_SUCCESS',
+  TRANSFER_FAILED: 'TRANSFER_FAILED',
+  TRANSFER_REVERSED: 'TRANSFER_REVERSED'
+} as const
+
+export type MerchantSettlementStatus = (typeof MerchantSettlementStatus)[keyof typeof MerchantSettlementStatus]
+
+
+export const SettlementAuditActor = {
+  SYSTEM: 'SYSTEM',
+  SCHEDULER: 'SCHEDULER',
+  WORKER: 'WORKER',
+  WEBHOOK: 'WEBHOOK',
+  USER: 'USER'
+} as const
+
+export type SettlementAuditActor = (typeof SettlementAuditActor)[keyof typeof SettlementAuditActor]

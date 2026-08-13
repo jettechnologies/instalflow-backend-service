@@ -404,6 +404,10 @@ export const ModelName = {
   CommissionAllocation: 'CommissionAllocation',
   CommissionPayoutRequest: 'CommissionPayoutRequest',
   MarketerBankAccount: 'MarketerBankAccount',
+  CompanyBankAccount: 'CompanyBankAccount',
+  MerchantSettlementRequest: 'MerchantSettlementRequest',
+  MerchantSettlementLine: 'MerchantSettlementLine',
+  MerchantSettlementAuditTrail: 'MerchantSettlementAuditTrail',
   LedgerTransaction: 'LedgerTransaction',
   Referral: 'Referral',
   SubscriptionPlan: 'SubscriptionPlan',
@@ -433,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "onboardingSession" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "paymentIntent" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
+    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "onboardingSession" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "paymentIntent" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "companyBankAccount" | "merchantSettlementRequest" | "merchantSettlementLine" | "merchantSettlementAuditTrail" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1917,6 +1921,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CompanyBankAccount: {
+      payload: Prisma.$CompanyBankAccountPayload<ExtArgs>
+      fields: Prisma.CompanyBankAccountFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompanyBankAccountFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompanyBankAccountFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>
+        }
+        findFirst: {
+          args: Prisma.CompanyBankAccountFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompanyBankAccountFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>
+        }
+        findMany: {
+          args: Prisma.CompanyBankAccountFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>[]
+        }
+        create: {
+          args: Prisma.CompanyBankAccountCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>
+        }
+        createMany: {
+          args: Prisma.CompanyBankAccountCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompanyBankAccountCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>[]
+        }
+        delete: {
+          args: Prisma.CompanyBankAccountDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>
+        }
+        update: {
+          args: Prisma.CompanyBankAccountUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompanyBankAccountDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompanyBankAccountUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompanyBankAccountUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompanyBankAccountUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyBankAccountPayload>
+        }
+        aggregate: {
+          args: Prisma.CompanyBankAccountAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompanyBankAccount>
+        }
+        groupBy: {
+          args: Prisma.CompanyBankAccountGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyBankAccountGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompanyBankAccountCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyBankAccountCountAggregateOutputType> | number
+        }
+      }
+    }
+    MerchantSettlementRequest: {
+      payload: Prisma.$MerchantSettlementRequestPayload<ExtArgs>
+      fields: Prisma.MerchantSettlementRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MerchantSettlementRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MerchantSettlementRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.MerchantSettlementRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MerchantSettlementRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>
+        }
+        findMany: {
+          args: Prisma.MerchantSettlementRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>[]
+        }
+        create: {
+          args: Prisma.MerchantSettlementRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>
+        }
+        createMany: {
+          args: Prisma.MerchantSettlementRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MerchantSettlementRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.MerchantSettlementRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>
+        }
+        update: {
+          args: Prisma.MerchantSettlementRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.MerchantSettlementRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MerchantSettlementRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MerchantSettlementRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.MerchantSettlementRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.MerchantSettlementRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMerchantSettlementRequest>
+        }
+        groupBy: {
+          args: Prisma.MerchantSettlementRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantSettlementRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MerchantSettlementRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantSettlementRequestCountAggregateOutputType> | number
+        }
+      }
+    }
+    MerchantSettlementLine: {
+      payload: Prisma.$MerchantSettlementLinePayload<ExtArgs>
+      fields: Prisma.MerchantSettlementLineFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MerchantSettlementLineFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MerchantSettlementLineFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>
+        }
+        findFirst: {
+          args: Prisma.MerchantSettlementLineFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MerchantSettlementLineFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>
+        }
+        findMany: {
+          args: Prisma.MerchantSettlementLineFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>[]
+        }
+        create: {
+          args: Prisma.MerchantSettlementLineCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>
+        }
+        createMany: {
+          args: Prisma.MerchantSettlementLineCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MerchantSettlementLineCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>[]
+        }
+        delete: {
+          args: Prisma.MerchantSettlementLineDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>
+        }
+        update: {
+          args: Prisma.MerchantSettlementLineUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>
+        }
+        deleteMany: {
+          args: Prisma.MerchantSettlementLineDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MerchantSettlementLineUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MerchantSettlementLineUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>[]
+        }
+        upsert: {
+          args: Prisma.MerchantSettlementLineUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementLinePayload>
+        }
+        aggregate: {
+          args: Prisma.MerchantSettlementLineAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMerchantSettlementLine>
+        }
+        groupBy: {
+          args: Prisma.MerchantSettlementLineGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantSettlementLineGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MerchantSettlementLineCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantSettlementLineCountAggregateOutputType> | number
+        }
+      }
+    }
+    MerchantSettlementAuditTrail: {
+      payload: Prisma.$MerchantSettlementAuditTrailPayload<ExtArgs>
+      fields: Prisma.MerchantSettlementAuditTrailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MerchantSettlementAuditTrailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MerchantSettlementAuditTrailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>
+        }
+        findFirst: {
+          args: Prisma.MerchantSettlementAuditTrailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MerchantSettlementAuditTrailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>
+        }
+        findMany: {
+          args: Prisma.MerchantSettlementAuditTrailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>[]
+        }
+        create: {
+          args: Prisma.MerchantSettlementAuditTrailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>
+        }
+        createMany: {
+          args: Prisma.MerchantSettlementAuditTrailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MerchantSettlementAuditTrailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>[]
+        }
+        delete: {
+          args: Prisma.MerchantSettlementAuditTrailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>
+        }
+        update: {
+          args: Prisma.MerchantSettlementAuditTrailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>
+        }
+        deleteMany: {
+          args: Prisma.MerchantSettlementAuditTrailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MerchantSettlementAuditTrailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MerchantSettlementAuditTrailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>[]
+        }
+        upsert: {
+          args: Prisma.MerchantSettlementAuditTrailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantSettlementAuditTrailPayload>
+        }
+        aggregate: {
+          args: Prisma.MerchantSettlementAuditTrailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMerchantSettlementAuditTrail>
+        }
+        groupBy: {
+          args: Prisma.MerchantSettlementAuditTrailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantSettlementAuditTrailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MerchantSettlementAuditTrailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantSettlementAuditTrailCountAggregateOutputType> | number
+        }
+      }
+    }
     LedgerTransaction: {
       payload: Prisma.$LedgerTransactionPayload<ExtArgs>
       fields: Prisma.LedgerTransactionFieldRefs
@@ -2998,6 +3298,7 @@ export const CompanyScalarFieldEnum = {
   name: 'name',
   plan: 'plan',
   logoUrl: 'logoUrl',
+  publicSignupCode: 'publicSignupCode',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3355,6 +3656,82 @@ export const MarketerBankAccountScalarFieldEnum = {
 export type MarketerBankAccountScalarFieldEnum = (typeof MarketerBankAccountScalarFieldEnum)[keyof typeof MarketerBankAccountScalarFieldEnum]
 
 
+export const CompanyBankAccountScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  companyId: 'companyId',
+  bankName: 'bankName',
+  bankCode: 'bankCode',
+  accountName: 'accountName',
+  accountNumber: 'accountNumber',
+  isPrimary: 'isPrimary',
+  recipientCode: 'recipientCode',
+  isVerified: 'isVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanyBankAccountScalarFieldEnum = (typeof CompanyBankAccountScalarFieldEnum)[keyof typeof CompanyBankAccountScalarFieldEnum]
+
+
+export const MerchantSettlementRequestScalarFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  companyId: 'companyId',
+  periodStart: 'periodStart',
+  periodEnd: 'periodEnd',
+  amount: 'amount',
+  status: 'status',
+  transferCode: 'transferCode',
+  companyBankAccountId: 'companyBankAccountId',
+  generatedAt: 'generatedAt',
+  approvedAt: 'approvedAt',
+  transferQueuedAt: 'transferQueuedAt',
+  transferInitiatedAt: 'transferInitiatedAt',
+  transferCodeReceivedAt: 'transferCodeReceivedAt',
+  webhookReceivedAt: 'webhookReceivedAt',
+  transferCompletedAt: 'transferCompletedAt',
+  transferFailedAt: 'transferFailedAt',
+  transferFailReason: 'transferFailReason',
+  lastRetryAt: 'lastRetryAt',
+  retryCount: 'retryCount',
+  retryInitiatedById: 'retryInitiatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantSettlementRequestScalarFieldEnum = (typeof MerchantSettlementRequestScalarFieldEnum)[keyof typeof MerchantSettlementRequestScalarFieldEnum]
+
+
+export const MerchantSettlementLineScalarFieldEnum = {
+  id: 'id',
+  lineId: 'lineId',
+  settlementId: 'settlementId',
+  installmentId: 'installmentId',
+  grossAmount: 'grossAmount',
+  commissionDeducted: 'commissionDeducted',
+  netAmount: 'netAmount',
+  createdAt: 'createdAt'
+} as const
+
+export type MerchantSettlementLineScalarFieldEnum = (typeof MerchantSettlementLineScalarFieldEnum)[keyof typeof MerchantSettlementLineScalarFieldEnum]
+
+
+export const MerchantSettlementAuditTrailScalarFieldEnum = {
+  id: 'id',
+  auditId: 'auditId',
+  settlementId: 'settlementId',
+  action: 'action',
+  actorType: 'actorType',
+  performedById: 'performedById',
+  outcome: 'outcome',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type MerchantSettlementAuditTrailScalarFieldEnum = (typeof MerchantSettlementAuditTrailScalarFieldEnum)[keyof typeof MerchantSettlementAuditTrailScalarFieldEnum]
+
+
 export const LedgerTransactionScalarFieldEnum = {
   id: 'id',
   transactionId: 'transactionId',
@@ -3391,6 +3768,7 @@ export const SubscriptionPlanScalarFieldEnum = {
   discountPercentage: 'discountPercentage',
   interval: 'interval',
   active: 'active',
+  gracePeriodDays: 'gracePeriodDays',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3871,6 +4249,34 @@ export type ListEnumCommissionPayoutStatusFieldRefInput<$PrismaModel> = FieldRef
 
 
 /**
+ * Reference to a field of type 'MerchantSettlementStatus'
+ */
+export type EnumMerchantSettlementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MerchantSettlementStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MerchantSettlementStatus[]'
+ */
+export type ListEnumMerchantSettlementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MerchantSettlementStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SettlementAuditActor'
+ */
+export type EnumSettlementAuditActorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementAuditActor'>
+    
+
+
+/**
+ * Reference to a field of type 'SettlementAuditActor[]'
+ */
+export type ListEnumSettlementAuditActorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementAuditActor[]'>
+    
+
+
+/**
  * Reference to a field of type 'TransactionType'
  */
 export type EnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionType'>
@@ -4139,6 +4545,10 @@ export type GlobalOmitConfig = {
   commissionAllocation?: Prisma.CommissionAllocationOmit
   commissionPayoutRequest?: Prisma.CommissionPayoutRequestOmit
   marketerBankAccount?: Prisma.MarketerBankAccountOmit
+  companyBankAccount?: Prisma.CompanyBankAccountOmit
+  merchantSettlementRequest?: Prisma.MerchantSettlementRequestOmit
+  merchantSettlementLine?: Prisma.MerchantSettlementLineOmit
+  merchantSettlementAuditTrail?: Prisma.MerchantSettlementAuditTrailOmit
   ledgerTransaction?: Prisma.LedgerTransactionOmit
   referral?: Prisma.ReferralOmit
   subscriptionPlan?: Prisma.SubscriptionPlanOmit

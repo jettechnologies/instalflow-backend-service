@@ -3,6 +3,7 @@ import {
   Prisma,
   PaymentIntentType,
   PaymentInitStatus,
+  type SubscriptionPlan,
 } from "@/infrastructure/prisma";
 import { BadRequestError, NotFoundError } from "@/shared/utils/AppError";
 import { LedgerService } from "./ledger.service";
@@ -85,19 +86,17 @@ export class SubscriptionService {
     };
   }
 
-  static async initializeSubscription(
+  /**
+   * Shared reservation step for both first-time subscribe and renewal — creates
+   * the PaymentIntent + a PENDING CompanySubscription row and initializes the
+   * Paystack transaction. Returns an in-flight PENDING intent's link as-is if
+   * one already exists (idempotent for repeated clicks/requests).
+   */
+  private static async createPendingSubscriptionAndIntent(
     companyId: string,
-    planId: string,
+    plan: SubscriptionPlan,
     email: string,
   ) {
-    const plan = await prisma.subscriptionPlan.findUnique({
-      where: { planId },
-    });
-
-    if (!plan || !plan.active) {
-      throw new NotFoundError("Subscription plan not found or inactive");
-    }
-
     const amount =
       plan.discountPrice && Number(plan.discountPrice) > 0
         ? Number(plan.discountPrice)
@@ -116,7 +115,7 @@ export class SubscriptionService {
         callbackUrl: `${process.env.FRONTEND_URL}/subscription/verify`,
         metadata: {
           companyId,
-          planId,
+          planId: plan.planId,
         },
       },
     });
@@ -149,7 +148,7 @@ export class SubscriptionService {
         ) {
           logger.warn(
             "[subscription] PENDING CompanySubscription already exists, continuing",
-            { companyId, planId },
+            { companyId, planId: plan.planId },
           );
         } else {
           throw err;
@@ -166,6 +165,69 @@ export class SubscriptionService {
     await PaymentIntentService.markPending(intent.intentId);
 
     return { authorization_url, access_code, reference };
+  }
+
+  static async initializeSubscription(
+    companyId: string,
+    planId: string,
+    email: string,
+  ) {
+    const plan = await prisma.subscriptionPlan.findUnique({
+      where: { planId },
+    });
+
+    if (!plan || !plan.active) {
+      throw new NotFoundError("Subscription plan not found or inactive");
+    }
+
+    return this.createPendingSubscriptionAndIntent(companyId, plan, email);
+  }
+
+  /**
+   * Click-to-renew — triggered from a reminder email link, not auto-charged
+   * (no stored Paystack authorization/card token exists in this codebase).
+   * Defaults to the company's current plan if none is specified.
+   */
+  static async renewSubscription(companyId: string, planId?: string) {
+    const company = await prisma.user.findFirst({
+      where: { companyId, role: "COMPANY" },
+      select: { email: true },
+    });
+
+    if (!company) {
+      throw new NotFoundError("Company owner not found for this company.");
+    }
+
+    let targetPlanId = planId;
+
+    if (!targetPlanId) {
+      const currentSubscription = await prisma.companySubscription.findFirst({
+        where: { companyId },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (!currentSubscription) {
+        throw new BadRequestError(
+          "No existing subscription found — use initializeSubscription instead.",
+        );
+      }
+
+      targetPlanId = currentSubscription.planId;
+    }
+
+    const plan = await prisma.subscriptionPlan.findUnique({
+      where: { planId: targetPlanId },
+    });
+
+    if (!plan || !plan.active) {
+      throw new NotFoundError("Subscription plan not found or inactive");
+    }
+
+    return this.createPendingSubscriptionAndIntent(
+      companyId,
+      plan,
+      company.email,
+    );
   }
 
   static async validatePaystackTransaction(reference: string) {
@@ -218,6 +280,18 @@ export class SubscriptionService {
         endDate.setMonth(endDate.getMonth() + 1);
       else if (plan.interval === "YEARLY")
         endDate.setFullYear(endDate.getFullYear() + 1);
+
+      // Defensive: a late webhook racing the grace-period scheduler must
+      // never leave two non-expired rows for one company — expire everything
+      // else first, then activate the new one.
+      await tx.companySubscription.updateMany({
+        where: {
+          companyId,
+          subscriptionId: { not: pendingSubscription.subscriptionId },
+          status: { not: "EXPIRED" },
+        },
+        data: { status: "EXPIRED" },
+      });
 
       await tx.companySubscription.update({
         where: { subscriptionId: pendingSubscription.subscriptionId },

@@ -16,6 +16,8 @@ import financingRoutes from "@/api/routes/financing.routes";
 import variantRoutes from "@/api/routes/variants.routes";
 import analyticsRoutes from "@/api/routes/analytics.routes";
 import bankRoutes from "@/api/routes/bank.routes";
+import companyBankRoutes from "@/api/routes/company-bank.routes";
+import merchantSettlementRoutes from "@/api/routes/merchant-settlement.routes";
 
 const router = Router();
 
@@ -43,5 +45,7 @@ router.use("/commissions", commissionRoutes);
 router.use("/financing", financingRoutes);
 router.use("/analytics", analyticsRoutes);
 router.use("/bank-accounts", bankRoutes);
+router.use("/company-bank-accounts", companyBankRoutes);
+router.use("/merchant-settlements", merchantSettlementRoutes);
 
 export default router;

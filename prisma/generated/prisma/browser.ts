@@ -118,6 +118,26 @@ export type CommissionPayoutRequest = Prisma.CommissionPayoutRequestModel
  */
 export type MarketerBankAccount = Prisma.MarketerBankAccountModel
 /**
+ * Model CompanyBankAccount
+ * 
+ */
+export type CompanyBankAccount = Prisma.CompanyBankAccountModel
+/**
+ * Model MerchantSettlementRequest
+ * 
+ */
+export type MerchantSettlementRequest = Prisma.MerchantSettlementRequestModel
+/**
+ * Model MerchantSettlementLine
+ * 
+ */
+export type MerchantSettlementLine = Prisma.MerchantSettlementLineModel
+/**
+ * Model MerchantSettlementAuditTrail
+ * 
+ */
+export type MerchantSettlementAuditTrail = Prisma.MerchantSettlementAuditTrailModel
+/**
  * Model LedgerTransaction
  * 
  */

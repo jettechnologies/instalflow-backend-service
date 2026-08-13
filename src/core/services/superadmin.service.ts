@@ -13,6 +13,7 @@ interface CreatePlanData {
   discountPercentage?: number;
   interval: SubscriptionInterval;
   active?: boolean;
+  gracePeriodDays?: number;
 }
 
 export class SuperAdminService {

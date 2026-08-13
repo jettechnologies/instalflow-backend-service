@@ -27,6 +27,18 @@ router.post(
 );
 
 router.post(
+  "/register-direct",
+  requireRole([Role.COMPANY, Role.ADMIN]),
+  KycController.registerDirect,
+);
+
+router.post(
+  "/company-signup-code",
+  requireRole([Role.COMPANY]),
+  KycController.generateCompanySignupCode,
+);
+
+router.post(
   "/applications/:id/approve",
   requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY]),
   KycController.approveApplication,

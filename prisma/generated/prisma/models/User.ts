@@ -318,6 +318,8 @@ export type UserWhereInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestListRelationFilter
   marketerBankAccounts?: Prisma.MarketerBankAccountListRelationFilter
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestListRelationFilter
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestListRelationFilter
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -358,6 +360,8 @@ export type UserOrderByWithRelationInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestOrderByRelationAggregateInput
   marketerBankAccounts?: Prisma.MarketerBankAccountOrderByRelationAggregateInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestOrderByRelationAggregateInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestOrderByRelationAggregateInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -401,6 +405,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestListRelationFilter
   marketerBankAccounts?: Prisma.MarketerBankAccountListRelationFilter
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestListRelationFilter
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestListRelationFilter
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailListRelationFilter
 }, "id" | "userId" | "email" | "referralCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -482,6 +488,8 @@ export type UserCreateInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -519,6 +527,8 @@ export type UserUncheckedCreateInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUpdateInput = {
@@ -556,6 +566,8 @@ export type UserUpdateInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -593,6 +605,8 @@ export type UserUncheckedUpdateInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -948,10 +962,12 @@ export type UserCreateNestedOneWithoutOnboardingSessionsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutOnboardingSessionsNestedInput = {
+export type UserUpdateOneWithoutOnboardingSessionsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutOnboardingSessionsInput, Prisma.UserUncheckedCreateWithoutOnboardingSessionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutOnboardingSessionsInput
   upsert?: Prisma.UserUpsertWithoutOnboardingSessionsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOnboardingSessionsInput, Prisma.UserUpdateWithoutOnboardingSessionsInput>, Prisma.UserUncheckedUpdateWithoutOnboardingSessionsInput>
 }
@@ -1078,6 +1094,38 @@ export type UserUpdateOneRequiredWithoutMarketerBankAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMarketerBankAccountsInput, Prisma.UserUpdateWithoutMarketerBankAccountsInput>, Prisma.UserUncheckedUpdateWithoutMarketerBankAccountsInput>
 }
 
+export type UserCreateNestedOneWithoutMerchantSettlementRetryInitiatorInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementRetryInitiatorInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementRetryInitiatorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMerchantSettlementRetryInitiatorInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutMerchantSettlementRetryInitiatorNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementRetryInitiatorInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementRetryInitiatorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMerchantSettlementRetryInitiatorInput
+  upsert?: Prisma.UserUpsertWithoutMerchantSettlementRetryInitiatorInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMerchantSettlementRetryInitiatorInput, Prisma.UserUpdateWithoutMerchantSettlementRetryInitiatorInput>, Prisma.UserUncheckedUpdateWithoutMerchantSettlementRetryInitiatorInput>
+}
+
+export type UserCreateNestedOneWithoutMerchantSettlementAuditActionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementAuditActionsInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementAuditActionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMerchantSettlementAuditActionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutMerchantSettlementAuditActionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementAuditActionsInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementAuditActionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMerchantSettlementAuditActionsInput
+  upsert?: Prisma.UserUpsertWithoutMerchantSettlementAuditActionsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMerchantSettlementAuditActionsInput, Prisma.UserUpdateWithoutMerchantSettlementAuditActionsInput>, Prisma.UserUncheckedUpdateWithoutMerchantSettlementAuditActionsInput>
+}
+
 export type UserCreateNestedOneWithoutTransactionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransactionsInput
@@ -1182,6 +1230,8 @@ export type UserCreateWithoutCompanyInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -1218,6 +1268,8 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -1301,6 +1353,8 @@ export type UserCreateWithoutReferredUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -1337,6 +1391,8 @@ export type UserUncheckedCreateWithoutReferredUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -1378,6 +1434,8 @@ export type UserCreateWithoutReferredByMarketerInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutReferredByMarketerInput = {
@@ -1414,6 +1472,8 @@ export type UserUncheckedCreateWithoutReferredByMarketerInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutReferredByMarketerInput = {
@@ -1460,6 +1520,8 @@ export type UserCreateWithoutCreatedUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedUsersInput = {
@@ -1496,6 +1558,8 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedUsersInput = {
@@ -1537,6 +1601,8 @@ export type UserCreateWithoutCreatorInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatorInput = {
@@ -1573,6 +1639,8 @@ export type UserUncheckedCreateWithoutCreatorInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatorInput = {
@@ -1630,6 +1698,8 @@ export type UserUpdateWithoutReferredUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -1666,6 +1736,8 @@ export type UserUncheckedUpdateWithoutReferredUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutReferredByMarketerInput = {
@@ -1729,6 +1801,8 @@ export type UserUpdateWithoutCreatedUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedUsersInput = {
@@ -1765,6 +1839,8 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -1817,6 +1893,8 @@ export type UserCreateWithoutSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1853,6 +1931,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1905,6 +1985,8 @@ export type UserUpdateWithoutSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1941,6 +2023,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
@@ -1977,6 +2061,8 @@ export type UserCreateWithoutPasswordResetsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
@@ -2013,6 +2099,8 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -2065,6 +2153,8 @@ export type UserUpdateWithoutPasswordResetsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
@@ -2101,6 +2191,8 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutKycApplicationsInput = {
@@ -2137,6 +2229,8 @@ export type UserCreateWithoutKycApplicationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutKycApplicationsInput = {
@@ -2173,6 +2267,8 @@ export type UserUncheckedCreateWithoutKycApplicationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutKycApplicationsInput = {
@@ -2225,6 +2321,8 @@ export type UserUpdateWithoutKycApplicationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKycApplicationsInput = {
@@ -2261,6 +2359,8 @@ export type UserUncheckedUpdateWithoutKycApplicationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutOnboardingSessionsInput = {
@@ -2297,6 +2397,8 @@ export type UserCreateWithoutOnboardingSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutOnboardingSessionsInput = {
@@ -2333,6 +2435,8 @@ export type UserUncheckedCreateWithoutOnboardingSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutOnboardingSessionsInput = {
@@ -2385,6 +2489,8 @@ export type UserUpdateWithoutOnboardingSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOnboardingSessionsInput = {
@@ -2421,6 +2527,8 @@ export type UserUncheckedUpdateWithoutOnboardingSessionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutKycAuditTrailsInput = {
@@ -2457,6 +2565,8 @@ export type UserCreateWithoutKycAuditTrailsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
@@ -2493,6 +2603,8 @@ export type UserUncheckedCreateWithoutKycAuditTrailsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutKycAuditTrailsInput = {
@@ -2545,6 +2657,8 @@ export type UserUpdateWithoutKycAuditTrailsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
@@ -2581,6 +2695,8 @@ export type UserUncheckedUpdateWithoutKycAuditTrailsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutFinancingContractsInput = {
@@ -2617,6 +2733,8 @@ export type UserCreateWithoutFinancingContractsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutFinancingContractsInput = {
@@ -2653,6 +2771,8 @@ export type UserUncheckedCreateWithoutFinancingContractsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutFinancingContractsInput = {
@@ -2705,6 +2825,8 @@ export type UserUpdateWithoutFinancingContractsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFinancingContractsInput = {
@@ -2741,6 +2863,8 @@ export type UserUncheckedUpdateWithoutFinancingContractsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutCommissionsInput = {
@@ -2777,6 +2901,8 @@ export type UserCreateWithoutCommissionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutCommissionsInput = {
@@ -2813,6 +2939,8 @@ export type UserUncheckedCreateWithoutCommissionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutCommissionsInput = {
@@ -2865,6 +2993,8 @@ export type UserUpdateWithoutCommissionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommissionsInput = {
@@ -2901,6 +3031,8 @@ export type UserUncheckedUpdateWithoutCommissionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutCommissionPayoutRequestsInput = {
@@ -2937,6 +3069,8 @@ export type UserCreateWithoutCommissionPayoutRequestsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutCommissionPayoutRequestsInput = {
@@ -2973,6 +3107,8 @@ export type UserUncheckedCreateWithoutCommissionPayoutRequestsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutCommissionPayoutRequestsInput = {
@@ -3014,6 +3150,8 @@ export type UserCreateWithoutAdminApprovedPayoutsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminApprovedPayoutsInput = {
@@ -3050,6 +3188,8 @@ export type UserUncheckedCreateWithoutAdminApprovedPayoutsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminApprovedPayoutsInput = {
@@ -3091,6 +3231,8 @@ export type UserCreateWithoutCompanyApprovedPayoutsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutCompanyApprovedPayoutsInput = {
@@ -3127,6 +3269,8 @@ export type UserUncheckedCreateWithoutCompanyApprovedPayoutsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutCompanyApprovedPayoutsInput = {
@@ -3168,6 +3312,8 @@ export type UserCreateWithoutCommissionTransferInitiatorInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutCommissionTransferInitiatorInput = {
@@ -3204,6 +3350,8 @@ export type UserUncheckedCreateWithoutCommissionTransferInitiatorInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutCommissionTransferInitiatorInput = {
@@ -3256,6 +3404,8 @@ export type UserUpdateWithoutCommissionPayoutRequestsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
@@ -3292,6 +3442,8 @@ export type UserUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUpsertWithoutAdminApprovedPayoutsInput = {
@@ -3339,6 +3491,8 @@ export type UserUpdateWithoutAdminApprovedPayoutsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminApprovedPayoutsInput = {
@@ -3375,6 +3529,8 @@ export type UserUncheckedUpdateWithoutAdminApprovedPayoutsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUpsertWithoutCompanyApprovedPayoutsInput = {
@@ -3422,6 +3578,8 @@ export type UserUpdateWithoutCompanyApprovedPayoutsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyApprovedPayoutsInput = {
@@ -3458,6 +3616,8 @@ export type UserUncheckedUpdateWithoutCompanyApprovedPayoutsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUpsertWithoutCommissionTransferInitiatorInput = {
@@ -3505,6 +3665,8 @@ export type UserUpdateWithoutCommissionTransferInitiatorInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommissionTransferInitiatorInput = {
@@ -3541,6 +3703,8 @@ export type UserUncheckedUpdateWithoutCommissionTransferInitiatorInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutMarketerBankAccountsInput = {
@@ -3577,6 +3741,8 @@ export type UserCreateWithoutMarketerBankAccountsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutMarketerBankAccountsInput = {
@@ -3613,6 +3779,8 @@ export type UserUncheckedCreateWithoutMarketerBankAccountsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutMarketerBankAccountsInput = {
@@ -3665,6 +3833,8 @@ export type UserUpdateWithoutMarketerBankAccountsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMarketerBankAccountsInput = {
@@ -3701,6 +3871,344 @@ export type UserUncheckedUpdateWithoutMarketerBankAccountsInput = {
   adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+}
+
+export type UserCreateWithoutMerchantSettlementRetryInitiatorInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
+}
+
+export type UserUncheckedCreateWithoutMerchantSettlementRetryInitiatorInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+}
+
+export type UserCreateOrConnectWithoutMerchantSettlementRetryInitiatorInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementRetryInitiatorInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementRetryInitiatorInput>
+}
+
+export type UserUpsertWithoutMerchantSettlementRetryInitiatorInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMerchantSettlementRetryInitiatorInput, Prisma.UserUncheckedUpdateWithoutMerchantSettlementRetryInitiatorInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementRetryInitiatorInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementRetryInitiatorInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMerchantSettlementRetryInitiatorInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMerchantSettlementRetryInitiatorInput, Prisma.UserUncheckedUpdateWithoutMerchantSettlementRetryInitiatorInput>
+}
+
+export type UserUpdateWithoutMerchantSettlementRetryInitiatorInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMerchantSettlementRetryInitiatorInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+}
+
+export type UserCreateWithoutMerchantSettlementAuditActionsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  referredByMarketer?: Prisma.UserCreateNestedOneWithoutReferredUsersInput
+  referredUsers?: Prisma.UserCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutMarketerInput
+  referrals?: Prisma.ReferralCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+}
+
+export type UserUncheckedCreateWithoutMerchantSettlementAuditActionsInput = {
+  id?: bigint | number
+  userId?: string
+  email: string
+  password: string
+  name?: string | null
+  role?: $Enums.Role
+  forcePasswordChange?: boolean
+  companyId?: string | null
+  referredByMarketerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  referralCode?: string | null
+  active?: boolean
+  deletedAt?: Date | string | null
+  createdById?: string | null
+  referredUsers?: Prisma.UserUncheckedCreateNestedManyWithoutReferredByMarketerInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+  kycApplications?: Prisma.KycApplicationUncheckedCreateNestedManyWithoutUserInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedCreateNestedManyWithoutUserInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutMarketerInput
+  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutMarketerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.LedgerTransactionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatorInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutTargetUserInput
+  financingContracts?: Prisma.FinancingContractUncheckedCreateNestedManyWithoutUserInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutUserInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutAdminApprovedByInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+}
+
+export type UserCreateOrConnectWithoutMerchantSettlementAuditActionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementAuditActionsInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementAuditActionsInput>
+}
+
+export type UserUpsertWithoutMerchantSettlementAuditActionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMerchantSettlementAuditActionsInput, Prisma.UserUncheckedUpdateWithoutMerchantSettlementAuditActionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMerchantSettlementAuditActionsInput, Prisma.UserUncheckedCreateWithoutMerchantSettlementAuditActionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMerchantSettlementAuditActionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMerchantSettlementAuditActionsInput, Prisma.UserUncheckedUpdateWithoutMerchantSettlementAuditActionsInput>
+}
+
+export type UserUpdateWithoutMerchantSettlementAuditActionsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  referredByMarketer?: Prisma.UserUpdateOneWithoutReferredUsersNestedInput
+  referredUsers?: Prisma.UserUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutMarketerNestedInput
+  referrals?: Prisma.ReferralUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMerchantSettlementAuditActionsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  forcePasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredByMarketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referredUsers?: Prisma.UserUncheckedUpdateManyWithoutReferredByMarketerNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+  kycApplications?: Prisma.KycApplicationUncheckedUpdateManyWithoutUserNestedInput
+  kycAuditTrails?: Prisma.KycAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
+  internalNotifications?: Prisma.InternalNotificationUncheckedUpdateManyWithoutUserNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutMarketerNestedInput
+  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutMarketerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.LedgerTransactionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatorNestedInput
+  requestedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  targetedApprovals?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutTargetUserNestedInput
+  financingContracts?: Prisma.FinancingContractUncheckedUpdateManyWithoutUserNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutUserNestedInput
+  adminApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutAdminApprovedByNestedInput
+  companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
+  marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
+  commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -3737,6 +4245,8 @@ export type UserCreateWithoutTransactionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -3773,6 +4283,8 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -3825,6 +4337,8 @@ export type UserUpdateWithoutTransactionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -3861,6 +4375,8 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutReferralsInput = {
@@ -3897,6 +4413,8 @@ export type UserCreateWithoutReferralsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutReferralsInput = {
@@ -3933,6 +4451,8 @@ export type UserUncheckedCreateWithoutReferralsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutReferralsInput = {
@@ -3985,6 +4505,8 @@ export type UserUpdateWithoutReferralsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralsInput = {
@@ -4021,6 +4543,8 @@ export type UserUncheckedUpdateWithoutReferralsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutRequestedApprovalsInput = {
@@ -4057,6 +4581,8 @@ export type UserCreateWithoutRequestedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
@@ -4093,6 +4619,8 @@ export type UserUncheckedCreateWithoutRequestedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutRequestedApprovalsInput = {
@@ -4134,6 +4662,8 @@ export type UserCreateWithoutTargetedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
@@ -4170,6 +4700,8 @@ export type UserUncheckedCreateWithoutTargetedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutTargetedApprovalsInput = {
@@ -4222,6 +4754,8 @@ export type UserUpdateWithoutRequestedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
@@ -4258,6 +4792,8 @@ export type UserUncheckedUpdateWithoutRequestedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUpsertWithoutTargetedApprovalsInput = {
@@ -4305,6 +4841,8 @@ export type UserUpdateWithoutTargetedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
@@ -4341,6 +4879,8 @@ export type UserUncheckedUpdateWithoutTargetedApprovalsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateWithoutInternalNotificationsInput = {
@@ -4377,6 +4917,8 @@ export type UserCreateWithoutInternalNotificationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserUncheckedCreateWithoutInternalNotificationsInput = {
@@ -4413,6 +4955,8 @@ export type UserUncheckedCreateWithoutInternalNotificationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyApprovedByInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedCreateNestedManyWithoutUserInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutTransferInitiatedByInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutRetryInitiatedByInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedCreateNestedManyWithoutPerformedByInput
 }
 
 export type UserCreateOrConnectWithoutInternalNotificationsInput = {
@@ -4465,6 +5009,8 @@ export type UserUpdateWithoutInternalNotificationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
@@ -4501,6 +5047,8 @@ export type UserUncheckedUpdateWithoutInternalNotificationsInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -4554,6 +5102,8 @@ export type UserUpdateWithoutCompanyInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -4590,6 +5140,8 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -4677,6 +5229,8 @@ export type UserUpdateWithoutReferredByMarketerInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
@@ -4713,6 +5267,8 @@ export type UserUncheckedUpdateWithoutReferredByMarketerInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutReferredByMarketerInput = {
@@ -4766,6 +5322,8 @@ export type UserUpdateWithoutCreatorInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatorInput = {
@@ -4802,6 +5360,8 @@ export type UserUncheckedUpdateWithoutCreatorInput = {
   companyApprovedPayouts?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyApprovedByNestedInput
   marketerBankAccounts?: Prisma.MarketerBankAccountUncheckedUpdateManyWithoutUserNestedInput
   commissionTransferInitiator?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutTransferInitiatedByNestedInput
+  merchantSettlementRetryInitiator?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutRetryInitiatedByNestedInput
+  merchantSettlementAuditActions?: Prisma.MerchantSettlementAuditTrailUncheckedUpdateManyWithoutPerformedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCreatorInput = {
@@ -4846,6 +5406,8 @@ export type UserCountOutputType = {
   companyApprovedPayouts: number
   marketerBankAccounts: number
   commissionTransferInitiator: number
+  merchantSettlementRetryInitiator: number
+  merchantSettlementAuditActions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4868,6 +5430,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   companyApprovedPayouts?: boolean | UserCountOutputTypeCountCompanyApprovedPayoutsArgs
   marketerBankAccounts?: boolean | UserCountOutputTypeCountMarketerBankAccountsArgs
   commissionTransferInitiator?: boolean | UserCountOutputTypeCountCommissionTransferInitiatorArgs
+  merchantSettlementRetryInitiator?: boolean | UserCountOutputTypeCountMerchantSettlementRetryInitiatorArgs
+  merchantSettlementAuditActions?: boolean | UserCountOutputTypeCountMerchantSettlementAuditActionsArgs
 }
 
 /**
@@ -5013,6 +5577,20 @@ export type UserCountOutputTypeCountCommissionTransferInitiatorArgs<ExtArgs exte
   where?: Prisma.CommissionPayoutRequestWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMerchantSettlementRetryInitiatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MerchantSettlementRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMerchantSettlementAuditActionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MerchantSettlementAuditTrailWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5052,6 +5630,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   companyApprovedPayouts?: boolean | Prisma.User$companyApprovedPayoutsArgs<ExtArgs>
   marketerBankAccounts?: boolean | Prisma.User$marketerBankAccountsArgs<ExtArgs>
   commissionTransferInitiator?: boolean | Prisma.User$commissionTransferInitiatorArgs<ExtArgs>
+  merchantSettlementRetryInitiator?: boolean | Prisma.User$merchantSettlementRetryInitiatorArgs<ExtArgs>
+  merchantSettlementAuditActions?: boolean | Prisma.User$merchantSettlementAuditActionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -5139,6 +5719,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   companyApprovedPayouts?: boolean | Prisma.User$companyApprovedPayoutsArgs<ExtArgs>
   marketerBankAccounts?: boolean | Prisma.User$marketerBankAccountsArgs<ExtArgs>
   commissionTransferInitiator?: boolean | Prisma.User$commissionTransferInitiatorArgs<ExtArgs>
+  merchantSettlementRetryInitiator?: boolean | Prisma.User$merchantSettlementRetryInitiatorArgs<ExtArgs>
+  merchantSettlementAuditActions?: boolean | Prisma.User$merchantSettlementAuditActionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5177,6 +5759,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     companyApprovedPayouts: Prisma.$CommissionPayoutRequestPayload<ExtArgs>[]
     marketerBankAccounts: Prisma.$MarketerBankAccountPayload<ExtArgs>[]
     commissionTransferInitiator: Prisma.$CommissionPayoutRequestPayload<ExtArgs>[]
+    merchantSettlementRetryInitiator: Prisma.$MerchantSettlementRequestPayload<ExtArgs>[]
+    merchantSettlementAuditActions: Prisma.$MerchantSettlementAuditTrailPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -5610,6 +6194,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   companyApprovedPayouts<T extends Prisma.User$companyApprovedPayoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyApprovedPayoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   marketerBankAccounts<T extends Prisma.User$marketerBankAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$marketerBankAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MarketerBankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   commissionTransferInitiator<T extends Prisma.User$commissionTransferInitiatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commissionTransferInitiatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  merchantSettlementRetryInitiator<T extends Prisma.User$merchantSettlementRetryInitiatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$merchantSettlementRetryInitiatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MerchantSettlementRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  merchantSettlementAuditActions<T extends Prisma.User$merchantSettlementAuditActionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$merchantSettlementAuditActionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MerchantSettlementAuditTrailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6565,6 +7151,54 @@ export type User$commissionTransferInitiatorArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.CommissionPayoutRequestScalarFieldEnum | Prisma.CommissionPayoutRequestScalarFieldEnum[]
+}
+
+/**
+ * User.merchantSettlementRetryInitiator
+ */
+export type User$merchantSettlementRetryInitiatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MerchantSettlementRequest
+   */
+  select?: Prisma.MerchantSettlementRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MerchantSettlementRequest
+   */
+  omit?: Prisma.MerchantSettlementRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MerchantSettlementRequestInclude<ExtArgs> | null
+  where?: Prisma.MerchantSettlementRequestWhereInput
+  orderBy?: Prisma.MerchantSettlementRequestOrderByWithRelationInput | Prisma.MerchantSettlementRequestOrderByWithRelationInput[]
+  cursor?: Prisma.MerchantSettlementRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MerchantSettlementRequestScalarFieldEnum | Prisma.MerchantSettlementRequestScalarFieldEnum[]
+}
+
+/**
+ * User.merchantSettlementAuditActions
+ */
+export type User$merchantSettlementAuditActionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MerchantSettlementAuditTrail
+   */
+  select?: Prisma.MerchantSettlementAuditTrailSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MerchantSettlementAuditTrail
+   */
+  omit?: Prisma.MerchantSettlementAuditTrailOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MerchantSettlementAuditTrailInclude<ExtArgs> | null
+  where?: Prisma.MerchantSettlementAuditTrailWhereInput
+  orderBy?: Prisma.MerchantSettlementAuditTrailOrderByWithRelationInput | Prisma.MerchantSettlementAuditTrailOrderByWithRelationInput[]
+  cursor?: Prisma.MerchantSettlementAuditTrailWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MerchantSettlementAuditTrailScalarFieldEnum | Prisma.MerchantSettlementAuditTrailScalarFieldEnum[]
 }
 
 /**

@@ -4,6 +4,7 @@ import ApiResponse from "@/shared/utils/ApiResponse";
 import {
   GenerateReferralLinkSchema,
   InviteRegisterSchema,
+  DirectRegisterSchema,
   SubmitApplicationSchema,
   RejectApplicationSchema,
 } from "@/shared/schemas/kyc.schema";
@@ -48,6 +49,51 @@ export class KycController {
         res,
         201,
         "Customer registered via referral successfully",
+        result,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async registerDirect(req: Request, res: Response, next: NextFunction) {
+    try {
+      const reviewerId = (req as any).user?.userId;
+      if (!reviewerId) {
+        throw new BadRequestError("Unauthorized reviewer session.");
+      }
+
+      const params = DirectRegisterSchema.parse(req.body);
+      const result = await KycService.registerDirect(reviewerId, params);
+
+      return ApiResponse.success(
+        res,
+        201,
+        "Customer registered directly successfully",
+        result,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async generateCompanySignupCode(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const companyUserId = (req as any).user?.userId;
+      if (!companyUserId) {
+        throw new BadRequestError("Unauthorized company session.");
+      }
+
+      const result = await KycService.generateCompanySignupCode(companyUserId);
+
+      return ApiResponse.success(
+        res,
+        200,
+        "Company signup code generated successfully",
         result,
       );
     } catch (error) {

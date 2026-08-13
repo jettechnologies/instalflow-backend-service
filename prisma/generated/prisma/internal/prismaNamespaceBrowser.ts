@@ -71,6 +71,10 @@ export const ModelName = {
   CommissionAllocation: 'CommissionAllocation',
   CommissionPayoutRequest: 'CommissionPayoutRequest',
   MarketerBankAccount: 'MarketerBankAccount',
+  CompanyBankAccount: 'CompanyBankAccount',
+  MerchantSettlementRequest: 'MerchantSettlementRequest',
+  MerchantSettlementLine: 'MerchantSettlementLine',
+  MerchantSettlementAuditTrail: 'MerchantSettlementAuditTrail',
   LedgerTransaction: 'LedgerTransaction',
   Referral: 'Referral',
   SubscriptionPlan: 'SubscriptionPlan',
@@ -109,6 +113,7 @@ export const CompanyScalarFieldEnum = {
   name: 'name',
   plan: 'plan',
   logoUrl: 'logoUrl',
+  publicSignupCode: 'publicSignupCode',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -466,6 +471,82 @@ export const MarketerBankAccountScalarFieldEnum = {
 export type MarketerBankAccountScalarFieldEnum = (typeof MarketerBankAccountScalarFieldEnum)[keyof typeof MarketerBankAccountScalarFieldEnum]
 
 
+export const CompanyBankAccountScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  companyId: 'companyId',
+  bankName: 'bankName',
+  bankCode: 'bankCode',
+  accountName: 'accountName',
+  accountNumber: 'accountNumber',
+  isPrimary: 'isPrimary',
+  recipientCode: 'recipientCode',
+  isVerified: 'isVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanyBankAccountScalarFieldEnum = (typeof CompanyBankAccountScalarFieldEnum)[keyof typeof CompanyBankAccountScalarFieldEnum]
+
+
+export const MerchantSettlementRequestScalarFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  companyId: 'companyId',
+  periodStart: 'periodStart',
+  periodEnd: 'periodEnd',
+  amount: 'amount',
+  status: 'status',
+  transferCode: 'transferCode',
+  companyBankAccountId: 'companyBankAccountId',
+  generatedAt: 'generatedAt',
+  approvedAt: 'approvedAt',
+  transferQueuedAt: 'transferQueuedAt',
+  transferInitiatedAt: 'transferInitiatedAt',
+  transferCodeReceivedAt: 'transferCodeReceivedAt',
+  webhookReceivedAt: 'webhookReceivedAt',
+  transferCompletedAt: 'transferCompletedAt',
+  transferFailedAt: 'transferFailedAt',
+  transferFailReason: 'transferFailReason',
+  lastRetryAt: 'lastRetryAt',
+  retryCount: 'retryCount',
+  retryInitiatedById: 'retryInitiatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantSettlementRequestScalarFieldEnum = (typeof MerchantSettlementRequestScalarFieldEnum)[keyof typeof MerchantSettlementRequestScalarFieldEnum]
+
+
+export const MerchantSettlementLineScalarFieldEnum = {
+  id: 'id',
+  lineId: 'lineId',
+  settlementId: 'settlementId',
+  installmentId: 'installmentId',
+  grossAmount: 'grossAmount',
+  commissionDeducted: 'commissionDeducted',
+  netAmount: 'netAmount',
+  createdAt: 'createdAt'
+} as const
+
+export type MerchantSettlementLineScalarFieldEnum = (typeof MerchantSettlementLineScalarFieldEnum)[keyof typeof MerchantSettlementLineScalarFieldEnum]
+
+
+export const MerchantSettlementAuditTrailScalarFieldEnum = {
+  id: 'id',
+  auditId: 'auditId',
+  settlementId: 'settlementId',
+  action: 'action',
+  actorType: 'actorType',
+  performedById: 'performedById',
+  outcome: 'outcome',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type MerchantSettlementAuditTrailScalarFieldEnum = (typeof MerchantSettlementAuditTrailScalarFieldEnum)[keyof typeof MerchantSettlementAuditTrailScalarFieldEnum]
+
+
 export const LedgerTransactionScalarFieldEnum = {
   id: 'id',
   transactionId: 'transactionId',
@@ -502,6 +583,7 @@ export const SubscriptionPlanScalarFieldEnum = {
   discountPercentage: 'discountPercentage',
   interval: 'interval',
   active: 'active',
+  gracePeriodDays: 'gracePeriodDays',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -40,6 +40,7 @@ export type CompanyMinAggregateOutputType = {
   name: string | null
   plan: string | null
   logoUrl: string | null
+  publicSignupCode: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type CompanyMaxAggregateOutputType = {
   name: string | null
   plan: string | null
   logoUrl: string | null
+  publicSignupCode: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +62,7 @@ export type CompanyCountAggregateOutputType = {
   name: number
   plan: number
   logoUrl: number
+  publicSignupCode: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,6 +83,7 @@ export type CompanyMinAggregateInputType = {
   name?: true
   plan?: true
   logoUrl?: true
+  publicSignupCode?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -90,6 +94,7 @@ export type CompanyMaxAggregateInputType = {
   name?: true
   plan?: true
   logoUrl?: true
+  publicSignupCode?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type CompanyCountAggregateInputType = {
   name?: true
   plan?: true
   logoUrl?: true
+  publicSignupCode?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -197,6 +203,7 @@ export type CompanyGroupByOutputType = {
   name: string
   plan: string
   logoUrl: string | null
+  publicSignupCode: string | null
   createdAt: Date
   updatedAt: Date
   _count: CompanyCountAggregateOutputType | null
@@ -230,6 +237,7 @@ export type CompanyWhereInput = {
   name?: Prisma.StringFilter<"Company"> | string
   plan?: Prisma.StringFilter<"Company"> | string
   logoUrl?: Prisma.StringNullableFilter<"Company"> | string | null
+  publicSignupCode?: Prisma.StringNullableFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   users?: Prisma.UserListRelationFilter
@@ -239,6 +247,8 @@ export type CompanyWhereInput = {
   approvalRequests?: Prisma.ApprovalRequestListRelationFilter
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestListRelationFilter
   onboardingSessions?: Prisma.OnboardingSessionListRelationFilter
+  bankAccounts?: Prisma.CompanyBankAccountListRelationFilter
+  settlementRequests?: Prisma.MerchantSettlementRequestListRelationFilter
 }
 
 export type CompanyOrderByWithRelationInput = {
@@ -247,6 +257,7 @@ export type CompanyOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicSignupCode?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
@@ -256,11 +267,14 @@ export type CompanyOrderByWithRelationInput = {
   approvalRequests?: Prisma.ApprovalRequestOrderByRelationAggregateInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestOrderByRelationAggregateInput
   onboardingSessions?: Prisma.OnboardingSessionOrderByRelationAggregateInput
+  bankAccounts?: Prisma.CompanyBankAccountOrderByRelationAggregateInput
+  settlementRequests?: Prisma.MerchantSettlementRequestOrderByRelationAggregateInput
 }
 
 export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   companyId?: string
+  publicSignupCode?: string
   AND?: Prisma.CompanyWhereInput | Prisma.CompanyWhereInput[]
   OR?: Prisma.CompanyWhereInput[]
   NOT?: Prisma.CompanyWhereInput | Prisma.CompanyWhereInput[]
@@ -276,7 +290,9 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   approvalRequests?: Prisma.ApprovalRequestListRelationFilter
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestListRelationFilter
   onboardingSessions?: Prisma.OnboardingSessionListRelationFilter
-}, "id" | "companyId">
+  bankAccounts?: Prisma.CompanyBankAccountListRelationFilter
+  settlementRequests?: Prisma.MerchantSettlementRequestListRelationFilter
+}, "id" | "companyId" | "publicSignupCode">
 
 export type CompanyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -284,6 +300,7 @@ export type CompanyOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicSignupCode?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompanyCountOrderByAggregateInput
@@ -302,6 +319,7 @@ export type CompanyScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Company"> | string
   plan?: Prisma.StringWithAggregatesFilter<"Company"> | string
   logoUrl?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
+  publicSignupCode?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
 }
@@ -312,6 +330,7 @@ export type CompanyCreateInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -321,6 +340,8 @@ export type CompanyCreateInput = {
   approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateInput = {
@@ -329,6 +350,7 @@ export type CompanyUncheckedCreateInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -338,6 +360,8 @@ export type CompanyUncheckedCreateInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUpdateInput = {
@@ -346,6 +370,7 @@ export type CompanyUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -355,6 +380,8 @@ export type CompanyUpdateInput = {
   approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateInput = {
@@ -363,6 +390,7 @@ export type CompanyUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -372,6 +400,8 @@ export type CompanyUncheckedUpdateInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateManyInput = {
@@ -380,6 +410,7 @@ export type CompanyCreateManyInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -390,6 +421,7 @@ export type CompanyUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -400,6 +432,7 @@ export type CompanyUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -410,6 +443,7 @@ export type CompanyCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
+  publicSignupCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -424,6 +458,7 @@ export type CompanyMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
+  publicSignupCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -434,6 +469,7 @@ export type CompanyMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
+  publicSignupCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -534,6 +570,34 @@ export type CompanyUpdateOneRequiredWithoutCommissionPayoutRequestsNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCommissionPayoutRequestsInput, Prisma.CompanyUpdateWithoutCommissionPayoutRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput>
 }
 
+export type CompanyCreateNestedOneWithoutBankAccountsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutBankAccountsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutBankAccountsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutBankAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutBankAccountsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutBankAccountsInput
+  upsert?: Prisma.CompanyUpsertWithoutBankAccountsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutBankAccountsInput, Prisma.CompanyUpdateWithoutBankAccountsInput>, Prisma.CompanyUncheckedUpdateWithoutBankAccountsInput>
+}
+
+export type CompanyCreateNestedOneWithoutSettlementRequestsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSettlementRequestsInput, Prisma.CompanyUncheckedCreateWithoutSettlementRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSettlementRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutSettlementRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSettlementRequestsInput, Prisma.CompanyUncheckedCreateWithoutSettlementRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSettlementRequestsInput
+  upsert?: Prisma.CompanyUpsertWithoutSettlementRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutSettlementRequestsInput, Prisma.CompanyUpdateWithoutSettlementRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutSettlementRequestsInput>
+}
+
 export type CompanyCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutSubscriptionsInput, Prisma.CompanyUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSubscriptionsInput
@@ -584,6 +648,7 @@ export type CompanyCreateWithoutUsersInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
@@ -592,6 +657,8 @@ export type CompanyCreateWithoutUsersInput = {
   approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -600,6 +667,7 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
@@ -608,6 +676,8 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -632,6 +702,7 @@ export type CompanyUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
@@ -640,6 +711,8 @@ export type CompanyUpdateWithoutUsersInput = {
   approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -648,6 +721,7 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
@@ -656,6 +730,8 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutProductsInput = {
@@ -664,6 +740,7 @@ export type CompanyCreateWithoutProductsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -672,6 +749,8 @@ export type CompanyCreateWithoutProductsInput = {
   approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutProductsInput = {
@@ -680,6 +759,7 @@ export type CompanyUncheckedCreateWithoutProductsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -688,6 +768,8 @@ export type CompanyUncheckedCreateWithoutProductsInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutProductsInput = {
@@ -712,6 +794,7 @@ export type CompanyUpdateWithoutProductsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -720,6 +803,8 @@ export type CompanyUpdateWithoutProductsInput = {
   approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutProductsInput = {
@@ -728,6 +813,7 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -736,6 +822,8 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutOnboardingSessionsInput = {
@@ -744,6 +832,7 @@ export type CompanyCreateWithoutOnboardingSessionsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -752,6 +841,8 @@ export type CompanyCreateWithoutOnboardingSessionsInput = {
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
   approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutOnboardingSessionsInput = {
@@ -760,6 +851,7 @@ export type CompanyUncheckedCreateWithoutOnboardingSessionsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -768,6 +860,8 @@ export type CompanyUncheckedCreateWithoutOnboardingSessionsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
   approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutOnboardingSessionsInput = {
@@ -792,6 +886,7 @@ export type CompanyUpdateWithoutOnboardingSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -800,6 +895,8 @@ export type CompanyUpdateWithoutOnboardingSessionsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
   approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutOnboardingSessionsInput = {
@@ -808,6 +905,7 @@ export type CompanyUncheckedUpdateWithoutOnboardingSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -816,6 +914,8 @@ export type CompanyUncheckedUpdateWithoutOnboardingSessionsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
@@ -824,6 +924,7 @@ export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -832,6 +933,8 @@ export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
   approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
@@ -840,6 +943,7 @@ export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -848,6 +952,8 @@ export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
   approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput = {
@@ -872,6 +978,7 @@ export type CompanyUpdateWithoutCommissionPayoutRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -880,6 +987,8 @@ export type CompanyUpdateWithoutCommissionPayoutRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
   approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
@@ -888,6 +997,7 @@ export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -896,6 +1006,192 @@ export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutBankAccountsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutBankAccountsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutBankAccountsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutBankAccountsInput>
+}
+
+export type CompanyUpsertWithoutBankAccountsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutBankAccountsInput, Prisma.CompanyUncheckedUpdateWithoutBankAccountsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutBankAccountsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutBankAccountsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutBankAccountsInput, Prisma.CompanyUncheckedUpdateWithoutBankAccountsInput>
+}
+
+export type CompanyUpdateWithoutBankAccountsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutBankAccountsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutSettlementRequestsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutSettlementRequestsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutSettlementRequestsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutSettlementRequestsInput, Prisma.CompanyUncheckedCreateWithoutSettlementRequestsInput>
+}
+
+export type CompanyUpsertWithoutSettlementRequestsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutSettlementRequestsInput, Prisma.CompanyUncheckedUpdateWithoutSettlementRequestsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutSettlementRequestsInput, Prisma.CompanyUncheckedCreateWithoutSettlementRequestsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutSettlementRequestsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutSettlementRequestsInput, Prisma.CompanyUncheckedUpdateWithoutSettlementRequestsInput>
+}
+
+export type CompanyUpdateWithoutSettlementRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutSettlementRequestsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutSubscriptionsInput = {
@@ -904,6 +1200,7 @@ export type CompanyCreateWithoutSubscriptionsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -912,6 +1209,8 @@ export type CompanyCreateWithoutSubscriptionsInput = {
   approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
@@ -920,6 +1219,7 @@ export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -928,6 +1228,8 @@ export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutSubscriptionsInput = {
@@ -952,6 +1254,7 @@ export type CompanyUpdateWithoutSubscriptionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -960,6 +1263,8 @@ export type CompanyUpdateWithoutSubscriptionsInput = {
   approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
@@ -968,6 +1273,7 @@ export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -976,6 +1282,8 @@ export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutLedgerAccountsInput = {
@@ -984,6 +1292,7 @@ export type CompanyCreateWithoutLedgerAccountsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -992,6 +1301,8 @@ export type CompanyCreateWithoutLedgerAccountsInput = {
   approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
@@ -1000,6 +1311,7 @@ export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1008,6 +1320,8 @@ export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutLedgerAccountsInput = {
@@ -1032,6 +1346,7 @@ export type CompanyUpdateWithoutLedgerAccountsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -1040,6 +1355,8 @@ export type CompanyUpdateWithoutLedgerAccountsInput = {
   approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
@@ -1048,6 +1365,7 @@ export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1056,6 +1374,8 @@ export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
   approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutApprovalRequestsInput = {
@@ -1064,6 +1384,7 @@ export type CompanyCreateWithoutApprovalRequestsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -1072,6 +1393,8 @@ export type CompanyCreateWithoutApprovalRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutApprovalRequestsInput = {
@@ -1080,6 +1403,7 @@ export type CompanyUncheckedCreateWithoutApprovalRequestsInput = {
   name: string
   plan?: string
   logoUrl?: string | null
+  publicSignupCode?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1088,6 +1412,8 @@ export type CompanyUncheckedCreateWithoutApprovalRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutApprovalRequestsInput = {
@@ -1112,6 +1438,7 @@ export type CompanyUpdateWithoutApprovalRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -1120,6 +1447,8 @@ export type CompanyUpdateWithoutApprovalRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
@@ -1128,6 +1457,7 @@ export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1136,6 +1466,8 @@ export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
   ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 
@@ -1151,6 +1483,8 @@ export type CompanyCountOutputType = {
   approvalRequests: number
   commissionPayoutRequests: number
   onboardingSessions: number
+  bankAccounts: number
+  settlementRequests: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1161,6 +1495,8 @@ export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   approvalRequests?: boolean | CompanyCountOutputTypeCountApprovalRequestsArgs
   commissionPayoutRequests?: boolean | CompanyCountOutputTypeCountCommissionPayoutRequestsArgs
   onboardingSessions?: boolean | CompanyCountOutputTypeCountOnboardingSessionsArgs
+  bankAccounts?: boolean | CompanyCountOutputTypeCountBankAccountsArgs
+  settlementRequests?: boolean | CompanyCountOutputTypeCountSettlementRequestsArgs
 }
 
 /**
@@ -1222,6 +1558,20 @@ export type CompanyCountOutputTypeCountOnboardingSessionsArgs<ExtArgs extends ru
   where?: Prisma.OnboardingSessionWhereInput
 }
 
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountBankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompanyBankAccountWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountSettlementRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MerchantSettlementRequestWhereInput
+}
+
 
 export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1229,6 +1579,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   plan?: boolean
   logoUrl?: boolean
+  publicSignupCode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   users?: boolean | Prisma.Company$usersArgs<ExtArgs>
@@ -1238,6 +1589,8 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   approvalRequests?: boolean | Prisma.Company$approvalRequestsArgs<ExtArgs>
   commissionPayoutRequests?: boolean | Prisma.Company$commissionPayoutRequestsArgs<ExtArgs>
   onboardingSessions?: boolean | Prisma.Company$onboardingSessionsArgs<ExtArgs>
+  bankAccounts?: boolean | Prisma.Company$bankAccountsArgs<ExtArgs>
+  settlementRequests?: boolean | Prisma.Company$settlementRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
@@ -1247,6 +1600,7 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   plan?: boolean
   logoUrl?: boolean
+  publicSignupCode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["company"]>
@@ -1257,6 +1611,7 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   plan?: boolean
   logoUrl?: boolean
+  publicSignupCode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["company"]>
@@ -1267,11 +1622,12 @@ export type CompanySelectScalar = {
   name?: boolean
   plan?: boolean
   logoUrl?: boolean
+  publicSignupCode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "plan" | "logoUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "plan" | "logoUrl" | "publicSignupCode" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Company$usersArgs<ExtArgs>
   products?: boolean | Prisma.Company$productsArgs<ExtArgs>
@@ -1280,6 +1636,8 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   approvalRequests?: boolean | Prisma.Company$approvalRequestsArgs<ExtArgs>
   commissionPayoutRequests?: boolean | Prisma.Company$commissionPayoutRequestsArgs<ExtArgs>
   onboardingSessions?: boolean | Prisma.Company$onboardingSessionsArgs<ExtArgs>
+  bankAccounts?: boolean | Prisma.Company$bankAccountsArgs<ExtArgs>
+  settlementRequests?: boolean | Prisma.Company$settlementRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1295,6 +1653,8 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     approvalRequests: Prisma.$ApprovalRequestPayload<ExtArgs>[]
     commissionPayoutRequests: Prisma.$CommissionPayoutRequestPayload<ExtArgs>[]
     onboardingSessions: Prisma.$OnboardingSessionPayload<ExtArgs>[]
+    bankAccounts: Prisma.$CompanyBankAccountPayload<ExtArgs>[]
+    settlementRequests: Prisma.$MerchantSettlementRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -1302,6 +1662,7 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     plan: string
     logoUrl: string | null
+    publicSignupCode: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["company"]>
@@ -1705,6 +2066,8 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
   approvalRequests<T extends Prisma.Company$approvalRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$approvalRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   commissionPayoutRequests<T extends Prisma.Company$commissionPayoutRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$commissionPayoutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   onboardingSessions<T extends Prisma.Company$onboardingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$onboardingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OnboardingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bankAccounts<T extends Prisma.Company$bankAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$bankAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyBankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  settlementRequests<T extends Prisma.Company$settlementRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$settlementRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MerchantSettlementRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1739,6 +2102,7 @@ export interface CompanyFieldRefs {
   readonly name: Prisma.FieldRef<"Company", 'String'>
   readonly plan: Prisma.FieldRef<"Company", 'String'>
   readonly logoUrl: Prisma.FieldRef<"Company", 'String'>
+  readonly publicSignupCode: Prisma.FieldRef<"Company", 'String'>
   readonly createdAt: Prisma.FieldRef<"Company", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Company", 'DateTime'>
 }
@@ -2299,6 +2663,54 @@ export type Company$onboardingSessionsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.OnboardingSessionScalarFieldEnum | Prisma.OnboardingSessionScalarFieldEnum[]
+}
+
+/**
+ * Company.bankAccounts
+ */
+export type Company$bankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompanyBankAccount
+   */
+  select?: Prisma.CompanyBankAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompanyBankAccount
+   */
+  omit?: Prisma.CompanyBankAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyBankAccountInclude<ExtArgs> | null
+  where?: Prisma.CompanyBankAccountWhereInput
+  orderBy?: Prisma.CompanyBankAccountOrderByWithRelationInput | Prisma.CompanyBankAccountOrderByWithRelationInput[]
+  cursor?: Prisma.CompanyBankAccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CompanyBankAccountScalarFieldEnum | Prisma.CompanyBankAccountScalarFieldEnum[]
+}
+
+/**
+ * Company.settlementRequests
+ */
+export type Company$settlementRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MerchantSettlementRequest
+   */
+  select?: Prisma.MerchantSettlementRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MerchantSettlementRequest
+   */
+  omit?: Prisma.MerchantSettlementRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MerchantSettlementRequestInclude<ExtArgs> | null
+  where?: Prisma.MerchantSettlementRequestWhereInput
+  orderBy?: Prisma.MerchantSettlementRequestOrderByWithRelationInput | Prisma.MerchantSettlementRequestOrderByWithRelationInput[]
+  cursor?: Prisma.MerchantSettlementRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MerchantSettlementRequestScalarFieldEnum | Prisma.MerchantSettlementRequestScalarFieldEnum[]
 }
 
 /**

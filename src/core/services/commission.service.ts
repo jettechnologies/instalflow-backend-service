@@ -495,8 +495,11 @@ export class CommissionService {
         remaining = remaining.minus(toAllocate);
       }
 
+      // An ADMIN requester has no higher admin to check them (only the
+      // company) — route straight to company approval, same as when a
+      // marketer's creator is already COMPANY.
       const status =
-        creatorRole === Role.COMPANY
+        creatorRole === Role.COMPANY || user.role === Role.ADMIN
           ? CommissionPayoutStatus.PENDING_COMPANY_APPROVAL
           : CommissionPayoutStatus.PENDING_ADMIN_APPROVAL;
 

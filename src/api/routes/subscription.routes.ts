@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { SubscriptionController } from "@/api/controllers/subscription.controller";
 import { publicApiLimiter } from "@/api/middlewares/rateLimiter";
+import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
+import { Role } from "@/infrastructure/prisma";
 
 const router = Router();
 
@@ -11,6 +13,12 @@ router.post(
   "/onboarding/initialize",
   publicApiLimiter,
   SubscriptionController.initializeOnboarding,
+);
+router.post(
+  "/renew",
+  requireAuth,
+  requireRole([Role.COMPANY]),
+  SubscriptionController.renew,
 );
 
 export default router;

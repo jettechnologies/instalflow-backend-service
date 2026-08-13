@@ -23,6 +23,8 @@
     "db:reset": "prisma migrate reset --force && pnpm run db:seed",
     "swagger": "tsx ./src/infrastructure/config/swagger.ts",
     "deploy:mail-worker": "cd mail-worker && wrangler deploy --name mail-worker",
+    "deploy:email-worker": "cd workers/email-worker && pnpm run deploy",
+    "deploy:notification-hub": "cd workers/notification-hub && pnpm run deploy",
     "test": "glob -c \"node --no-warnings --import tsx --test\" \"src/**/*.test.ts\""
   },
   "keywords": [],

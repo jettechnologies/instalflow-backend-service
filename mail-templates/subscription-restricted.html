@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Restricted - Instalflow</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;700&display=swap");
+      body {
+        font-family: "Jost", sans-serif;
+        background-color: #0b0f1a;
+        color: #9ca3af;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      }
+      .banner {
+        background: rgba(239, 68, 68, 0.12);
+        border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 0.65rem 1rem;
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #fca5a5;
+        letter-spacing: 0.1rem;
+        text-transform: uppercase;
+      }
+      .header {
+        padding: 2.5rem 1.5rem 1rem;
+        text-align: center;
+      }
+      .logo-text {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+      }
+      .logo-text span {
+        color: #7c3aed;
+      }
+      .hero-icon {
+        width: 64px;
+        height: 64px;
+        margin: 1.5rem auto;
+        background-color: #ef4444;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 24px rgba(239, 68, 68, 0.35);
+      }
+      .title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f9fafb;
+        margin: 0.5rem 0 1rem;
+      }
+      .content {
+        padding: 0 2.5rem 2.5rem;
+        text-align: center;
+      }
+      .alert-box {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin: 1.25rem 0;
+        text-align: left;
+      }
+      .alert-title {
+        color: #fca5a5;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      .data-grid {
+        background: #0b0f1a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        text-align: left;
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #1f2937;
+      }
+      .data-row:last-child {
+        border-bottom: none;
+      }
+      .data-label {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      .data-value {
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .cta-btn {
+        display: inline-block;
+        margin-top: 1.75rem;
+        padding: 0.75rem 2rem;
+        background: #7c3aed;
+        color: #ffffff;
+        font-family: "Jost", sans-serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        text-decoration: none;
+      }
+      .footer {
+        background-color: #0b0f1a;
+        border-top: 1px solid #1f2937;
+        padding: 2rem;
+        text-align: center;
+      }
+      .signature {
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+      .signature .product-name {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="banner">🔒 Account Restricted</div>
+
+      <div class="header">
+        <div class="logo-text">Instal<span>flow</span></div>
+        <div class="hero-icon">
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h1 class="title">Your Account Has Been Restricted</h1>
+      </div>
+
+      <div class="content">
+        <p>
+          Hi <strong style="color: #f9fafb">{{companyName}}</strong>, your
+          <strong style="color: #f9fafb">{{planName}}</strong> subscription's
+          grace period has ended without renewal. Your company account is
+          now restricted.
+        </p>
+
+        <div class="alert-box">
+          <div class="alert-title">What this means</div>
+          <div>
+            Access to your Instalflow workspace is limited until the
+            subscription is renewed.
+          </div>
+        </div>
+
+        <div class="data-grid">
+          <div class="data-row">
+            <span class="data-label">Plan</span>
+            <span class="data-value">{{planName}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Expired On</span>
+            <span class="data-value">{{endDate}}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Status</span>
+            <span class="data-value" style="color: #ef4444">Restricted</span>
+          </div>
+        </div>
+
+        <p>Renew your subscription now to restore full access immediately.</p>
+
+        <a href="{{payment_url}}" class="cta-btn">Renew &amp; Restore Access</a>
+      </div>
+
+      <div class="footer">
+        <div class="signature">
+          <p>The <span class="product-name">Instalflow</span> Team</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

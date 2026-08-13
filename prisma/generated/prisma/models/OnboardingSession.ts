@@ -227,7 +227,7 @@ export type OnboardingSessionGroupByOutputType = {
   name: string
   email: string
   passwordHash: string
-  marketerId: string
+  marketerId: string | null
   companyId: string | null
   status: $Enums.KycOnboardingStatus
   expiresAt: Date
@@ -265,14 +265,14 @@ export type OnboardingSessionWhereInput = {
   name?: Prisma.StringFilter<"OnboardingSession"> | string
   email?: Prisma.StringFilter<"OnboardingSession"> | string
   passwordHash?: Prisma.StringFilter<"OnboardingSession"> | string
-  marketerId?: Prisma.StringFilter<"OnboardingSession"> | string
+  marketerId?: Prisma.StringNullableFilter<"OnboardingSession"> | string | null
   companyId?: Prisma.StringNullableFilter<"OnboardingSession"> | string | null
   status?: Prisma.EnumKycOnboardingStatusFilter<"OnboardingSession"> | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFilter<"OnboardingSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"OnboardingSession"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OnboardingSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OnboardingSession"> | Date | string
-  marketer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  marketer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   kycApplication?: Prisma.XOR<Prisma.KycApplicationNullableScalarRelationFilter, Prisma.KycApplicationWhereInput> | null
 }
@@ -283,7 +283,7 @@ export type OnboardingSessionOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
-  marketerId?: Prisma.SortOrder
+  marketerId?: Prisma.SortOrderInput | Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -304,14 +304,14 @@ export type OnboardingSessionWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"OnboardingSession"> | string
   email?: Prisma.StringFilter<"OnboardingSession"> | string
   passwordHash?: Prisma.StringFilter<"OnboardingSession"> | string
-  marketerId?: Prisma.StringFilter<"OnboardingSession"> | string
+  marketerId?: Prisma.StringNullableFilter<"OnboardingSession"> | string | null
   companyId?: Prisma.StringNullableFilter<"OnboardingSession"> | string | null
   status?: Prisma.EnumKycOnboardingStatusFilter<"OnboardingSession"> | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFilter<"OnboardingSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"OnboardingSession"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OnboardingSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OnboardingSession"> | Date | string
-  marketer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  marketer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   kycApplication?: Prisma.XOR<Prisma.KycApplicationNullableScalarRelationFilter, Prisma.KycApplicationWhereInput> | null
 }, "id" | "sessionId">
@@ -322,7 +322,7 @@ export type OnboardingSessionOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
-  marketerId?: Prisma.SortOrder
+  marketerId?: Prisma.SortOrderInput | Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -345,7 +345,7 @@ export type OnboardingSessionScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"OnboardingSession"> | string
   email?: Prisma.StringWithAggregatesFilter<"OnboardingSession"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"OnboardingSession"> | string
-  marketerId?: Prisma.StringWithAggregatesFilter<"OnboardingSession"> | string
+  marketerId?: Prisma.StringNullableWithAggregatesFilter<"OnboardingSession"> | string | null
   companyId?: Prisma.StringNullableWithAggregatesFilter<"OnboardingSession"> | string | null
   status?: Prisma.EnumKycOnboardingStatusWithAggregatesFilter<"OnboardingSession"> | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"OnboardingSession"> | Date | string
@@ -365,7 +365,7 @@ export type OnboardingSessionCreateInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  marketer: Prisma.UserCreateNestedOneWithoutOnboardingSessionsInput
+  marketer?: Prisma.UserCreateNestedOneWithoutOnboardingSessionsInput
   company?: Prisma.CompanyCreateNestedOneWithoutOnboardingSessionsInput
   kycApplication?: Prisma.KycApplicationCreateNestedOneWithoutOnboardingSessionInput
 }
@@ -376,7 +376,7 @@ export type OnboardingSessionUncheckedCreateInput = {
   name: string
   email: string
   passwordHash: string
-  marketerId: string
+  marketerId?: string | null
   companyId?: string | null
   status?: $Enums.KycOnboardingStatus
   expiresAt: Date | string
@@ -397,7 +397,7 @@ export type OnboardingSessionUpdateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  marketer?: Prisma.UserUpdateOneRequiredWithoutOnboardingSessionsNestedInput
+  marketer?: Prisma.UserUpdateOneWithoutOnboardingSessionsNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOnboardingSessionsNestedInput
   kycApplication?: Prisma.KycApplicationUpdateOneWithoutOnboardingSessionNestedInput
 }
@@ -408,7 +408,7 @@ export type OnboardingSessionUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  marketerId?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumKycOnboardingStatusFieldUpdateOperationsInput | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -424,7 +424,7 @@ export type OnboardingSessionCreateManyInput = {
   name: string
   email: string
   passwordHash: string
-  marketerId: string
+  marketerId?: string | null
   companyId?: string | null
   status?: $Enums.KycOnboardingStatus
   expiresAt: Date | string
@@ -452,7 +452,7 @@ export type OnboardingSessionUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  marketerId?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumKycOnboardingStatusFieldUpdateOperationsInput | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -644,7 +644,7 @@ export type OnboardingSessionCreateWithoutCompanyInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  marketer: Prisma.UserCreateNestedOneWithoutOnboardingSessionsInput
+  marketer?: Prisma.UserCreateNestedOneWithoutOnboardingSessionsInput
   kycApplication?: Prisma.KycApplicationCreateNestedOneWithoutOnboardingSessionInput
 }
 
@@ -654,7 +654,7 @@ export type OnboardingSessionUncheckedCreateWithoutCompanyInput = {
   name: string
   email: string
   passwordHash: string
-  marketerId: string
+  marketerId?: string | null
   status?: $Enums.KycOnboardingStatus
   expiresAt: Date | string
   completedAt?: Date | string | null
@@ -698,7 +698,7 @@ export type OnboardingSessionScalarWhereInput = {
   name?: Prisma.StringFilter<"OnboardingSession"> | string
   email?: Prisma.StringFilter<"OnboardingSession"> | string
   passwordHash?: Prisma.StringFilter<"OnboardingSession"> | string
-  marketerId?: Prisma.StringFilter<"OnboardingSession"> | string
+  marketerId?: Prisma.StringNullableFilter<"OnboardingSession"> | string | null
   companyId?: Prisma.StringNullableFilter<"OnboardingSession"> | string | null
   status?: Prisma.EnumKycOnboardingStatusFilter<"OnboardingSession"> | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFilter<"OnboardingSession"> | Date | string
@@ -774,7 +774,7 @@ export type OnboardingSessionCreateWithoutKycApplicationInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  marketer: Prisma.UserCreateNestedOneWithoutOnboardingSessionsInput
+  marketer?: Prisma.UserCreateNestedOneWithoutOnboardingSessionsInput
   company?: Prisma.CompanyCreateNestedOneWithoutOnboardingSessionsInput
 }
 
@@ -784,7 +784,7 @@ export type OnboardingSessionUncheckedCreateWithoutKycApplicationInput = {
   name: string
   email: string
   passwordHash: string
-  marketerId: string
+  marketerId?: string | null
   companyId?: string | null
   status?: $Enums.KycOnboardingStatus
   expiresAt: Date | string
@@ -820,7 +820,7 @@ export type OnboardingSessionUpdateWithoutKycApplicationInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  marketer?: Prisma.UserUpdateOneRequiredWithoutOnboardingSessionsNestedInput
+  marketer?: Prisma.UserUpdateOneWithoutOnboardingSessionsNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOnboardingSessionsNestedInput
 }
 
@@ -830,7 +830,7 @@ export type OnboardingSessionUncheckedUpdateWithoutKycApplicationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  marketerId?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumKycOnboardingStatusFieldUpdateOperationsInput | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -845,7 +845,7 @@ export type OnboardingSessionCreateManyCompanyInput = {
   name: string
   email: string
   passwordHash: string
-  marketerId: string
+  marketerId?: string | null
   status?: $Enums.KycOnboardingStatus
   expiresAt: Date | string
   completedAt?: Date | string | null
@@ -864,7 +864,7 @@ export type OnboardingSessionUpdateWithoutCompanyInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  marketer?: Prisma.UserUpdateOneRequiredWithoutOnboardingSessionsNestedInput
+  marketer?: Prisma.UserUpdateOneWithoutOnboardingSessionsNestedInput
   kycApplication?: Prisma.KycApplicationUpdateOneWithoutOnboardingSessionNestedInput
 }
 
@@ -874,7 +874,7 @@ export type OnboardingSessionUncheckedUpdateWithoutCompanyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  marketerId?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumKycOnboardingStatusFieldUpdateOperationsInput | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -889,7 +889,7 @@ export type OnboardingSessionUncheckedUpdateManyWithoutCompanyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  marketerId?: Prisma.StringFieldUpdateOperationsInput | string
+  marketerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumKycOnboardingStatusFieldUpdateOperationsInput | $Enums.KycOnboardingStatus
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -970,7 +970,7 @@ export type OnboardingSessionSelect<ExtArgs extends runtime.Types.Extensions.Int
   completedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  marketer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  marketer?: boolean | Prisma.OnboardingSession$marketerArgs<ExtArgs>
   company?: boolean | Prisma.OnboardingSession$companyArgs<ExtArgs>
   kycApplication?: boolean | Prisma.OnboardingSession$kycApplicationArgs<ExtArgs>
 }, ExtArgs["result"]["onboardingSession"]>
@@ -988,7 +988,7 @@ export type OnboardingSessionSelectCreateManyAndReturn<ExtArgs extends runtime.T
   completedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  marketer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  marketer?: boolean | Prisma.OnboardingSession$marketerArgs<ExtArgs>
   company?: boolean | Prisma.OnboardingSession$companyArgs<ExtArgs>
 }, ExtArgs["result"]["onboardingSession"]>
 
@@ -1005,7 +1005,7 @@ export type OnboardingSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   completedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  marketer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  marketer?: boolean | Prisma.OnboardingSession$marketerArgs<ExtArgs>
   company?: boolean | Prisma.OnboardingSession$companyArgs<ExtArgs>
 }, ExtArgs["result"]["onboardingSession"]>
 
@@ -1026,23 +1026,23 @@ export type OnboardingSessionSelectScalar = {
 
 export type OnboardingSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionId" | "name" | "email" | "passwordHash" | "marketerId" | "companyId" | "status" | "expiresAt" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["onboardingSession"]>
 export type OnboardingSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  marketer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  marketer?: boolean | Prisma.OnboardingSession$marketerArgs<ExtArgs>
   company?: boolean | Prisma.OnboardingSession$companyArgs<ExtArgs>
   kycApplication?: boolean | Prisma.OnboardingSession$kycApplicationArgs<ExtArgs>
 }
 export type OnboardingSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  marketer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  marketer?: boolean | Prisma.OnboardingSession$marketerArgs<ExtArgs>
   company?: boolean | Prisma.OnboardingSession$companyArgs<ExtArgs>
 }
 export type OnboardingSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  marketer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  marketer?: boolean | Prisma.OnboardingSession$marketerArgs<ExtArgs>
   company?: boolean | Prisma.OnboardingSession$companyArgs<ExtArgs>
 }
 
 export type $OnboardingSessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OnboardingSession"
   objects: {
-    marketer: Prisma.$UserPayload<ExtArgs>
+    marketer: Prisma.$UserPayload<ExtArgs> | null
     company: Prisma.$CompanyPayload<ExtArgs> | null
     kycApplication: Prisma.$KycApplicationPayload<ExtArgs> | null
   }
@@ -1052,7 +1052,7 @@ export type $OnboardingSessionPayload<ExtArgs extends runtime.Types.Extensions.I
     name: string
     email: string
     passwordHash: string
-    marketerId: string
+    marketerId: string | null
     companyId: string | null
     status: $Enums.KycOnboardingStatus
     expiresAt: Date
@@ -1453,7 +1453,7 @@ readonly fields: OnboardingSessionFieldRefs;
  */
 export interface Prisma__OnboardingSessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  marketer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  marketer<T extends Prisma.OnboardingSession$marketerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OnboardingSession$marketerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   company<T extends Prisma.OnboardingSession$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OnboardingSession$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   kycApplication<T extends Prisma.OnboardingSession$kycApplicationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OnboardingSession$kycApplicationArgs<ExtArgs>>): Prisma.Prisma__KycApplicationClient<runtime.Types.Result.GetResult<Prisma.$KycApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1895,6 +1895,25 @@ export type OnboardingSessionDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many OnboardingSessions to delete.
    */
   limit?: number
+}
+
+/**
+ * OnboardingSession.marketer
+ */
+export type OnboardingSession$marketerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**
