@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model CompanyReminderSettings
+ * 
+ */
+export type CompanyReminderSettings = Prisma.CompanyReminderSettingsModel
+/**
  * Model Company
  * 
  */

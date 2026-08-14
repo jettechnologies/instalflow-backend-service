@@ -21,6 +21,17 @@ import {
   dayWindow,
   ensureReminderSent,
 } from "@/shared/utils/helpers/date-window";
+import {
+  REMINDER_OFFSET_DAYS,
+  MAX_REMINDER_OFFSET_DAYS,
+} from "@/shared/utils/helpers/reminder-offset";
+import {
+  ReminderSettingsService,
+  DEFAULT_REMINDER_SETTINGS,
+  type EffectiveReminderSettings,
+} from "@/core/services/reminder-settings.service";
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 const formatAmount = (val: Prisma.Decimal | string | number): string => {
   const num = typeof val === "object" ? val.toNumber() : Number(val);
@@ -64,6 +75,16 @@ async function calculateProgress(contractId: string) {
   return { percentagePaid, totalFinanced: contract.totalFinanced, totalPaid };
 }
 
+type SettingsMap = Map<string, EffectiveReminderSettings>;
+
+function settingsFor(
+  settingsMap: SettingsMap,
+  companyId: string | null | undefined,
+): EffectiveReminderSettings {
+  if (!companyId) return DEFAULT_REMINDER_SETTINGS;
+  return settingsMap.get(companyId) ?? DEFAULT_REMINDER_SETTINGS;
+}
+
 export class PaymentReminderWorker {
   static async run(): Promise<void> {
     console.log("🔔 [InstallmentPaymentReminder] Starting reminder scan...");
@@ -71,13 +92,15 @@ export class PaymentReminderWorker {
 
     await this.transitionInstallmentStatuses(now);
 
+    const settingsMap = await ReminderSettingsService.getEffectiveSettingsMap();
+
     await Promise.allSettled([
-      this.process3DayReminders(),
-      this.process1DayReminders(),
-      this.processDueTodayReminders(now),
-      this.processRecurringReminders(),
-      this.process3DayOverdue(now),
-      this.process7DayOverdue(now),
+      this.process3DayReminders(settingsMap),
+      this.process1DayReminders(settingsMap),
+      this.processDueTodayReminders(settingsMap),
+      this.processRecurringReminders(settingsMap),
+      this.process3DayOverdue(settingsMap),
+      this.process7DayOverdue(settingsMap),
     ]);
 
     console.log("✅ [InstallmentPaymentReminder] Scan complete.");
@@ -117,19 +140,35 @@ export class PaymentReminderWorker {
     }
   }
 
-  private static async process3DayReminders(): Promise<void> {
-    const { start, end } = dayWindow(+3);
+  // Before-due family (3-day, 1-day) share a widened [today, today+MAX] query
+  // window since each company's configured offset can be anywhere in that
+  // range — the exact day is decided per-installment via `daysUntil`, not by
+  // the DB query itself.
+  private static async process3DayReminders(
+    settingsMap: SettingsMap,
+  ): Promise<void> {
+    const { start: rangeStart } = dayWindow(0);
+    const rangeEnd = new Date(
+      rangeStart.getTime() + (MAX_REMINDER_OFFSET_DAYS + 1) * ONE_DAY_MS,
+    );
 
     const installments = await prisma.installment.findMany({
       where: {
-        dueDate: { gte: start, lt: end },
+        dueDate: { gte: rangeStart, lt: rangeEnd },
         status: { in: [InstallmentStatus.PENDING, InstallmentStatus.DUE] },
         financingContract: { status: FinancingStatus.ACTIVE },
       },
       include: {
         financingContract: {
           include: {
-            user: { select: { userId: true, email: true, name: true } },
+            user: {
+              select: {
+                userId: true,
+                email: true,
+                name: true,
+                companyId: true,
+              },
+            },
             product: { select: { name: true } },
             variant: { select: { sku: true } },
           },
@@ -138,16 +177,29 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `📅 [InstallmentPaymentReminder] 3-day reminders: ${installments.length} installment(s)`,
+      `📅 [InstallmentPaymentReminder] 3-day-family scan: ${installments.length} installment(s) in range`,
     );
 
     for (const inst of installments) {
       try {
+        const contract = inst.financingContract;
+        const customer = contract.user;
+        const settings = settingsFor(settingsMap, customer?.companyId);
+
+        const daysUntil = Math.round(
+          (inst.dueDate.getTime() - rangeStart.getTime()) / ONE_DAY_MS,
+        );
+
+        if (
+          !settings.reminder3DayEnabled ||
+          daysUntil !== REMINDER_OFFSET_DAYS[settings.reminder3DayOffset]
+        ) {
+          continue;
+        }
+
         const { percentagePaid } = await calculateProgress(
           inst.financingContractId,
         );
-        const contract = inst.financingContract;
-        const customer = contract.user;
 
         const payload: Reminder3DayPayload = {
           customerEmail: customer?.email ?? "",
@@ -160,20 +212,12 @@ export class PaymentReminderWorker {
           productName: contract.product.name,
           variantName: contract.variant?.sku,
           percentagePaid,
+          daysUntil,
           payment_url: process.env.FRONTEND_URL,
           dashboard_url: process.env.FRONTEND_URL,
         };
 
-        const alreadySent = await ensureReminderSent(
-          inst.installmentId,
-          "3day",
-        );
-
-        if (!alreadySent) {
-          console.log(
-            `⏭️ [Idempotency] 3-day reminder already sent for installment ${inst.installmentId}`,
-          );
-        }
+        if (!(await ensureReminderSent(inst.installmentId, "3day"))) continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_REMINDER_3DAY, payload);
       } catch (err: any) {
@@ -185,19 +229,31 @@ export class PaymentReminderWorker {
     }
   }
 
-  private static async process1DayReminders(): Promise<void> {
-    const { start, end } = dayWindow(+1);
+  private static async process1DayReminders(
+    settingsMap: SettingsMap,
+  ): Promise<void> {
+    const { start: rangeStart } = dayWindow(0);
+    const rangeEnd = new Date(
+      rangeStart.getTime() + (MAX_REMINDER_OFFSET_DAYS + 1) * ONE_DAY_MS,
+    );
 
     const installments = await prisma.installment.findMany({
       where: {
-        dueDate: { gte: start, lt: end },
+        dueDate: { gte: rangeStart, lt: rangeEnd },
         status: { in: [InstallmentStatus.PENDING, InstallmentStatus.DUE] },
         financingContract: { status: FinancingStatus.ACTIVE },
       },
       include: {
         financingContract: {
           include: {
-            user: { select: { userId: true, email: true, name: true } },
+            user: {
+              select: {
+                userId: true,
+                email: true,
+                name: true,
+                companyId: true,
+              },
+            },
             product: { select: { name: true } },
             variant: { select: { sku: true } },
           },
@@ -206,16 +262,29 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `📅 [InstallmentPaymentReminder] 1-day reminders: ${installments.length} installment(s)`,
+      `📅 [InstallmentPaymentReminder] 1-day-family scan: ${installments.length} installment(s) in range`,
     );
 
     for (const inst of installments) {
       try {
+        const contract = inst.financingContract;
+        const customer = contract.user;
+        const settings = settingsFor(settingsMap, customer?.companyId);
+
+        const daysUntil = Math.round(
+          (inst.dueDate.getTime() - rangeStart.getTime()) / ONE_DAY_MS,
+        );
+
+        if (
+          !settings.reminder1DayEnabled ||
+          daysUntil !== REMINDER_OFFSET_DAYS[settings.reminder1DayOffset]
+        ) {
+          continue;
+        }
+
         const { percentagePaid } = await calculateProgress(
           inst.financingContractId,
         );
-        const contract = inst.financingContract;
-        const customer = contract.user;
 
         const payload: Reminder1DayPayload = {
           customerEmail: customer?.email ?? "",
@@ -228,20 +297,12 @@ export class PaymentReminderWorker {
           productName: contract.product.name,
           variantName: contract.variant?.sku,
           percentagePaid,
+          daysUntil,
           payment_url: process.env.FRONTEND_URL,
           dashboard_url: process.env.FRONTEND_URL,
         };
 
-        const alreadySent = await ensureReminderSent(
-          inst.installmentId,
-          "1day",
-        );
-
-        if (!alreadySent) {
-          console.log(
-            `⏭️ [Idempotency] 1-day reminder already sent for installment ${inst.installmentId}`,
-          );
-        }
+        if (!(await ensureReminderSent(inst.installmentId, "1day"))) continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_REMINDER_1DAY, payload);
       } catch (err: any) {
@@ -253,7 +314,9 @@ export class PaymentReminderWorker {
     }
   }
 
-  private static async processDueTodayReminders(now: Date): Promise<void> {
+  private static async processDueTodayReminders(
+    settingsMap: SettingsMap,
+  ): Promise<void> {
     const { start, end } = dayWindow(0);
 
     const installments = await prisma.installment.findMany({
@@ -265,7 +328,14 @@ export class PaymentReminderWorker {
       include: {
         financingContract: {
           include: {
-            user: { select: { userId: true, email: true, name: true } },
+            user: {
+              select: {
+                userId: true,
+                email: true,
+                name: true,
+                companyId: true,
+              },
+            },
             product: { select: { name: true } },
             variant: { select: { sku: true } },
           },
@@ -279,11 +349,15 @@ export class PaymentReminderWorker {
 
     for (const inst of installments) {
       try {
+        const contract = inst.financingContract;
+        const customer = contract.user;
+        const settings = settingsFor(settingsMap, customer?.companyId);
+
+        if (!settings.reminderDueTodayEnabled) continue;
+
         const { percentagePaid } = await calculateProgress(
           inst.financingContractId,
         );
-        const contract = inst.financingContract;
-        const customer = contract.user;
 
         const payload: DueTodayPayload = {
           customerEmail: customer?.email ?? "",
@@ -300,16 +374,8 @@ export class PaymentReminderWorker {
           dashboard_url: process.env.FRONTEND_URL,
         };
 
-        const alreadySent = await ensureReminderSent(
-          inst.installmentId,
-          "due-today",
-        );
-
-        if (!alreadySent) {
-          console.log(
-            `⏭️ [Idempotency] Due-today reminder already sent for installment ${inst.installmentId}`,
-          );
-        }
+        if (!(await ensureReminderSent(inst.installmentId, "due-today")))
+          continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_DUE_TODAY, payload);
       } catch (err: any) {
@@ -321,7 +387,9 @@ export class PaymentReminderWorker {
     }
   }
 
-  private static async processRecurringReminders(): Promise<void> {
+  private static async processRecurringReminders(
+    settingsMap: SettingsMap,
+  ): Promise<void> {
     const now = new Date();
     const todayStart = new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
@@ -358,6 +426,7 @@ export class PaymentReminderWorker {
                 userId: true,
                 email: true,
                 name: true,
+                companyId: true,
               },
             },
             product: { select: { name: true } },
@@ -373,9 +442,15 @@ export class PaymentReminderWorker {
 
     for (const inst of installments) {
       try {
+        const contract = inst.financingContract;
+        const customer = contract?.user;
+        const settings = settingsFor(settingsMap, customer?.companyId);
+
+        if (!settings.reminderRecurringOverdueEnabled) continue;
+
         const dueDate = new Date(inst.dueDate);
         const daysOverdue = Math.floor(
-          (todayStart.getTime() - dueDate.getTime()) / (24 * 60 * 60 * 1000),
+          (todayStart.getTime() - dueDate.getTime()) / ONE_DAY_MS,
         );
 
         if (daysOverdue < 1) continue;
@@ -383,8 +458,6 @@ export class PaymentReminderWorker {
         const { percentagePaid } = await calculateProgress(
           inst.financingContractId,
         );
-        const contract = inst.financingContract;
-        const customer = contract?.user;
 
         const payload: OverdueRecurringPayload = {
           customerEmail: customer?.email ?? "",
@@ -402,16 +475,13 @@ export class PaymentReminderWorker {
           dashboard_url: process.env.FRONTEND_URL,
         };
 
-        const alreadySent = await ensureReminderSent(
-          inst.installmentId,
-          `recurring-${daysOverdue}`,
-        );
-
-        if (!alreadySent) {
-          console.log(
-            `⏭️ [Idempotency] Recurring overdue reminder already sent for installment ${inst.installmentId} (day ${daysOverdue})`,
-          );
-        }
+        if (
+          !(await ensureReminderSent(
+            inst.installmentId,
+            `recurring-${daysOverdue}`,
+          ))
+        )
+          continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_RECURRING, payload);
       } catch (err: any) {
@@ -423,12 +493,20 @@ export class PaymentReminderWorker {
     }
   }
 
-  private static async process3DayOverdue(now: Date): Promise<void> {
-    const { start, end } = dayWindow(-3);
+  // Overdue-escalation family (3-day→marketer, 7-day→marketer+admin) share a
+  // widened [today-MAX, today] query window for the same reason as the
+  // before-due family above.
+  private static async process3DayOverdue(
+    settingsMap: SettingsMap,
+  ): Promise<void> {
+    const { start: todayStart, end: rangeEnd } = dayWindow(0);
+    const rangeStart = new Date(
+      todayStart.getTime() - MAX_REMINDER_OFFSET_DAYS * ONE_DAY_MS,
+    );
 
     const installments = await prisma.installment.findMany({
       where: {
-        dueDate: { gte: start, lt: end },
+        dueDate: { gte: rangeStart, lt: rangeEnd },
         status: { in: [InstallmentStatus.DUE, InstallmentStatus.OVERDUE] },
         financingContract: { status: FinancingStatus.ACTIVE },
       },
@@ -440,6 +518,7 @@ export class PaymentReminderWorker {
                 userId: true,
                 email: true,
                 name: true,
+                companyId: true,
                 referredByMarketerId: true,
               },
             },
@@ -451,13 +530,25 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `🚨 [InstallmentPaymentReminder] 3-day overdue: ${installments.length} installment(s)`,
+      `🚨 [InstallmentPaymentReminder] 3-day-overdue-family scan: ${installments.length} installment(s) in range`,
     );
 
     for (const inst of installments) {
       try {
         const contract = inst.financingContract;
         const customer = contract.user;
+        const settings = settingsFor(settingsMap, customer?.companyId);
+
+        const daysOverdue = Math.floor(
+          (todayStart.getTime() - inst.dueDate.getTime()) / ONE_DAY_MS,
+        );
+
+        if (
+          !settings.reminderOverdue3DayEnabled ||
+          daysOverdue !== REMINDER_OFFSET_DAYS[settings.reminderOverdue3DayOffset]
+        ) {
+          continue;
+        }
 
         if (!customer?.referredByMarketerId) {
           console.warn(
@@ -490,6 +581,7 @@ export class PaymentReminderWorker {
           productName: contract.product.name,
           variantName: contract.variant?.sku,
           percentagePaid,
+          daysOverdue,
           payment_url: process.env.FRONTEND_URL,
           // Marketer fields — fall back gracefully if no marketer
           marketerEmail: marketer?.email ?? "",
@@ -497,16 +589,8 @@ export class PaymentReminderWorker {
           marketerId: marketer?.userId ?? "",
         };
 
-        const alreadySent = await ensureReminderSent(
-          inst.installmentId,
-          "overdue-3day",
-        );
-
-        if (!alreadySent) {
-          console.log(
-            `⏭️ [Idempotency] 3-day overdue reminder already sent for installment ${inst.installmentId}`,
-          );
-        }
+        if (!(await ensureReminderSent(inst.installmentId, "overdue-3day")))
+          continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, payload);
       } catch (err: any) {
@@ -518,12 +602,17 @@ export class PaymentReminderWorker {
     }
   }
 
-  private static async process7DayOverdue(now: Date): Promise<void> {
-    const { start, end } = dayWindow(-7);
+  private static async process7DayOverdue(
+    settingsMap: SettingsMap,
+  ): Promise<void> {
+    const { start: todayStart, end: rangeEnd } = dayWindow(0);
+    const rangeStart = new Date(
+      todayStart.getTime() - MAX_REMINDER_OFFSET_DAYS * ONE_DAY_MS,
+    );
 
     const installments = await prisma.installment.findMany({
       where: {
-        dueDate: { gte: start, lt: end },
+        dueDate: { gte: rangeStart, lt: rangeEnd },
         status: { in: [InstallmentStatus.DUE, InstallmentStatus.OVERDUE] },
         financingContract: { status: FinancingStatus.ACTIVE },
       },
@@ -535,6 +624,7 @@ export class PaymentReminderWorker {
                 userId: true,
                 email: true,
                 name: true,
+                companyId: true,
                 referredByMarketerId: true,
               },
             },
@@ -546,13 +636,25 @@ export class PaymentReminderWorker {
     });
 
     console.log(
-      `🚨 [InstallmentPaymentReminder] 7-day overdue: ${installments.length} installment(s)`,
+      `🚨 [InstallmentPaymentReminder] 7-day-overdue-family scan: ${installments.length} installment(s) in range`,
     );
 
     for (const inst of installments) {
       try {
         const contract = inst.financingContract;
         const customer = contract.user;
+        const settings = settingsFor(settingsMap, customer?.companyId);
+
+        const daysOverdue = Math.floor(
+          (todayStart.getTime() - inst.dueDate.getTime()) / ONE_DAY_MS,
+        );
+
+        if (
+          !settings.reminderOverdue7DayEnabled ||
+          daysOverdue !== REMINDER_OFFSET_DAYS[settings.reminderOverdue7DayOffset]
+        ) {
+          continue;
+        }
 
         const marketer = customer?.referredByMarketerId
           ? await prisma.user.findUnique({
@@ -615,6 +717,7 @@ export class PaymentReminderWorker {
           productName: contract.product.name,
           variantName: contract.variant?.sku,
           percentagePaid,
+          daysOverdue,
           payment_url: process.env.FRONTEND_URL,
           marketerEmail: marketer?.email ?? "",
           marketerName: marketer?.name ?? "N/A",
@@ -624,16 +727,8 @@ export class PaymentReminderWorker {
           adminId: admin.userId,
         };
 
-        const alreadySent = await ensureReminderSent(
-          inst.installmentId,
-          "overdue-7day",
-        );
-
-        if (!alreadySent) {
-          console.log(
-            `⏭️ [Idempotency] 7-day overdue reminder already sent for installment ${inst.installmentId}`,
-          );
-        }
+        if (!(await ensureReminderSent(inst.installmentId, "overdue-7day")))
+          continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, payload);
       } catch (err: any) {

@@ -177,14 +177,14 @@
         </div>
         <h1 class="title">Final Payment Reminder</h1>
         <p class="subtitle">
-          Hi {{customerName}}, your installment is due <strong>tomorrow</strong>.
+          Hi {{customerName}}, your installment is due <strong>{{dueLabel}}</strong>.
           This is your final reminder before the due date.
         </p>
       </div>
 
       <div class="content">
         <div class="amount-badge">
-          <div class="amount-label">Payment Required Tomorrow</div>
+          <div class="amount-label">Payment Required {{dueLabelTitle}}</div>
           <div class="amount-value">{{amount}}</div>
         </div>
 

@@ -213,6 +213,41 @@ enum SettlementAuditActor {
   USER
 }
 
+// Fixed set of selectable offsets for CompanyReminderSettings — deliberately
+// not a free integer range. See DOMAIN_MODEL.md "Reminders & Notifications".
+enum ReminderOffsetOption {
+  TWO_DAYS
+  THREE_DAYS
+  SEVEN_DAYS
+}
+
+// Per-company override of the installment reminder cadence — see
+// DOMAIN_MODEL.md "Reminders & Notifications". Field names keep the
+// "3Day"/"1Day"/"Overdue3Day"/"Overdue7Day" suffixes matching the
+// DomainEvent/template names they control (INSTALLMENT_REMINDER_3DAY, etc.,
+// which are NOT renamed) even though reminder1DayOffset now defaults to
+// TWO_DAYS, not one day — a deliberate trade-off, not a bug.
+model CompanyReminderSettings {
+  id         BigInt   @id @default(autoincrement())
+  settingsId String   @unique @default(uuid())
+  companyId  String   @unique
+  company    Company  @relation(fields: [companyId], references: [companyId], onDelete: Cascade)
+
+  reminder3DayEnabled             Boolean              @default(true)
+  reminder3DayOffset              ReminderOffsetOption @default(THREE_DAYS)
+  reminder1DayEnabled             Boolean              @default(true)
+  reminder1DayOffset              ReminderOffsetOption @default(TWO_DAYS)
+  reminderDueTodayEnabled         Boolean              @default(true)
+  reminderRecurringOverdueEnabled Boolean              @default(true)
+  reminderOverdue3DayEnabled      Boolean              @default(true)
+  reminderOverdue3DayOffset       ReminderOffsetOption @default(THREE_DAYS)
+  reminderOverdue7DayEnabled      Boolean              @default(true)
+  reminderOverdue7DayOffset       ReminderOffsetOption @default(SEVEN_DAYS)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Company {
   id               BigInt   @id @default(autoincrement())
   companyId        String   @unique @default(uuid())
@@ -232,6 +267,7 @@ model Company {
   onboardingSessions       OnboardingSession[]
   bankAccounts             CompanyBankAccount[]
   settlementRequests       MerchantSettlementRequest[]
+  reminderSettings         CompanyReminderSettings?
 }
 
 model User {

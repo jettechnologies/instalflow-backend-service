@@ -161,7 +161,7 @@ onEvent(DomainEvent.INSTALLMENT_REMINDER_3DAY, async (payload) => {
     to: payload.customerEmail,
     channel: NotificationChannel.EMAIL,
     template: EmailTemplate.INSTALLMENT_REMINDER_3DAY,
-    subject: `⏰ Payment Reminder: ₦ due in 3 days`,
+    subject: `⏰ Payment Reminder: ${payload.amount} due in ${payload.daysUntil} day${payload.daysUntil === 1 ? "" : "s"}`,
     context: {
       customerName: payload.customerName,
       productName: payload.productName,
@@ -170,6 +170,7 @@ onEvent(DomainEvent.INSTALLMENT_REMINDER_3DAY, async (payload) => {
       dueDate: payload.dueDate,
       amount: payload.amount,
       percentagePaid: payload.percentagePaid,
+      daysUntil: payload.daysUntil,
       payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
       dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
     },
@@ -238,7 +239,10 @@ onEvent(DomainEvent.INSTALLMENT_REMINDER_1DAY, async (payload) => {
     to: payload.customerEmail,
     channel: NotificationChannel.EMAIL,
     template: EmailTemplate.INSTALLMENT_REMINDER_1DAY,
-    subject: `🔔 Final Reminder: Payment Due Tomorrow`,
+    subject:
+      payload.daysUntil === 1
+        ? `🔔 Final Reminder: Payment Due Tomorrow`
+        : `🔔 Reminder: Payment due in ${payload.daysUntil} days`,
     context: {
       customerName: payload.customerName,
       productName: payload.productName,
@@ -247,6 +251,7 @@ onEvent(DomainEvent.INSTALLMENT_REMINDER_1DAY, async (payload) => {
       dueDate: payload.dueDate,
       amount: payload.amount,
       percentagePaid: payload.percentagePaid,
+      daysUntil: payload.daysUntil,
       payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
       dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
     },
@@ -327,6 +332,7 @@ onEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, async (payload) => {
       dueDate: payload.dueDate,
       amount: payload.amount,
       percentagePaid: payload.percentagePaid,
+      daysOverdue: payload.daysOverdue,
       payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
     },
   });
@@ -335,7 +341,7 @@ onEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, async (payload) => {
     to: payload.marketerEmail,
     channel: NotificationChannel.EMAIL,
     template: EmailTemplate.INSTALLMENT_OVERDUE_3DAY_MARKETER,
-    subject: `⚠️ Customer Payment Overdue (3 Days) — Action Needed`,
+    subject: `⚠️ Customer Payment Overdue (${payload.daysOverdue} Day${payload.daysOverdue === 1 ? "" : "s"}) — Action Needed`,
     context: {
       marketerName: payload.marketerName,
       customerName: payload.customerName,
@@ -345,6 +351,7 @@ onEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, async (payload) => {
       dueDate: payload.dueDate,
       amount: payload.amount,
       percentagePaid: payload.percentagePaid,
+      daysOverdue: payload.daysOverdue,
     },
   });
 
@@ -383,6 +390,7 @@ onEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, async (payload) => {
       dueDate: payload.dueDate,
       amount: payload.amount,
       percentagePaid: payload.percentagePaid,
+      daysOverdue: payload.daysOverdue,
       payment_url: payload.payment_url ?? process.env.FRONTEND_URL,
     },
   });
@@ -391,7 +399,7 @@ onEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, async (payload) => {
     to: payload.adminEmail,
     channel: NotificationChannel.EMAIL,
     template: EmailTemplate.INSTALLMENT_OVERDUE_7DAY_ADMIN,
-    subject: `🚨 Escalation: 7-Day Overdue Installment — ${payload.customerName}`,
+    subject: `🚨 Escalation: ${payload.daysOverdue}-Day Overdue Installment — ${payload.customerName}`,
     context: {
       adminName: payload.adminName,
       marketerName: payload.marketerName,
@@ -402,6 +410,7 @@ onEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, async (payload) => {
       expectedPaymentDate: payload.expectedPaymentDate,
       amount: payload.amount,
       percentagePaid: payload.percentagePaid,
+      daysOverdue: payload.daysOverdue,
       dashboard_url: payload.dashboard_url ?? process.env.FRONTEND_URL,
     },
   });

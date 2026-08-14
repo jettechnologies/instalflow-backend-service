@@ -176,9 +176,17 @@ export interface SubscriptionGracePeriodPayload extends SubscriptionRenewalBase 
   gracePeriodDays: number;
 }
 
-export interface Reminder3DayPayload extends InstallmentReminderBase {}
+// daysUntil/daysOverdue reflect the company's *effective* configured offset
+// (CompanyReminderSettings, default if uncustomized) — not a literal "3"/"1"/
+// "7" — since these are now company-configurable. See DOMAIN_MODEL.md
+// "Reminders & Notifications".
+export interface Reminder3DayPayload extends InstallmentReminderBase {
+  daysUntil: number;
+}
 
-export interface Reminder1DayPayload extends InstallmentReminderBase {}
+export interface Reminder1DayPayload extends InstallmentReminderBase {
+  daysUntil: number;
+}
 
 export interface DueTodayPayload extends InstallmentReminderBase {}
 
@@ -190,12 +198,14 @@ export interface Overdue3DayPayload extends InstallmentReminderBase {
   marketerEmail: string;
   marketerName: string;
   marketerId: string;
+  daysOverdue: number;
 }
 
 export interface Overdue7DayPayload extends InstallmentReminderBase {
   marketerEmail: string;
   marketerName: string;
   marketerId: string;
+  daysOverdue: number;
 
   adminEmail: string;
   adminName: string;

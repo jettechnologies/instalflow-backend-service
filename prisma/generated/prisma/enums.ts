@@ -283,3 +283,12 @@ export const SettlementAuditActor = {
 } as const
 
 export type SettlementAuditActor = (typeof SettlementAuditActor)[keyof typeof SettlementAuditActor]
+
+
+export const ReminderOffsetOption = {
+  TWO_DAYS: 'TWO_DAYS',
+  THREE_DAYS: 'THREE_DAYS',
+  SEVEN_DAYS: 'SEVEN_DAYS'
+} as const
+
+export type ReminderOffsetOption = (typeof ReminderOffsetOption)[keyof typeof ReminderOffsetOption]

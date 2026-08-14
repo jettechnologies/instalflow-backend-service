@@ -249,6 +249,7 @@ export type CompanyWhereInput = {
   onboardingSessions?: Prisma.OnboardingSessionListRelationFilter
   bankAccounts?: Prisma.CompanyBankAccountListRelationFilter
   settlementRequests?: Prisma.MerchantSettlementRequestListRelationFilter
+  reminderSettings?: Prisma.XOR<Prisma.CompanyReminderSettingsNullableScalarRelationFilter, Prisma.CompanyReminderSettingsWhereInput> | null
 }
 
 export type CompanyOrderByWithRelationInput = {
@@ -269,6 +270,7 @@ export type CompanyOrderByWithRelationInput = {
   onboardingSessions?: Prisma.OnboardingSessionOrderByRelationAggregateInput
   bankAccounts?: Prisma.CompanyBankAccountOrderByRelationAggregateInput
   settlementRequests?: Prisma.MerchantSettlementRequestOrderByRelationAggregateInput
+  reminderSettings?: Prisma.CompanyReminderSettingsOrderByWithRelationInput
 }
 
 export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -292,6 +294,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   onboardingSessions?: Prisma.OnboardingSessionListRelationFilter
   bankAccounts?: Prisma.CompanyBankAccountListRelationFilter
   settlementRequests?: Prisma.MerchantSettlementRequestListRelationFilter
+  reminderSettings?: Prisma.XOR<Prisma.CompanyReminderSettingsNullableScalarRelationFilter, Prisma.CompanyReminderSettingsWhereInput> | null
 }, "id" | "companyId" | "publicSignupCode">
 
 export type CompanyOrderByWithAggregationInput = {
@@ -342,6 +345,7 @@ export type CompanyCreateInput = {
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateInput = {
@@ -362,6 +366,7 @@ export type CompanyUncheckedCreateInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUpdateInput = {
@@ -382,6 +387,7 @@ export type CompanyUpdateInput = {
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateInput = {
@@ -402,6 +408,7 @@ export type CompanyUncheckedUpdateInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateManyInput = {
@@ -435,6 +442,11 @@ export type CompanyUncheckedUpdateManyInput = {
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CompanyScalarRelationFilter = {
+  is?: Prisma.CompanyWhereInput
+  isNot?: Prisma.CompanyWhereInput
 }
 
 export type CompanyCountOrderByAggregateInput = {
@@ -483,29 +495,22 @@ export type CompanyNullableScalarRelationFilter = {
   isNot?: Prisma.CompanyWhereInput | null
 }
 
-export type CompanyScalarRelationFilter = {
-  is?: Prisma.CompanyWhereInput
-  isNot?: Prisma.CompanyWhereInput
+export type CompanyCreateNestedOneWithoutReminderSettingsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutReminderSettingsInput, Prisma.CompanyUncheckedCreateWithoutReminderSettingsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutReminderSettingsInput
+  connect?: Prisma.CompanyWhereUniqueInput
 }
 
-export type BigIntFieldUpdateOperationsInput = {
-  set?: bigint | number
-  increment?: bigint | number
-  decrement?: bigint | number
-  multiply?: bigint | number
-  divide?: bigint | number
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type CompanyUpdateOneRequiredWithoutReminderSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutReminderSettingsInput, Prisma.CompanyUncheckedCreateWithoutReminderSettingsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutReminderSettingsInput
+  upsert?: Prisma.CompanyUpsertWithoutReminderSettingsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutReminderSettingsInput, Prisma.CompanyUpdateWithoutReminderSettingsInput>, Prisma.CompanyUncheckedUpdateWithoutReminderSettingsInput>
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type CompanyCreateNestedOneWithoutUsersInput = {
@@ -642,6 +647,102 @@ export type CompanyUpdateOneRequiredWithoutApprovalRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutApprovalRequestsInput, Prisma.CompanyUpdateWithoutApprovalRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutApprovalRequestsInput>
 }
 
+export type CompanyCreateWithoutReminderSettingsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutReminderSettingsInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutReminderSettingsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutReminderSettingsInput, Prisma.CompanyUncheckedCreateWithoutReminderSettingsInput>
+}
+
+export type CompanyUpsertWithoutReminderSettingsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutReminderSettingsInput, Prisma.CompanyUncheckedUpdateWithoutReminderSettingsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutReminderSettingsInput, Prisma.CompanyUncheckedCreateWithoutReminderSettingsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutReminderSettingsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutReminderSettingsInput, Prisma.CompanyUncheckedUpdateWithoutReminderSettingsInput>
+}
+
+export type CompanyUpdateWithoutReminderSettingsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutReminderSettingsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
 export type CompanyCreateWithoutUsersInput = {
   id?: bigint | number
   companyId?: string
@@ -659,6 +760,7 @@ export type CompanyCreateWithoutUsersInput = {
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -678,6 +780,7 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -713,6 +816,7 @@ export type CompanyUpdateWithoutUsersInput = {
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -732,6 +836,7 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutProductsInput = {
@@ -751,6 +856,7 @@ export type CompanyCreateWithoutProductsInput = {
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutProductsInput = {
@@ -770,6 +876,7 @@ export type CompanyUncheckedCreateWithoutProductsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutProductsInput = {
@@ -805,6 +912,7 @@ export type CompanyUpdateWithoutProductsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutProductsInput = {
@@ -824,6 +932,7 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutOnboardingSessionsInput = {
@@ -843,6 +952,7 @@ export type CompanyCreateWithoutOnboardingSessionsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutOnboardingSessionsInput = {
@@ -862,6 +972,7 @@ export type CompanyUncheckedCreateWithoutOnboardingSessionsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutOnboardingSessionsInput = {
@@ -897,6 +1008,7 @@ export type CompanyUpdateWithoutOnboardingSessionsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutOnboardingSessionsInput = {
@@ -916,6 +1028,7 @@ export type CompanyUncheckedUpdateWithoutOnboardingSessionsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
@@ -935,6 +1048,7 @@ export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
@@ -954,6 +1068,7 @@ export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutCommissionPayoutRequestsInput = {
@@ -989,6 +1104,7 @@ export type CompanyUpdateWithoutCommissionPayoutRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
@@ -1008,6 +1124,7 @@ export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutBankAccountsInput = {
@@ -1027,6 +1144,7 @@ export type CompanyCreateWithoutBankAccountsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutBankAccountsInput = {
@@ -1046,6 +1164,7 @@ export type CompanyUncheckedCreateWithoutBankAccountsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutBankAccountsInput = {
@@ -1081,6 +1200,7 @@ export type CompanyUpdateWithoutBankAccountsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutBankAccountsInput = {
@@ -1100,6 +1220,7 @@ export type CompanyUncheckedUpdateWithoutBankAccountsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutSettlementRequestsInput = {
@@ -1119,6 +1240,7 @@ export type CompanyCreateWithoutSettlementRequestsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutSettlementRequestsInput = {
@@ -1138,6 +1260,7 @@ export type CompanyUncheckedCreateWithoutSettlementRequestsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutSettlementRequestsInput = {
@@ -1173,6 +1296,7 @@ export type CompanyUpdateWithoutSettlementRequestsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutSettlementRequestsInput = {
@@ -1192,6 +1316,7 @@ export type CompanyUncheckedUpdateWithoutSettlementRequestsInput = {
   commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutSubscriptionsInput = {
@@ -1211,6 +1336,7 @@ export type CompanyCreateWithoutSubscriptionsInput = {
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
@@ -1230,6 +1356,7 @@ export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutSubscriptionsInput = {
@@ -1265,6 +1392,7 @@ export type CompanyUpdateWithoutSubscriptionsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1284,6 +1412,7 @@ export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutLedgerAccountsInput = {
@@ -1303,6 +1432,7 @@ export type CompanyCreateWithoutLedgerAccountsInput = {
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
@@ -1322,6 +1452,7 @@ export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutLedgerAccountsInput = {
@@ -1357,6 +1488,7 @@ export type CompanyUpdateWithoutLedgerAccountsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
@@ -1376,6 +1508,7 @@ export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutApprovalRequestsInput = {
@@ -1395,6 +1528,7 @@ export type CompanyCreateWithoutApprovalRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutApprovalRequestsInput = {
@@ -1414,6 +1548,7 @@ export type CompanyUncheckedCreateWithoutApprovalRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutApprovalRequestsInput = {
@@ -1449,6 +1584,7 @@ export type CompanyUpdateWithoutApprovalRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
@@ -1468,6 +1604,7 @@ export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
   onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
 
@@ -1591,6 +1728,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   onboardingSessions?: boolean | Prisma.Company$onboardingSessionsArgs<ExtArgs>
   bankAccounts?: boolean | Prisma.Company$bankAccountsArgs<ExtArgs>
   settlementRequests?: boolean | Prisma.Company$settlementRequestsArgs<ExtArgs>
+  reminderSettings?: boolean | Prisma.Company$reminderSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
@@ -1638,6 +1776,7 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   onboardingSessions?: boolean | Prisma.Company$onboardingSessionsArgs<ExtArgs>
   bankAccounts?: boolean | Prisma.Company$bankAccountsArgs<ExtArgs>
   settlementRequests?: boolean | Prisma.Company$settlementRequestsArgs<ExtArgs>
+  reminderSettings?: boolean | Prisma.Company$reminderSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1655,6 +1794,7 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     onboardingSessions: Prisma.$OnboardingSessionPayload<ExtArgs>[]
     bankAccounts: Prisma.$CompanyBankAccountPayload<ExtArgs>[]
     settlementRequests: Prisma.$MerchantSettlementRequestPayload<ExtArgs>[]
+    reminderSettings: Prisma.$CompanyReminderSettingsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -2068,6 +2208,7 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
   onboardingSessions<T extends Prisma.Company$onboardingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$onboardingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OnboardingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bankAccounts<T extends Prisma.Company$bankAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$bankAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyBankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settlementRequests<T extends Prisma.Company$settlementRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$settlementRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MerchantSettlementRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reminderSettings<T extends Prisma.Company$reminderSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$reminderSettingsArgs<ExtArgs>>): Prisma.Prisma__CompanyReminderSettingsClient<runtime.Types.Result.GetResult<Prisma.$CompanyReminderSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2711,6 +2852,25 @@ export type Company$settlementRequestsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.MerchantSettlementRequestScalarFieldEnum | Prisma.MerchantSettlementRequestScalarFieldEnum[]
+}
+
+/**
+ * Company.reminderSettings
+ */
+export type Company$reminderSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompanyReminderSettings
+   */
+  select?: Prisma.CompanyReminderSettingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompanyReminderSettings
+   */
+  omit?: Prisma.CompanyReminderSettingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyReminderSettingsInclude<ExtArgs> | null
+  where?: Prisma.CompanyReminderSettingsWhereInput
 }
 
 /**

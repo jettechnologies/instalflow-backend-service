@@ -161,7 +161,8 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.customerEmail,
 			template: 'installment-3days-reminder',
-			subject: (p) => `⏰ Payment Reminder: ${p.amount} due in 3 days`,
+			subject: (p) =>
+				`⏰ Payment Reminder: ${p.amount} due in ${p.daysUntil} day${p.daysUntil === 1 ? '' : 's'}`,
 			context: (p) => ({
 				customerName: p.customerName,
 				productName: p.productName,
@@ -170,6 +171,8 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dueDate: p.dueDate,
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
+				daysUntil: p.daysUntil,
+				daysUntilLabel: `${p.daysUntil} Day${p.daysUntil === 1 ? '' : 's'}`,
 				payment_url: p.payment_url,
 				dashboard_url: p.dashboard_url,
 			}),
@@ -181,7 +184,10 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.customerEmail,
 			template: 'installment-1day-reminder',
-			subject: (p) => `🔔 Final Reminder: Payment Due Tomorrow`,
+			subject: (p) =>
+				p.daysUntil === 1
+					? `🔔 Final Reminder: Payment Due Tomorrow`
+					: `🔔 Reminder: Payment due in ${p.daysUntil} days`,
 			context: (p) => ({
 				customerName: p.customerName,
 				productName: p.productName,
@@ -190,6 +196,11 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dueDate: p.dueDate,
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
+				daysUntil: p.daysUntil,
+				// Pre-formatted for the two capitalizations used in the template
+				// body — Handlebars has no pluralization/case helpers registered.
+				dueLabel: p.daysUntil === 1 ? 'tomorrow' : `in ${p.daysUntil} days`,
+				dueLabelTitle: p.daysUntil === 1 ? 'Tomorrow' : `In ${p.daysUntil} Days`,
 				payment_url: p.payment_url,
 				dashboard_url: p.dashboard_url,
 			}),
@@ -250,6 +261,8 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dueDate: p.dueDate,
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
+				daysOverdue: p.daysOverdue,
+				daysOverdueLabel: `${p.daysOverdue} Day${p.daysOverdue === 1 ? '' : 's'}`,
 				payment_url: p.payment_url,
 			}),
 		},
@@ -257,7 +270,8 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.marketerEmail,
 			template: 'installment-overdue-3days-marketer',
-			subject: (p) => `⚠️ Customer Payment Overdue (3 Days) — Action Needed`,
+			subject: (p) =>
+				`⚠️ Customer Payment Overdue (${p.daysOverdue} Day${p.daysOverdue === 1 ? '' : 's'}) — Action Needed`,
 			context: (p) => ({
 				marketerName: p.marketerName,
 				customerName: p.customerName,
@@ -267,6 +281,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dueDate: p.dueDate,
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
+				daysOverdue: p.daysOverdue,
 			}),
 		},
 	],
@@ -285,6 +300,8 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				dueDate: p.dueDate,
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
+				daysOverdue: p.daysOverdue,
+				daysOverdueLabel: `${p.daysOverdue} Day${p.daysOverdue === 1 ? '' : 's'}`,
 				payment_url: p.payment_url,
 			}),
 		},
@@ -292,7 +309,8 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 			channels: [NotificationChannel.EMAIL],
 			to: (p) => p.adminEmail,
 			template: 'installment-overdue-7days-admin',
-			subject: (p) => `🚨 Escalation: 7-Day Overdue Installment — ${p.customerName}`,
+			subject: (p) =>
+				`🚨 Escalation: ${p.daysOverdue}-Day Overdue Installment — ${p.customerName}`,
 			context: (p) => ({
 				adminName: p.adminName,
 				marketerName: p.marketerName,
@@ -303,6 +321,7 @@ export const EventRouter: Record<DomainEvent, RoutedNotification[]> = {
 				expectedPaymentDate: p.expectedPaymentDate,
 				amount: p.amount,
 				percentagePaid: p.percentagePaid,
+				daysOverdue: p.daysOverdue,
 				dashboard_url: p.dashboard_url,
 			}),
 		},

@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  CompanyReminderSettings: 'CompanyReminderSettings',
   Company: 'Company',
   User: 'User',
   UserSession: 'UserSession',
@@ -437,10 +438,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "onboardingSession" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "paymentIntent" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "companyBankAccount" | "merchantSettlementRequest" | "merchantSettlementLine" | "merchantSettlementAuditTrail" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
+    modelProps: "companyReminderSettings" | "company" | "user" | "userSession" | "passwordReset" | "session" | "category" | "product" | "productVariant" | "kycApplication" | "onboardingSession" | "kycDocumentAsset" | "kycAuditTrail" | "financingContract" | "installment" | "payment" | "paymentIntent" | "commission" | "commissionAllocation" | "commissionPayoutRequest" | "marketerBankAccount" | "companyBankAccount" | "merchantSettlementRequest" | "merchantSettlementLine" | "merchantSettlementAuditTrail" | "ledgerTransaction" | "referral" | "subscriptionPlan" | "companySubscription" | "ledgerAccount" | "financialTransaction" | "journalEntry" | "webhookEvent" | "onboardingIntent" | "approvalRequest" | "productInstallmentPlan" | "productImage" | "productVariantImage" | "internalNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    CompanyReminderSettings: {
+      payload: Prisma.$CompanyReminderSettingsPayload<ExtArgs>
+      fields: Prisma.CompanyReminderSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompanyReminderSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompanyReminderSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.CompanyReminderSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompanyReminderSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.CompanyReminderSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.CompanyReminderSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.CompanyReminderSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompanyReminderSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.CompanyReminderSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>
+        }
+        update: {
+          args: Prisma.CompanyReminderSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompanyReminderSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompanyReminderSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompanyReminderSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompanyReminderSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyReminderSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.CompanyReminderSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompanyReminderSettings>
+        }
+        groupBy: {
+          args: Prisma.CompanyReminderSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyReminderSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompanyReminderSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyReminderSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
     Company: {
       payload: Prisma.$CompanyPayload<ExtArgs>
       fields: Prisma.CompanyFieldRefs
@@ -3292,6 +3367,27 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const CompanyReminderSettingsScalarFieldEnum = {
+  id: 'id',
+  settingsId: 'settingsId',
+  companyId: 'companyId',
+  reminder3DayEnabled: 'reminder3DayEnabled',
+  reminder3DayOffset: 'reminder3DayOffset',
+  reminder1DayEnabled: 'reminder1DayEnabled',
+  reminder1DayOffset: 'reminder1DayOffset',
+  reminderDueTodayEnabled: 'reminderDueTodayEnabled',
+  reminderRecurringOverdueEnabled: 'reminderRecurringOverdueEnabled',
+  reminderOverdue3DayEnabled: 'reminderOverdue3DayEnabled',
+  reminderOverdue3DayOffset: 'reminderOverdue3DayOffset',
+  reminderOverdue7DayEnabled: 'reminderOverdue7DayEnabled',
+  reminderOverdue7DayOffset: 'reminderOverdue7DayOffset',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanyReminderSettingsScalarFieldEnum = (typeof CompanyReminderSettingsScalarFieldEnum)[keyof typeof CompanyReminderSettingsScalarFieldEnum]
+
+
 export const CompanyScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
@@ -4018,6 +4114,27 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'ReminderOffsetOption'
+ */
+export type EnumReminderOffsetOptionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderOffsetOption'>
+    
+
+
+/**
+ * Reference to a field of type 'ReminderOffsetOption[]'
+ */
+export type ListEnumReminderOffsetOptionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderOffsetOption[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -4042,13 +4159,6 @@ export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Role[]'
  */
 export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -4525,6 +4635,7 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
+  companyReminderSettings?: Prisma.CompanyReminderSettingsOmit
   company?: Prisma.CompanyOmit
   user?: Prisma.UserOmit
   userSession?: Prisma.UserSessionOmit

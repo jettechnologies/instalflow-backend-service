@@ -1,11 +1,13 @@
 import type { Request, Response } from "express";
 import { UserManagementService } from "@/core/services/user-management.service";
+import { ReminderSettingsService } from "@/core/services/reminder-settings.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
 import {
   CreateAdminSchema,
   ToggleStatusSchema,
   HandleApprovalSchema,
 } from "@/shared/schemas/user-management.schema";
+import { UpdateReminderSettingsSchema } from "@/shared/schemas/reminder-settings.schema";
 import { ApprovalStatus } from "@/prisma/client";
 import { BadRequestError } from "@/shared/utils/AppError";
 
@@ -193,5 +195,33 @@ export class CompanyController {
     );
 
     return ApiResponse.success(res, 200, result.message);
+  }
+
+  static async getReminderSettings(req: Request, res: Response) {
+    const companyId = req.user!.companyId!;
+    const data = await ReminderSettingsService.getForCompany(companyId);
+    return ApiResponse.success(
+      res,
+      200,
+      "Reminder settings retrieved successfully",
+      data,
+    );
+  }
+
+  static async updateReminderSettings(req: Request, res: Response) {
+    const companyId = req.user!.companyId!;
+    const payload = UpdateReminderSettingsSchema.parse(req.body);
+
+    const data = await ReminderSettingsService.updateForCompany(
+      companyId,
+      payload,
+    );
+
+    return ApiResponse.success(
+      res,
+      200,
+      "Reminder settings updated successfully",
+      data,
+    );
   }
 }

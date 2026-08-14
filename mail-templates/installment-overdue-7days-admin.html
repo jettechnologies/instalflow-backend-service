@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Escalation: 7-Day Overdue Installment - Instalflow</title>
+    <title>Escalation: {{daysOverdue}}-Day Overdue Installment - Instalflow</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&display=swap");
       @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap");
@@ -226,10 +226,10 @@
             />
           </svg>
         </div>
-        <h1 class="title">7-Day Overdue Escalation</h1>
+        <h1 class="title">{{daysOverdue}}-Day Overdue Escalation</h1>
         <p class="intro">
-          Hi {{adminName}}, an installment payment has been overdue for 7 days
-          and requires your immediate review.
+          Hi {{adminName}}, an installment payment has been overdue for
+          {{daysOverdue}} days and requires your immediate review.
         </p>
       </div>
 
@@ -287,7 +287,7 @@
           This customer was referred by marketer
           <strong style="color: #f9fafb">{{marketerName}}</strong>. Both the
           customer and the marketer have been notified via email and in-app
-          notifications over the past 7 days. The marketer has also been
+          notifications over the past {{daysOverdue}} days. The marketer has also been
           informed that this case has now been escalated to management.
         </div>
 

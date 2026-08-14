@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  CompanyReminderSettings: 'CompanyReminderSettings',
   Company: 'Company',
   User: 'User',
   UserSession: 'UserSession',
@@ -105,6 +106,27 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const CompanyReminderSettingsScalarFieldEnum = {
+  id: 'id',
+  settingsId: 'settingsId',
+  companyId: 'companyId',
+  reminder3DayEnabled: 'reminder3DayEnabled',
+  reminder3DayOffset: 'reminder3DayOffset',
+  reminder1DayEnabled: 'reminder1DayEnabled',
+  reminder1DayOffset: 'reminder1DayOffset',
+  reminderDueTodayEnabled: 'reminderDueTodayEnabled',
+  reminderRecurringOverdueEnabled: 'reminderRecurringOverdueEnabled',
+  reminderOverdue3DayEnabled: 'reminderOverdue3DayEnabled',
+  reminderOverdue3DayOffset: 'reminderOverdue3DayOffset',
+  reminderOverdue7DayEnabled: 'reminderOverdue7DayEnabled',
+  reminderOverdue7DayOffset: 'reminderOverdue7DayOffset',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanyReminderSettingsScalarFieldEnum = (typeof CompanyReminderSettingsScalarFieldEnum)[keyof typeof CompanyReminderSettingsScalarFieldEnum]
 
 
 export const CompanyScalarFieldEnum = {

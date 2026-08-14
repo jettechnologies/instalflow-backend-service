@@ -31,4 +31,8 @@ router.get("/pending-approvals", CompanyController.getPendingApprovals);
 router.get("/approvals", CompanyController.getApprovalsByStatus);
 router.post("/approvals/:requestId", CompanyController.handleApproval);
 
+// Reminder cadence configuration
+router.get("/reminder-settings", CompanyController.getReminderSettings);
+router.patch("/reminder-settings", CompanyController.updateReminderSettings);
+
 export default router;
