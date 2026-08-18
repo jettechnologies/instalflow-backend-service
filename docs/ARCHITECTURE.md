@@ -8,21 +8,54 @@
 
 ## 2. Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Runtime** | Node.js + TypeScript | API server, workers, schedulers |
-| **Framework** | Express.js v5 | HTTP server |
-| **ORM** | Prisma 7 + PostgreSQL (via Neon/pg) | Database access, migrations |
-| **Queue** | BullMQ + Redis | Async job processing |
-| **Payments** | Paystack API | Payment gateways, transfers |
-| **File Storage** | Cloudinary | KYC document storage |
-| **Email** | Brevo + Cloudflare Worker | Transactional email delivery |
-| **Validation** | Zod | Runtime schema validation |
-| **Observability** | OpenTelemetry | Logging, tracing |
-| **Auth** | JWT (Access + Refresh) + bcrypt | Stateless token auth with session revocation |
-| **Docs** | Swagger/OpenAPI | API documentation |
+| Layer             | Technology                          | Purpose                                      |
+| ----------------- | ----------------------------------- | -------------------------------------------- |
+| **Runtime**       | Node.js + TypeScript                | API server, workers, schedulers              |
+| **Framework**     | Express.js v5                       | HTTP server                                  |
+| **ORM**           | Prisma 7 + PostgreSQL (via Neon/pg) | Database access, migrations                  |
+| **Queue**         | BullMQ + Redis                      | Async job processing                         |
+| **Payments**      | Paystack API                        | Payment gateways, transfers                  |
+| **File Storage**  | Cloudinary                          | KYC document storage                         |
+| **Email**         | Brevo + Cloudflare Worker           | Transactional email delivery                 |
+| **Validation**    | Zod                                 | Runtime schema validation                    |
+| **Observability** | OpenTelemetry                       | Logging, tracing                             |
+| **Auth**          | JWT (Access + Refresh) + bcrypt     | Stateless token auth with session revocation |
+| **Docs**          | Swagger/OpenAPI                     | API documentation                            |
 
 ---
+
+### 2.5 Code Quality & Linting
+
+- **Linter**: ESLint v10+ (flat config via `eslint.config.ts`).
+- **Plugin**: `@typescript-eslint` v8.67+ with recommended preset.
+- **Base**: `@eslint/js` recommended rules.
+
+#### Key Active Rules
+
+| Rule                                         | Level | Description                                                                              |
+| -------------------------------------------- | ----- | ---------------------------------------------------------------------------------------- |
+| `@typescript-eslint/no-explicit-any`         | error | `any` types are forbidden.                                                               |
+| `@typescript-eslint/no-unused-vars`          | error | Unused variables are errors; args prefixed with `_` are ignored.                         |
+| `@typescript-eslint/no-var-requires`         | error | `require()` is forbidden in ESM.                                                         |
+| `@typescript-eslint/no-empty-object-type`    | error | `{}` as a type is forbidden; use `object` or explicit interfaces.                        |
+| `@typescript-eslint/consistent-type-imports` | error | Type-only imports must use `import type { ... }`.                                        |
+| `no-console`                                 | warn  | `warn`, `error`, `log`, and `info` are allowed; other console methods trigger a warning. |
+
+#### Disabled / Overridden Rules
+
+- `no-unused-vars` — disabled (replaced by the TypeScript-specific rule above).
+- `@typescript-eslint/explicit-function-return-type` — off (inference is preferred).
+- `@typescript-eslint/explicit-module-boundary-types` — off.
+
+#### Ignored Paths
+
+`node_modules/`, `dist/`, `prisma/**`, `scripts/prisma/**`, `workers/**`, `mail-worker/**`, `.kilo/**`, `**/*.test.ts`
+
+#### Command
+
+```bash
+pnpm run lint   # runs: eslint . --ext .ts,.tsx
+```
 
 ## 3. System Architecture
 
@@ -88,16 +121,16 @@ The backend runs **three separate Node.js processes**:
 
 ### 4.2 Enumerations
 
-| Enum | Values | Purpose |
-|------|--------|---------|
-| `Role` | SUPER_ADMIN, ADMIN, COMPANY, MARKETER, CUSTOMER | RBAC |
-| `FinancingStatus` | PENDING_ACTIVATION, ACTIVE, COMPLETED, DEFAULTED, CANCELLED, REJECTED, RESTRUCTURED, WRITTEN_OFF | Contract lifecycle |
-| `InstallmentStatus` | PENDING, DUE, OVERDUE, DEFAULTED, PAID | Payment tracking |
-| `PaymentStatus` | PENDING, SUCCESS, FAILED | Payment tracking |
-| `CommissionStatus` | ACTIVE, PARTIALLY_RESERVED, RESERVED, PAID | Commission state machine |
-| `CommissionPayoutStatus` | PENDING_ADMIN_APPROVAL, PENDING_COMPANY_APPROVAL, APPROVED, REJECTED, TRANSFER_INITIATED, PAID, TRANSFER_FAILED, TRANSFER_REVERSED | Payout lifecycle |
-| `OnboardingStatus` | PENDING, PAYMENT_INITIALIZED, PAID, COMPLETED, FAILED | Company onboarding |
-| `InternalNotificationStatus` | UNREAD, READ, ARCHIVED | Notification state |
+| Enum                         | Values                                                                                                                             | Purpose                  |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `Role`                       | SUPER_ADMIN, ADMIN, COMPANY, MARKETER, CUSTOMER                                                                                    | RBAC                     |
+| `FinancingStatus`            | PENDING_ACTIVATION, ACTIVE, COMPLETED, DEFAULTED, CANCELLED, REJECTED, RESTRUCTURED, WRITTEN_OFF                                   | Contract lifecycle       |
+| `InstallmentStatus`          | PENDING, DUE, OVERDUE, DEFAULTED, PAID                                                                                             | Payment tracking         |
+| `PaymentStatus`              | PENDING, SUCCESS, FAILED                                                                                                           | Payment tracking         |
+| `CommissionStatus`           | ACTIVE, PARTIALLY_RESERVED, RESERVED, PAID                                                                                         | Commission state machine |
+| `CommissionPayoutStatus`     | PENDING_ADMIN_APPROVAL, PENDING_COMPANY_APPROVAL, APPROVED, REJECTED, TRANSFER_INITIATED, PAID, TRANSFER_FAILED, TRANSFER_REVERSED | Payout lifecycle         |
+| `OnboardingStatus`           | PENDING, PAYMENT_INITIALIZED, PAID, COMPLETED, FAILED                                                                              | Company onboarding       |
+| `InternalNotificationStatus` | UNREAD, READ, ARCHIVED                                                                                                             | Notification state       |
 
 ---
 
@@ -147,6 +180,7 @@ The backend runs **three separate Node.js processes**:
 **Files**: `src/core/services/product.service.ts`, `src/core/services/category.service.ts`
 
 Companies manage product catalogs:
+
 - Split products into categories (each with unique slug)
 - Products support variants (size, color, stock, SKU):
   - Commission rate per product used for marketer earnings calculation
@@ -180,6 +214,7 @@ This is the **core business flow** of the platform:
    - Customer and marketer are notified
 
 **KYC Retention Worker** (daily cron):
+
 - Queries `KycDocumentAsset` where `scheduledDeletionAt <= now()`
 - Permanently purges the physical files from Cloudinary (GDPR-like compliance)
 
@@ -188,11 +223,13 @@ This is the **core business flow** of the platform:
 **Files**: `src/core/services/installment.service.ts`, `src/job-workers/payment.worker.ts`
 
 **Schedule Generation**:
+
 - Divides total financed amount equally across months
 - Remainder cents are pushed to the last installment
 - Due dates are monthly from the first payment date (first payment = +3 days from activation)
 
 **Payment Flow**:
+
 1. Customer triggers `initializeInstallmentPayment()` → calls Paystack `transaction/initialize`
 2. Paystack redirects customer to payment page
 3. On success, Paystack sends `charge.success` webhook
@@ -216,11 +253,13 @@ This is the **core business flow** of the platform:
 **Files**: `src/core/services/commission.service.ts`, `src/job-workers/transfer.worker.ts`
 
 **Commission Accrual**:
+
 - Triggered automatically on every successful payment
 - `amount = installment.amount × (product.commissionRate / 100)`
 - Status: `ACTIVE` initially, transitions to `PARTIALLY_RESERVED` or `RESERVED` as allocations are made
 
 **Requesting a Payout** (`requestPayout()`):
+
 - Marketer submits a payout request
 - System validates sufficient available balance
 - **Greedy FIFO allocation**: oldest commissions are locked first (FIFO order)
@@ -229,10 +268,12 @@ This is the **core business flow** of the platform:
 - Creates `CommissionPayoutRequest` + `CommissionAllocation[]` in a transaction
 
 **Approval Chain** (2-step):
+
 1. **Admin** → `PENDING_COMPANY_APPROVAL`
 2. **Company** → `APPROVED` (if creator is COMPANY, skips step 1)
 
 **Transfer Initiation** (`initiateTransfer()`):
+
 - Only `APPROVED`, `TRANSFER_FAILED`, or `TRANSFER_REVERSED` payouts can be initiated
 - Resolves marketer's primary bank account via Paystack
 - Enqueues `transferQueue` job
@@ -244,20 +285,21 @@ This is the **core business flow** of the platform:
   ```
 
 **Transfer Worker**:
+
 - Creates Paystack transfer recipient (if not exists)
 - Calls Paystack `transfer` API
 - On success → DB records `transferCode`, waits for webhook
 
 **Webhook Handlers** (`handleChargeSuccess`, `handleTransferSuccess`, `handleTransferFailed`, `handleTransferReversed`):
 
-| Webhook Event | Action |
-|---------------|--------|
-| `charge.success` (onboarding) | Queue onboarding worker |
-| `charge.success` (installment) | Queue payment worker |
-| `charge.success` (subscription) | Verify + activate |
-| `transfer.success` | Mark `PAID`, release allocations, ledger: PAYOUTS_IN_TRANSIT → BANK_SETTLED |
-| `transfer.failed` | Mark `TRANSFER_FAILED`, restore allocations/commissions, ledger: PAYOUTS_IN_TRANSIT → COMMISSION_PAYABLE |
-| `transfer.reversed` | Mark `TRANSFER_REVERSED`, restore allocations/commissions, ledger: BANK_SETTLED → PAYOUTS_IN_TRANSIT / COMMISSION_PAYABLE |
+| Webhook Event                   | Action                                                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `charge.success` (onboarding)   | Queue onboarding worker                                                                                                   |
+| `charge.success` (installment)  | Queue payment worker                                                                                                      |
+| `charge.success` (subscription) | Verify + activate                                                                                                         |
+| `transfer.success`              | Mark `PAID`, release allocations, ledger: PAYOUTS_IN_TRANSIT → BANK_SETTLED                                               |
+| `transfer.failed`               | Mark `TRANSFER_FAILED`, restore allocations/commissions, ledger: PAYOUTS_IN_TRANSIT → COMMISSION_PAYABLE                  |
+| `transfer.reversed`             | Mark `TRANSFER_REVERSED`, restore allocations/commissions, ledger: BANK_SETTLED → PAYOUTS_IN_TRANSIT / COMMISSION_PAYABLE |
 
 **Bulk Transfer**: `CommissionService.initiateBulkTransfer()` — validates multiple payouts, enqueues them individually, returns per-item results.
 
@@ -274,6 +316,7 @@ This is the **core business flow** of the platform:
 - Ledger reference is idempotent (upsert on `reference` field)
 
 **Ledger Reconciliation** (daily 02:00):
+
 - Computes canonical balance from journal entries vs stored balance
 - Auto-corrects any drift
 - Caches results in Redis (TTL 25 hours)
@@ -345,11 +388,11 @@ This is the **core business flow** of the platform:
 
 ## 6. Scheduled Jobs (Cron)
 
-| Job | Schedule | Queue | Purpose |
-|-----|----------|-------|---------|
-| **KYC Retention** | Daily 00:00 | `kyc-retention-queue` | Purge expired KYC documents |
-| **Payment Reminders** | Daily 00:00 | `payment-reminder-queue` | Scan and dispatch installment reminders at 3-day, due-today, 3-day overdue, 7-day overdue |
-| **Ledger Reconciliation** | Daily 02:00 | `ledger-reconciliation-queue` | Verify + auto-correct ledger account balances |
+| Job                       | Schedule    | Queue                         | Purpose                                                                                   |
+| ------------------------- | ----------- | ----------------------------- | ----------------------------------------------------------------------------------------- |
+| **KYC Retention**         | Daily 00:00 | `kyc-retention-queue`         | Purge expired KYC documents                                                               |
+| **Payment Reminders**     | Daily 00:00 | `payment-reminder-queue`      | Scan and dispatch installment reminders at 3-day, due-today, 3-day overdue, 7-day overdue |
+| **Ledger Reconciliation** | Daily 02:00 | `ledger-reconciliation-queue` | Verify + auto-correct ledger account balances                                             |
 
 ---
 
@@ -367,6 +410,7 @@ emitEvent()
 ```
 
 Domain events cover:
+
 - User lifecycle (`USER_REGISTERED`, `STAFF_CREATED`)
 - Pricing (`PASSWORD_RESET_REQUESTED`, `PASSWORD_RESET_COMPLETED`, `PASSWORD_CHANGED`)
 - Order flow (`ORDER_CREATED`, `ORDER_CANCELLED`, `ORDER_STATUS_UPDATED`)
@@ -378,18 +422,18 @@ Domain events cover:
 
 ## 8. Middleware Stack
 
-| Middleware | Purpose |
-|------------|---------|
-| `helmet()` | Security headers |
-| `express.json()` / `express.urlencoded()` | Body parsing |
-| `cookie-parser` | Cookie parsing for CSRF |
-| `express-session` (Prisma store) | Session state for CSRF |
-| `sanitizer` | Input sanitization |
-| `csrfMiddleware` | CSRF protection (double-submit) |
-| `requireAuth` | JWT access token + session revocation check |
-| `requireRole([r1, r2])` | RBAC role guard |
-| `rateLimiter` | Request rate limiting |
-| `errorHandler` | Central error formatting with type-safe responses |
+| Middleware                                | Purpose                                           |
+| ----------------------------------------- | ------------------------------------------------- |
+| `helmet()`                                | Security headers                                  |
+| `express.json()` / `express.urlencoded()` | Body parsing                                      |
+| `cookie-parser`                           | Cookie parsing for CSRF                           |
+| `express-session` (Prisma store)          | Session state for CSRF                            |
+| `sanitizer`                               | Input sanitization                                |
+| `csrfMiddleware`                          | CSRF protection (double-submit)                   |
+| `requireAuth`                             | JWT access token + session revocation check       |
+| `requireRole([r1, r2])`                   | RBAC role guard                                   |
+| `rateLimiter`                             | Request rate limiting                             |
+| `errorHandler`                            | Central error formatting with type-safe responses |
 
 ---
 

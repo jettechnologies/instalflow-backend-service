@@ -35,7 +35,6 @@ app.set("trust proxy", 1);
 app.use(
   cors({
     origin: (origin, cb) => {
-      if (!origin) return cb(null, true);
       if (allowedOrigins.includes(origin)) return cb(null, true);
       return cb(new Error("CORS blocked"));
     },

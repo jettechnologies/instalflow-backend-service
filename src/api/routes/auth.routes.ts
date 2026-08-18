@@ -5,6 +5,7 @@ import {
   loginLimiter,
   registerLimiter,
   otpLimiter,
+  refreshLimiter,
 } from "@/api/middlewares/rateLimiter";
 
 const router = Router();
@@ -17,7 +18,7 @@ router.post(
   AuthController.startOnboarding,
 );
 router.post("/login", loginLimiter, AuthController.login);
-router.post("/refresh", AuthController.refresh);
+router.post("/refresh", refreshLimiter, AuthController.refresh);
 router.post("/forgot-password", otpLimiter, AuthController.forgotPassword);
 router.post("/reset-password", otpLimiter, AuthController.resetPassword);
 

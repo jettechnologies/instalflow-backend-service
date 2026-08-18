@@ -318,12 +318,12 @@ export class SubscriptionService {
             {
               accountName: "PAYSTACK_CLEARING",
               accountType: AccountType.ASSET,
-              debit: plan.discountPrice || plan.price,
+              debit: plan.discountPrice ?? plan.price,
             },
             {
               accountName: "PLATFORM_REVENUE",
               accountType: AccountType.REVENUE,
-              credit: plan.discountPrice || plan.price,
+              credit: plan.discountPrice ?? plan.price,
             },
           ],
         },
