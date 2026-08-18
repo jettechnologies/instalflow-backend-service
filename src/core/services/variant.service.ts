@@ -6,8 +6,8 @@ import type {
   UpdateVariantInput,
   UpdateVariantStockInput,
   DeactivateVariantInput,
+  BulkCreateVariantsInput,
 } from "@/shared/schemas/variant.schema";
-import { BulkCreateVariantsInput } from "@/shared/schemas/variant.schema";
 
 export class VariantService {
   static async getVariantsByProduct(productId: string) {

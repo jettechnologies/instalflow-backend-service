@@ -135,7 +135,7 @@ const logger = {
     paystack: {
       chargeSuccess: (
         reference: string,
-        metadataType: string,
+        metadataType?: string,
         meta?: Record<string, unknown>,
       ) => {
         console.log(

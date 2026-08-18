@@ -63,3 +63,10 @@ Thumbs.db
 tmp/
 temp/
 .cache/
+
+# Ignore all Markdown documentation
+*.md
+
+# Allow README files
+!README.md
+!**/README.md

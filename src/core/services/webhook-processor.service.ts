@@ -40,29 +40,29 @@ interface ChargeSuccessPayload {
   };
 }
 
-interface TransferSuccessPayload {
-  reference: string;
-  transfer?: {
-    id?: string;
-    metadata?: Record<string, unknown>;
-  };
-}
+// interface TransferSuccessPayload {
+//   reference: string;
+//   transfer?: {
+//     id?: string;
+//     metadata?: Record<string, unknown>;
+//   };
+// }
 
-interface TransferFailedPayload {
-  reference: string;
-  transfer?: {
-    id?: string;
-    metadata?: Record<string, unknown>;
-  };
-}
+// interface TransferFailedPayload {
+//   reference: string;
+//   transfer?: {
+//     id?: string;
+//     metadata?: Record<string, unknown>;
+//   };
+// }
 
-interface TransferReversedPayload {
-  reference: string;
-  transfer?: {
-    id?: string;
-    metadata?: Record<string, unknown>;
-  };
-}
+// interface TransferReversedPayload {
+//   reference: string;
+//   transfer?: {
+//     id?: string;
+//     metadata?: Record<string, unknown>;
+//   };
+// }
 
 export class WebhookProcessor {
   static async handleChargeSuccess(data: unknown): Promise<void> {
@@ -71,7 +71,7 @@ export class WebhookProcessor {
     const metadataType =
       typeof payload.metadata?.type === "string"
         ? (payload.metadata.type.trim().toLowerCase() as string)
-        : null;
+        : undefined;
 
     logger.info("[webhook] metadata inspection", {
       raw_metadata: payload.metadata,
@@ -339,8 +339,8 @@ export class WebhookProcessor {
 
     const payoutId = reference;
     const failReason =
-      ((payload.failures as unknown as Array<{ reason?: string }>)?.[0]?.reason as string) ??
-      "Transfer failed";
+      ((payload.failures as unknown as Array<{ reason?: string }>)?.[0]
+        ?.reason as string) ?? "Transfer failed";
 
     logger.warn("[webhook] transfer.failed", { payoutId, failReason });
 
@@ -651,10 +651,8 @@ export class WebhookProcessor {
     const maskedAccount =
       settlement.companyBankAccount?.accountNumber
         ?.slice(-4)
-        .padStart(
-          settlement.companyBankAccount.accountNumber.length,
-          "*",
-        ) ?? "****";
+        .padStart(settlement.companyBankAccount.accountNumber.length, "*") ??
+      "****";
 
     emitEvent(DomainEvent.MERCHANT_SETTLEMENT_TRANSFER_SUCCESS, {
       companyId: settlement.companyId,
@@ -681,8 +679,8 @@ export class WebhookProcessor {
       "",
     );
     const failReason =
-      ((payload.failures as unknown as Array<{ reason?: string }>)?.[0]?.reason as string) ??
-      "Transfer failed";
+      ((payload.failures as unknown as Array<{ reason?: string }>)?.[0]
+        ?.reason as string) ?? "Transfer failed";
 
     logger.warn("[webhook] settlement transfer.failed", {
       settlementId,
