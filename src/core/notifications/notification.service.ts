@@ -1,8 +1,6 @@
 // src/core/notifications/notification.service.ts
-import {
-  NotificationPayload,
-  NotificationChannel,
-} from "@/core/notifications/notification.type";
+import type { NotificationPayload } from "@/core/notifications/notification.type";
+import { NotificationChannel } from "@/core/notifications/notification.type";
 import { EmailChannel } from "@/core/channels/email.channel";
 
 export class NotificationService {

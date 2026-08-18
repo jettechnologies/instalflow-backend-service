@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { FinancingService } from "@/core/services/financing.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
 import {
@@ -13,17 +13,13 @@ export class FinancingController {
     next: NextFunction,
   ) {
     try {
-      const adminUserId = (req as any).user?.userId;
-      if (!adminUserId) {
-        throw new Error("Unauthorized");
-      }
-
+      const callerUserId = req.user!.userId;
       const contractId = req.params.id as string;
       const data = RestructureContractSchema.parse(req.body);
 
       const result = await FinancingService.restructureContract(
         contractId,
-        adminUserId,
+        callerUserId,
         data,
       );
 
@@ -44,17 +40,13 @@ export class FinancingController {
     next: NextFunction,
   ) {
     try {
-      const companyUserId = (req as any).user?.userId;
-      if (!companyUserId) {
-        throw new Error("Unauthorized");
-      }
-
+      const callerUserId = req.user!.userId;
       const contractId = req.params.id as string;
       const data = WriteOffContractSchema.parse(req.body);
 
       const result = await FinancingService.writeOffContract(
         contractId,
-        companyUserId,
+        callerUserId,
         data.reason,
       );
 

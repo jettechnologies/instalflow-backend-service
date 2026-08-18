@@ -5,6 +5,7 @@ import {
   DeactivateVariantSchema,
   UpdateVariantSchema,
   UpdateVariantStockSchema,
+  type BulkCreateVariantInput,
 } from "@/shared/schemas/variant.schema";
 import ApiResponse from "@/shared/utils/ApiResponse";
 import {
@@ -134,15 +135,17 @@ export class VariantController {
     const productId = req.params.productId as string;
 
     const payload = BulkCreateVariantsSchema.parse({
-      variants: (body.variants ?? []).map((variant: any) => ({
-        ...variant,
-        price: parseNumber(variant.price),
-        stockQuantity: parseNumber(variant.stockQuantity),
-        color: parseStringArray(variant.color),
-        imageIds: parseNumberArray(variant.imageIds),
-        attributes: parseObject(variant.attributes),
-        isActive: parseBoolean(variant.isActive),
-      })),
+      variants: (body.variants ?? []).map(
+        (variant: BulkCreateVariantInput) => ({
+          ...variant,
+          price: parseNumber(variant.price),
+          stockQuantity: parseNumber(variant.stockQuantity),
+          color: parseStringArray(variant.color),
+          imageIds: parseNumberArray(variant.imageIds),
+          attributes: parseObject(variant.attributes),
+          isActive: parseBoolean(variant.isActive),
+        }),
+      ),
     });
 
     const result = await VariantService.bulkCreateVariants(productId, payload);

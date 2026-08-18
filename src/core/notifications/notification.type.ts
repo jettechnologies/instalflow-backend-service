@@ -9,7 +9,7 @@ export interface NotificationPayload {
   channel: NotificationChannel;
   template: string;
   subject?: string;
-  context: Record<string, any>;
+  context: Record<string, unknown>;
 }
 
 export interface NotificationResponse {

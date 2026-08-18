@@ -1,4 +1,5 @@
-import { BrevoClient, Brevo } from "@getbrevo/brevo";
+import type { Brevo } from "@getbrevo/brevo";
+import { BrevoClient } from "@getbrevo/brevo";
 import handlebars from "handlebars";
 import fs from "fs";
 import path from "path";
@@ -45,7 +46,7 @@ interface SendEmailProps {
   to: string;
   subject: string;
   template: EmailTemplate;
-  context: Record<string, any>;
+  context: Record<string, unknown>;
 }
 
 export class EmailService {
@@ -58,7 +59,10 @@ export class EmailService {
     }
   }
 
-  private static getTemplate(templateName: EmailTemplate, context: any) {
+  private static getTemplate(
+    templateName: EmailTemplate,
+    context: Record<string, unknown>,
+  ) {
     const filePath = path.join(TEMPLATES_DIR, `${templateName}.html`);
 
     if (!fs.existsSync(filePath)) {
@@ -77,20 +81,6 @@ export class EmailService {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
-
-    // const response = await fetch(workerUrl, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "X-Worker-Secret": process.env.EMAIL_WORKER_SECRET || "",
-    //   },
-    //   body: JSON.stringify(props),
-    // });
-
-    // if (!response.ok) {
-    //   const errorText = await response.text();
-    // throw new Error(`Email worker responded with error: ${errorText}`);
-    // }
 
     try {
       const response = await fetch(workerUrl, {
@@ -149,9 +139,15 @@ export class EmailService {
       }
 
       return { success: true };
-    } catch (err: any) {
-      console.error("[EmailService] Delivery failed:", err?.message || err);
-      return { success: false, error: err?.message };
+    } catch (err: unknown) {
+      console.error(
+        "[EmailService] Delivery failed:",
+        err instanceof Error ? err.message : String(err),
+      );
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : undefined,
+      };
     }
   }
 }

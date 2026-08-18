@@ -1,5 +1,6 @@
 import swaggerJsdoc from "swagger-jsdoc";
-import express, { Express, Request, Response, NextFunction } from "express";
+import type { Express, Request, Response } from "express";
+import express from "express";
 import swaggerUiDist from "swagger-ui-dist";
 import path from "path";
 
@@ -37,7 +38,7 @@ export const swaggerSpec = (() => {
       openapi: "3.0.0",
       info: { title: "Instalflow Platform API (partial)", version: "0.0.0" },
       paths: {},
-    } as any;
+    } as swaggerJsdoc.OAS3Definition;
   }
 })();
 
@@ -114,10 +115,10 @@ export function setupSwagger(app: Express): void {
       </html>`);
   });
 
-  console.log(
-    "Swagger Path:",
-    path.join(process.cwd(), "docs/swagger/**/*.yaml"),
-  );
+  // console.log(
+  //   "Swagger Path:",
+  //   path.join(process.cwd(), "docs/swagger/**/*.yaml"),
+  // );
 
   // 4. Static assets — serves css, js, icons from swagger-ui-dist
   app.use("/api-docs", express.static(uiAssetsPath));

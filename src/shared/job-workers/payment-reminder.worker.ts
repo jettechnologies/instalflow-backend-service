@@ -1,10 +1,10 @@
+import type { Installment } from "@/infrastructure/prisma";
 import {
   prisma,
   InstallmentStatus,
   FinancingStatus,
   Role,
   Prisma,
-  Installment,
 } from "@/infrastructure/prisma";
 import { emitEvent } from "@/core/events/emitter";
 import {
@@ -220,10 +220,10 @@ export class PaymentReminderWorker {
         if (!(await ensureReminderSent(inst.installmentId, "3day"))) continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_REMINDER_3DAY, payload);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(
           `❌ [InstallmentPaymentReminder] 3-day reminder failed for installment ${inst.installmentId}:`,
-          err.message,
+          err instanceof Error ? err.message : String(err),
         );
       }
     }
@@ -305,10 +305,10 @@ export class PaymentReminderWorker {
         if (!(await ensureReminderSent(inst.installmentId, "1day"))) continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_REMINDER_1DAY, payload);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(
           `❌ [InstallmentPaymentReminder] 1-day reminder failed for installment ${inst.installmentId}:`,
-          err.message,
+          err instanceof Error ? err.message : String(err),
         );
       }
     }
@@ -378,10 +378,10 @@ export class PaymentReminderWorker {
           continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_DUE_TODAY, payload);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(
           `❌ [InstallmentPaymentReminder] Due-today reminder failed for installment ${inst.installmentId}:`,
-          err.message,
+          err instanceof Error ? err.message : String(err),
         );
       }
     }
@@ -484,10 +484,10 @@ export class PaymentReminderWorker {
           continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_RECURRING, payload);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(
           `❌ [InstallmentPaymentReminder] Recurring overdue failed for installment ${inst.installmentId}:`,
-          err.message,
+          err instanceof Error ? err.message : String(err),
         );
       }
     }
@@ -545,7 +545,8 @@ export class PaymentReminderWorker {
 
         if (
           !settings.reminderOverdue3DayEnabled ||
-          daysOverdue !== REMINDER_OFFSET_DAYS[settings.reminderOverdue3DayOffset]
+          daysOverdue !==
+            REMINDER_OFFSET_DAYS[settings.reminderOverdue3DayOffset]
         ) {
           continue;
         }
@@ -593,10 +594,10 @@ export class PaymentReminderWorker {
           continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_3DAY, payload);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(
           `❌ [InstallmentPaymentReminder] 3-day overdue failed for installment ${inst.installmentId}:`,
-          err.message,
+          err instanceof Error ? err.message : String(err),
         );
       }
     }
@@ -651,7 +652,8 @@ export class PaymentReminderWorker {
 
         if (
           !settings.reminderOverdue7DayEnabled ||
-          daysOverdue !== REMINDER_OFFSET_DAYS[settings.reminderOverdue7DayOffset]
+          daysOverdue !==
+            REMINDER_OFFSET_DAYS[settings.reminderOverdue7DayOffset]
         ) {
           continue;
         }
@@ -731,10 +733,10 @@ export class PaymentReminderWorker {
           continue;
 
         await emitEvent(DomainEvent.INSTALLMENT_OVERDUE_7DAY, payload);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(
           `❌ [InstallmentPaymentReminder] 7-day overdue failed for installment ${inst.installmentId}:`,
-          err.message,
+          err instanceof Error ? err.message : String(err),
         );
       }
     }

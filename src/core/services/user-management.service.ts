@@ -1,12 +1,12 @@
+import type {
+  Prisma} from "@/infrastructure/prisma";
 import {
   prisma,
   ApprovalAction,
   ApprovalStatus,
-  Role,
-  Prisma,
+  Role
 } from "@/infrastructure/prisma";
-import crypto from "crypto";
-import { z } from "zod";
+import type { z } from "zod";
 import { bcryptHash } from "@/shared/utils/password-hash-verify";
 import {
   ConflictError,
@@ -14,18 +14,16 @@ import {
   ForbiddenError,
   BadRequestError,
 } from "@/shared/utils/AppError";
-import {
+import type {
   CreateAdminSchema,
-  ToggleStatusSchema,
-  HandleApprovalSchema,
-} from "@/shared/schemas/user-management.schema";
+  HandleApprovalSchema} from "@/shared/schemas/user-management.schema";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 import { parseISO, format } from "date-fns";
 import { generateTempPassword } from "@/shared/utils/helpers/misc";
-import { CreateApprovalRequestInput } from "@/shared/schemas/customer-management.schema";
+import type { CreateApprovalRequestInput } from "@/shared/schemas/customer-management.schema";
 
 interface CreateApprovalRequest {
   adminId: string;

@@ -3,9 +3,11 @@
 
 import express from "express";
 import cors from "cors";
+import "@/infrastructure/config/validate-env";
 import { configureExpress } from "@/infrastructure/config/express";
 import { setupSwagger } from "@/infrastructure/config/swagger";
 import "@/infrastructure/logger/instruments";
+import logger from "@/infrastructure/logger/logger";
 import "@/core/events/handlers/notification.handler";
 import router from "@/api/routes";
 import webhookRoutes from "@/api/routes/webhook.routes";
@@ -48,10 +50,10 @@ app.use(csrfMiddleware);
 app.use("/api/v1", router);
 
 // Catch all errors propagating out of routes natively
-app.use(errorHandler as any);
+app.use(errorHandler as unknown as express.RequestHandler);
 
 const PORT = Number(process.env.PORT) || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 API Server Live on port ${PORT}`);
+  logger.info(`🚀 API Server Live on port ${PORT}`);
 });

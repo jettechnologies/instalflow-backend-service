@@ -1,6 +1,9 @@
 import { prisma } from "@/infrastructure/prisma";
-import { z } from "zod";
-import { CreateCategorySchema, UpdateCategorySchema } from "@/shared/schemas/category.schema";
+import type { z } from "zod";
+import type {
+  CreateCategorySchema,
+  UpdateCategorySchema,
+} from "@/shared/schemas/category.schema";
 import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
 
 export class CategoryService {
@@ -16,7 +19,9 @@ export class CategoryService {
 
     const existing = await prisma.category.findUnique({ where: { slug } });
     if (existing) {
-      throw new BadRequestError("Category with a similar name/slug already exists");
+      throw new BadRequestError(
+        "Category with a similar name/slug already exists",
+      );
     }
 
     return prisma.category.create({
@@ -42,8 +47,13 @@ export class CategoryService {
     return category;
   }
 
-  static async updateCategory(categoryId: string, data: z.infer<typeof UpdateCategorySchema>) {
-    const category = await prisma.category.findUnique({ where: { categoryId } });
+  static async updateCategory(
+    categoryId: string,
+    data: z.infer<typeof UpdateCategorySchema>,
+  ) {
+    const category = await prisma.category.findUnique({
+      where: { categoryId },
+    });
     if (!category) throw new NotFoundError("Category not found");
 
     let slug = category.slug;
@@ -51,7 +61,9 @@ export class CategoryService {
       slug = this.generateSlug(data.name);
       const existing = await prisma.category.findUnique({ where: { slug } });
       if (existing && existing.categoryId !== categoryId) {
-        throw new BadRequestError("Category with a similar name/slug already exists");
+        throw new BadRequestError(
+          "Category with a similar name/slug already exists",
+        );
       }
     }
 
@@ -73,7 +85,9 @@ export class CategoryService {
     if (!category) throw new NotFoundError("Category not found");
 
     if (category._count.products > 0) {
-      throw new BadRequestError("Cannot delete category containing active products");
+      throw new BadRequestError(
+        "Cannot delete category containing active products",
+      );
     }
 
     return prisma.category.delete({

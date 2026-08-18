@@ -1,5 +1,6 @@
-import { prisma, SubscriptionInterval } from "@/infrastructure/prisma";
-import AppError, {
+import type { SubscriptionInterval } from "@/infrastructure/prisma";
+import { prisma } from "@/infrastructure/prisma";
+import {
   BadRequestError,
   ConflictError,
   NotFoundError,

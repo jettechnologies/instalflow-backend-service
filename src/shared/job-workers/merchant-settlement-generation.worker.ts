@@ -12,7 +12,8 @@ export class MerchantSettlementGenerationWorker {
     );
 
     try {
-      const generated = await MerchantSettlementService.generatePendingSettlements();
+      const generated =
+        await MerchantSettlementService.generatePendingSettlements();
       logger.info(
         `[MerchantSettlementGenerationWorker] Generated ${generated.length} settlement(s)`,
       );
@@ -21,10 +22,13 @@ export class MerchantSettlementGenerationWorker {
       logger.info(
         `[MerchantSettlementGenerationWorker] Queued ${queued.length} transfer(s)`,
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error(
         "[MerchantSettlementGenerationWorker] Fatal error during settlement sweep",
-        { exception: error?.message, stack: error?.stack },
+        {
+          exception: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+        },
       );
     }
   }

@@ -1,9 +1,7 @@
 import {
   prisma,
   Prisma,
-  CommissionStatus,
   Role,
-  AccountType,
   CommissionPayoutStatus,
   CommissionAllocationStatus,
 } from "@/infrastructure/prisma";
@@ -12,7 +10,6 @@ import {
   ForbiddenError,
   NotFoundError,
 } from "@/shared/utils/AppError";
-import { LedgerService } from "@/core/services/ledger.service";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 import { formatCurrency, maskAccountNumber } from "@/shared/utils/helpers/misc";
@@ -90,7 +87,15 @@ export class CommissionService {
       },
     });
 
-    const grouped: Record<string, any> = {};
+    const grouped: Record<
+      string,
+      {
+        customerId: string;
+        customerName: string;
+        customerEmail: string;
+        totalCommission: Prisma.Decimal;
+      }
+    > = {};
 
     for (const item of commissions) {
       const customer = item.payment?.installment?.financingContract?.user;
@@ -100,7 +105,7 @@ export class CommissionService {
       if (!grouped[customer.userId]) {
         grouped[customer.userId] = {
           customerId: customer.userId,
-          customerName: customer.name,
+          customerName: customer.name ?? "",
           customerEmail: customer.email,
           totalCommission: new Prisma.Decimal(0),
         };
@@ -136,7 +141,14 @@ export class CommissionService {
       },
     });
 
-    const grouped: Record<string, any> = {};
+    const grouped: Record<
+      string,
+      {
+        productId: string;
+        productName: string;
+        totalCommission: Prisma.Decimal;
+      }
+    > = {};
 
     for (const item of commissions) {
       const product = item.payment?.installment?.financingContract?.product;
@@ -884,9 +896,15 @@ export class CommissionService {
       try {
         await this.initiateTransfer(id, companyUserId);
         results.push({ payoutId: id, queued: true });
-      } catch (err: any) {
-        logger.error(`[bulk-transfer] unexpected failure for ${id}`, err);
-        results.push({ payoutId: id, queued: false, error: err.message });
+      } catch (err: unknown) {
+        logger.error(`[bulk-transfer] unexpected failure for ${id}`, {
+          error: err instanceof Error ? err.message : String(err),
+        });
+        results.push({
+          payoutId: id,
+          queued: false,
+          error: err instanceof Error ? err.message : String(err),
+        });
       }
     }
 

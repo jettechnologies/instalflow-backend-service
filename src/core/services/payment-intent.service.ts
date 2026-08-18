@@ -1,9 +1,13 @@
-import { prisma, Prisma } from "@/infrastructure/prisma";
-import { PaymentInitStatus, PaymentIntentType } from "@/infrastructure/prisma";
+import {
+  prisma,
+  Prisma,
+  PaymentInitStatus,
+  PaymentIntentType,
+} from "@/infrastructure/prisma";
+import type { RequestContext } from "@/infrastructure/paystack";
 import {
   PaystackHttpClient,
   PaystackErrorCode,
-  RequestContext,
 } from "@/infrastructure/paystack";
 import {
   BadRequestError,
@@ -11,10 +15,9 @@ import {
   NotFoundError,
 } from "@/shared/utils/AppError";
 import { randomUUID } from "crypto";
-import {
-  PaymentInitializationPayload,
-  assertValidInitializationPayload,
-} from "@/shared/types/payment-intent-payload.types";
+import type { PaymentInitializationPayload } from "@/shared/types/payment-intent-payload.types";
+import { assertValidInitializationPayload } from "@/shared/types/payment-intent-payload.types";
+import { isPaystackError } from "@/infrastructure/paystack/PaystackHttpClient";
 
 const INTENT_EXPIRATION_MS = 10 * 60 * 1000;
 
@@ -52,7 +55,7 @@ export class PaymentIntentService {
   ];
 
   static async reserve(params: ReserveIntentParams): Promise<{
-    intent: Prisma.PaymentIntentGetPayload<{}>;
+    intent: Prisma.PaymentIntentGetPayload<boolean>;
     isExisting: boolean;
     message?: string;
   }> {
@@ -67,7 +70,7 @@ export class PaymentIntentService {
     params: ReserveIntentParams,
     allowRetry: boolean,
   ): Promise<{
-    intent: Prisma.PaymentIntentGetPayload<{}>;
+    intent: Prisma.PaymentIntentGetPayload<boolean>;
     isExisting: boolean;
     message?: string;
   }> {
@@ -451,12 +454,17 @@ export class PaymentIntentService {
         reference: providerResponse.reference,
         access_code: providerResponse.access_code,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (markFailedOnError) {
-        await this.markFailed(intentId, error?.message);
+        await this.markFailed(
+          intentId,
+          error instanceof Error ? error.message : String(error),
+        );
       }
-      if (error.code === PaystackErrorCode.TIMEOUT) {
-        throw new BadRequestError("Payment provider timeout, please retry");
+      if (isPaystackError(error)) {
+        if (error.code === PaystackErrorCode.TIMEOUT) {
+          throw new BadRequestError("Payment provider timeout, please retry");
+        }
       }
       throw error;
     }

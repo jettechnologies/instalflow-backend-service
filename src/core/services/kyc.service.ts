@@ -5,15 +5,19 @@ import {
   Role,
   prisma,
 } from "@/infrastructure/prisma";
+import type {
+  OnboardingSession,
+  ProductVariant,
+} from "@/infrastructure/prisma";
 import crypto from "crypto";
-import { z } from "zod";
+import type { z } from "zod";
 import {
   ConflictError,
   UnauthorizedError,
   NotFoundError,
   BadRequestError,
 } from "@/shared/utils/AppError";
-import {
+import type {
   GenerateReferralLinkSchema,
   InviteRegisterSchema,
   DirectRegisterSchema,
@@ -24,7 +28,10 @@ import {
   generateOnboardingToken,
   generateLoginToken,
 } from "@/shared/utils/password-hash-verify";
-import { uploadPdfToCloudinary } from "./cloudinary.service";
+import {
+  uploadPdfToCloudinary,
+  type CloudinaryUploadResult,
+} from "./cloudinary.service";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 import { KycStorageService } from "./kyc-storage.service";
@@ -33,6 +40,15 @@ import fs from "fs";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 import { InstallmentService } from "./installment.service";
+
+export interface UploadedPdfFile {
+  originalname?: string;
+  name?: string;
+  path?: string;
+  tempFilePath?: string;
+  mimetype: string;
+  size: number;
+}
 
 export class KycService {
   /**
@@ -81,7 +97,7 @@ export class KycService {
 
     if (params.variantId) {
       const variant = product.variants.find(
-        (v: any) => v.variantId === params.variantId,
+        (v: ProductVariant) => v.variantId === params.variantId,
       );
       if (!variant || !variant.isActive) {
         throw new BadRequestError("Variant not found or inactive.");
@@ -92,7 +108,7 @@ export class KycService {
     } else {
       const totalStock =
         product.variants.reduce(
-          (sum: number, v: any) => sum + (v.stockQuantity || 0),
+          (sum: number, v: ProductVariant) => sum + (v.stockQuantity || 0),
           0,
         ) || product.stockQuantity;
       if (totalStock <= 0) {
@@ -188,9 +204,7 @@ export class KycService {
       if (!marketer) {
         throw new BadRequestError("Invalid referral code: Marketer not found.");
       }
-
       marketerId = marketer.userId;
-      companyId = marketer.companyId;
     } else {
       const company = await prisma.company.findUnique({
         where: { publicSignupCode: data.companyCode },
@@ -334,7 +348,7 @@ export class KycService {
   static async submitApplication(
     sessionId: string,
     params: z.infer<typeof SubmitApplicationSchema>,
-    file: any,
+    file: UploadedPdfFile,
   ) {
     const session = await prisma.onboardingSession.findUnique({
       where: { sessionId },
@@ -422,11 +436,11 @@ export class KycService {
    * Cloudinary orphan-cleanup path (submitApplication) can wrap it.
    */
   private static async persistApplication(args: {
-    session: any;
+    session: OnboardingSession;
     params: z.infer<typeof SubmitApplicationSchema>;
-    uploadResult: any;
+    uploadResult: CloudinaryUploadResult;
     fileHash: string;
-    file: any;
+    file: UploadedPdfFile;
   }) {
     const { session, params, uploadResult, fileHash, file } = args;
 
@@ -576,7 +590,7 @@ export class KycService {
         customerEmail: session.email,
         customer: {
           email: session.email,
-          referredByMarketerId: session.marketerId,
+          referredByMarketerId: session.marketerId ?? undefined,
         },
       },
     );
@@ -852,7 +866,7 @@ export class KycService {
 
       if (updatedApp.status === "APPROVED") {
         const activationToken = generateLoginToken(
-          (updatedApp as any).userId,
+          (updatedApp as { userId: string }).userId,
           session.email,
         );
 
@@ -1128,9 +1142,9 @@ export class KycService {
 
     if (marketerId && reviewerRole !== Role.MARKETER) {
       where.onboardingSession = {
-        ...(where.onboardingSession as any),
+        ...(where.onboardingSession as Prisma.KycApplicationWhereInput["onboardingSession"]),
         marketerId,
-      };
+      } as Prisma.KycApplicationWhereInput["onboardingSession"];
     }
 
     if (search) {

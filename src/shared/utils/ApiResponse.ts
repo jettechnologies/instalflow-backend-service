@@ -6,7 +6,7 @@ class ApiResponse {
     status = 200,
     message = "Success",
     data?: T,
-    pagination?: Record<string, any>,
+    pagination?: Record<string, unknown>,
   ) {
     const serializedData = data
       ? JSON.parse(
@@ -16,7 +16,7 @@ class ApiResponse {
         )
       : null;
 
-    const response: Record<string, any> = {
+    const response: Record<string, unknown> = {
       status,
       message,
       data: serializedData,

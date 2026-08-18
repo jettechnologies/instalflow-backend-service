@@ -1,4 +1,5 @@
-import { BackoffOptions, Queue, type DefaultJobOptions } from "bullmq";
+import type { BackoffOptions } from "bullmq";
+import { Queue } from "bullmq";
 import { redis } from "@/infrastructure/redis/redis-connect";
 
 type RepeatOptions = {
@@ -10,7 +11,7 @@ type RegisterRepeatableJobParams = {
   queueName: string;
   jobName: string;
   backoff?: BackoffOptions;
-  data: any;
+  data: unknown;
   repeat: RepeatOptions;
 };
 
@@ -47,10 +48,10 @@ export async function registerRepeatableJob({
     console.log(
       `✅ [Scheduler] Registered repeatable job "${jobName}" on queue "${queueName}"`,
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(
       `❌ [Scheduler] Failed to register "${jobName}":`,
-      err.message,
+      err instanceof Error ? err.message : String(err),
     );
   } finally {
     await queue.close();

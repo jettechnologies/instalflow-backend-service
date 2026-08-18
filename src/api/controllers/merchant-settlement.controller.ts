@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
+import { type Role } from "@/infrastructure/prisma";
 
 import ApiResponse from "@/shared/utils/ApiResponse";
 import { MerchantSettlementService } from "@/core/services/merchant-settlement.service";
@@ -7,15 +8,19 @@ import { MerchantSettlementService } from "@/core/services/merchant-settlement.s
 // there is no "request"/"approve"/"initiate" endpoint here for COMPANY. See
 // DOMAIN_MODEL.md "Merchant Settlement".
 export class MerchantSettlementController {
-  static async listSettlements(req: Request, res: Response, next: NextFunction) {
+  static async listSettlements(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
-      const { userId, role } = (req as any).user;
+      const { userId, role } = req.user!;
       const page = req.query.page ? Number(req.query.page) : undefined;
       const limit = req.query.limit ? Number(req.query.limit) : undefined;
 
       const result = await MerchantSettlementService.listSettlements({
         userId,
-        role,
+        role: role as Role,
         page,
         limit,
       });
@@ -31,15 +36,19 @@ export class MerchantSettlementController {
     }
   }
 
-  static async getSettlementById(req: Request, res: Response, next: NextFunction) {
+  static async getSettlementById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
-      const { userId, role } = (req as any).user;
+      const { userId, role } = req.user!;
       const settlementId = req.params.id as string;
 
       const result = await MerchantSettlementService.getSettlementById(
         settlementId,
         userId,
-        role,
+        role as Role,
       );
 
       return ApiResponse.success(
@@ -55,13 +64,13 @@ export class MerchantSettlementController {
 
   static async getAuditTrail(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId, role } = (req as any).user;
+      const { userId, role } = req.user!;
       const settlementId = req.params.id as string;
 
       const result = await MerchantSettlementService.getAuditTrail(
         settlementId,
         userId,
-        role,
+        role as Role,
       );
 
       return ApiResponse.success(
@@ -77,7 +86,7 @@ export class MerchantSettlementController {
 
   static async retryTransfer(req: Request, res: Response, next: NextFunction) {
     try {
-      const superAdminUserId = (req as any).user.userId;
+      const superAdminUserId = req.user!.userId;
       const settlementId = req.params.id as string;
 
       const result = await MerchantSettlementService.retryTransfer(
@@ -98,7 +107,8 @@ export class MerchantSettlementController {
 
   static async generate(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await MerchantSettlementService.generatePendingSettlements();
+      const result =
+        await MerchantSettlementService.generatePendingSettlements();
 
       return ApiResponse.success(
         res,

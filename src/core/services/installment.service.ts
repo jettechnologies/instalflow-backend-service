@@ -15,12 +15,14 @@ import { PaymentIntentService } from "@/core/services/payment-intent.service";
 import { randomUUID } from "crypto";
 import {
   computeInstallmentEligibility,
-  EligibilityInstallmentInput,
-  EligibilityMessages,
-  InstallmentEligibility,
   InstallmentEligibilityState,
-  NextUnpaidMarker,
+  EligibilityMessages,
 } from "@/core/services/installment-eligibility.helper";
+import type {
+  EligibilityInstallmentInput,
+  InstallmentEligibility,
+  NextUnpaidMarker,
+} from "./installment-eligibility.helper";
 
 interface GenerateInstallmentScheduleParams {
   financingContractId: string;
@@ -499,8 +501,6 @@ export class InstallmentService {
       installmentId: installment.installmentId,
       planId: product.productId,
       idempotencyKey,
-      // Objective 1: persisted at reserve() time, not passed to
-      // initializePaystack() later.
       initializationPayload: {
         email: customer.email,
         callbackUrl: `${process.env.FRONTEND_URL}/customer/installments`,

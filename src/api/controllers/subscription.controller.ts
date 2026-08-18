@@ -44,11 +44,10 @@ export class SubscriptionController {
    * Initialize an onboarding payment for a new company intent
    */
   static async initializeOnboarding(req: Request, res: Response) {
-    // We expect intentId from the body
-    const { intentId } = req.body;
+    const intentId = req.onboardingSessionId;
 
     if (!intentId) {
-      return ApiResponse.badRequest(res, "Onboarding Intent ID is required");
+      return ApiResponse.badRequest(res, "Onboarding token is required");
     }
 
     try {
@@ -61,13 +60,13 @@ export class SubscriptionController {
         "Onboarding payment initialized",
         data,
       );
-    } catch (error: any) {
-      if (error.name === "NotFoundError") {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === "NotFoundError") {
         return ApiResponse.notFound(res, error.message);
       }
       return ApiResponse.internalServerError(
         res,
-        error.message || "Internal Server Error",
+        error instanceof Error ? error.message : "Internal Server Error",
       );
     }
   }
@@ -86,12 +85,14 @@ export class SubscriptionController {
       );
     }
 
-    const data = await SubscriptionService.renewSubscription(
-      companyId,
-      planId,
-    );
+    const data = await SubscriptionService.renewSubscription(companyId, planId);
 
-    return ApiResponse.success(res, 200, "Subscription renewal initialized", data);
+    return ApiResponse.success(
+      res,
+      200,
+      "Subscription renewal initialized",
+      data,
+    );
   }
 
   /**

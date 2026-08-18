@@ -1,7 +1,7 @@
 // csrf.utils.ts
 import crypto from "crypto";
 
-const SECRET = process.env.CSRF_SECRET || "must-set-csrf-secret-in-env";
+const SECRET = process.env.CSRF_SECRET!;
 
 export const createCsrfToken = (): string =>
   crypto.randomBytes(32).toString("hex");

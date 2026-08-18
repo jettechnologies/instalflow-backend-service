@@ -1,4 +1,4 @@
-import { prisma, Prisma, ProductStatus } from "@/infrastructure/prisma";
+import { prisma, Prisma } from "@/infrastructure/prisma";
 import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
 import { ProductService } from "@/core/services/product.service";
 import type {
@@ -7,7 +7,7 @@ import type {
   UpdateVariantStockInput,
   DeactivateVariantInput,
 } from "@/shared/schemas/variant.schema";
-import type { BulkCreateVariantsInput } from "@/shared/schemas/variant.schema";
+import { BulkCreateVariantsInput } from "@/shared/schemas/variant.schema";
 
 export class VariantService {
   static async getVariantsByProduct(productId: string) {
@@ -303,7 +303,6 @@ export class VariantService {
         (v) => v.imageIds?.length,
       );
       for (const variant of variantsWithImages) {
-        const variantId = skus.indexOf(variant.sku);
         const variantRow = await tx.productVariant.findUnique({
           where: { sku: variant.sku },
           select: { id: true, variantId: true },

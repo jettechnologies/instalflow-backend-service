@@ -5,8 +5,8 @@ import {
   ConflictError,
 } from "@/shared/utils/AppError";
 import { PaystackService } from "@/core/services/paystack.service";
-import { AddBankAccountSchema } from "@/shared/schemas/bank.schema";
-import z from "zod";
+import type { AddBankAccountSchema } from "@/shared/schemas/bank.schema";
+import type z from "zod";
 
 // Mirrors BankAccountService's shape 1:1, keyed by companyId instead of
 // userId. This is account *management* only — adding/verifying a company

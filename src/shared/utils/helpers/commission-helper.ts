@@ -1,8 +1,5 @@
-import {
-  Prisma,
-  CommissionStatus,
-  CommissionAllocationStatus,
-} from "@/infrastructure/prisma";
+import type { Prisma } from "@/infrastructure/prisma";
+import { CommissionStatus } from "@/infrastructure/prisma";
 
 export function deriveReservationStatus(
   reservedAmount: Prisma.Decimal,

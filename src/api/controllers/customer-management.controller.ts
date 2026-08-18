@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { CustomerManagementService } from "@/core/services/customer-management.service";
 import { CustomerQuerySchema } from "@/shared/schemas/customer-management.schema";
-import { Role } from "@/prisma/client";
+import type { Role } from "@/prisma/client";
 import ApiResponse from "@/shared/utils/ApiResponse";
 
 export class CustomerManagementController {

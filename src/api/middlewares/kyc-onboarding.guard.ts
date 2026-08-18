@@ -2,11 +2,9 @@ import type { Request, Response, NextFunction } from "express";
 import AppError, { ErrorType } from "@/shared/utils/AppError";
 import { verifyOnboardingToken } from "@/shared/utils/password-hash-verify";
 
-declare global {
-  namespace Express {
-    interface Request {
-      onboardingSessionId?: string;
-    }
+declare module "express" {
+  interface Request {
+    onboardingSessionId?: string;
   }
 }
 
@@ -32,12 +30,13 @@ export const requireOnboardingToken = (
     req.onboardingSessionId = payload.sessionId;
 
     next();
-  } catch (err: any) {
+  } catch (err: unknown) {
     next(
       new AppError(
         401,
-        err.message ||
-          "Onboarding token expired or invalid. Please register again.",
+        err instanceof Error
+          ? err.message
+          : "Onboarding token expired or invalid. Please register again.",
         ErrorType.UNAUTHORIZED,
       ),
     );

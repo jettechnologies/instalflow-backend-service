@@ -36,9 +36,12 @@ export const uploadToCloudinary = async (
       format: result.format,
       resource_type: result.resource_type,
     };
-  } catch (error: any) {
-    console.error("❌ Cloudinary Upload Error:", error.message);
-    throw new Error("Failed to upload file to Cloudinary");
+  } catch (error: unknown) {
+    console.error(
+      "❌ Cloudinary Upload Error:",
+      error instanceof Error ? error.message : String(error),
+    );
+    throw new Error("Failed to upload file to Cloudinary", { cause: error });
   }
 };
 
@@ -68,16 +71,22 @@ export const uploadPdfToCloudinary = async (
       format: result.format,
       resource_type: result.resource_type,
     };
-  } catch (error: any) {
-    console.error("❌ Cloudinary PDF Upload Error:", error.message);
-    throw new Error("Failed to upload PDF to Cloudinary");
+  } catch (error: unknown) {
+    console.error(
+      "❌ Cloudinary PDF Upload Error:",
+      error instanceof Error ? error.message : String(error),
+    );
+    throw new Error("Failed to upload PDF to Cloudinary", { cause: error });
   }
 };
 
 export const deleteFromCloudinary = async (publicId: string): Promise<void> => {
   try {
     await cloudinary.uploader.destroy(publicId);
-  } catch (error: any) {
-    console.error("❌ Cloudinary Deletion Error:", error.message);
+  } catch (error: unknown) {
+    console.error(
+      "❌ Cloudinary Deletion Error:",
+      error instanceof Error ? error.message : String(error),
+    );
   }
 };

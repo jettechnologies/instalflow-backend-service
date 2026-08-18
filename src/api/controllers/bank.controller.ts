@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 import ApiResponse from "@/shared/utils/ApiResponse";
 import { BankAccountService } from "@/core/services/bank.service";
@@ -7,12 +7,11 @@ import {
   SwitchPrimaryBankAccountSchema,
   RemoveBankAccountSchema,
 } from "@/shared/schemas/bank.schema";
-import z from "zod";
 
 export class BankController {
   static async addBankAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      const marketerId = (req as any).user.userId;
+      const marketerId = req.user!.userId;
       const payload = AddBankAccountSchema.parse(req.body);
 
       const account = await BankAccountService.addBankAccount(marketerId, payload);
@@ -30,7 +29,7 @@ export class BankController {
 
   static async listBankAccounts(req: Request, res: Response, next: NextFunction) {
     try {
-      const marketerId = (req as any).user.userId;
+      const marketerId = req.user!.userId;
 
       const accounts = await BankAccountService.listBankAccounts(marketerId);
 
@@ -51,7 +50,7 @@ export class BankController {
     next: NextFunction,
   ) {
     try {
-      const marketerId = (req as any).user.userId;
+      const marketerId = req.user!.userId;
       const payload = SwitchPrimaryBankAccountSchema.parse(req.body);
 
       const result = await BankAccountService.switchPrimaryBankAccount(
@@ -72,7 +71,7 @@ export class BankController {
 
   static async removeBankAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      const marketerId = (req as any).user.userId;
+      const marketerId = req.user!.userId;
       const payload = RemoveBankAccountSchema.parse(req.body);
 
       const result = await BankAccountService.removeBankAccount(

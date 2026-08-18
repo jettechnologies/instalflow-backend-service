@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 import ApiResponse from "@/shared/utils/ApiResponse";
 import { CompanyBankAccountService } from "@/core/services/company-bank.service";
@@ -11,7 +11,7 @@ import {
 export class CompanyBankController {
   static async addBankAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      const companyId = (req as any).user.companyId;
+      const companyId = req.user!.companyId!;
       const payload = AddBankAccountSchema.parse(req.body);
 
       const account = await CompanyBankAccountService.addBankAccount(
@@ -32,7 +32,7 @@ export class CompanyBankController {
 
   static async listBankAccounts(req: Request, res: Response, next: NextFunction) {
     try {
-      const companyId = (req as any).user.companyId;
+      const companyId = req.user!.companyId!;
 
       const accounts = await CompanyBankAccountService.listBankAccounts(
         companyId,
@@ -55,7 +55,7 @@ export class CompanyBankController {
     next: NextFunction,
   ) {
     try {
-      const companyId = (req as any).user.companyId;
+      const companyId = req.user!.companyId!;
       const payload = SwitchPrimaryBankAccountSchema.parse(req.body);
 
       const result = await CompanyBankAccountService.switchPrimaryBankAccount(
@@ -76,7 +76,7 @@ export class CompanyBankController {
 
   static async removeBankAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      const companyId = (req as any).user.companyId;
+      const companyId = req.user!.companyId!;
       const payload = RemoveBankAccountSchema.parse(req.body);
 
       const result = await CompanyBankAccountService.removeBankAccount(

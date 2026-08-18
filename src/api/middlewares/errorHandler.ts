@@ -5,16 +5,16 @@ import AppError, { ErrorType } from "@/shared/utils/AppError";
 import logger from "@/infrastructure/logger/logger";
 
 export function errorHandler(
-  err: any,
+  err: unknown,
   _req: Request,
   res: Response,
   _next: NextFunction,
 ) {
   // Always log the full error server-side
   logger.error("Unhandled error", {
-    message: err?.message,
-    stack: err?.stack,
-    type: err?.constructor?.name,
+    message: err instanceof Error ? err.message : String(err),
+    stack: err instanceof Error ? err.stack : undefined,
+    type: err instanceof Error ? err.constructor.name : undefined,
   });
 
   // Zod validation

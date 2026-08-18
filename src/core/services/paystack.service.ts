@@ -1,7 +1,6 @@
 import {
   PaystackHttpClient,
   PaystackErrorCode,
-  RequestContext,
 } from "@/infrastructure/paystack/PaystackHttpClient";
 
 export { PaystackErrorCode };

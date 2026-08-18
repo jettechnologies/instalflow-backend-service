@@ -1,42 +1,50 @@
-import { NotificationEventType } from "./notification.types";
+import {
+  NotificationEventType,
+  type NotificationPayloadMap,
+} from "./notification.types";
+
+type NotificationBuildArgs = {
+  [K in NotificationEventType]: [type: K, payload: NotificationPayloadMap[K]];
+}[NotificationEventType];
 
 export class NotificationTemplates {
-  static build(type: NotificationEventType, payload: any) {
+  static build(...args: NotificationBuildArgs) {
+    const [type, p] = args;
     switch (type) {
       case NotificationEventType.KYC_APPLICATION_SUBMITTED:
         return {
           title: "New Installment Application",
-          message: `Customer "${payload.customerName}" submitted an application for review.`,
+          message: `Customer "${p.customerName}" submitted an application for review.`,
         };
 
       case NotificationEventType.INSTALLMENT_OVERDUE:
         return {
           title: "Installment Overdue",
-          message: `Installment payment for ${payload.customerName} is overdue.`,
+          message: `Installment payment for ${p.customerName} is overdue.`,
         };
 
       case NotificationEventType.PAYMENT_CONFIRMED:
         return {
           title: "Payment Confirmed",
-          message: `Payment of ₦${payload.amount} has been confirmed.`,
+          message: `Payment of ₦${p.amount} has been confirmed.`,
         };
 
       case NotificationEventType.COMMISSION_ACCRUED:
         return {
           title: "Commission Earned",
-          message: `You earned ₦${payload.amount} commission.`,
+          message: `You earned ₦${p.amount} commission.`,
         };
 
       case NotificationEventType.COMMISSION_TRANSFER_REQUEST:
         return {
           title: "Commission Withdrawal Request",
-          message: `${payload.marketerName} requested a commission payout of ${payload.amount}.`,
+          message: `${p.marketerName} requested a commission payout of ${p.amount}.`,
         };
 
       case NotificationEventType.COMMISSION_REQUEST_APPROVAL: {
-        const base = `Hello ${payload.marketerName}, your payout request (${payload.requestId}) for ₦${payload.amount.toLocaleString()}`;
+        const base = `Hello ${p.marketerName}, your payout request (${p.requestId}) for ₦${p.amount.toLocaleString()}`;
 
-        if (payload.role === "ADMIN") {
+        if (p.role === "ADMIN") {
           return {
             title: "Payout Approved by Admin",
             message: `${base} has been approved by an administrator and is now awaiting company approval.`,
@@ -51,109 +59,109 @@ export class NotificationTemplates {
       case NotificationEventType.INSTALLMENT_REMINDER_3DAY:
         return {
           title: "Payment Due in 3 Days",
-          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due on ${payload.dueDate}. Please ensure your payment is ready.`,
+          message: `Your installment #${p.sequence} for ${p.productName} (${p.amount}) is due on ${p.dueDate}. Please ensure your payment is ready.`,
         };
 
       case NotificationEventType.INSTALLMENT_REMINDER_1DAY:
         return {
           title: "Final Payment Reminder — Due Tomorrow",
-          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due tomorrow (${payload.dueDate}). Please make your payment today to avoid any disruption.`,
+          message: `Your installment #${p.sequence} for ${p.productName} (${p.amount}) is due tomorrow (${p.dueDate}). Please make your payment today to avoid any disruption.`,
         };
 
       case NotificationEventType.INSTALLMENT_DUE_TODAY:
         return {
           title: "Your Payment is Due Today",
-          message: `Installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is due today. Tap to pay now.`,
+          message: `Installment #${p.sequence} for ${p.productName} (${p.amount}) is due today. Tap to pay now.`,
         };
 
       case NotificationEventType.INSTALLMENT_OVERDUE_RECURRING:
         return {
           title: "Payment Overdue — Daily Reminder",
-          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is ${payload.daysOverdue} day(s) overdue (due on ${payload.dueDate}). Please make payment immediately to avoid further escalation.`,
+          message: `Your installment #${p.sequence} for ${p.productName} (${p.amount}) is ${p.daysOverdue} day(s) overdue (due on ${p.dueDate}). Please make payment immediately to avoid further escalation.`,
         };
 
       case NotificationEventType.INSTALLMENT_OVERDUE_3DAY:
         return {
           title: "⚠️ Payment Overdue",
-          message: `Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) was due on ${payload.dueDate} and remains unpaid. Please make payment immediately to avoid further escalation.`,
+          message: `Your installment #${p.sequence} for ${p.productName} (${p.amount}) was due on ${p.dueDate} and remains unpaid. Please make payment immediately to avoid further escalation.`,
         };
 
       case NotificationEventType.INSTALLMENT_OVERDUE_7DAY:
         return {
           title: "🚨 URGENT: Overdue Payment",
-          message: `This is a final notice. Your installment #${payload.sequence} for ${payload.productName} (${payload.amount}) is now 7 days overdue. This matter has been escalated to management. Pay immediately to avoid default status.`,
+          message: `This is a final notice. Your installment #${p.sequence} for ${p.productName} (${p.amount}) is now 7 days overdue. This matter has been escalated to management. Pay immediately to avoid default status.`,
         };
 
       case NotificationEventType.MARKETER_TOGGLE_REQUEST:
         return {
           title: "Marketer Status Change Request",
-          message: `${payload.requestedBy} requested to change the active status of marketer "${payload.marketerName}". Approval is required.`,
+          message: `${p.requestedBy} requested to change the active status of marketer "${p.marketerName}". Approval is required.`,
         };
 
       case NotificationEventType.MARKETER_DELETE_REQUEST:
         return {
           title: "Marketer Deletion Request",
-          message: `${payload.requestedBy} requested to delete marketer "${payload.marketerName}". Approval is required.`,
+          message: `${p.requestedBy} requested to delete marketer "${p.marketerName}". Approval is required.`,
         };
 
       case NotificationEventType.MARKETER_TOGGLE_APPROVED:
         return {
           title: "Marketer Status Updated",
-          message: `Your request to change the status of marketer "${payload.marketerName}" has been approved and executed.`,
+          message: `Your request to change the status of marketer "${p.marketerName}" has been approved and executed.`,
         };
 
       case NotificationEventType.MARKETER_TOGGLE_REJECTED:
         return {
           title: "Marketer Status Request Rejected",
-          message: `Your request to change the status of marketer "${payload.marketerName}" was rejected.`,
+          message: `Your request to change the status of marketer "${p.marketerName}" was rejected.`,
         };
 
       case NotificationEventType.MARKETER_DELETE_APPROVED:
         return {
           title: "Marketer Deleted",
-          message: `Your request to delete marketer "${payload.marketerName}" has been approved and completed.`,
+          message: `Your request to delete marketer "${p.marketerName}" has been approved and completed.`,
         };
 
       case NotificationEventType.MARKETER_DELETE_REJECTED:
         return {
           title: "Marketer Deletion Request Rejected",
-          message: `Your request to delete marketer "${payload.marketerName}" was rejected.`,
+          message: `Your request to delete marketer "${p.marketerName}" was rejected.`,
         };
 
       case NotificationEventType.CONTRACT_RESTRUCTURED:
         return {
           title: "Contract Restructured",
-          message: `Contract for customer "${payload.customerName}" has been restructured. New total financed: ₦${Number(payload.newTotalFinanced).toLocaleString()}. Restructured by: ${payload.restructuredBy}.`,
+          message: `Contract for customer "${p.customerName}" has been restructured. New total financed: ₦${Number(p.newTotalFinanced).toLocaleString()}. Restructured by: ${p.restructuredBy}.`,
         };
 
       case NotificationEventType.CONTRACT_WRITTEN_OFF:
-        if (payload.recipientRole === "MARKETER") {
+        if (p.recipientRole === "MARKETER") {
           return {
             title: "Contract Written Off",
-            message: `The financing contract for your customer "${payload.customerName}" has been written off. Outstanding amount: ₦${Number(payload.outstandingAmount).toLocaleString()}. Reason: ${payload.writeOffReason}. Written off by: ${payload.writtenOffBy}.`,
+            message: `The financing contract for your customer "${p.customerName}" has been written off. Outstanding amount: ₦${Number(p.outstandingAmount).toLocaleString()}. Reason: ${p.writeOffReason}. Written off by: ${p.writtenOffBy}.`,
           };
         }
-        if (payload.recipientRole === "ADMIN") {
+        if (p.recipientRole === "ADMIN") {
           return {
             title: "Contract Written Off",
-            message: `Contract for customer "${payload.customerName}" (referred by marketer under your supervision) has been written off. Outstanding amount: ₦${Number(payload.outstandingAmount).toLocaleString()}. Reason: ${payload.writeOffReason}. Written off by: ${payload.writtenOffBy}.`,
+            message: `Contract for customer "${p.customerName}" (referred by marketer under your supervision) has been written off. Outstanding amount: ₦${Number(p.outstandingAmount).toLocaleString()}. Reason: ${p.writeOffReason}. Written off by: ${p.writtenOffBy}.`,
           };
         }
         return {
           title: "Contract Written Off",
-          message: `Contract for customer "${payload.customerName}" has been written off. Outstanding amount: ₦${Number(payload.outstandingAmount).toLocaleString()}. Reason: ${payload.writeOffReason}.`,
+          message: `Contract for customer "${p.customerName}" has been written off. Outstanding amount: ₦${Number(p.outstandingAmount).toLocaleString()}. Reason: ${p.writeOffReason}.`,
         };
 
       case NotificationEventType.ONBOARDING_SESSION_EXPIRED:
         return {
           title: "Onboarding Session Expired",
-          message: `The onboarding session for customer "${payload.customerName}" (${payload.email}) has expired${payload.hadKycApplication ? " and their KYC application was auto-rejected" : ""}. Referred by: ${payload.marketerName || "direct"}.`,
+          message: `The onboarding session for customer "${p.customerName}" (${p.customerEmail}) has expired${p.hadKycApplication ? " and their KYC application was auto-rejected" : ""}. Referred by: ${p.marketerName || "direct"}.`,
         };
 
       case NotificationEventType.KYC_APPLICATION_AUTO_EXPIRED:
         return {
           title: "KYC Application Auto-Expired",
-          message: `KYC application for ${payload.customerName} (${payload.customerEmail}) was auto-rejected after remaining pending for 15+ days${payload.hadOnboardingSession ? " following an expired onboarding session" : ""}. Referred by: ${payload.marketerName || "direct"}.`,
+          message: `KYC application for ${p.customerName} (${p.customerEmail}) was auto-rejected after remaining pending for 15+ days${p.hadOnboardingSession ? " following an expired onboarding session" : ""}. Referred by: ${p.marketerName || "direct"}.`,
         };
 
       default:
@@ -163,7 +171,7 @@ export class NotificationTemplates {
         };
     }
   }
-  static buildCompanyTransferFailed(payload: {
+  static buildCompanyTransferFailed(p: {
     marketerName: string;
     amount: number;
     reason: string;
@@ -171,18 +179,18 @@ export class NotificationTemplates {
   }) {
     return {
       title: "Commission Transfer Failed",
-      message: `The payout of ₦${Number(payload.amount).toLocaleString()} to ${payload.marketerName} failed. Reason: ${payload.reason}. Payout ID: ${payload.payoutId}. The commission liability has been restored and the payout can be retried.`,
+      message: `The payout of ₦${Number(p.amount).toLocaleString()} to ${p.marketerName} failed. Reason: ${p.reason}. Payout ID: ${p.payoutId}. The commission liability has been restored and the payout can be retried.`,
     };
   }
 
-  static buildCompanyTransferReversed(payload: {
+  static buildCompanyTransferReversed(p: {
     marketerName: string;
     amount: number;
     payoutId: string;
   }) {
     return {
       title: "Commission Transfer Reversed",
-      message: `The payout of ₦${Number(payload.amount).toLocaleString()} to ${payload.marketerName} was reversed by Paystack. Payout ID: ${payload.payoutId}. Commission liability has been restored.`,
+      message: `The payout of ₦${Number(p.amount).toLocaleString()} to ${p.marketerName} was reversed by Paystack. Payout ID: ${p.payoutId}. Commission liability has been restored.`,
     };
   }
 }

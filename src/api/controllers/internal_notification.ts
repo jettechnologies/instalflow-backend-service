@@ -1,10 +1,19 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { InternalNotificationService } from "@/core/services/internal_notification.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
+import { BadRequestError } from "@/shared/utils/AppError";
 
 export class NotificationController {
+  private static getUserId(req: Request): string {
+    const userId = req.user?.userId;
+    if (!userId) {
+      throw new BadRequestError("Unauthorized");
+    }
+    return userId;
+  }
+
   static async getNotifications(req: Request, res: Response) {
-    const userId = req?.user?.userId!;
+    const userId = this.getUserId(req);
 
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit ?? 20);
@@ -24,7 +33,7 @@ export class NotificationController {
   }
 
   static async getUnreadCount(req: Request, res: Response) {
-    const userId = req?.user?.userId!;
+    const userId = this.getUserId(req);
 
     const data = await InternalNotificationService.getUnreadCount(userId);
 
@@ -37,7 +46,7 @@ export class NotificationController {
   }
 
   static async markAsRead(req: Request, res: Response) {
-    const userId = req?.user?.userId!;
+    const userId = this.getUserId(req);
 
     const notificationId = req.params.notificationId as string;
 
@@ -55,7 +64,7 @@ export class NotificationController {
   }
 
   static async markSelectedAsRead(req: Request, res: Response) {
-    const userId = req?.user?.userId!;
+    const userId = this.getUserId(req);
 
     const { notificationIds } = req.body;
 
@@ -73,7 +82,7 @@ export class NotificationController {
   }
 
   static async markAllAsRead(req: Request, res: Response) {
-    const userId = req?.user?.userId!;
+    const userId = this.getUserId(req);
 
     const data = await InternalNotificationService.markAllAsRead(userId);
 

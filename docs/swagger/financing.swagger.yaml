@@ -15,7 +15,7 @@ paths:
       description: |
         Restructures a defaulted contract by voiding remaining unpaid installments,
         calculating new terms based on remaining principal, and generating a fresh installment schedule.
-        **Authorization:** Requires `ADMIN` or `SUPER_ADMIN` role.
+        **Authorization:** Requires `ADMIN` or `COMPANY` role, and the contract must belong to the caller's company.
       security:
         - bearerAuth: []
       parameters:
@@ -86,7 +86,7 @@ paths:
         "401":
           description: Unauthorized — invalid or expired JWT.
         "403":
-          description: Forbidden — caller is not an ADMIN or SUPER_ADMIN.
+          description: Forbidden — caller lacks required role or does not own the contract.
         "404":
           description: Financing contract not found.
 
@@ -100,7 +100,7 @@ paths:
         All remaining unpaid installments are voided, the contract status moves to WRITTEN_OFF,
         and a notification chain is dispatched to the Marketer, Admin (via marketer hierarchy),
         and the Company approver.
-        **Authorization:** Requires `COMPANY` role.
+        **Authorization:** Requires `COMPANY` role, and the contract must belong to the caller's company.
       security:
         - bearerAuth: []
       parameters:
@@ -158,7 +158,7 @@ paths:
         "401":
           description: Unauthorized — invalid or expired JWT.
         "403":
-          description: Forbidden — caller is not a COMPANY role user.
+          description: Forbidden — caller is not a COMPANY role user or does not own the contract.
         "404":
           description: Financing contract not found.
 

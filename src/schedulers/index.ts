@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "@/infrastructure/config/validate-env";
 import "@/infrastructure/logger/instruments";
 
 import "@/schedulers/kyc-retention.scheduler";

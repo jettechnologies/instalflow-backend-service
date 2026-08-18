@@ -101,20 +101,17 @@ paths:
     post:
       summary: Initialize payment for a new company onboarding
       tags: [Subscription]
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/CsrfTokenHeader"
       requestBody:
-        required: true
+        required: false
         content:
           application/json:
             schema:
               type: object
-              required:
-                - intentId
-              properties:
-                intentId:
-                  type: string
-                  description: The ID of the onboarding intent created during registration.
+              properties: {}
       responses:
         "200":
           description: Paystack initialization successful
@@ -134,6 +131,8 @@ paths:
                         type: string
                       reference:
                         type: string
+        "401":
+          description: Unauthorized — missing or invalid onboarding token.
         "404":
           description: Intent or Plan not found
 

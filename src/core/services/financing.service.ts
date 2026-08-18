@@ -16,10 +16,9 @@ import {
   RestructureContractSchema,
   WriteOffContractSchema,
 } from "@/shared/schemas/financing.schema";
-import { z } from "zod";
+import type { z } from "zod";
 
 type RestructureInput = z.infer<typeof RestructureContractSchema>;
-type WriteOffInput = z.infer<typeof WriteOffContractSchema>;
 
 export class FinancingService {
   static async restructureContract(
@@ -42,12 +41,22 @@ export class FinancingService {
         );
       }
 
-      const admin = await tx.user.findUnique({
+      if (!contract.user) {
+        throw new NotFoundError("Contract owner not found");
+      }
+
+      const caller = await tx.user.findUnique({
         where: { userId: adminUserId },
       });
 
-      if (!admin || !["ADMIN", "COMPANY"].includes(admin.role)) {
+      if (!caller || !["ADMIN", "COMPANY"].includes(caller.role)) {
         throw new ForbiddenError("Only admins can restructure contracts");
+      }
+
+      if (caller.companyId && contract.user.companyId !== caller.companyId) {
+        throw new ForbiddenError(
+          "You are not authorized to modify this contract",
+        );
       }
 
       const paidAmount = contract.installments
@@ -105,7 +114,7 @@ export class FinancingService {
       await LedgerService.recordTransaction(
         {
           reference: `RESTRUCTURE-${contractId}-${Date.now()}`,
-          description: `Contract ${contractId} restructured by ${admin.name}`,
+          description: `Contract ${contractId} restructured by ${caller.name}`,
           companyId: contract.user.companyId || undefined,
           entries: [
             {
@@ -144,7 +153,7 @@ export class FinancingService {
             customerName: customer.name ?? "Customer",
             customerEmail: customer.email,
             newTotalFinanced: Number(newTotalFinanced),
-            restructuredBy: admin.name ?? "Admin",
+            restructuredBy: caller.name ?? "Admin",
             restructuredAt: new Date().toISOString(),
             marketerId: marketer.userId,
             marketerEmail: marketer.email,
@@ -156,7 +165,7 @@ export class FinancingService {
           contractId,
           customerName: customer.name ?? "Customer",
           newTotalFinanced: Number(newTotalFinanced),
-          restructuredBy: admin.name ?? "Admin",
+          restructuredBy: caller.name ?? "Admin",
           restructuredAt: new Date().toISOString(),
           marketerEmail: marketer.email,
           marketerName: marketer.name ?? "Marketer",
@@ -197,6 +206,10 @@ export class FinancingService {
         );
       }
 
+      if (!contract.user) {
+        throw new NotFoundError("Contract owner not found");
+      }
+
       const approver = await tx.user.findUnique({
         where: { userId: companyUserId },
       });
@@ -204,6 +217,15 @@ export class FinancingService {
       if (!approver || approver.role !== "COMPANY") {
         throw new ForbiddenError(
           "Only company accounts can write off contracts",
+        );
+      }
+
+      if (
+        approver.companyId &&
+        contract.user.companyId !== approver.companyId
+      ) {
+        throw new ForbiddenError(
+          "You are not authorized to write off this contract",
         );
       }
 

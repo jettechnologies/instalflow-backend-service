@@ -1,4 +1,4 @@
-import { prisma, Role, InstallmentStatus } from "@/infrastructure/prisma";
+import { prisma, Role, InstallmentStatus, type Prisma } from "@/infrastructure/prisma";
 import { UnauthorizedError, NotFoundError } from "@/shared/utils/AppError";
 import { Decimal } from "@prisma/client/runtime/client";
 
@@ -10,7 +10,7 @@ export class CustomerManagementService {
     customerId: string,
     reviewerId: string,
     reviewerRole: Role,
-  ): Promise<any> {
+  ): Promise<unknown> {
     const customer = await prisma.user.findUnique({
       where: { userId: customerId },
       include: {
@@ -59,7 +59,7 @@ export class CustomerManagementService {
   ) {
     const skip = (query.page - 1) * query.limit;
 
-    let whereClause: any = {
+    let whereClause: Prisma.UserWhereInput = {
       role: Role.CUSTOMER,
     };
 

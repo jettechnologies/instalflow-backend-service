@@ -11,30 +11,26 @@ import {
   InternalNotificationStatus,
 } from "@/infrastructure/prisma";
 
-type RoleType = Role | string;
-
-function toNumber(value: any): number {
+function toNumber(value: unknown): number {
   if (value == null) return 0;
   if (typeof value === "number") return value;
   if (value instanceof Prisma.Decimal) return value.toNumber();
-  if (typeof value.toNumber === "function") return value.toNumber();
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as { toNumber?: () => number }).toNumber === "function"
+  )
+    return (value as { toNumber: () => number }).toNumber();
   return Number(value);
 }
 
-function sumDecimal(values: any[]): number {
-  return values.reduce((acc, v) => acc + toNumber(v), 0);
-}
-
-function sumField(items: any[], field: string): number {
+function sumField(items: Record<string, unknown>[], field: string): number {
   return items.reduce((acc, item) => acc + toNumber(item[field]), 0);
 }
 
 export class AnalyticsService {
   // ─── COMPANY OVERVIEW ───
   static async getCompanyOverview(companyId: string) {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
     const [
       totalFinancedRes,
       totalPaidRes,
@@ -606,7 +602,7 @@ export class AnalyticsService {
     marketerId?: string;
     customerId?: string;
   }) {
-    const where: any = {};
+    const where: Prisma.FinancingContractWhereInput = {};
 
     if (scope.companyId) {
       where.product = { companyId: scope.companyId };
@@ -680,7 +676,7 @@ export class AnalyticsService {
     adminId?: string;
     marketerId?: string;
   }) {
-    const baseWhere: any = {};
+    const baseWhere: Prisma.KycApplicationWhereInput = {};
     if (scope.companyId) {
       baseWhere.onboardingSession = { companyId: scope.companyId };
     } else if (scope.adminId) {
@@ -813,7 +809,7 @@ export class AnalyticsService {
     companyId?: string;
     adminId?: string;
   }) {
-    const where: any = {};
+    const where: Prisma.ProductWhereInput = {};
     if (scope.companyId) {
       where.companyId = scope.companyId;
     } else if (scope.adminId) {

@@ -394,14 +394,28 @@ export class ProductService {
     } satisfies Prisma.ProductInclude;
   }
 
-  private static attachBreakdowns(product: any) {
+  private static attachBreakdowns(
+    product: Prisma.ProductModel & {
+      installmentPlans: Prisma.ProductInstallmentPlanModel[];
+      variants: Prisma.ProductVariantModel[];
+    },
+  ) {
     const plans = product.installmentPlans ?? [];
     const variants = product.variants ?? [];
-    const breakdowns: any[] = [];
+    const breakdowns: Array<{
+      planId: string;
+      durationMonths: number;
+      interestPercentage: number;
+      basePrice: number;
+      totalPrice: number;
+      monthlyPayment: number;
+      variantId?: string;
+      sku?: string;
+    }> = [];
 
     const computeBreakdown = (
       basePrice: number,
-      plan: any,
+      plan: Prisma.ProductInstallmentPlanModel,
       extra: object = {},
     ) => ({
       ...extra,

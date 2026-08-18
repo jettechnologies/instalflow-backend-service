@@ -147,7 +147,7 @@ export class AuthController {
 
   static async forcePasswordChange(req: Request, res: Response) {
     const payload = ForcePasswordChangeSchema.parse(req.body);
-    const userId = (req as any).user.userId;
+    const userId = req.user!.userId;
     const result = await AuthService.forcePasswordChange(userId, payload);
 
     return ApiResponse.success(res, 200, result.message, null);

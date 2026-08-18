@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { AnalyticsService } from "@/core/services/analytics.service";
 import { Role } from "@/infrastructure/prisma";
 import ApiResponse from "@/shared/utils/ApiResponse";
@@ -94,7 +94,7 @@ export class AnalyticsController {
       const userId = req.user!.userId;
       const companyId = req.user!.companyId;
 
-      let scope: any = {};
+      let scope: { companyId?: string; adminId?: string; marketerId?: string; customerId?: string } = {};
       if (userRole === Role.COMPANY && companyId) {
         scope.companyId = companyId;
       } else if (userRole === Role.ADMIN) {
@@ -129,7 +129,7 @@ export class AnalyticsController {
       const userId = req.user!.userId;
       const companyId = req.user!.companyId;
 
-      let scope: any = {};
+      let scope: { companyId?: string; adminId?: string; marketerId?: string } = {};
       if (userRole === Role.COMPANY && companyId) {
         scope.companyId = companyId;
       } else if (userRole === Role.ADMIN) {
@@ -187,7 +187,7 @@ export class AnalyticsController {
       const companyId = req.user!.companyId;
       const userId = req.user!.userId;
 
-      let scope: any = {};
+      let scope: { companyId?: string; adminId?: string } = {};
       if (userRole === Role.COMPANY && companyId) {
         scope.companyId = companyId;
       } else if (userRole === Role.ADMIN) {

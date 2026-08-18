@@ -64,10 +64,10 @@ export class KycRetentionWorker {
           console.log(
             `✅ [KycRetentionWorker] Safely purged asset ${asset.assetId} (Cloudinary: ${asset.cloudinaryPublicId}).`,
           );
-        } catch (assetErr: any) {
+        } catch (assetErr: unknown) {
           console.error(
             `❌ [KycRetentionWorker] Failed to purge asset ${asset.assetId}:`,
-            assetErr.message,
+            assetErr instanceof Error ? assetErr.message : String(assetErr),
           );
         }
       }
@@ -185,10 +185,10 @@ export class KycRetentionWorker {
           console.log(
             `✅ [KycRetentionWorker] Stale application ${app.kycApplicationId} auto-expired successfully.`,
           );
-        } catch (appErr: any) {
+        } catch (appErr: unknown) {
           console.error(
             `❌ [KycRetentionWorker] Failed to auto-expire application ${app.kycApplicationId}:`,
-            appErr.message,
+            appErr instanceof Error ? appErr.message : String(appErr),
           );
         }
       }
@@ -196,10 +196,10 @@ export class KycRetentionWorker {
       console.log(
         "🧹 [KycRetentionWorker] Split retention cleanup completed successfully.",
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(
         "❌ [KycRetentionWorker] Fatal cleanup worker error:",
-        error.message,
+        error instanceof Error ? error.message : String(error),
       );
     }
   }

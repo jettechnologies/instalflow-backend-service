@@ -1,4 +1,3 @@
-import { ApprovalStatus } from "@/prisma/client";
 import { z } from "zod";
 
 export const CustomerQuerySchema = z.object({

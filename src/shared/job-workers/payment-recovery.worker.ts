@@ -49,7 +49,7 @@ export class PaymentRecoveryWorker {
             durationMs: Date.now() - startedAt,
             result,
           });
-        } catch (err: any) {
+        } catch (err: unknown) {
           logger.error(
             "[PaymentRecoveryWorker] Unhandled error recovering intent",
             {
@@ -57,8 +57,8 @@ export class PaymentRecoveryWorker {
               attempt: claim.recoveryAttempts,
               workerId: WORKER_ID,
               durationMs: Date.now() - startedAt,
-              exception: err?.message,
-              stack: err?.stack,
+              exception: err instanceof Error ? err.message : String(err),
+              stack: err instanceof Error ? err.stack : undefined,
             },
           );
         }
@@ -75,11 +75,11 @@ export class PaymentRecoveryWorker {
       logger.info("[PaymentRecoveryWorker] Recovery sweep completed", {
         workerId: WORKER_ID,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error("[PaymentRecoveryWorker] Fatal recovery worker error", {
         workerId: WORKER_ID,
-        exception: error?.message,
-        stack: error?.stack,
+        exception: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
       });
     }
   }
@@ -159,10 +159,12 @@ export class PaymentRecoveryWorker {
         { markFailedOnError: false },
       );
       return "recovered";
-    } catch (err: any) {
+    } catch (err: unknown) {
       await PaymentIntentService.recordRecoveryFailure(
         intent.intentId,
-        err?.message ?? "Unknown error during recovery replay",
+        err instanceof Error
+          ? err.message
+          : "Unknown error during recovery replay",
       );
       logger.warn(
         "[PaymentRecoveryWorker] Paystack replay failed, will retry next sweep",
@@ -171,8 +173,8 @@ export class PaymentRecoveryWorker {
           reference: intent.reference,
           attempt: recoveryAttempts,
           workerId: WORKER_ID,
-          exception: err?.message,
-          stack: err?.stack,
+          exception: err instanceof Error ? err.message : undefined,
+          stack: err instanceof Error ? err.stack : undefined,
         },
       );
       return "retry_scheduled";

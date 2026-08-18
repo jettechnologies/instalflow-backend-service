@@ -15,11 +15,22 @@ export enum PaystackErrorCode {
   REQUEST_FAILED = "PAYSTACK_REQUEST_FAILED",
 }
 
+export function isPaystackError(
+  error: unknown,
+): error is Error & { code: PaystackErrorCode } {
+  return (
+    error instanceof Error &&
+    "code" in error &&
+    typeof error.code === "string" &&
+    Object.values(PaystackErrorCode).includes(error.code as PaystackErrorCode)
+  );
+}
+
 export interface PaystackError extends Error {
   code: PaystackErrorCode;
   retryable: boolean;
   status?: number;
-  data?: any;
+  data?: unknown;
 }
 
 export interface CircuitState {
@@ -104,7 +115,7 @@ export class PaystackHttpClient {
     message: string,
     retryable: boolean,
     status?: number,
-    data?: any,
+    data?: unknown,
   ): PaystackError {
     const error = new Error(message) as PaystackError;
     error.code = code;
@@ -112,6 +123,19 @@ export class PaystackHttpClient {
     error.status = status;
     error.data = data;
     return error;
+  }
+
+  private static getResponseMessage(data: unknown): string | undefined {
+    if (
+      typeof data === "object" &&
+      data !== null &&
+      "message" in data &&
+      typeof data.message === "string"
+    ) {
+      return data.message;
+    }
+
+    return undefined;
   }
 
   static async request<T>(
@@ -179,10 +203,10 @@ export class PaystackHttpClient {
 
         clearTimeout(timeout);
 
-        let data: any;
+        let data: Record<string, unknown>;
         try {
           data = await response.json();
-        } catch (parseError) {
+        } catch {
           throw this.createError(
             PaystackErrorCode.INVALID_RESPONSE,
             "Failed to parse Paystack response",
@@ -191,12 +215,13 @@ export class PaystackHttpClient {
           );
         }
 
+        const message = this.getResponseMessage(data);
+
         if (!response.ok || !data.status) {
           const isRetryable = this.isRetryableStatus(response.status);
           throw this.createError(
-            this.mapErrorCode(data?.message, endpoint),
-            data?.message ||
-              `Paystack request failed with status ${response.status}`,
+            this.mapErrorCode(message, endpoint),
+            message ?? `Paystack request failed with status ${response.status}`,
             isRetryable,
             response.status,
             data,

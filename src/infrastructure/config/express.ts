@@ -1,4 +1,5 @@
-import express, { Application } from "express";
+import type { Application } from "express";
+import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import session from "express-session";
@@ -34,7 +35,7 @@ export function configureExpress(app: Application): void {
   app.use(
     session({
       store: new PrismaSessionStore(60 * 60 * 24),
-      secret: process.env.SESSION_SECRET || "defaultsecret",
+      secret: process.env.SESSION_SECRET!,
       resave: false,
       saveUninitialized: false,
       cookie: {

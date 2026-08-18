@@ -1,5 +1,65 @@
-node_modules
-# Keep environment variables out of version control
-.env
+# Dependencies
+node_modules/
+.pnpm-store/
 
-/src/generated/prisma
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Generated Prisma client
+/src/generated/prisma/
+
+# AI / coding agents
+.claude/
+.claude.json
+.cursor/
+.clinerules/
+.cline/
+.roo/
+.roo-code/
+.continue/
+.windsurf/
+.aider*
+.amazonq/
+.gemini/
+.codex/
+.agents/
+.agent/
+
+# Logs
+*.log
+logs/
+
+# Build
+dist/
+build/
+.next/
+.vite/
+
+# Test / coverage
+coverage/
+test-results/
+playwright-report/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Temporary files
+tmp/
+temp/
+.cache/

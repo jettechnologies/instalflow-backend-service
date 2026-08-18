@@ -28,23 +28,60 @@ import {
 // payoutIds are raw UUIDs and never carry this prefix.
 const SETTLEMENT_REFERENCE_PREFIX = "MST-";
 
+type WebhookPayload = Record<string, unknown>;
+
+interface ChargeSuccessPayload {
+  reference: string;
+  amount: number;
+  metadata: {
+    type?: string;
+    intentId?: string;
+    installmentId?: string;
+  };
+}
+
+interface TransferSuccessPayload {
+  reference: string;
+  transfer?: {
+    id?: string;
+    metadata?: Record<string, unknown>;
+  };
+}
+
+interface TransferFailedPayload {
+  reference: string;
+  transfer?: {
+    id?: string;
+    metadata?: Record<string, unknown>;
+  };
+}
+
+interface TransferReversedPayload {
+  reference: string;
+  transfer?: {
+    id?: string;
+    metadata?: Record<string, unknown>;
+  };
+}
+
 export class WebhookProcessor {
-  static async handleChargeSuccess(data: any): Promise<void> {
-    const reference = data.reference;
+  static async handleChargeSuccess(data: unknown): Promise<void> {
+    const payload = data as ChargeSuccessPayload;
+    const reference = payload.reference;
     const metadataType =
-      typeof data.metadata?.type === "string"
-        ? data.metadata.type.trim().toLowerCase()
+      typeof payload.metadata?.type === "string"
+        ? (payload.metadata.type.trim().toLowerCase() as string)
         : null;
 
     logger.info("[webhook] metadata inspection", {
-      raw_metadata: data.metadata,
-      metadata_type: data.metadata?.type,
+      raw_metadata: payload.metadata,
+      metadata_type: payload.metadata?.type,
       normalized_type: metadataType,
-      metadata_type_typeof: typeof data.metadata?.type,
+      metadata_type_typeof: typeof payload.metadata?.type,
     });
 
     logger.webhook.paystack.chargeSuccess(reference, metadataType, {
-      intent_id: data.metadata?.intentId,
+      intent_id: payload.metadata?.intentId,
     });
 
     switch (metadataType) {
@@ -82,7 +119,7 @@ export class WebhookProcessor {
       }
 
       case MetadataType.installment_payment: {
-        const webhookInstallmentId = data.metadata?.installmentId;
+        const webhookInstallmentId = payload.metadata?.installmentId;
         if (!webhookInstallmentId) {
           logger.error("No installmentId found in webhook metadata", {
             reference,
@@ -113,12 +150,12 @@ export class WebhookProcessor {
         }
 
         const expectedAmountKobo = Number(intent.amount) * 100;
-        if (expectedAmountKobo !== data.amount) {
+        if (expectedAmountKobo !== payload.amount) {
           logger.error(
             "[webhook] amount mismatch between webhook payload and PaymentIntent — refusing to enqueue",
             {
               reference,
-              webhookAmountKobo: data.amount,
+              webhookAmountKobo: payload.amount,
               expectedAmountKobo,
             },
           );
@@ -153,22 +190,23 @@ export class WebhookProcessor {
       default:
         logger.warn("[webhook] Unknown metadata type", {
           reference,
-          metadata: data.metadata,
+          metadata: payload.metadata,
           metadataType,
         });
         return;
     }
   }
 
-  static async handleTransferSuccess(data: any): Promise<void> {
-    const reference = data.reference as string;
+  static async handleTransferSuccess(data: unknown): Promise<void> {
+    const payload = data as WebhookPayload;
+    const reference = payload.reference as string;
 
     if (reference?.startsWith(SETTLEMENT_REFERENCE_PREFIX)) {
       return this.handleSettlementTransferSuccess(data);
     }
 
     const payoutId = reference;
-    const transferCode = data.transfer_code as string;
+    const transferCode = payload.transfer_code as string;
 
     logger.info("[webhook] transfer.success", { payoutId, transferCode });
 
@@ -291,8 +329,9 @@ export class WebhookProcessor {
     logger.info("[webhook] transfer.success — PAID", { payoutId });
   }
 
-  static async handleTransferFailed(data: any): Promise<void> {
-    const reference = data.reference as string;
+  static async handleTransferFailed(data: unknown): Promise<void> {
+    const payload = data as WebhookPayload;
+    const reference = payload.reference as string;
 
     if (reference?.startsWith(SETTLEMENT_REFERENCE_PREFIX)) {
       return this.handleSettlementTransferFailed(data);
@@ -300,7 +339,8 @@ export class WebhookProcessor {
 
     const payoutId = reference;
     const failReason =
-      (data.failures?.[0]?.reason as string) ?? "Transfer failed";
+      ((payload.failures as unknown as Array<{ reason?: string }>)?.[0]?.reason as string) ??
+      "Transfer failed";
 
     logger.warn("[webhook] transfer.failed", { payoutId, failReason });
 
@@ -400,8 +440,9 @@ export class WebhookProcessor {
     });
   }
 
-  static async handleTransferReversed(data: any): Promise<void> {
-    const reference = data.reference as string;
+  static async handleTransferReversed(data: unknown): Promise<void> {
+    const payload = data as WebhookPayload;
+    const reference = payload.reference as string;
 
     if (reference?.startsWith(SETTLEMENT_REFERENCE_PREFIX)) {
       return this.handleSettlementTransferReversed(data);
@@ -512,13 +553,14 @@ export class WebhookProcessor {
   // *called* Paystack, never that the transfer succeeded.
 
   private static async handleSettlementTransferSuccess(
-    data: any,
+    data: unknown,
   ): Promise<void> {
-    const settlementId = (data.reference as string).replace(
+    const payload = data as WebhookPayload;
+    const settlementId = (payload.reference as string).replace(
       SETTLEMENT_REFERENCE_PREFIX,
       "",
     );
-    const transferCode = data.transfer_code as string;
+    const transferCode = payload.transfer_code as string;
 
     logger.info("[webhook] settlement transfer.success", {
       settlementId,
@@ -631,14 +673,16 @@ export class WebhookProcessor {
   }
 
   private static async handleSettlementTransferFailed(
-    data: any,
+    data: unknown,
   ): Promise<void> {
-    const settlementId = (data.reference as string).replace(
+    const payload = data as WebhookPayload;
+    const settlementId = (payload.reference as string).replace(
       SETTLEMENT_REFERENCE_PREFIX,
       "",
     );
     const failReason =
-      (data.failures?.[0]?.reason as string) ?? "Transfer failed";
+      ((payload.failures as unknown as Array<{ reason?: string }>)?.[0]?.reason as string) ??
+      "Transfer failed";
 
     logger.warn("[webhook] settlement transfer.failed", {
       settlementId,
@@ -726,9 +770,10 @@ export class WebhookProcessor {
   }
 
   private static async handleSettlementTransferReversed(
-    data: any,
+    data: unknown,
   ): Promise<void> {
-    const settlementId = (data.reference as string).replace(
+    const payload = data as WebhookPayload;
+    const settlementId = (payload.reference as string).replace(
       SETTLEMENT_REFERENCE_PREFIX,
       "",
     );

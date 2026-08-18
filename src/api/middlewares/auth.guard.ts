@@ -3,19 +3,15 @@ import { prisma } from "@/infrastructure/prisma";
 import AppError, { ErrorType } from "@/shared/utils/AppError";
 import { verifyAccessToken } from "@/shared/utils/password-hash-verify";
 
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        userId: string;
-        email: string;
-        role: string;
-        companyId?: string;
-        sessionId?: string;
-      };
-    }
+declare module "express" {
+  interface Request {
+    user?: {
+      userId: string;
+      email: string;
+      role: string;
+      companyId?: string;
+      sessionId?: string;
+    };
   }
 }
 
@@ -60,11 +56,11 @@ export const requireAuth = async (
     req.user = decoded;
 
     next();
-  } catch (err: any) {
+  } catch (err: unknown) {
     next(
       new AppError(
         401,
-        err.message || "Token expired or invalid constraints",
+        err instanceof Error ? err.message : "Token expired or invalid constraints",
         ErrorType.UNAUTHORIZED,
       ),
     );

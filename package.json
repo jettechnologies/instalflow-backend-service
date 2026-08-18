@@ -66,6 +66,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/bcryptjs": "^3.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
@@ -81,8 +82,11 @@
     "@types/swagger-ui-dist": "^3.30.6",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^11.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
     "eslint": "^10.2.1",
     "glob": "^13.0.6",
+    "globals": "^17.11.0",
     "nodemon": "^3.1.14",
     "prisma": "^7.8.0",
     "tsup": "^8.5.1",

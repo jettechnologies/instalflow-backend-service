@@ -1,5 +1,7 @@
 // logger.ts
-import { logs, SeverityNumber } from "@opentelemetry/api-logs";
+/* eslint-disable no-console */
+import { logs } from "@opentelemetry/api-logs";
+import { SeverityNumber } from "@opentelemetry/api-logs";
 
 const otelLogger = logs.getLogger(process.env.SERVICE_NAME || "api");
 
@@ -7,7 +9,7 @@ const otelLogger = logs.getLogger(process.env.SERVICE_NAME || "api");
 function emit(
   severityText: "trace" | "debug" | "info" | "warn" | "error" | "fatal",
   body: string,
-  attributes: Record<string, any> = {},
+  attributes: Record<string, unknown> = {},
 ) {
   const severityMap: Record<string, SeverityNumber> = {
     trace: SeverityNumber.TRACE,
@@ -36,29 +38,29 @@ function emit(
 
 // ─── Logger ───────────────────────────────────────────────────────────────────
 const logger = {
-  trace: (message: string, meta?: Record<string, any>) => {
+  trace: (message: string, meta?: Record<string, unknown>) => {
     console.trace(`[TRACE] ${message}`, meta);
     emit("trace", message, meta);
   },
 
-  debug: (message: string, meta?: Record<string, any>) => {
+  debug: (message: string, meta?: Record<string, unknown>) => {
     if (process.env.NODE_ENV === "development") {
       console.debug(`[DEBUG] ${message}`, meta);
     }
     emit("debug", message, meta);
   },
 
-  info: (message: string, meta?: Record<string, any>) => {
+  info: (message: string, meta?: Record<string, unknown>) => {
     console.log(`[INFO] ${message}`, meta);
     emit("info", message, meta);
   },
 
-  warn: (message: string, meta?: Record<string, any>) => {
+  warn: (message: string, meta?: Record<string, unknown>) => {
     console.warn(`[WARN] ${message}`, meta);
     emit("warn", message, meta);
   },
 
-  error: (message: string, meta?: Record<string, any>) => {
+  error: (message: string, meta?: Record<string, unknown>) => {
     console.error(`[ERROR] ${message}`, meta);
     emit("error", message, {
       ...meta,
@@ -71,7 +73,7 @@ const logger = {
     });
   },
 
-  fatal: (message: string, meta?: Record<string, any>) => {
+  fatal: (message: string, meta?: Record<string, unknown>) => {
     console.error(`[FATAL] ${message}`, meta);
     emit("fatal", message, {
       ...meta,
@@ -85,7 +87,7 @@ const logger = {
 
   // ─── Webhook Namespace ──────────────────────────────────────────────────────
   webhook: {
-    received: (event: string, meta?: Record<string, any>) => {
+    received: (event: string, meta?: Record<string, unknown>) => {
       console.log(`[WEBHOOK] Received: ${event}`, meta);
       emit("info", "webhook_received", {
         webhook_event: event,
@@ -93,12 +95,12 @@ const logger = {
       });
     },
 
-    signatureFailure: (meta?: Record<string, any>) => {
+    signatureFailure: (meta?: Record<string, unknown>) => {
       console.error("[WEBHOOK] Invalid signature", meta);
       emit("error", "webhook_signature_failure", { ...meta });
     },
 
-    duplicate: (eventId: string, meta?: Record<string, any>) => {
+    duplicate: (eventId: string, meta?: Record<string, unknown>) => {
       console.warn(`[WEBHOOK] Duplicate blocked: ${eventId}`, meta);
       emit("warn", "webhook_duplicate_blocked", {
         event_id: eventId,
@@ -106,7 +108,7 @@ const logger = {
       });
     },
 
-    processed: (event: string, meta?: Record<string, any>) => {
+    processed: (event: string, meta?: Record<string, unknown>) => {
       console.log(`[WEBHOOK] Processed: ${event}`, meta);
       emit("info", "webhook_processed", {
         webhook_event: event,
@@ -114,12 +116,17 @@ const logger = {
       });
     },
 
-    failed: (event: string, error: any, meta?: Record<string, any>) => {
+    failed: (event: string, error: unknown, meta?: Record<string, unknown>) => {
       console.error(`[WEBHOOK] Failed: ${event}`, error, meta);
       emit("error", "webhook_failed", {
         webhook_event: event,
-        error_message: error?.message || String(error),
-        error_stack: error?.stack,
+        error_message:
+          error instanceof Error
+            ? error.message
+            : typeof error === "string"
+              ? error
+              : String(error),
+        error_stack: error instanceof Error ? error.stack : undefined,
         ...meta,
       });
     },
@@ -129,7 +136,7 @@ const logger = {
       chargeSuccess: (
         reference: string,
         metadataType: string,
-        meta?: Record<string, any>,
+        meta?: Record<string, unknown>,
       ) => {
         console.log(
           `[WEBHOOK:PAYSTACK] charge.success | ref: ${reference} | type: ${metadataType}`,
@@ -225,17 +232,17 @@ export { logger };
 
 // // ─── Logger ───────────────────────────────────────────────────────────────────
 // const logger = {
-//   info: (message: string, meta?: Record<string, any>) => {
+//   info: (message: string, meta?: Record<string, unknown>) => {
 //     console.log(`[INFO] ${message}`, meta);
 //     emit(SeverityNumber.INFO, "INFO", message, meta);
 //   },
 
-//   warn: (message: string, meta?: Record<string, any>) => {
+//   warn: (message: string, meta?: Record<string, unknown>) => {
 //     console.warn(`[WARN] ${message}`, meta);
 //     emit(SeverityNumber.WARN, "WARN", message, meta);
 //   },
 
-//   error: (message: string, meta?: Record<string, any>) => {
+//   error: (message: string, meta?: Record<string, unknown>) => {
 //     console.error(`[ERROR] ${message}`, meta);
 //     emit(SeverityNumber.ERROR, "ERROR", message, {
 //       ...meta,
@@ -248,7 +255,7 @@ export { logger };
 //     });
 //   },
 
-//   debug: (message: string, meta?: Record<string, any>) => {
+//   debug: (message: string, meta?: Record<string, unknown>) => {
 //     if (process.env.NODE_ENV === "development") {
 //       console.debug(`[DEBUG] ${message}`, meta);
 //     }
@@ -257,7 +264,7 @@ export { logger };
 
 //   // ─── Webhook Namespace ──────────────────────────────────────────────────────
 //   webhook: {
-//     received: (event: string, meta?: Record<string, any>) => {
+//     received: (event: string, meta?: Record<string, unknown>) => {
 //       console.log(`[WEBHOOK] Received: ${event}`, meta);
 //       emit(SeverityNumber.INFO, "INFO", `webhook_received`, {
 //         webhook_event: event,
@@ -265,14 +272,14 @@ export { logger };
 //       });
 //     },
 
-//     signatureFailure: (meta?: Record<string, any>) => {
+//     signatureFailure: (meta?: Record<string, unknown>) => {
 //       console.error("[WEBHOOK] Invalid signature", meta);
 //       emit(SeverityNumber.ERROR, "ERROR", "webhook_signature_failure", {
 //         ...meta,
 //       });
 //     },
 
-//     duplicate: (eventId: string, meta?: Record<string, any>) => {
+//     duplicate: (eventId: string, meta?: Record<string, unknown>) => {
 //       console.warn(`[WEBHOOK] Duplicate blocked: ${eventId}`, meta);
 //       emit(SeverityNumber.WARN, "WARN", "webhook_duplicate_blocked", {
 //         event_id: eventId,
@@ -280,7 +287,7 @@ export { logger };
 //       });
 //     },
 
-//     processed: (event: string, meta?: Record<string, any>) => {
+//     processed: (event: string, meta?: Record<string, unknown>) => {
 //       console.log(`[WEBHOOK] Processed: ${event}`, meta);
 //       emit(SeverityNumber.INFO, "INFO", "webhook_processed", {
 //         webhook_event: event,
@@ -288,7 +295,7 @@ export { logger };
 //       });
 //     },
 
-//     failed: (event: string, error: any, meta?: Record<string, any>) => {
+//     failed: (event: string, error: any, meta?: Record<string, unknown>) => {
 //       console.error(`[WEBHOOK] Failed: ${event}`, error, meta);
 //       emit(SeverityNumber.ERROR, "ERROR", "webhook_failed", {
 //         webhook_event: event,
@@ -303,7 +310,7 @@ export { logger };
 //       chargeSuccess: (
 //         reference: string,
 //         metadataType: string,
-//         meta?: Record<string, any>,
+//         meta?: Record<string, unknown>,
 //       ) => {
 //         console.log(
 //           `[WEBHOOK:PAYSTACK] charge.success | ref: ${reference} | type: ${metadataType}`,
@@ -387,7 +394,7 @@ export { logger };
 
 // // ─── Logger ───────────────────────────────────────────────────────────────────
 // const logger = {
-//   error: (message: string, meta?: Record<string, any>) => {
+//   error: (message: string, meta?: Record<string, unknown>) => {
 //     console.error(`[ERROR] ${message}`, meta);
 //     capture("server_error", {
 //       level: "error",
@@ -396,7 +403,7 @@ export { logger };
 //     });
 //   },
 
-//   warn: (message: string, meta?: Record<string, any>) => {
+//   warn: (message: string, meta?: Record<string, unknown>) => {
 //     console.warn(`[WARN] ${message}`, meta);
 //     capture("server_warning", {
 //       level: "warn",
@@ -405,7 +412,7 @@ export { logger };
 //     });
 //   },
 
-//   info: (message: string, meta?: Record<string, any>) => {
+//   info: (message: string, meta?: Record<string, unknown>) => {
 //     console.log(`[INFO] ${message}`, meta);
 //     capture("server_info", {
 //       level: "info",
@@ -416,7 +423,7 @@ export { logger };
 
 //   // ─── Webhook-specific methods ───────────────────────────────────────────────
 //   webhook: {
-//     received: (event: string, meta?: Record<string, any>) => {
+//     received: (event: string, meta?: Record<string, unknown>) => {
 //       console.log(`[WEBHOOK] Received: ${event}`, meta);
 //       capture("webhook_received", {
 //         webhook_event: event,
@@ -424,7 +431,7 @@ export { logger };
 //       });
 //     },
 
-//     signatureFailure: (meta?: Record<string, any>) => {
+//     signatureFailure: (meta?: Record<string, unknown>) => {
 //       console.error("[WEBHOOK] Invalid signature", meta);
 //       capture("webhook_signature_failure", {
 //         level: "error",
@@ -432,7 +439,7 @@ export { logger };
 //       });
 //     },
 
-//     duplicate: (eventId: string, meta?: Record<string, any>) => {
+//     duplicate: (eventId: string, meta?: Record<string, unknown>) => {
 //       console.warn(`[WEBHOOK] Duplicate blocked: ${eventId}`, meta);
 //       capture("webhook_duplicate_blocked", {
 //         level: "warn",
@@ -441,7 +448,7 @@ export { logger };
 //       });
 //     },
 
-//     processed: (event: string, meta?: Record<string, any>) => {
+//     processed: (event: string, meta?: Record<string, unknown>) => {
 //       console.log(`[WEBHOOK] Processed: ${event}`, meta);
 //       capture("webhook_processed", {
 //         webhook_event: event,
@@ -449,7 +456,7 @@ export { logger };
 //       });
 //     },
 
-//     failed: (event: string, error: any, meta?: Record<string, any>) => {
+//     failed: (event: string, error: any, meta?: Record<string, unknown>) => {
 //       console.error(`[WEBHOOK] Failed: ${event}`, error, meta);
 //       capture("webhook_failed", {
 //         level: "error",
@@ -465,7 +472,7 @@ export { logger };
 //       chargeSuccess: (
 //         reference: string,
 //         metadataType: string,
-//         meta?: Record<string, any>,
+//         meta?: Record<string, unknown>,
 //       ) => {
 //         console.log(
 //           `[WEBHOOK:PAYSTACK] charge.success | ref: ${reference} | type: ${metadataType}`,

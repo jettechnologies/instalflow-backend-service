@@ -2,7 +2,14 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import type { Express, Request, Response, NextFunction } from "express";
 import { BadRequestError } from "@/shared/utils/AppError";
+
+declare module "express" {
+  interface Request {
+    fileSizeLimits?: Record<string, number>;
+  }
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,8 +25,10 @@ const storage = multer.diskStorage({
 
   filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-
-    cb(null, `${uniqueSuffix}-${file.originalname}`);
+    const safeName = path
+      .basename(file.originalname)
+      .replace(/[^a-zA-Z0-9._-]/g, "_");
+    cb(null, `${uniqueSuffix}-${safeName}`);
   },
 });
 
@@ -37,7 +46,7 @@ const FILE_SIZE_LIMITS: Record<string, number> = {
 };
 
 const fileFilter = (
-  req: any,
+  req: Request,
   file: Express.Multer.File,
   cb: multer.FileFilterCallback,
 ) => {
@@ -92,8 +101,18 @@ export const uploadMultiple = (fieldName: string) =>
     limits,
   }).array(fieldName, 10);
 
-export const validateUploadedFileSizes = (req: any, _res: any, next: any) => {
-  const files = req.files || (req.file ? [req.file] : []);
+export const validateUploadedFileSizes = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
+  const files = Array.isArray(req.files)
+    ? req.files
+    : req.files
+      ? Object.values(req.files).flat()
+      : req.file
+        ? [req.file]
+        : [];
 
   for (const file of files) {
     const ext = path.extname(file.originalname).toLowerCase().substring(1);
@@ -117,7 +136,7 @@ export const validateUploadedFileSizes = (req: any, _res: any, next: any) => {
 const PDF_SIZE_LIMIT = 10 * 1024 * 1024;
 
 const pdfFilter = (
-  _req: any,
+  _req: Request,
   file: Express.Multer.File,
   cb: multer.FileFilterCallback,
 ) => {

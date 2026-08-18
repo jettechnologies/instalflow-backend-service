@@ -1,18 +1,26 @@
-import { DomainEvent, DomainEventPayloads } from "./event.types";
+import type { DomainEvent, DomainEventPayloads } from "./event.types";
 
 type EventHandler<T extends DomainEvent> = (
   payload: DomainEventPayloads[T],
 ) => Promise<void>;
 
 // ── Local in-process registry (still used for non-notification events) ────────
-const handlers: Partial<Record<DomainEvent, EventHandler<any>[]>> = {};
+// const handlers: Partial<
+//   Record<DomainEvent, Array<(payload: unknown) => Promise<void>>>
+// > = {};
+
+type AnyEventHandler = (
+  payload: DomainEventPayloads[DomainEvent],
+) => Promise<void>;
+
+const handlers: Partial<Record<DomainEvent, AnyEventHandler[]>> = {};
 
 export const onEvent = <T extends DomainEvent>(
   event: T,
   handler: EventHandler<T>,
 ) => {
   if (!handlers[event]) handlers[event] = [];
-  handlers[event]!.push(handler);
+  handlers[event]!.push(handler as AnyEventHandler);
 };
 
 export const removeEvent = <T extends DomainEvent>(
@@ -43,7 +51,7 @@ export const emitEvent = async <T extends DomainEvent>(
 };
 
 // ── Cloudflare hub forwarder ─────────────────────────────────────────────────
-async function forwardToHub(event: string, payload: any): Promise<void> {
+async function forwardToHub(event: string, payload: unknown): Promise<void> {
   const hubUrl = process.env.NOTIFICATION_HUB_URL;
 
   if (!hubUrl) {
@@ -77,11 +85,11 @@ async function forwardToHub(event: string, payload: any): Promise<void> {
 
     const result = await res.json();
     console.log(`[emitter] Hub accepted event=${event}`, result);
-  } catch (err: any) {
+  } catch (err: unknown) {
     // Never let a notification failure crash the main request flow
     console.error(
       `[emitter] Hub dispatch failed for event=${event}:`,
-      err?.message ?? err,
+      err instanceof Error ? err.message : String(err),
     );
   } finally {
     clearTimeout(timeout);

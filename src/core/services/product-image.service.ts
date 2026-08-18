@@ -1,3 +1,4 @@
+import type { Express } from "express";
 import { prisma } from "@/infrastructure/prisma";
 import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
 import {

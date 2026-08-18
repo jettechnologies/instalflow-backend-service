@@ -4,7 +4,6 @@ import { NotificationService } from "@/core/notifications/notification.service";
 import { NotificationChannel } from "@/core/notifications/notification.type";
 import { EmailTemplate } from "@/core/services/email.service";
 import { NotificationOrchestrator } from "@/infrastructure/internal_notification/notification.orchestrator";
-import { NotificationRepository } from "@/infrastructure/internal_notification/notification.repository";
 import { NotificationEventType } from "@/infrastructure/internal_notification/notification.types";
 
 const fmt = (amount: string | number) =>

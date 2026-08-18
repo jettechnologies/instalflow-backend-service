@@ -1,8 +1,7 @@
-import { prisma, FinancingStatus } from "@/infrastructure/prisma";
-import { z } from "zod";
-import { NotFoundError, BadRequestError, ForbiddenError } from "@/shared/utils/AppError";
-import { InstallmentService } from "./installment.service";
-import {
+import { prisma, type Prisma } from "@/infrastructure/prisma";
+import type { z } from "zod";
+import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
+import type {
   DeactivateInstallmentPlanSchema,
   UpdateInstallmentPlanSchema,
 } from "@/shared/schemas/installment-plan.schema";
@@ -62,7 +61,7 @@ export class InstallmentPlanService {
       );
     }
 
-    const updateData: any = {
+    const updateData: Prisma.ProductInstallmentPlanUpdateInput = {
       ...(data.durationMonths !== undefined && {
         durationMonths: data.durationMonths,
       }),
@@ -111,11 +110,14 @@ export class InstallmentPlanService {
     return updated;
   }
 
-  static async createInstallmentPlan(productId: string, data: {
-    durationMonths: number;
-    interestPercentage: number;
-    active?: boolean;
-  }) {
+  static async createInstallmentPlan(
+    productId: string,
+    data: {
+      durationMonths: number;
+      interestPercentage: number;
+      active?: boolean;
+    },
+  ) {
     const product = await prisma.product.findUnique({
       where: { productId },
     });

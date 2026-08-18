@@ -1,13 +1,12 @@
 import { prisma } from "@/infrastructure/prisma";
 import {
   BadRequestError,
-  ForbiddenError,
   NotFoundError,
   ConflictError,
 } from "@/shared/utils/AppError";
 import { PaystackService } from "@/core/services/paystack.service";
-import { AddBankAccountSchema } from "@/shared/schemas/bank.schema";
-import z from "zod";
+import type { AddBankAccountSchema } from "@/shared/schemas/bank.schema";
+import type z from "zod";
 
 export class BankAccountService {
   static async addBankAccount(

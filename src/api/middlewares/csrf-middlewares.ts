@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import logger from "@/infrastructure/logger/logger";
 import { hashToken, safeCompare } from "@/shared/utils/helpers/csrf.helper";
-import { request } from "node:http";
 
 const skipCsrf = (req: Request): boolean => {
   const path = req.originalUrl.split("?")[0];

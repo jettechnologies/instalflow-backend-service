@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { InstallmentService } from "@/core/services/installment.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
 
@@ -9,7 +9,7 @@ export class InstallmentController {
     next: NextFunction,
   ) {
     try {
-      const userId = (req as any).user.userId;
+      const userId = req.user!.userId;
 
       const page = Number(req.query.page || 1);
       const limit = Number(req.query.limit || 10);

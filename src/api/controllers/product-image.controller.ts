@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request, Response, Express } from "express";
 import { ProductImageService } from "@/core/services/product-image.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
 import {

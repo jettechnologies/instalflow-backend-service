@@ -1,7 +1,7 @@
 import {
   prisma,
-  InternalNotificationStatus,
-  InternalNotificationType,
+  type InternalNotificationStatus,
+  type InternalNotificationType,
   type Prisma,
 } from "../prisma";
 

@@ -188,7 +188,7 @@ export interface Reminder1DayPayload extends InstallmentReminderBase {
   daysUntil: number;
 }
 
-export interface DueTodayPayload extends InstallmentReminderBase {}
+export type DueTodayPayload = InstallmentReminderBase;
 
 export interface OverdueRecurringPayload extends InstallmentReminderBase {
   daysOverdue: number;

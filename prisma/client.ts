@@ -20,7 +20,27 @@ const adapter = new PrismaPg(pool);
   return this.toString();
 };
 
-export const prisma = new PrismaClient({ adapter, log: ["error"] }).$extends({
+// export const prisma = new PrismaClient({ adapter, log: ["error"] }).$extends({
+//   result: {
+//     $allModels: {
+//       toJSON: {
+//         compute(data) {
+//           return () => {
+//             const { id, ...rest } = data as any;
+//             return rest;
+//           };
+//         },
+//       },
+//     },
+//   },
+// });
+
+const basePrisma = new PrismaClient({
+  adapter,
+  log: ["error"],
+});
+
+export const prisma = basePrisma.$extends({
   result: {
     $allModels: {
       toJSON: {
@@ -34,3 +54,7 @@ export const prisma = new PrismaClient({ adapter, log: ["error"] }).$extends({
     },
   },
 });
+
+export type PrismaTxClient = Parameters<
+  Parameters<typeof prisma.$transaction>[0]
+>[0];

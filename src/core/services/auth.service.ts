@@ -1,12 +1,13 @@
 import { prisma } from "@/infrastructure/prisma";
 import crypto from "crypto";
-import { z } from "zod";
+import type { z } from "zod";
 import {
   bcryptHash,
   bcryptCompare,
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
+  generateOnboardingToken,
 } from "@/shared/utils/password-hash-verify";
 import {
   ConflictError,
@@ -14,19 +15,15 @@ import {
   NotFoundError,
   BadRequestError,
 } from "@/shared/utils/AppError";
-import {
+import type {
   RegisterSchema,
   LoginSchema,
   ChangePasswordSchema,
   CompanyRegisterSchema,
   MarketerCreateSchema,
-  ForgotPasswordSchema,
   ResetPasswordSchema,
   ForcePasswordChangeSchema,
 } from "@/shared/schemas/auth.schema";
-import { SubscriptionService } from "./subscription.service";
-import { LedgerService } from "./ledger.service";
-import { AccountType } from "@/infrastructure/prisma";
 import { emitEvent } from "@/core/events/emitter";
 import { DomainEvent } from "@/core/events/event.types";
 import { generateTempPassword } from "@/shared/utils/helpers/misc";
@@ -142,7 +139,12 @@ export class AuthService {
       },
     });
 
-    return intent;
+    const onboardingToken = generateOnboardingToken(intent.intentId);
+
+    return {
+      ...intent,
+      onboardingToken,
+    };
   }
 
   /**
@@ -209,6 +211,12 @@ export class AuthService {
     if (!user) throw new UnauthorizedError("Invalid credentials");
 
     if (!user.active) {
+      throw new UnauthorizedError(
+        "Your account has been deactivated. Please contact support.",
+      );
+    }
+
+    if (user.deletedAt) {
       throw new UnauthorizedError(
         "Your account has been deactivated. Please contact support.",
       );

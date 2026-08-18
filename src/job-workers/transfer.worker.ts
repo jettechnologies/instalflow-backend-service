@@ -3,9 +3,7 @@ import { redis } from "@/infrastructure/redis/redis-connect";
 
 import {
   prisma,
-  Prisma,
   AccountType,
-  CommissionStatus,
   CommissionPayoutStatus,
 } from "@/infrastructure/prisma";
 
@@ -156,7 +154,9 @@ transferWorker.on("completed", (job) => {
 transferWorker.on("failed", async (job, err) => {
   console.error(`❌ Transfer job failed: ${job?.id}`, err);
 
-  logger.error(`❌ Transfer job failed: ${job?.id}`, err);
+  logger.error(`❌ Transfer job failed: ${job?.id}`, {
+    error: err,
+  });
 
   if (job?.data?.payoutId && job.attemptsMade >= (job.opts.attempts ?? 3)) {
     const payout = await prisma.commissionPayoutRequest.findUnique({

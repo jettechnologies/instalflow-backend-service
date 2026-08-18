@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { KycService } from "@/core/services/kyc.service";
+import type { Request, Response, NextFunction } from "express";
+import { KycService, type UploadedPdfFile } from "@/core/services/kyc.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
 import {
   GenerateReferralLinkSchema,
@@ -17,7 +17,7 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const marketerId = (req as any).user?.userId;
+      const marketerId = req.user?.userId;
       if (!marketerId) {
         throw new BadRequestError("Unauthorized marketer session.");
       }
@@ -58,7 +58,7 @@ export class KycController {
 
   static async registerDirect(req: Request, res: Response, next: NextFunction) {
     try {
-      const reviewerId = (req as any).user?.userId;
+      const reviewerId = req.user?.userId;
       if (!reviewerId) {
         throw new BadRequestError("Unauthorized reviewer session.");
       }
@@ -83,7 +83,7 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const companyUserId = (req as any).user?.userId;
+      const companyUserId = req.user?.userId;
       if (!companyUserId) {
         throw new BadRequestError("Unauthorized company session.");
       }
@@ -107,9 +107,9 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const sessionId = (req as any).onboardingSessionId!;
+      const sessionId = req.onboardingSessionId!;
       const params = SubmitApplicationSchema.parse(req.body);
-      const file = req.file;
+      const file = req.file as UploadedPdfFile;
 
       const result = await KycService.submitApplication(
         sessionId,
@@ -134,7 +134,7 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const reviewerId = (req as any).user?.userId;
+      const reviewerId = req.user?.userId;
       if (!reviewerId) {
         throw new BadRequestError("Unauthorized session.");
       }
@@ -162,7 +162,7 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const adminId = (req as any).user?.userId;
+      const adminId = req.user?.userId;
       if (!adminId) {
         throw new BadRequestError("Unauthorized session.");
       }
@@ -193,7 +193,7 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const reviewerId = (req as any).user?.userId;
+      const reviewerId = req.user?.userId;
       if (!reviewerId) {
         throw new BadRequestError("Unauthorized session.");
       }
@@ -221,9 +221,9 @@ export class KycController {
     next: NextFunction,
   ) {
     try {
-      const reviewerId = (req as any).user?.userId;
-      const reviewerRole = (req as any).user?.role;
-      const companyId = (req as any).user?.companyId;
+      const reviewerId = req.user?.userId;
+      const reviewerRole = req.user?.role;
+      const companyId = req.user?.companyId;
 
       if (!reviewerId || !reviewerRole) {
         throw new BadRequestError("Unauthorized session.");

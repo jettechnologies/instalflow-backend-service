@@ -4,7 +4,6 @@ import { ReminderSettingsService } from "@/core/services/reminder-settings.servi
 import ApiResponse from "@/shared/utils/ApiResponse";
 import {
   CreateAdminSchema,
-  ToggleStatusSchema,
   HandleApprovalSchema,
 } from "@/shared/schemas/user-management.schema";
 import { UpdateReminderSettingsSchema } from "@/shared/schemas/reminder-settings.schema";

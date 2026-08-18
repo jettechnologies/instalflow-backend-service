@@ -24,8 +24,11 @@ export class KycStorageService {
       );
 
       return signedUrl;
-    } catch (error: any) {
-      console.error("❌ Cloudinary Signed Link Error:", error.message);
+    } catch (error: unknown) {
+      console.error(
+        "❌ Cloudinary Signed Link Error:",
+        error instanceof Error ? error.message : String(error),
+      );
       // Fallback URL if signing fails
       return cloudinary.url(publicId, { resource_type: "raw" });
     }
@@ -41,8 +44,11 @@ export class KycStorageService {
         type: "authenticated",
         invalidate: true,
       });
-    } catch (error: any) {
-      console.error("❌ Cloudinary PDF Deletion Error:", error.message);
+    } catch (error: unknown) {
+      console.error(
+        "❌ Cloudinary PDF Deletion Error:",
+        error instanceof Error ? error.message : String(error),
+      );
     }
   }
 }

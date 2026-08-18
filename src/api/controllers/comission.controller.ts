@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 import ApiResponse from "@/shared/utils/ApiResponse";
 import { CommissionService } from "@/core/services/commission.service";
-import { CommissionPayoutStatus } from "@/infrastructure/prisma";
+import type { CommissionPayoutStatus, Role } from "@/infrastructure/prisma";
 
 export class CommissionController {
   static async allTime(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = (req as any).user.userId;
+      const userId = req.user!.userId;
 
       const result = await CommissionService.getAllTimeCommissions(userId);
 
@@ -24,7 +24,7 @@ export class CommissionController {
 
   static async perCustomer(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = (req as any).user.userId;
+      const userId = req.user!.userId;
 
       const result = await CommissionService.getCommissionPerCustomer(userId);
 
@@ -41,7 +41,7 @@ export class CommissionController {
 
   static async perProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = (req as any).user.userId;
+      const userId = req.user!.userId;
 
       const result = await CommissionService.getCommissionPerProduct(userId);
 
@@ -58,7 +58,7 @@ export class CommissionController {
 
   static async requestPayout(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = (req as any).user.userId;
+      const userId = req.user!.userId;
 
       const { amount } = req.body;
 
@@ -77,7 +77,7 @@ export class CommissionController {
 
   static async adminApprove(req: Request, res: Response, next: NextFunction) {
     try {
-      const adminId = (req as any).user.userId;
+      const adminId = req.user!.userId;
       const payoutId = req.params.id as string;
 
       const result = await CommissionService.adminApprovePayout(
@@ -98,7 +98,7 @@ export class CommissionController {
 
   static async companyApprove(req: Request, res: Response, next: NextFunction) {
     try {
-      const companyUserId = (req as any).user.userId;
+      const companyUserId = req.user!.userId;
       const payoutId = req.params.id as string;
 
       const result = await CommissionService.companyApprovePayout(
@@ -123,7 +123,7 @@ export class CommissionController {
     next: NextFunction,
   ) {
     try {
-      const companyUserId = (req as any).user.userId;
+      const companyUserId = req.user!.userId;
       const payoutId = req.params.id as string;
 
       const result = await CommissionService.initiateTransfer(
@@ -148,7 +148,7 @@ export class CommissionController {
     next: NextFunction,
   ) {
     try {
-      const companyUserId = (req as any).user.userId;
+      const companyUserId = req.user!.userId;
       const { payoutIds } = req.body;
 
       const result = await CommissionService.initiateBulkTransfer(
@@ -173,16 +173,20 @@ export class CommissionController {
     next: NextFunction,
   ) {
     try {
-      const userId = (req as any).user.userId;
-      const role = (req as any).user.role;
+      const userId = req.user!.userId;
+      const role = req.user!.role;
 
       const { status, page, limit } = req.query;
 
-      const result = await CommissionService.getPayoutRequests(userId, role, {
-        status: status as CommissionPayoutStatus | undefined,
-        page: page ? parseInt(page as string, 10) : undefined,
-        limit: limit ? parseInt(limit as string, 10) : undefined,
-      });
+      const result = await CommissionService.getPayoutRequests(
+        userId,
+        role as Role,
+        {
+          status: status as CommissionPayoutStatus | undefined,
+          page: page ? parseInt(page as string, 10) : undefined,
+          limit: limit ? parseInt(limit as string, 10) : undefined,
+        },
+      );
 
       return ApiResponse.success(
         res,

@@ -1,4 +1,9 @@
-import { prisma, Prisma, AccountType } from "@/infrastructure/prisma";
+import {
+  prisma,
+  type PrismaTxClient,
+  Prisma,
+  AccountType,
+} from "@/infrastructure/prisma";
 import { randomUUID } from "crypto";
 
 export class LedgerService {
@@ -17,9 +22,9 @@ export class LedgerService {
         debit?: number | Prisma.Decimal;
         credit?: number | Prisma.Decimal;
       }[];
-      metadata?: any;
+      metadata?: unknown;
     },
-    txClient?: any,
+    txClient?: PrismaTxClient,
   ) {
     const totalDebits = data.entries.reduce(
       (acc, entry) => acc.plus(new Prisma.Decimal(entry.debit || 0)),
@@ -36,7 +41,7 @@ export class LedgerService {
       );
     }
 
-    const execute = async (tx: any) => {
+    const execute = async (tx: PrismaTxClient) => {
       // 1. Create the Transaction Parent
       const financialTx = await tx.financialTransaction.upsert({
         where: { reference: data.reference },

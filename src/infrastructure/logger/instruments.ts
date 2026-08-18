@@ -34,7 +34,7 @@ sdk.start();
 async function shutdownTelemetry() {
   try {
     await sdk.shutdown();
-    console.log("[OTel] SDK shut down successfully");
+    // SDK shut down successfully
   } catch (e) {
     console.error("[OTel] Error shutting down SDK", e);
   }

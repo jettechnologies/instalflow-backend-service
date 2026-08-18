@@ -99,8 +99,8 @@ export const paymentWorker = new Worker(
     }
 
     const gatewayRef =
-      (verification as any).id?.toString() ??
-      (verification as any).gatewayRef ??
+      (verification as { id?: number }).id?.toString() ??
+      (verification as { gatewayRef?: string }).gatewayRef ??
       reference;
 
     const contract = installment.financingContract;

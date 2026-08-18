@@ -1,8 +1,14 @@
 import type { Request, Response } from "express";
-import { prisma } from "@/infrastructure/prisma";
+import { prisma, type Prisma } from "@/infrastructure/prisma";
 import logger from "@/infrastructure/logger/logger";
 import { PaystackService } from "@/core/services/paystack.service";
 import { WebhookProcessor } from "@/core/services/webhook-processor.service";
+
+type PaystackWebhookEvent = {
+  event: string;
+  data: Record<string, unknown>;
+  [key: string]: unknown;
+};
 
 export class WebhookController {
   static async handlePaystack(req: Request, res: Response) {
@@ -44,7 +50,7 @@ export class WebhookController {
       return res.status(400).send("Invalid signature");
     }
 
-    let event: any;
+    let event: PaystackWebhookEvent;
 
     try {
       if (Buffer.isBuffer(req.body)) {
@@ -59,7 +65,9 @@ export class WebhookController {
       return res.status(400).send("Malformed JSON");
     }
 
-    if (!event?.event || !event?.data?.id) {
+    const eventData = event as Record<string, unknown>;
+
+    if (!event?.event || !(eventData.data as Record<string, unknown>)?.id) {
       logger.webhook.signatureFailure({
         reason: "invalid_event_structure",
         payload: event,
@@ -67,17 +75,21 @@ export class WebhookController {
       return res.status(400).send("Invalid webhook structure");
     }
 
+    const dataRecord = eventData.data as Record<string, unknown>;
+
     logger.webhook.received(event.event, {
-      event_id: event.data.id,
-      metadata_type: event.data.metadata?.type,
+      event_id: (dataRecord.id as string).toString(),
+      metadata_type: (
+        dataRecord.metadata as Record<string, unknown> | undefined
+      )?.type,
     });
 
     const existingEvent = await prisma.webhookEvent.findUnique({
-      where: { id: event.data.id.toString() },
+      where: { id: (dataRecord.id as string).toString() },
     });
 
     if (existingEvent) {
-      logger.webhook.duplicate(event.data.id.toString(), {
+      logger.webhook.duplicate((dataRecord.id as string).toString(), {
         event_type: event.event,
       });
       return res.status(200).send("Event already processed");
@@ -85,26 +97,26 @@ export class WebhookController {
 
     await prisma.webhookEvent.create({
       data: {
-        id: event.data.id.toString(),
+        id: (dataRecord.id as string).toString(),
         source: "PAYSTACK",
         type: event.event,
-        payload: event,
+        payload: event as Prisma.InputJsonValue,
       },
     });
 
     try {
       switch (event.event) {
         case "charge.success":
-          await WebhookProcessor.handleChargeSuccess(event.data);
+          await WebhookProcessor.handleChargeSuccess(dataRecord);
           break;
         case "transfer.success":
-          await WebhookProcessor.handleTransferSuccess(event.data);
+          await WebhookProcessor.handleTransferSuccess(dataRecord);
           break;
         case "transfer.failed":
-          await WebhookProcessor.handleTransferFailed(event.data);
+          await WebhookProcessor.handleTransferFailed(dataRecord);
           break;
         case "transfer.reversed":
-          await WebhookProcessor.handleTransferReversed(event.data);
+          await WebhookProcessor.handleTransferReversed(dataRecord);
           break;
         default:
           logger.webhook.received(event.event, { ignored: true });
@@ -112,18 +124,22 @@ export class WebhookController {
       }
 
       await prisma.webhookEvent.update({
-        where: { id: event.data.id.toString() },
+        where: { id: (dataRecord.id as string).toString() },
         data: { processed: true },
       });
 
       logger.webhook.processed(event.event, {
-        event_id: event.data.id,
-        metadata_type: event.data.metadata?.type,
+        event_id: dataRecord.id as string,
+        metadata_type: (
+          dataRecord.metadata as Record<string, unknown> | undefined
+        )?.type,
       });
 
       return res.status(200).send("Webhook Processed");
-    } catch (error: any) {
-      logger.webhook.failed(event.event, error, { event_id: event.data.id });
+    } catch (error: unknown) {
+      logger.webhook.failed(event.event, error, {
+        event_id: eventData.id as string,
+      });
       return res.status(500).send("Internal Server Error during processing");
     }
   }
