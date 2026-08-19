@@ -202,8 +202,14 @@ export class CommissionController {
   static async getPayoutById(req: Request, res: Response, next: NextFunction) {
     try {
       const payoutId = req.params.id as string;
+      const userId = req.user!.userId;
+      const role = req.user!.role as Role;
 
-      const result = await CommissionService.getPayoutById(payoutId);
+      const result = await CommissionService.getPayoutById(
+        payoutId,
+        userId,
+        role,
+      );
 
       return ApiResponse.success(
         res,

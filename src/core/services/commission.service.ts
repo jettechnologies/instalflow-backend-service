@@ -304,7 +304,16 @@ export class CommissionService {
     };
   }
 
-  static async getPayoutById(payoutId: string) {
+  static async getPayoutById(payoutId: string, userId: string, role: Role) {
+    const currentUser = await prisma.user.findUnique({
+      where: { userId },
+      select: { companyId: true },
+    });
+
+    if (!currentUser) {
+      throw new NotFoundError("User not found");
+    }
+
     const payout = await prisma.commissionPayoutRequest.findUnique({
       where: {
         payoutId,
@@ -363,6 +372,26 @@ export class CommissionService {
 
     if (!payout) {
       throw new NotFoundError("Payout request not found");
+    }
+
+    switch (role) {
+      case Role.MARKETER:
+        if (payout.userId !== userId) {
+          throw new NotFoundError("Payout request not found");
+        }
+        break;
+
+      case Role.COMPANY:
+        if (payout.companyId !== currentUser.companyId) {
+          throw new NotFoundError("Payout request not found");
+        }
+        break;
+
+      case Role.ADMIN:
+        break;
+
+      default:
+        throw new ForbiddenError("Unauthorized");
     }
 
     return {
@@ -609,11 +638,17 @@ export class CommissionService {
         payoutId,
         status: CommissionPayoutStatus.PENDING_ADMIN_APPROVAL,
       },
-      include: { user: true },
+      include: {
+        user: { select: { userId: true, name: true } },
+      },
     });
 
     if (!payout) {
       throw new NotFoundError("Payout request not found");
+    }
+
+    if (payout.companyId !== admin.companyId) {
+      throw new ForbiddenError("This payout does not belong to your company");
     }
 
     const updated = await prisma.commissionPayoutRequest.update({
@@ -653,11 +688,17 @@ export class CommissionService {
 
     const payout = await prisma.commissionPayoutRequest.findUnique({
       where: { payoutId },
-      include: { user: true },
+      include: {
+        user: { select: { userId: true, name: true } },
+      },
     });
 
     if (!payout) {
       throw new NotFoundError("Payout request not found");
+    }
+
+    if (payout.companyId !== approver.companyId) {
+      throw new ForbiddenError("This payout does not belong to your company");
     }
 
     if (payout.status !== CommissionPayoutStatus.PENDING_COMPANY_APPROVAL) {

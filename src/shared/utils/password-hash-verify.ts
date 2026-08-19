@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_SECRET!;
 const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET!;
@@ -78,6 +79,15 @@ export function generateRefreshToken({
   return jwt.sign({ companyId, userId, role, email }, REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
   });
+}
+
+// Deterministic, non-secret hash of a refresh token for at-rest storage
+// (UserSession.tokenHash). The token itself is already an unguessable signed
+// JWT, so SHA-256 is sufficient here — the goal is to avoid storing a
+// directly-replayable session token in the database, not to slow down
+// brute force of a low-entropy secret.
+export function hashRefreshToken(token: string): string {
+  return crypto.createHash("sha256").update(token).digest("hex");
 }
 
 // Verify Refresh Token

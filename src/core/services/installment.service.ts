@@ -319,7 +319,54 @@ export class InstallmentService {
     };
   }
 
-  static async getCustomerInstallments(financingContractId: string) {
+  /**
+   * A CUSTOMER may only reach their own contract; any staff role is scoped
+   * to their own company (SUPER_ADMIN is platform-wide). Deliberately
+   * NotFoundError, not Forbidden — matches the tenant-boundary convention
+   * used across the catalog/customer-management fixes.
+   */
+  private static async assertContractAccess(
+    financingContractId: string,
+    callerId: string,
+    callerRole: string,
+    callerCompanyId?: string,
+  ) {
+    const contract = await prisma.financingContract.findUnique({
+      where: { contractId: financingContractId },
+      select: { userId: true, user: { select: { companyId: true } } },
+    });
+
+    if (!contract) {
+      throw new NotFoundError("Financing contract not found");
+    }
+
+    if (callerRole === "CUSTOMER") {
+      if (contract.userId !== callerId) {
+        throw new NotFoundError("Financing contract not found");
+      }
+      return;
+    }
+
+    if (callerRole === "SUPER_ADMIN") return;
+
+    if (contract.user?.companyId !== callerCompanyId) {
+      throw new NotFoundError("Financing contract not found");
+    }
+  }
+
+  static async getCustomerInstallments(
+    financingContractId: string,
+    callerId: string,
+    callerRole: string,
+    callerCompanyId?: string,
+  ) {
+    await this.assertContractAccess(
+      financingContractId,
+      callerId,
+      callerRole,
+      callerCompanyId,
+    );
+
     return prisma.installment.findMany({
       where: {
         financingContractId,
@@ -331,7 +378,19 @@ export class InstallmentService {
     });
   }
 
-  static async getFinancedProducts(financingContractId: string) {
+  static async getFinancedProducts(
+    financingContractId: string,
+    callerId: string,
+    callerRole: string,
+    callerCompanyId?: string,
+  ) {
+    await this.assertContractAccess(
+      financingContractId,
+      callerId,
+      callerRole,
+      callerCompanyId,
+    );
+
     const financedProducts = await prisma.installment.findMany({
       where: {
         financingContractId,
@@ -371,7 +430,19 @@ export class InstallmentService {
     return financedProducts;
   }
 
-  static async calculateProgressPercentage(financingContractId: string) {
+  static async calculateProgressPercentage(
+    financingContractId: string,
+    callerId: string,
+    callerRole: string,
+    callerCompanyId?: string,
+  ) {
+    await this.assertContractAccess(
+      financingContractId,
+      callerId,
+      callerRole,
+      callerCompanyId,
+    );
+
     // Aggregate the PAID sum in the database instead of pulling every
     // installment row into memory just to filter+reduce in JS.
     const [contract, paidAgg] = await prisma.$transaction([

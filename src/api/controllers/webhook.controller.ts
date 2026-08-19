@@ -88,21 +88,28 @@ export class WebhookController {
       where: { id: (dataRecord.id as string).toString() },
     });
 
-    if (existingEvent) {
+    // Only a *successfully processed* event is a true duplicate. A row that
+    // exists but was never marked `processed` means a prior attempt crashed
+    // mid-handling — Paystack's retry must be allowed to try again, or the
+    // event (e.g. a transfer.success finalizing a payout) is silently lost
+    // forever with no other recovery path.
+    if (existingEvent?.processed) {
       logger.webhook.duplicate((dataRecord.id as string).toString(), {
         event_type: event.event,
       });
       return res.status(200).send("Event already processed");
     }
 
-    await prisma.webhookEvent.create({
-      data: {
-        id: (dataRecord.id as string).toString(),
-        source: "PAYSTACK",
-        type: event.event,
-        payload: event as Prisma.InputJsonValue,
-      },
-    });
+    if (!existingEvent) {
+      await prisma.webhookEvent.create({
+        data: {
+          id: (dataRecord.id as string).toString(),
+          source: "PAYSTACK",
+          type: event.event,
+          payload: event as Prisma.InputJsonValue,
+        },
+      });
+    }
 
     try {
       switch (event.event) {

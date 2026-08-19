@@ -85,6 +85,8 @@ const fileFilter = (
 
 const limits = {
   fileSize: 20 * 1024 * 1024,
+  fields: 20,
+  parts: 30,
 };
 
 export const uploadSingle = (fieldName: string) =>
@@ -154,5 +156,5 @@ export const uploadSinglePdf = (fieldName: string) =>
   multer({
     storage,
     fileFilter: pdfFilter,
-    limits: { fileSize: PDF_SIZE_LIMIT },
+    limits: { fileSize: PDF_SIZE_LIMIT, fields: 20, parts: 30 },
   }).single(fieldName);

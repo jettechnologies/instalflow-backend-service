@@ -250,18 +250,21 @@ export class ProductService {
           ],
         },
       }),
-      ...(cursor && {
-        id:
-          sortOrder === "desc"
-            ? { lte: BigInt(cursor) }
-            : { gte: BigInt(cursor) },
-      }),
     };
 
+    // Cursor on the public productId (not the internal sequential id) so the
+    // response never exposes the DB's autoincrement PK or lets a client
+    // infer catalog size/insertion order. createdAt is the primary sort key;
+    // productId is the tiebreaker Prisma needs to disambiguate rows sharing
+    // a createdAt timestamp and to anchor the cursor itself.
     const raw = await prisma.product.findMany({
       where,
       take: limit + 1,
-      orderBy: { id: sortOrder },
+      ...(cursor && {
+        cursor: { productId: cursor },
+        skip: 1,
+      }),
+      orderBy: [{ createdAt: sortOrder }, { productId: sortOrder }],
       include: this.standardIncludes(),
     });
 
@@ -270,10 +273,10 @@ export class ProductService {
     let nextCursor: string | null = null;
     if (products.length > limit) {
       const next = products.pop()!;
-      nextCursor = next.id.toString();
+      nextCursor = next.productId;
     }
 
-    const prevCursor = products.length ? products[0].id.toString() : null;
+    const prevCursor = products.length ? products[0].productId : null;
 
     return {
       products,

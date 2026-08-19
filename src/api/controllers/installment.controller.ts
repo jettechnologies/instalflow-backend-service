@@ -41,7 +41,12 @@ export class InstallmentController {
   static async getCustomerInstallments(req: Request, res: Response) {
     const contractId = req.params.contractId as string;
 
-    const data = await InstallmentService.getCustomerInstallments(contractId);
+    const data = await InstallmentService.getCustomerInstallments(
+      contractId,
+      req.user!.userId,
+      req.user!.role,
+      req.user!.companyId,
+    );
 
     return ApiResponse.success(
       res,
@@ -57,7 +62,12 @@ export class InstallmentController {
   static async getFinancedProducts(req: Request, res: Response) {
     const contractId = req.params.contractId as string;
 
-    const data = await InstallmentService.getFinancedProducts(contractId);
+    const data = await InstallmentService.getFinancedProducts(
+      contractId,
+      req.user!.userId,
+      req.user!.role,
+      req.user!.companyId,
+    );
 
     return ApiResponse.success(
       res,
@@ -73,8 +83,12 @@ export class InstallmentController {
   static async getProgress(req: Request, res: Response) {
     const contractId = req.params.contractId as string;
 
-    const data =
-      await InstallmentService.calculateProgressPercentage(contractId);
+    const data = await InstallmentService.calculateProgressPercentage(
+      contractId,
+      req.user!.userId,
+      req.user!.role,
+      req.user!.companyId,
+    );
 
     return ApiResponse.success(
       res,

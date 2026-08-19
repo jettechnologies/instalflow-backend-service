@@ -8,6 +8,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
   generateOnboardingToken,
+  hashRefreshToken,
 } from "@/shared/utils/password-hash-verify";
 import {
   ConflictError,
@@ -76,7 +77,7 @@ export class AuthService {
     const session = await prisma.userSession.create({
       data: {
         user: { connect: { userId: user.userId } },
-        tokenHash: refreshToken,
+        tokenHash: hashRefreshToken(refreshToken),
         expiresAt,
       },
     });
@@ -238,7 +239,7 @@ export class AuthService {
     const session = await prisma.userSession.create({
       data: {
         user: { connect: { userId: user.userId } },
-        tokenHash: refreshToken,
+        tokenHash: hashRefreshToken(refreshToken),
         expiresAt,
       },
     });
@@ -323,7 +324,7 @@ export class AuthService {
     }
 
     const activeSession = await prisma.userSession.findUnique({
-      where: { tokenHash: refreshToken },
+      where: { tokenHash: hashRefreshToken(refreshToken) },
     });
     if (
       !activeSession ||
