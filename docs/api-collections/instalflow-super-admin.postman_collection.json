@@ -1,0 +1,1327 @@
+{
+  "info": {
+    "_postman_id": "b6f2a5b1-6e5f-4d3f-9a0a-instalflow-superadmin",
+    "name": "Instalflow — Super Admin",
+    "description": "SUPER_ADMIN-scoped API collection for the Instalflow backend-service. Includes every endpoint that lists SUPER_ADMIN in its `requireRole([...])` guard (verified directly against `src/api/routes/*.ts` on 2026-08-18), plus the auth flow needed to obtain an access token. Endpoints that never grant SUPER_ADMIN (e.g. `/admin`, `/company`, `/company-bank-accounts`, `/commissions/payouts/*-approve`, `/financing`) are intentionally excluded — a SUPER_ADMIN token will get a 403 on those.\n\nAuth model: short-lived JWT access token via `Authorization: Bearer`, refresh token in an httpOnly cookie. CSRF is exempt whenever a Bearer token is present (`csrf-middlewares.ts`), so no CSRF token is needed for any request in this collection once you're logged in.\n\nRun \"Login\" first — its test script stores the access token into the collection variable `accessToken`, which every other request inherits via collection-level Bearer auth.\n\nThe \"Tenant Management\" and \"Platform Revenue\" folders are new SUPER_ADMIN-only routes added under `/superadmin` on 2026-08-18 — cross-checked against `docs/swagger/superadmin.swagger.yaml`. They give SUPER_ADMIN a tenant directory/profile, a unified per-tenant activity timeline (fanned in from KYC/settlement/approval/payout/contract/login audit sources — there is no single AuditLog table), per-tenant platform revenue vs GMV, and cross-tenant revenue leaderboards for both tenants and products.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api/v1", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" },
+    { "key": "superAdminEmail", "value": "superadmin@instalflow.com", "type": "string" },
+    { "key": "superAdminPassword", "value": "ChangeMe123!", "type": "string" },
+    { "key": "planId", "value": "", "type": "string" },
+    { "key": "accountId", "value": "", "type": "string" },
+    { "key": "settlementId", "value": "", "type": "string" },
+    { "key": "productId", "value": "", "type": "string" },
+    { "key": "productSlug", "value": "", "type": "string" },
+    { "key": "categoryId", "value": "", "type": "string" },
+    { "key": "variantId", "value": "", "type": "string" },
+    { "key": "imageId", "value": "", "type": "string" },
+    { "key": "installmentPlanId", "value": "", "type": "string" },
+    { "key": "customerId", "value": "", "type": "string" },
+    { "key": "contractId", "value": "", "type": "string" },
+    { "key": "installmentId", "value": "", "type": "string" },
+    { "key": "notificationId", "value": "", "type": "string" },
+    { "key": "companyId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Session bootstrap. Login/refresh are public; the rest require a valid access token. `/auth/*` is fully CSRF-exempt.",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{superAdminEmail}}\",\n  \"password\": \"{{superAdminPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "description": "Public. Sets an httpOnly `refresh_token` cookie and returns `accessToken` in the body. The test script below stores it into the `accessToken` collection variable."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  const token = json.data && json.data.accessToken;",
+                  "  if (token) pm.collectionVariables.set('accessToken', token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] },
+            "description": "Public. Reads the refresh token from the `refresh_token` cookie (or an `Authorization: Bearer <refreshToken>` header as a fallback). Returns a new access/refresh token pair."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  const token = json.data && json.data.accessToken;",
+                  "  if (token) pm.collectionVariables.set('accessToken', token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] },
+            "description": "Any authenticated role. Revokes the current `UserSession` and clears the refresh cookie."
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"ChangeMe123!\",\n  \"newPassword\": \"NewSecureP@ss1\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/change-password", "host": ["{{baseUrl}}"], "path": ["auth", "change-password"] },
+            "description": "Any authenticated role."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Marketer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Marketer\",\n  \"email\": \"jane.marketer@example.com\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/marketers", "host": ["{{baseUrl}}"], "path": ["auth", "marketers"] },
+            "description": "Roles: COMPANY, ADMIN, SUPER_ADMIN. Returns a temp password for the new marketer; controller additionally requires `companyId` on the acting user when role === COMPANY (SUPER_ADMIN is not subject to that check)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Subscription Plans",
+      "description": "`/superadmin/plans` — entirely SUPER_ADMIN-gated at the router level (`superadmin.routes.ts`). Backs `SubscriptionPlan` CRUD consumed by company onboarding/renewal.",
+      "item": [
+        {
+          "name": "List Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/superadmin/plans", "host": ["{{baseUrl}}"], "path": ["superadmin", "plans"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Plan",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Growth\",\n  \"description\": \"For scaling merchants\",\n  \"price\": 25000,\n  \"discountPrice\": 20000,\n  \"discountPercentage\": 20,\n  \"interval\": \"MONTHLY\",\n  \"active\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/superadmin/plans", "host": ["{{baseUrl}}"], "path": ["superadmin", "plans"] },
+            "description": "`interval` is a `SubscriptionInterval` enum (e.g. MONTHLY, YEARLY — check `prisma/schema.prisma` for the full set)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const id = pm.response.json().data && pm.response.json().data.uuid;",
+                  "  if (id) pm.collectionVariables.set('planId', id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Update Plan",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 27500,\n  \"description\": \"Updated pricing tier\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/plans/:planId",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "plans", ":planId"],
+              "variable": [{ "key": "planId", "value": "{{planId}}" }]
+            },
+            "description": "Partial update — every field from `CreateSubscriptionPlanSchema` is optional here."
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Plan Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"active\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/plans/:planId/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "plans", ":planId", "toggle"],
+              "variable": [{ "key": "planId", "value": "{{planId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Plan",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/plans/:planId",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "plans", ":planId"],
+              "variable": [{ "key": "planId", "value": "{{planId}}" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ledger Reconciliation",
+      "description": "`/superadmin/ledger/reconciliation/*` — SUPER_ADMIN-only reads over the Redis-cached output of `ledger-reconciliation.worker.ts` (fed by the daily 02:00 `ledger-reconciliation.scheduler.ts` cron). Read-heavy; the only mutation is cache invalidation.",
+      "item": [
+        {
+          "name": "Get Reconciliation Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/ledger/reconciliation/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "ledger", "reconciliation", "summary"]
+            },
+            "description": "Returns `cacheStatus: \"cold\"` if no reconciliation run has populated the cache yet."
+          },
+          "response": []
+        },
+        {
+          "name": "List All Account Results",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/ledger/reconciliation/accounts?discrepancyOnly=false&companyId=",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "ledger", "reconciliation", "accounts"],
+              "query": [
+                { "key": "discrepancyOnly", "value": "false", "description": "\"true\" | \"false\" — filter to accounts with a balance/journal drift" },
+                { "key": "companyId", "value": "", "description": "company UUID, or the literal \"global\" for platform-level accounts", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Account Result",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/ledger/reconciliation/accounts/:accountId",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "ledger", "reconciliation", "accounts", ":accountId"],
+              "variable": [{ "key": "accountId", "value": "{{accountId}}", "description": "internal numeric LedgerAccount id, not the external uuid" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalidate Reconciliation Cache",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/ledger/reconciliation/cache",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "ledger", "reconciliation", "cache"]
+            },
+            "description": "Purges all reconciliation cache keys from Redis. Use right before manually re-triggering a run, to prevent stale reads."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Merchant Settlements",
+      "description": "`/merchant-settlements` — reads are shared with COMPANY/ADMIN; `retry` and `generate` are SUPER_ADMIN-exclusive because settlement is fully automatic (weekly `merchant-settlement-generation.scheduler.ts`, Monday 06:00) — COMPANY never approves or initiates its own settlement transfer.",
+      "item": [
+        {
+          "name": "List Settlements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/merchant-settlements?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["merchant-settlements"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "description": "SUPER_ADMIN sees across all companies; COMPANY/ADMIN are scoped server-side to their own company."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Settlement By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/merchant-settlements/:settlementId",
+              "host": ["{{baseUrl}}"],
+              "path": ["merchant-settlements", ":settlementId"],
+              "variable": [{ "key": "settlementId", "value": "{{settlementId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Settlement Audit Trail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/merchant-settlements/:settlementId/audit-trail",
+              "host": ["{{baseUrl}}"],
+              "path": ["merchant-settlements", ":settlementId", "audit-trail"],
+              "variable": [{ "key": "settlementId", "value": "{{settlementId}}" }]
+            },
+            "description": "Roles: COMPANY, SUPER_ADMIN (not ADMIN). Returns `MerchantSettlementAuditTrail` rows, each tagged with a `SettlementAuditActor` (SYSTEM/SCHEDULER/WORKER/WEBHOOK/USER)."
+          },
+          "response": []
+        },
+        {
+          "name": "Retry Failed Transfer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/merchant-settlements/:settlementId/retry",
+              "host": ["{{baseUrl}}"],
+              "path": ["merchant-settlements", ":settlementId", "retry"],
+              "variable": [{ "key": "settlementId", "value": "{{settlementId}}" }]
+            },
+            "description": "SUPER_ADMIN-only. Operational recovery for a settlement stuck in TRANSFER_FAILED/TRANSFER_REVERSED — not an approval step, since settlement never required one."
+          },
+          "response": []
+        },
+        {
+          "name": "Manually Trigger Settlement Generation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/merchant-settlements/generate", "host": ["{{baseUrl}}"], "path": ["merchant-settlements", "generate"] },
+            "description": "SUPER_ADMIN-only manual/backfill trigger. Runs the exact same idempotent generation path the weekly scheduler invokes — safe to call ad hoc."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Platform Overview",
+      "description": "`GET /superadmin/overview` — single dashboard-summary endpoint tying tenants, platform revenue, and GMV together.",
+      "item": [
+        {
+          "name": "Get Platform Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/superadmin/overview", "host": ["{{baseUrl}}"], "path": ["superadmin", "overview"] },
+            "description": "Tenant counts by plan, all-time and this-month platform revenue, total GMV, active contract count, top 5 tenants by revenue, top 5 products by GMV."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tenant Management",
+      "description": "`/superadmin/tenants/*` — tenant directory, single-tenant profile, and the unified per-tenant activity timeline. New SUPER_ADMIN-only routes (added 2026-08-18) fanned in from KYC/settlement/approval/payout/contract/login audit sources — no single AuditLog table backs this yet.",
+      "item": [
+        {
+          "name": "List Tenants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/tenants?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "tenants"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "", "disabled": true, "description": "matches company name (case-insensitive)" }
+              ]
+            },
+            "description": "Paginated company directory — plan, active subscription, product/user counts, platform revenue, and GMV per tenant."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const tenants = pm.response.json().data && pm.response.json().data.tenants;",
+                  "  if (tenants && tenants[0]) pm.collectionVariables.set('companyId', tenants[0].companyId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Get Tenant Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/tenants/:companyId",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "tenants", ":companyId"],
+              "variable": [{ "key": "companyId", "value": "{{companyId}}" }]
+            },
+            "description": "Full tenant profile — subscription history, bank accounts, user counts by role, financing stats, KYC funnel, and revenue snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tenant Activity Timeline",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/tenants/:companyId/activity?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "tenants", ":companyId", "activity"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "type", "value": "", "disabled": true, "description": "kyc | settlement | approval | payout | contract | login" },
+                { "key": "from", "value": "", "disabled": true, "description": "ISO date-time" },
+                { "key": "to", "value": "", "disabled": true, "description": "ISO date-time" }
+              ],
+              "variable": [{ "key": "companyId", "value": "{{companyId}}" }]
+            },
+            "description": "Unified, chronologically-sorted feed of everything this tenant's users did: KYC submit/approve/reject, settlement generate/retry/webhook actions, marketer approval requests, commission payout status changes, financing contract lifecycle transitions, and logins. Post-merge pagination (see collection description) — fine for admin-dashboard use, not a strict cross-table cursor."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Platform Revenue",
+      "description": "`/superadmin/tenants/:companyId/revenue` and `/superadmin/revenue/*` — new SUPER_ADMIN-only routes (added 2026-08-18). `platformRevenue` (what Instalflow earned — onboarding fee + subscription renewals, from the `PLATFORM_REVENUE` ledger account) is always reported separately from `gmv`/`tenantGmv` (money flowing through a tenant's own products) — the two are never summed.",
+      "item": [
+        {
+          "name": "Get Tenant Revenue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/tenants/:companyId/revenue",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "tenants", ":companyId", "revenue"],
+              "variable": [{ "key": "companyId", "value": "{{companyId}}" }]
+            },
+            "description": "Itemized platform revenue transactions for this tenant, plus their GMV (totalFinanced/collected/contract counts) and total merchant settlement payouts."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tenant Revenue Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/revenue/tenants?page=1&limit=20&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "revenue", "tenants"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "sortOrder", "value": "desc" }
+              ]
+            },
+            "description": "Every tenant ranked by platform revenue (sorted at the DB level on the live LedgerAccount balance), with GMV shown alongside for the current page."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Revenue Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/revenue/products?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["superadmin", "revenue", "products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "description": "Every product across every tenant, ranked by GMV (total financed value), with tenant name attached and commissions paid shown per product. Cross-tenant version of the existing company-scoped `GET /analytics/products/performance`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog - Products",
+      "description": "`/products` — reads open to any authenticated user; writes gated to COMPANY, ADMIN, SUPER_ADMIN. SUPER_ADMIN can act across every company since `companyId` is a query filter, not an implicit scope.",
+      "item": [
+        {
+          "name": "List Products (offset paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&limit=10&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "sortOrder", "value": "desc" },
+                { "key": "category", "value": "", "disabled": true },
+                { "key": "companyId", "value": "", "disabled": true, "description": "UUID — cross-company filter, SUPER_ADMIN-relevant" },
+                { "key": "status", "value": "", "disabled": true, "description": "ProductStatus enum, e.g. DRAFT/ACTIVE" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Products (cursor paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/cursor?limit=10&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "cursor"],
+              "query": [
+                { "key": "limit", "value": "10" },
+                { "key": "cursor", "value": "", "disabled": true },
+                { "key": "sortOrder", "value": "desc" },
+                { "key": "category", "value": "", "disabled": true },
+                { "key": "companyId", "value": "", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/search?search=phone&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "search"],
+              "query": [
+                { "key": "search", "value": "phone" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "minPrice", "value": "", "disabled": true },
+                { "key": "maxPrice", "value": "", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/slug/:slug",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "slug", ":slug"],
+              "variable": [{ "key": "slug", "value": "{{productSlug}}" }]
+            },
+            "description": "Public route in the app, but works fine under an authenticated SUPER_ADMIN token too."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Gallery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/gallery",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "gallery"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Installment Plans For Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/installment-plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "installment-plans"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone 15 Pro\",\n  \"description\": \"128GB, Titanium Blue\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"commissionRate\": 5,\n  \"status\": \"DRAFT\",\n  \"price\": 850000,\n  \"stockQuantity\": 20,\n  \"installmentPlans\": [\n    { \"durationMonths\": 3, \"interestPercentage\": 5, \"active\": true },\n    { \"durationMonths\": 6, \"interestPercentage\": 8, \"active\": true }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const id = pm.response.json().data && pm.response.json().data.uuid;",
+                  "  if (id) pm.collectionVariables.set('productId', id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Bulk Create Products",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"name\": \"Samsung Galaxy S24\",\n    \"categoryId\": \"{{categoryId}}\",\n    \"commissionRate\": 5,\n    \"status\": \"DRAFT\",\n    \"price\": 720000,\n    \"stockQuantity\": 15,\n    \"installmentPlans\": [\n      { \"durationMonths\": 3, \"interestPercentage\": 5 }\n    ],\n    \"variants\": [\n      {\n        \"sku\": \"SGS24-BLK-128\",\n        \"price\": 720000,\n        \"stockQuantity\": 10,\n        \"color\": [\"Black\"],\n        \"isActive\": true\n      }\n    ]\n  }\n]"
+            },
+            "url": { "raw": "{{baseUrl}}/products/bulk", "host": ["{{baseUrl}}"], "path": ["products", "bulk"] },
+            "description": "Body is a raw JSON array (`BulkProductsSchema = z.array(BulkProductInputSchema)`), not wrapped in an object."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 899000,\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Gallery Images",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "images", "type": "file", "src": [] }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/gallery",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "gallery"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            },
+            "description": "multipart/form-data, field name `images` (see `uploadMultiple(\"images\")` in `multer.middlewares.ts`). Uploads go to Cloudinary via `cloudinary.service.ts`."
+          },
+          "response": []
+        },
+        {
+          "name": "Reorder Gallery Images",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderedIds\": [\n    \"11111111-1111-1111-1111-111111111111\",\n    \"22222222-2222-2222-2222-222222222222\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/gallery/reorder",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "gallery", "reorder"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Primary Gallery Image",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/gallery/:imageId/primary",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "gallery", ":imageId", "primary"],
+              "variable": [
+                { "key": "productId", "value": "{{productId}}" },
+                { "key": "imageId", "value": "{{imageId}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Gallery Image Meta",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"altText\": \"Front view, titanium blue\",\n  \"sortOrder\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/gallery/:imageId",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "gallery", ":imageId"],
+              "variable": [
+                { "key": "productId", "value": "{{productId}}" },
+                { "key": "imageId", "value": "{{imageId}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Gallery Image",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/gallery/:imageId",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "gallery", ":imageId"],
+              "variable": [
+                { "key": "productId", "value": "{{productId}}" },
+                { "key": "imageId", "value": "{{imageId}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Installment Plan For Product",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"durationMonths\": 12,\n  \"interestPercentage\": 12,\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:productId/installment-plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":productId", "installment-plans"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            },
+            "description": "`productId` is taken from the URL and merged server-side — don't include it in the body."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Installment Plan",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"interestPercentage\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/installment-plans/:planId",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "installment-plans", ":planId"],
+              "variable": [{ "key": "planId", "value": "{{installmentPlanId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate/Reactivate Installment Plan",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"active\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/products/installment-plans/:planId/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "installment-plans", ":planId", "status"],
+              "variable": [{ "key": "planId", "value": "{{installmentPlanId}}" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog - Categories",
+      "description": "`/categories` — reads open to any authenticated user; writes gated to COMPANY, ADMIN, SUPER_ADMIN.",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:categoryId",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":categoryId"],
+              "variable": [{ "key": "categoryId", "value": "{{categoryId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Smartphones\",\n  \"description\": \"Mobile phones and accessories\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const id = pm.response.json().data && pm.response.json().data.uuid;",
+                  "  if (id) pm.collectionVariables.set('categoryId', id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"description\": \"Updated description\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/categories/:categoryId",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":categoryId"],
+              "variable": [{ "key": "categoryId", "value": "{{categoryId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:categoryId",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":categoryId"],
+              "variable": [{ "key": "categoryId", "value": "{{categoryId}}" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog - Variants",
+      "description": "`/variants` — every route gated to COMPANY, ADMIN, SUPER_ADMIN (`variants.routes.ts` applies the role check collection-wide).",
+      "item": [
+        {
+          "name": "Create Variant",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"IP15P-BLU-256\",\n  \"price\": 950000,\n  \"stockQuantity\": 10,\n  \"size\": \"256GB\",\n  \"color\": [\"Titanium Blue\"],\n  \"attributes\": { \"storage\": \"256GB\" },\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/variants/:productId",
+              "host": ["{{baseUrl}}"],
+              "path": ["variants", ":productId"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            },
+            "description": "`productId` is taken from the URL and merged server-side — omit it from the body."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const id = pm.response.json().data && pm.response.json().data.uuid;",
+                  "  if (id) pm.collectionVariables.set('variantId', id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Bulk Create Variants",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variants\": [\n    { \"sku\": \"IP15P-BLK-128\", \"price\": 850000, \"stockQuantity\": 5, \"color\": [\"Black\"], \"isActive\": true },\n    { \"sku\": \"IP15P-BLK-256\", \"price\": 950000, \"stockQuantity\": 5, \"color\": [\"Black\"], \"isActive\": true }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/variants/:productId/bulk",
+              "host": ["{{baseUrl}}"],
+              "path": ["variants", ":productId", "bulk"],
+              "variable": [{ "key": "productId", "value": "{{productId}}" }]
+            },
+            "description": "Max 100 variants per call (`BulkCreateVariantsSchema`)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Variant",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 899000\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/variants/:variantId",
+              "host": ["{{baseUrl}}"],
+              "path": ["variants", ":variantId"],
+              "variable": [{ "key": "variantId", "value": "{{variantId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Variant Stock",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"stockQuantity\": 25\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/variants/:variantId/stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["variants", ":variantId", "stock"],
+              "variable": [{ "key": "variantId", "value": "{{variantId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate/Reactivate Variant",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/variants/:variantId/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["variants", ":variantId", "status"],
+              "variable": [{ "key": "variantId", "value": "{{variantId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Variant Images",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageIds\": [\"11111111-1111-1111-1111-111111111111\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/variants/:variantId/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["variants", ":variantId", "images"],
+              "variable": [{ "key": "variantId", "value": "{{variantId}}" }]
+            },
+            "description": "`imageIds` reference existing `ProductImage` records (upload first via the Products > Upload Gallery Images request)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "KYC Oversight",
+      "description": "`/kyc` — SUPER_ADMIN only has the platform-wide applications list (`GET /kyc/applications`); the submit/approve/reject/document-download routes stay with MARKETER/ADMIN/COMPANY as the maker-checker parties.",
+      "item": [
+        {
+          "name": "List All KYC Applications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/kyc/applications?page=1&limit=10&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["kyc", "applications"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "sortOrder", "value": "desc" },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "marketerId", "value": "", "disabled": true },
+                { "key": "search", "value": "", "disabled": true }
+              ]
+            },
+            "description": "Roles: SUPER_ADMIN, ADMIN, COMPANY, MARKETER. Non-SUPER_ADMIN callers are scoped server-side by `companyId`/`marketerId`; SUPER_ADMIN sees across all companies."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Customer Management",
+      "description": "`/customers` — role-scoped views; SUPER_ADMIN is included on every route in this file.",
+      "item": [
+        {
+          "name": "Get Corporate Hierarchy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/customers/hierarchy", "host": ["{{baseUrl}}"], "path": ["customers", "hierarchy"] },
+            "description": "Roles: COMPANY, SUPER_ADMIN only. Full Company → Admin/Marketer → Customer tree."
+          },
+          "response": []
+        },
+        {
+          "name": "List Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/:customerId/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", ":customerId", "products"],
+              "variable": [{ "key": "customerId", "value": "{{customerId}}" }]
+            },
+            "description": "Ongoing `FinancingContract`s for the customer."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer Installment Schedule",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/:customerId/products/:productId/schedule",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", ":customerId", "products", ":productId", "schedule"],
+              "variable": [
+                { "key": "customerId", "value": "{{customerId}}" },
+                { "key": "productId", "value": "{{productId}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer Payment History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/:customerId/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", ":customerId", "payments"],
+              "variable": [{ "key": "customerId", "value": "{{customerId}}" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Installments",
+      "description": "`/installments` — three of six routes include SUPER_ADMIN; the customer-only `GET /customer` and `POST /:installmentId/pay` are intentionally excluded here.",
+      "item": [
+        {
+          "name": "Get Installment By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/installments/view/:installmentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["installments", "view", ":installmentId"],
+              "variable": [{ "key": "installmentId", "value": "{{installmentId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Installments By Contract",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/installments/:contractId",
+              "host": ["{{baseUrl}}"],
+              "path": ["installments", ":contractId"],
+              "variable": [{ "key": "contractId", "value": "{{contractId}}" }]
+            },
+            "description": "Roles: ADMIN, COMPANY, SUPER_ADMIN (not CUSTOMER — customers use `GET /customer` instead)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Financed Products For Contract",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/installments/:contractId/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["installments", ":contractId", "products"],
+              "variable": [{ "key": "contractId", "value": "{{contractId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Contract Progress",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/installments/:contractId/progress",
+              "host": ["{{baseUrl}}"],
+              "path": ["installments", ":contractId", "progress"],
+              "variable": [{ "key": "contractId", "value": "{{contractId}}" }]
+            },
+            "description": "Completion percentage for the `FinancingContract`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "description": "`/notifications` — no role restriction, just `requireAuth`. In-app notification inbox for whichever account is logged in, including SUPER_ADMIN.",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/notifications", "host": ["{{baseUrl}}"], "path": ["notifications"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/notifications/unread-count", "host": ["{{baseUrl}}"], "path": ["notifications", "unread-count"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Notification As Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/:notificationId/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", ":notificationId", "read"],
+              "variable": [{ "key": "notificationId", "value": "{{notificationId}}" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Selected Notifications As Read",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notificationIds\": [\"{{notificationId}}\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/notifications/read-selected", "host": ["{{baseUrl}}"], "path": ["notifications", "read-selected"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark All Notifications As Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/notifications/read-all", "host": ["{{baseUrl}}"], "path": ["notifications", "read-all"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Utility",
+      "description": "Unauthenticated infrastructure routes, mounted directly in `routes/index.ts`.",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get CSRF Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/csrf-token", "host": ["{{baseUrl}}"], "path": ["csrf-token"] },
+            "description": "Only needed for cookie/session-based clients. Every request in this collection authenticates with `Authorization: Bearer`, which `csrf-middlewares.ts` exempts from CSRF checks entirely."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

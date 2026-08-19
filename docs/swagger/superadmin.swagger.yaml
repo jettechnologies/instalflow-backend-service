@@ -5,6 +5,198 @@ info:
   description: API for platform management and configuration.
 
 paths:
+  /superadmin/overview:
+    get:
+      summary: Platform-wide dashboard overview
+      tags: [SuperAdmin, Revenue]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Tenant counts, platform revenue, GMV, and top tenants/products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+
+  /superadmin/tenants:
+    get:
+      summary: List all tenants (companies) with headline stats
+      tags: [SuperAdmin, Tenants]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 20 }
+        - in: query
+          name: search
+          schema: { type: string }
+      responses:
+        '200':
+          description: Paginated tenant directory
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      pagination:
+                        $ref: '#/components/schemas/Pagination'
+                      tenants:
+                        type: array
+                        items:
+                          type: object
+
+  /superadmin/tenants/{companyId}:
+    get:
+      summary: Get a single tenant's full profile
+      tags: [SuperAdmin, Tenants]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Tenant profile — subscription history, users, financing, KYC funnel, revenue
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Tenant not found
+
+  /superadmin/tenants/{companyId}/activity:
+    get:
+      summary: Unified tenant activity timeline
+      description: >
+        Fanned in from KYC audit trail, merchant settlement audit trail,
+        marketer approval requests, commission payout status changes,
+        financing contract lifecycle events, and login sessions. No single
+        AuditLog table backs this — each source is queried and merged.
+      tags: [SuperAdmin, Tenants]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 20 }
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [kyc, settlement, approval, payout, contract, login]
+        - in: query
+          name: from
+          schema: { type: string, format: date-time }
+        - in: query
+          name: to
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: Paginated, chronologically-sorted activity feed
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /superadmin/tenants/{companyId}/revenue:
+    get:
+      summary: Platform revenue earned from this tenant, plus their GMV
+      description: >
+        `platformRevenue` is what Instalflow earned from this tenant
+        (onboarding fee + subscription renewals, from the PLATFORM_REVENUE
+        ledger account). `tenantGmv` is a separate number — money flowing
+        through the tenant's own products. The two are never summed.
+      tags: [SuperAdmin, Revenue]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Itemized platform revenue + tenant GMV + merchant settlement payout total
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Tenant not found
+
+  /superadmin/revenue/tenants:
+    get:
+      summary: Cross-tenant platform revenue leaderboard
+      tags: [SuperAdmin, Revenue]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 20 }
+        - in: query
+          name: sortOrder
+          schema: { type: string, enum: [asc, desc], default: desc }
+      responses:
+        '200':
+          description: Tenants ranked by platform revenue, with GMV shown alongside
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /superadmin/revenue/products:
+    get:
+      summary: Platform-wide product revenue leaderboard
+      description: >
+        Cross-tenant version of the company-scoped product performance
+        endpoint (`GET /analytics/products/performance`) — every product
+        across every tenant, ranked by GMV.
+      tags: [SuperAdmin, Revenue]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 20 }
+      responses:
+        '200':
+          description: Products ranked by total financed value, with tenant attached
+          content:
+            application/json:
+              schema:
+                type: object
+
   /superadmin/plans:
     get:
       summary: List all subscription plans (Internal)
