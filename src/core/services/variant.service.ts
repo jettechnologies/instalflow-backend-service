@@ -1,6 +1,7 @@
 import { prisma, Prisma } from "@/infrastructure/prisma";
 import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
 import { ProductService } from "@/core/services/product.service";
+import { assertCompanyOwnership } from "@/shared/utils/helpers/tenant-scope";
 import type {
   CreateVariantInput,
   UpdateVariantInput,
@@ -44,14 +45,25 @@ export class VariantService {
     return variant;
   }
 
-  static async addVariant(data: CreateVariantInput) {
+  static async addVariant(
+    data: CreateVariantInput,
+    callerCompanyId?: string,
+    callerRole?: string,
+  ) {
     return prisma.$transaction(async (tx) => {
       const product = await tx.product.findUnique({
         where: { productId: data.productId },
-        select: { productId: true },
+        select: { productId: true, companyId: true },
       });
 
       if (!product) throw new NotFoundError("Product not found");
+
+      assertCompanyOwnership(
+        product.companyId,
+        callerCompanyId,
+        callerRole,
+        "Product not found",
+      );
 
       const existingSku = await tx.productVariant.findUnique({
         where: { sku: data.sku },
@@ -101,13 +113,30 @@ export class VariantService {
     });
   }
 
-  static async updateVariant(variantId: string, data: UpdateVariantInput) {
+  static async updateVariant(
+    variantId: string,
+    data: UpdateVariantInput,
+    callerCompanyId?: string,
+    callerRole?: string,
+  ) {
     const variant = await prisma.productVariant.findUnique({
       where: { variantId },
-      select: { id: true, productId: true, sku: true },
+      select: {
+        id: true,
+        productId: true,
+        sku: true,
+        product: { select: { companyId: true } },
+      },
     });
 
     if (!variant) throw new NotFoundError("Variant not found");
+
+    assertCompanyOwnership(
+      variant.product.companyId,
+      callerCompanyId,
+      callerRole,
+      "Variant not found",
+    );
 
     if (data.sku && data.sku !== variant.sku) {
       const skuTaken = await prisma.productVariant.findFirst({
@@ -169,14 +198,27 @@ export class VariantService {
   static async updateVariantStock(
     variantId: string,
     data: UpdateVariantStockInput,
+    callerCompanyId?: string,
+    callerRole?: string,
   ) {
     return prisma.$transaction(async (tx) => {
       const variant = await tx.productVariant.findUnique({
         where: { variantId },
-        select: { variantId: true, productId: true },
+        select: {
+          variantId: true,
+          productId: true,
+          product: { select: { companyId: true } },
+        },
       });
 
       if (!variant) throw new NotFoundError("Variant not found");
+
+      assertCompanyOwnership(
+        variant.product.companyId,
+        callerCompanyId,
+        callerRole,
+        "Variant not found",
+      );
 
       await tx.productVariant.update({
         where: { variantId },
@@ -192,11 +234,14 @@ export class VariantService {
   static async deactivateVariant(
     variantId: string,
     data: DeactivateVariantInput,
+    callerCompanyId?: string,
+    callerRole?: string,
   ) {
     return prisma.$transaction(async (tx) => {
       const variant = await tx.productVariant.findUnique({
         where: { variantId },
         include: {
+          product: { select: { companyId: true } },
           financingContracts: {
             where: { status: { in: ["ACTIVE", "PENDING_ACTIVATION"] } },
             select: { contractId: true },
@@ -205,6 +250,13 @@ export class VariantService {
       });
 
       if (!variant) throw new NotFoundError("Variant not found");
+
+      assertCompanyOwnership(
+        variant.product.companyId,
+        callerCompanyId,
+        callerRole,
+        "Variant not found",
+      );
 
       if (!data.isActive && variant.financingContracts.length > 0) {
         throw new BadRequestError(
@@ -224,11 +276,16 @@ export class VariantService {
     });
   }
 
-  static async removeVariant(variantId: string) {
+  static async removeVariant(
+    variantId: string,
+    callerCompanyId?: string,
+    callerRole?: string,
+  ) {
     return prisma.$transaction(async (tx) => {
       const variant = await tx.productVariant.findUnique({
         where: { variantId },
         include: {
+          product: { select: { companyId: true } },
           financingContracts: {
             where: { status: { in: ["ACTIVE", "PENDING_ACTIVATION"] } },
             select: { contractId: true },
@@ -237,6 +294,13 @@ export class VariantService {
       });
 
       if (!variant) throw new NotFoundError("Variant not found");
+
+      assertCompanyOwnership(
+        variant.product.companyId,
+        callerCompanyId,
+        callerRole,
+        "Variant not found",
+      );
 
       if (variant.financingContracts.length > 0) {
         throw new BadRequestError(
@@ -266,14 +330,23 @@ export class VariantService {
   static async bulkCreateVariants(
     productId: string,
     data: BulkCreateVariantsInput,
+    callerCompanyId?: string,
+    callerRole?: string,
   ) {
     return prisma.$transaction(async (tx) => {
       const product = await tx.product.findUnique({
         where: { productId: productId },
-        select: { productId: true },
+        select: { productId: true, companyId: true },
       });
 
       if (!product) throw new NotFoundError("Product not found");
+
+      assertCompanyOwnership(
+        product.companyId,
+        callerCompanyId,
+        callerRole,
+        "Product not found",
+      );
 
       const skus = data.variants.map((v) => v.sku);
       const existingSkus = await tx.productVariant.findMany({

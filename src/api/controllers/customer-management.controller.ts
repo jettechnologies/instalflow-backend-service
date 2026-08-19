@@ -10,11 +10,13 @@ export class CustomerManagementController {
       const parsed = CustomerQuerySchema.parse(req.query);
       const reviewerId = req.user!.userId;
       const reviewerRole = req.user!.role as Role;
+      const reviewerCompanyId = req.user!.companyId;
 
       const data = await CustomerManagementService.listCustomers(
         reviewerId,
         reviewerRole,
         parsed,
+        reviewerCompanyId,
       );
 
       return ApiResponse.success(
@@ -37,11 +39,13 @@ export class CustomerManagementController {
       const customerId = req.params.id as string;
       const reviewerId = req.user!.userId;
       const reviewerRole = req.user!.role as Role;
+      const reviewerCompanyId = req.user!.companyId;
 
       const data = await CustomerManagementService.getCustomerProducts(
         customerId,
         reviewerId,
         reviewerRole,
+        reviewerCompanyId,
       );
 
       return ApiResponse.success(
@@ -65,12 +69,14 @@ export class CustomerManagementController {
       const customerId = req.params.id as string;
       const reviewerId = req.user!.userId;
       const reviewerRole = req.user!.role as Role;
+      const reviewerCompanyId = req.user!.companyId;
 
       const data = await CustomerManagementService.getInstallmentSchedule(
         customerId,
         productId,
         reviewerId,
         reviewerRole,
+        reviewerCompanyId,
       );
 
       return ApiResponse.success(
@@ -93,11 +99,13 @@ export class CustomerManagementController {
       const customerId = req.params.id as string;
       const reviewerId = req.user!.userId;
       const reviewerRole = req.user!.role as Role;
+      const reviewerCompanyId = req.user!.companyId;
 
       const data = await CustomerManagementService.getCustomerPaymentHistory(
         customerId,
         reviewerId,
         reviewerRole,
+        reviewerCompanyId,
       );
 
       return ApiResponse.success(
@@ -119,10 +127,12 @@ export class CustomerManagementController {
     try {
       const reviewerId = req.user!.userId;
       const reviewerRole = req.user!.role as Role;
+      const reviewerCompanyId = req.user!.companyId;
 
       const data = await CustomerManagementService.getCorporateHierarchy(
         reviewerId,
         reviewerRole,
+        reviewerCompanyId,
       );
 
       return ApiResponse.success(

@@ -3,6 +3,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import express from "express";
 import swaggerUiDist from "swagger-ui-dist";
 import path from "path";
+import crypto from "crypto";
 
 const isProd = process.env.NODE_ENV === "production";
 const isStaging = process.env.NODE_ENV === "staging";
@@ -28,7 +29,8 @@ const swaggerAuth = (req: Request, res: Response, next: NextFunction) => {
 
   if (swaggerApiKey && token === swaggerApiKey) return next();
 
-  if (req.cookies?.swagger_session === "true") return next();
+  const sessionValue = req.signedCookies?.swagger_session;
+  if (typeof sessionValue === "string" && sessionValue.length > 0) return next();
 
   if (req.accepts("html")) {
     return res.redirect("/api-docs/login");
@@ -80,7 +82,8 @@ export function setupSwagger(app: Express): void {
 
   if (isProtected && swaggerAdminEmail && swaggerAdminPassword) {
     app.get("/api-docs/login", (req: Request, res: Response) => {
-      if (req.cookies?.swagger_session === "true") {
+      const existing = req.signedCookies?.swagger_session;
+      if (typeof existing === "string" && existing.length > 0) {
         return res.redirect("/api-docs");
       }
 
@@ -122,10 +125,12 @@ export function setupSwagger(app: Express): void {
         email === swaggerAdminEmail &&
         password === swaggerAdminPassword
       ) {
-        res.cookie("swagger_session", "true", {
+        const sessionToken = crypto.randomBytes(32).toString("hex");
+        res.cookie("swagger_session", sessionToken, {
           httpOnly: true,
           secure: isProd,
           sameSite: "strict",
+          signed: true,
           maxAge: 8 * 60 * 60 * 1000,
         });
         return res.redirect("/api-docs");

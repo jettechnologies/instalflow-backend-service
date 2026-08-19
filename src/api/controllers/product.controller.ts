@@ -35,7 +35,12 @@ export class ProductController {
 
     const payload = UpdateProductSchema.parse(req.body);
 
-    const product = await ProductService.updateProduct(productId, payload);
+    const product = await ProductService.updateProduct(
+      productId,
+      payload,
+      req.user?.companyId,
+      req.user?.role,
+    );
 
     return ApiResponse.success(
       res,
@@ -117,7 +122,11 @@ export class ProductController {
   }
 
   static async deleteProduct(req: Request, res: Response) {
-    await ProductService.deleteProduct(req.params.id as string);
+    await ProductService.deleteProduct(
+      req.params.id as string,
+      req.user?.companyId,
+      req.user?.role,
+    );
 
     return ApiResponse.success(res, 200, "Product archived successfully");
   }

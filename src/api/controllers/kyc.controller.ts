@@ -266,8 +266,14 @@ export class KycController {
   ) {
     try {
       const applicationId = req.params.id as string;
+      const reviewerId = req.user!.userId;
+      const reviewerRole = req.user!.role;
 
-      const result = await KycService.getKycApplicationById(applicationId);
+      const result = await KycService.getKycApplicationById(
+        applicationId,
+        reviewerId,
+        reviewerRole,
+      );
 
       return ApiResponse.success(
         res,

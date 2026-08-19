@@ -49,7 +49,15 @@ const installmentDetailInclude = {
       kycApplication: {
         include: {
           product: true,
-          user: true,
+          user: {
+            select: {
+              userId: true,
+              name: true,
+              email: true,
+              role: true,
+              companyId: true,
+            },
+          },
         },
       },
     },

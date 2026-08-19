@@ -1293,7 +1293,19 @@ export class KycService {
    * Under Option B, `user` is nullable pre-approval. `onboardingSession` is the
    * authoritative source for the customer's identity until approval.
    */
-  static async getKycApplicationById(applicationId: string) {
+  static async getKycApplicationById(
+    applicationId: string,
+    reviewerId: string,
+    reviewerRole: string,
+  ) {
+    const reviewer = await prisma.user.findUnique({
+      where: { userId: reviewerId },
+    });
+
+    if (!reviewer || reviewer.role === "CUSTOMER") {
+      throw new UnauthorizedError("Unauthorized review session.");
+    }
+
     const application = await prisma.kycApplication.findUnique({
       where: { kycApplicationId: applicationId },
       include: {
@@ -1361,6 +1373,28 @@ export class KycService {
 
     if (!application) {
       throw new NotFoundError("KYC Application not found.");
+    }
+
+    const session = application.onboardingSession;
+
+    if (reviewerRole === "MARKETER") {
+      if (session?.marketerId !== reviewer.userId) {
+        throw new UnauthorizedError(
+          "Unauthorized: You are not the referring marketer for this customer.",
+        );
+      }
+    } else if (reviewerRole === "ADMIN" || reviewerRole === "COMPANY") {
+      if (session?.marketerId) {
+        if (session.marketer?.createdById !== reviewer.userId) {
+          throw new UnauthorizedError(
+            "Unauthorized: You are not the Admin associated with this marketer.",
+          );
+        }
+      } else if (session?.companyId !== reviewer.companyId) {
+        throw new UnauthorizedError(
+          "Unauthorized: This customer does not belong to your company.",
+        );
+      }
     }
 
     return application;

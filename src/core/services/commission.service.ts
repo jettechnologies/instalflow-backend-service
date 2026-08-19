@@ -39,7 +39,15 @@ export class CommissionService {
                 financingContract: {
                   include: {
                     product: true,
-                    user: true,
+                    user: {
+                      select: {
+                        userId: true,
+                        name: true,
+                        email: true,
+                        role: true,
+                        companyId: true,
+                      },
+                    },
                   },
                 },
               },
@@ -522,7 +530,15 @@ export class CommissionService {
           amount: requestedAmount,
           status,
         },
-        include: { user: true },
+        include: {
+          user: {
+            select: {
+              userId: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
       });
 
       for (const entry of plan) {

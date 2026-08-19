@@ -39,7 +39,11 @@ export class VariantController {
       isActive: parseBoolean(req.body.isActive),
     });
 
-    const variant = await VariantService.addVariant(payload);
+    const variant = await VariantService.addVariant(
+      payload,
+      req.user?.companyId,
+      req.user?.role,
+    );
 
     return ApiResponse.success(
       res,
@@ -78,7 +82,12 @@ export class VariantController {
       }),
     });
 
-    const variant = await VariantService.updateVariant(variantId, payload);
+    const variant = await VariantService.updateVariant(
+      variantId,
+      payload,
+      req.user?.companyId,
+      req.user?.role,
+    );
 
     return ApiResponse.success(
       res,
@@ -99,7 +108,12 @@ export class VariantController {
       stockQuantity: parseNumber(req.body.stockQuantity),
     });
 
-    const variant = await VariantService.updateVariantStock(variantId, payload);
+    const variant = await VariantService.updateVariantStock(
+      variantId,
+      payload,
+      req.user?.companyId,
+      req.user?.role,
+    );
 
     return ApiResponse.success(
       res,
@@ -120,7 +134,12 @@ export class VariantController {
       isActive: parseBoolean(req.body.isActive),
     });
 
-    const variant = await VariantService.deactivateVariant(variantId, payload);
+    const variant = await VariantService.deactivateVariant(
+      variantId,
+      payload,
+      req.user?.companyId,
+      req.user?.role,
+    );
 
     return ApiResponse.success(
       res,
@@ -148,7 +167,12 @@ export class VariantController {
       ),
     });
 
-    const result = await VariantService.bulkCreateVariants(productId, payload);
+    const result = await VariantService.bulkCreateVariants(
+      productId,
+      payload,
+      req.user?.companyId,
+      req.user?.role,
+    );
 
     return ApiResponse.success(
       res,

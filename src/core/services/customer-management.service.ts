@@ -10,6 +10,7 @@ export class CustomerManagementService {
     customerId: string,
     reviewerId: string,
     reviewerRole: Role,
+    reviewerCompanyId?: string,
   ): Promise<unknown> {
     const customer = await prisma.user.findUnique({
       where: { userId: customerId },
@@ -34,11 +35,14 @@ export class CustomerManagementService {
           "Unauthorized: This customer's marketer is not assigned to you.",
         );
       }
-    } else if (
-      reviewerRole === Role.SUPER_ADMIN ||
-      reviewerRole === Role.COMPANY
-    ) {
-      // Allowed global corporate view
+    } else if (reviewerRole === Role.SUPER_ADMIN) {
+      // Platform-level: unrestricted corporate view
+    } else if (reviewerRole === Role.COMPANY) {
+      if (!reviewerCompanyId || customer.companyId !== reviewerCompanyId) {
+        throw new UnauthorizedError(
+          "Unauthorized: This customer does not belong to your company.",
+        );
+      }
     } else {
       // Customer viewing themselves
       if (customerId !== reviewerId) {
@@ -56,6 +60,7 @@ export class CustomerManagementService {
     reviewerId: string,
     reviewerRole: Role,
     query: { page: number; limit: number; search?: string },
+    reviewerCompanyId?: string,
   ) {
     const skip = (query.page - 1) * query.limit;
 
@@ -76,11 +81,13 @@ export class CustomerManagementService {
       whereClause.referredByMarketer = {
         createdById: reviewerId,
       };
-    } else if (
-      reviewerRole === Role.COMPANY ||
-      reviewerRole === Role.SUPER_ADMIN
-    ) {
-      // Global list
+    } else if (reviewerRole === Role.SUPER_ADMIN) {
+      // Platform-level: unrestricted global list
+    } else if (reviewerRole === Role.COMPANY) {
+      if (!reviewerCompanyId) {
+        throw new UnauthorizedError("Unauthorized: missing company context.");
+      }
+      whereClause.companyId = reviewerCompanyId;
     } else {
       throw new UnauthorizedError("Unauthorized role.");
     }
@@ -128,8 +135,14 @@ export class CustomerManagementService {
     customerId: string,
     reviewerId: string,
     reviewerRole: Role,
+    reviewerCompanyId?: string,
   ) {
-    await this.validateCustomerScoping(customerId, reviewerId, reviewerRole);
+    await this.validateCustomerScoping(
+      customerId,
+      reviewerId,
+      reviewerRole,
+      reviewerCompanyId,
+    );
 
     const financingContracts = await prisma.financingContract.findMany({
       where: { userId: customerId },
@@ -178,8 +191,14 @@ export class CustomerManagementService {
     productId: string,
     reviewerId: string,
     reviewerRole: Role,
+    reviewerCompanyId?: string,
   ) {
-    await this.validateCustomerScoping(customerId, reviewerId, reviewerRole);
+    await this.validateCustomerScoping(
+      customerId,
+      reviewerId,
+      reviewerRole,
+      reviewerCompanyId,
+    );
 
     const financingContract = await prisma.financingContract.findFirst({
       where: {
@@ -290,8 +309,14 @@ export class CustomerManagementService {
     customerId: string,
     reviewerId: string,
     reviewerRole: Role,
+    reviewerCompanyId?: string,
   ) {
-    await this.validateCustomerScoping(customerId, reviewerId, reviewerRole);
+    await this.validateCustomerScoping(
+      customerId,
+      reviewerId,
+      reviewerRole,
+      reviewerCompanyId,
+    );
 
     const payments = await prisma.payment.findMany({
       where: {
@@ -353,15 +378,28 @@ export class CustomerManagementService {
    * Returns a complete corporate org hierarchy view:
    * Company -> Admins -> Marketers -> Referred Customers.
    */
-  static async getCorporateHierarchy(reviewerId: string, reviewerRole: Role) {
+  static async getCorporateHierarchy(
+    reviewerId: string,
+    reviewerRole: Role,
+    reviewerCompanyId?: string,
+  ) {
     if (reviewerRole !== Role.COMPANY && reviewerRole !== Role.SUPER_ADMIN) {
       throw new UnauthorizedError(
         "Corporate hierarchy view is restricted to Company accounts.",
       );
     }
 
+    if (reviewerRole === Role.COMPANY && !reviewerCompanyId) {
+      throw new UnauthorizedError("Unauthorized: missing company context.");
+    }
+
+    const adminWhere: Prisma.UserWhereInput = { role: Role.ADMIN };
+    if (reviewerRole === Role.COMPANY) {
+      adminWhere.companyId = reviewerCompanyId;
+    }
+
     const admins = await prisma.user.findMany({
-      where: { role: Role.ADMIN },
+      where: adminWhere,
       select: {
         userId: true,
         name: true,

@@ -1,6 +1,7 @@
 import { prisma, type Prisma } from "@/infrastructure/prisma";
 import type { z } from "zod";
 import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
+import { assertCompanyOwnership } from "@/shared/utils/helpers/tenant-scope";
 import type {
   DeactivateInstallmentPlanSchema,
   UpdateInstallmentPlanSchema,
@@ -39,10 +40,13 @@ export class InstallmentPlanService {
   static async updateInstallmentPlan(
     planId: string,
     data: z.infer<typeof UpdateInstallmentPlanSchema>,
+    callerCompanyId?: string,
+    callerRole?: string,
   ) {
     const plan = await prisma.productInstallmentPlan.findUnique({
       where: { planId },
       include: {
+        product: { select: { companyId: true } },
         kycApplications: {
           where: {
             status: "PENDING",
@@ -54,6 +58,13 @@ export class InstallmentPlanService {
     if (!plan) {
       throw new NotFoundError("Installment plan not found");
     }
+
+    assertCompanyOwnership(
+      plan.product.companyId,
+      callerCompanyId,
+      callerRole,
+      "Installment plan not found",
+    );
 
     if (plan.kycApplications.length > 0 && data.active !== undefined) {
       throw new BadRequestError(
@@ -80,10 +91,13 @@ export class InstallmentPlanService {
   static async deactivateInstallmentPlan(
     planId: string,
     data: z.infer<typeof DeactivateInstallmentPlanSchema>,
+    callerCompanyId?: string,
+    callerRole?: string,
   ) {
     const plan = await prisma.productInstallmentPlan.findUnique({
       where: { planId },
       include: {
+        product: { select: { companyId: true } },
         kycApplications: {
           where: {
             status: "PENDING",
@@ -95,6 +109,13 @@ export class InstallmentPlanService {
     if (!plan) {
       throw new NotFoundError("Installment plan not found");
     }
+
+    assertCompanyOwnership(
+      plan.product.companyId,
+      callerCompanyId,
+      callerRole,
+      "Installment plan not found",
+    );
 
     if (plan.kycApplications.length > 0) {
       throw new BadRequestError(
@@ -117,6 +138,8 @@ export class InstallmentPlanService {
       interestPercentage: number;
       active?: boolean;
     },
+    callerCompanyId?: string,
+    callerRole?: string,
   ) {
     const product = await prisma.product.findUnique({
       where: { productId },
@@ -125,6 +148,13 @@ export class InstallmentPlanService {
     if (!product) {
       throw new NotFoundError("Product not found");
     }
+
+    assertCompanyOwnership(
+      product.companyId,
+      callerCompanyId,
+      callerRole,
+      "Product not found",
+    );
 
     return prisma.productInstallmentPlan.create({
       data: {

@@ -32,6 +32,7 @@ export const BulkCreateVariantsSchema = z.object({
   variants: z.array(BulkCreateVariantSchema).min(1).max(100),
 });
 
+export type BulkCreateVariantInput = z.infer<typeof BulkCreateVariantSchema>;
 export type BulkCreateVariantsInput = z.infer<typeof BulkCreateVariantsSchema>;
 export type CreateVariantInput = z.infer<typeof CreateVariantSchema>;
 export type UpdateVariantInput = z.infer<typeof UpdateVariantSchema>;

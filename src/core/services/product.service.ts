@@ -1,5 +1,6 @@
 import { prisma, ProductStatus, Prisma } from "@/infrastructure/prisma";
 import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
+import { assertCompanyOwnership } from "@/shared/utils/helpers/tenant-scope";
 import {
   type CreateProductInput,
   type UpdateProductInput,
@@ -84,7 +85,12 @@ export class ProductService {
     });
   }
 
-  static async updateProduct(productId: string, data: UpdateProductInput) {
+  static async updateProduct(
+    productId: string,
+    data: UpdateProductInput,
+    callerCompanyId?: string,
+    callerRole?: string,
+  ) {
     const product = await prisma.product.findUnique({
       where: { productId },
       include: {
@@ -93,6 +99,13 @@ export class ProductService {
     });
 
     if (!product) throw new NotFoundError("Product not found");
+
+    assertCompanyOwnership(
+      product.companyId,
+      callerCompanyId,
+      callerRole,
+      "Product not found",
+    );
 
     const hasActiveVariants = product.variants.length > 0;
 
@@ -131,7 +144,11 @@ export class ProductService {
     });
   }
 
-  static async deleteProduct(productId: string) {
+  static async deleteProduct(
+    productId: string,
+    callerCompanyId?: string,
+    callerRole?: string,
+  ) {
     const product = await prisma.product.findUnique({
       where: { productId },
       include: {
@@ -149,6 +166,13 @@ export class ProductService {
     });
 
     if (!product) throw new NotFoundError("Product not found");
+
+    assertCompanyOwnership(
+      product.companyId,
+      callerCompanyId,
+      callerRole,
+      "Product not found",
+    );
 
     return prisma.product.update({
       where: { productId },

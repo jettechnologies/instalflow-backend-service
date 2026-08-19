@@ -15,7 +15,10 @@ services:
       pnpm run db:generate
       pnpm run build
       if [ "$NODE_ENV" = "production" ]; then pnpm run db:push; fi
-      pnpm run db:seed
+      # db:seed is intentionally NOT run automatically here. Seeding creates the
+      # SUPER_ADMIN account and must only ever be run manually and deliberately
+      # (e.g. `ALLOW_PROD_SEED=true SUPER_ADMIN_SEED_PASSWORD=... pnpm run db:seed`
+      # from a Render shell) — see prisma/seed.ts.
 
     startCommand: pnpm run start
 
