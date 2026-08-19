@@ -221,7 +221,6 @@ export interface DomainEventPayloads {
     dashboard_url?: string;
     role?: string;
     applicationUnderReview?: boolean;
-    activationToken?: string;
     rejectionReason?: string;
   };
   [DomainEvent.STAFF_CREATED]: {

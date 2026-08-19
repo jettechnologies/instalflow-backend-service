@@ -15,7 +15,11 @@ const fmt = (amount: string | number) =>
 onEvent(DomainEvent.USER_REGISTERED, async (payload) => {
   const isCustomer =
     payload.role === "CUSTOMER" || !!payload.applicationUnderReview;
-  const dashboard_url = `${process.env.FRONTEND_URL}/customer?activationToken=${payload.activationToken}`;
+  const dashboard_url =
+    payload.dashboard_url ??
+    (isCustomer
+      ? `${process.env.FRONTEND_URL}/customer`
+      : process.env.FRONTEND_URL);
 
   await NotificationService.send({
     to: payload.email,

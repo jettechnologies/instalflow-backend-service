@@ -59,16 +59,6 @@ export function generateAccessToken({
   );
 }
 
-// Generate a short-lived login/activation token for a newly-created customer
-// (e.g. delivered on KYC approval completion so they can sign in for the first time).
-export function generateLoginToken(userId: string, email?: string): string {
-  return jwt.sign(
-    { userId, role: "CUSTOMER", email, sessionId: userId },
-    ACCESS_TOKEN_SECRET,
-    { expiresIn: "1d" },
-  );
-}
-
 // Generate Refresh Token
 export function generateRefreshToken({
   companyId,

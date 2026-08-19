@@ -26,7 +26,6 @@ import type {
 import {
   bcryptHash,
   generateOnboardingToken,
-  generateLoginToken,
 } from "@/shared/utils/password-hash-verify";
 import {
   uploadPdfToCloudinary,
@@ -865,17 +864,17 @@ export class KycService {
       });
 
       if (updatedApp.status === "APPROVED") {
-        const activationToken = generateLoginToken(
-          (updatedApp as { userId: string }).userId,
-          session.email,
-        );
-
+        // The customer already has real credentials — the password they set
+        // at registration (createOrResumeOnboardingSession) was carried
+        // straight into the new User row above. No magic-link token needed;
+        // this mirrors COMPANY_ONBOARDED, which sends the same plain
+        // dashboard_url and lets the new user log in normally.
         emitEvent(DomainEvent.USER_REGISTERED, {
           email: session.email,
           name: session.name,
           role: "CUSTOMER",
           applicationUnderReview: false,
-          activationToken,
+          dashboard_url: process.env.FRONTEND_URL,
         });
       }
 

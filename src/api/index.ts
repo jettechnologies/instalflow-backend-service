@@ -13,6 +13,7 @@ import router from "@/api/routes";
 import webhookRoutes from "@/api/routes/webhook.routes";
 import { errorHandler } from "@/api/middlewares/errorHandler";
 import csrfMiddleware from "./middlewares/csrf-middlewares";
+import { ForbiddenError } from "@/shared/utils/AppError";
 
 const app = express();
 
@@ -36,7 +37,7 @@ app.use(
   cors({
     origin: (origin, cb) => {
       if (allowedOrigins.includes(origin)) return cb(null, true);
-      return cb(new Error("CORS blocked"));
+      return cb(new ForbiddenError("Origin not allowed by CORS policy"));
     },
     credentials: true,
   }),

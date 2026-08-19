@@ -59,9 +59,6 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
-      express-fileupload:
-        specifier: ^1.5.2
-        version: 1.5.2
       express-rate-limit:
         specifier: ^8.4.1
         version: 8.4.1(express@5.2.1)
@@ -120,9 +117,6 @@ importers:
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6
-      '@types/express-fileupload':
-        specifier: ^1.5.1
-        version: 1.5.1
       '@types/express-session':
         specifier: ^1.19.0
         version: 1.19.0
@@ -1000,9 +994,6 @@ packages:
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
 
-  '@types/busboy@1.5.4':
-    resolution: {integrity: sha512-kG7WrUuAKK0NoyxfQHsVE6j1m01s6kMma64E+OZenQABMQyTJop1DumUWcLwAQ2JzpefU7PDYoRDKl8uZosFjw==}
-
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
@@ -1019,9 +1010,6 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
-
-  '@types/express-fileupload@1.5.1':
-    resolution: {integrity: sha512-DllImBVI1lCyjl2klky/TEwk60mbNebgXv1669h66g9TfptWSrEFq5a/raHSutaFzjSm1tmn9ypdNfu4jPSixQ==}
 
   '@types/express-serve-static-core@5.1.1':
     resolution: {integrity: sha512-v4zIMr/cX7/d2BpAEX3KNKL/JrT1s43s96lLvvdTmza1oEvDudCqK9aF/djc/SWgy8Yh0h30TZx5VpzqFCxk5A==}
@@ -1536,10 +1524,6 @@ packages:
   etag@1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
-
-  express-fileupload@1.5.2:
-    resolution: {integrity: sha512-wxUJn2vTHvj/kZCVmc5/bJO15C7aSMyHeuXYY3geKpeKibaAoQGcEv5+sM6nHS2T7VF+QHS4hTWPiY2mKofEdg==}
-    engines: {node: '>=12.0.0'}
 
   express-rate-limit@8.4.1:
     resolution: {integrity: sha512-NGVYwQSAyEQgzxX1iCM978PP9AdO/hW93gMcF6ZwQCm+rFvLsBH6w4xcXWTcliS8La5EPRN3p9wzItqBwJrfNw==}
@@ -3371,10 +3355,6 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 25.6.0
 
-  '@types/busboy@1.5.4':
-    dependencies:
-      '@types/node': 25.6.0
-
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 25.6.0
@@ -3390,11 +3370,6 @@ snapshots:
   '@types/esrecurse@4.3.1': {}
 
   '@types/estree@1.0.8': {}
-
-  '@types/express-fileupload@1.5.1':
-    dependencies:
-      '@types/busboy': 1.5.4
-      '@types/express': 5.0.6
 
   '@types/express-serve-static-core@5.1.1':
     dependencies:
@@ -3971,10 +3946,6 @@ snapshots:
   esutils@2.0.3: {}
 
   etag@1.8.1: {}
-
-  express-fileupload@1.5.2:
-    dependencies:
-      busboy: 1.6.0
 
   express-rate-limit@8.4.1(express@5.2.1):
     dependencies:

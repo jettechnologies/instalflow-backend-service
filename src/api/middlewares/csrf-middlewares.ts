@@ -9,7 +9,12 @@ const skipCsrf = (req: Request): boolean => {
     path.startsWith("/api/v1/auth/") ||
     path.startsWith("/api/v1/webhooks/") ||
     path === "/api/v1/health" ||
-    path.startsWith("/api/v1/kyc/") ||
+    // Every other /kyc/* route is Bearer-authenticated (real access token or
+    // onboarding token) and already covered by the check below — this is
+    // the one genuinely public, session-less route. Deliberately not a
+    // blanket "/api/v1/kyc/" prefix: that would silently exempt any future
+    // cookie-session-based kyc route from CSRF protection too.
+    path === "/api/v1/kyc/register" ||
     path === "/api/v1/csrf-token" ||
     !!req.headers.authorization?.startsWith("Bearer ")
   );
