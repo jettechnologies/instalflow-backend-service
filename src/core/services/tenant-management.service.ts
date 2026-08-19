@@ -1,5 +1,5 @@
-import { prisma, Prisma } from "@/infrastructure/prisma";
-import { NotFoundError } from "@/shared/utils/AppError";
+import { prisma, Prisma, CompanyStatus } from "@/infrastructure/prisma";
+import { NotFoundError, BadRequestError } from "@/shared/utils/AppError";
 import { AnalyticsService } from "@/core/services/analytics.service";
 
 type ActivityEvent = {
@@ -12,15 +12,14 @@ type ActivityEvent = {
   refId: string;
 };
 
-const ACTIVITY_TYPES = [
-  "kyc",
-  "settlement",
-  "approval",
-  "payout",
-  "contract",
-  "login",
-] as const;
-type ActivityType = (typeof ACTIVITY_TYPES)[number];
+enum ActivityType {
+  KYC = "kyc",
+  SETTLEMENT = "settlement",
+  APPROVAL = "approval",
+  PAYOUT = "payout",
+  CONTRACT = "contract",
+  LOGIN = "login",
+}
 
 function toNumber(value: unknown): number {
   if (value == null) return 0;
@@ -102,6 +101,7 @@ export class TenantManagementService {
           companyId: company.companyId,
           name: company.name,
           plan: company.plan,
+          status: company.status,
           activeSubscription: company.subscriptions[0]
             ? {
                 planName: company.subscriptions[0].plan.name,
@@ -152,18 +152,22 @@ export class TenantManagementService {
 
     if (!company) throw new NotFoundError("Tenant not found.");
 
-    const [usersByRole, financingStats, kycFunnel, revenue] =
-      await Promise.all([
+    const [usersByRole, financingStats, kycFunnel, revenue] = await Promise.all(
+      [
         this.getUsersByRole(companyId),
         AnalyticsService.getFinancingStats({ companyId }),
         AnalyticsService.getKycFunnelStats({ companyId }),
         this.getRevenueSnapshot(companyId),
-      ]);
+      ],
+    );
 
     return {
       companyId: company.companyId,
       name: company.name,
       plan: company.plan,
+      status: company.status,
+      suspendedAt: company.suspendedAt,
+      suspendedReason: company.suspendedReason,
       logoUrl: company.logoUrl,
       publicSignupCode: company.publicSignupCode,
       createdAt: company.createdAt,
@@ -185,14 +189,42 @@ export class TenantManagementService {
     };
   }
 
-  /**
-   * Unified tenant activity timeline, fanned in from every existing per-domain
-   * audit source (there is no single AuditLog table). Each source is fetched
-   * independently and capped, then merged and sorted in-memory — an activity
-   * from a very quiet source (e.g. approvals) could in theory be pushed past
-   * the per-source fetch window by a very active one (e.g. logins) before the
-   * merge. Acceptable for an admin dashboard; not a true cross-table cursor.
-   */
+  static async setTenantStatus(
+    companyId: string,
+    data: {
+      status: CompanyStatus;
+      reason?: string;
+      performedById: string;
+    },
+  ) {
+    const company = await prisma.company.findUnique({ where: { companyId } });
+    if (!company) throw new NotFoundError("Tenant not found.");
+
+    if (data.status === CompanyStatus.SUSPENDED && !data.reason) {
+      throw new BadRequestError("A reason is required to suspend a tenant.");
+    }
+
+    const isSuspending = data.status === CompanyStatus.SUSPENDED;
+
+    const updated = await prisma.company.update({
+      where: { companyId },
+      data: {
+        status: data.status,
+        suspendedAt: isSuspending ? new Date() : null,
+        suspendedReason: isSuspending ? data.reason : null,
+        suspendedById: isSuspending ? data.performedById : null,
+      },
+    });
+
+    return {
+      companyId: updated.companyId,
+      name: updated.name,
+      status: updated.status,
+      suspendedAt: updated.suspendedAt,
+      suspendedReason: updated.suspendedReason,
+    };
+  }
+
   static async getTenantActivity(
     companyId: string,
     query: {
@@ -210,10 +242,7 @@ export class TenantManagementService {
     if (!company) throw new NotFoundError("Tenant not found.");
 
     const { page, limit, type, from, to } = query;
-    const dateFilter =
-      from || to
-        ? { gte: from, lte: to }
-        : undefined;
+    const dateFilter = from || to ? { gte: from, lte: to } : undefined;
     const fanInTake = page * limit;
 
     const sources: Promise<ActivityEvent[]>[] = [];
@@ -441,4 +470,4 @@ export class TenantManagementService {
   }
 }
 
-export type { ActivityType };
+export { ActivityType };

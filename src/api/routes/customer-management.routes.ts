@@ -2,11 +2,12 @@ import { Router } from "express";
 import { CustomerManagementController } from "@/api/controllers/customer-management.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
+import { requireActiveCompany } from "@/api/middlewares/company-status.guard";
 import { Role } from "@/infrastructure/prisma";
 
 const router = Router();
 
-router.use(requireAuth, requireActiveSubscription);
+router.use(requireAuth, requireActiveSubscription, requireActiveCompany);
 
 // Corporate full hierarchy tree (Company/SuperAdmin only)
 router.get(

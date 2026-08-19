@@ -2,6 +2,7 @@ import { Router } from "express";
 import { KycController } from "@/api/controllers/kyc.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
+import { requireActiveCompany } from "@/api/middlewares/company-status.guard";
 import { Role } from "@/infrastructure/prisma";
 import { uploadSinglePdf } from "@/api/middlewares/multer.middlewares";
 import { requireOnboardingToken } from "@/api/middlewares/kyc-onboarding.guard";
@@ -19,7 +20,7 @@ router.post(
   KycController.submitApplication,
 );
 
-router.use(requireAuth, requireActiveSubscription);
+router.use(requireAuth, requireActiveSubscription, requireActiveCompany);
 
 router.post(
   "/referral-link",
@@ -59,13 +60,13 @@ router.get(
 
 router.get(
   "/applications/:id",
-  requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY]),
+  requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY, Role.SUPER_ADMIN]),
   KycController.getKycApplicationById,
 );
 
 router.get(
   "/applications/:id/document",
-  requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY]),
+  requireRole([Role.MARKETER, Role.ADMIN, Role.COMPANY, Role.SUPER_ADMIN]),
   KycController.getSignedDocumentUrl,
 );
 

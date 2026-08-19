@@ -136,6 +136,10 @@ export const CompanyScalarFieldEnum = {
   plan: 'plan',
   logoUrl: 'logoUrl',
   publicSignupCode: 'publicSignupCode',
+  status: 'status',
+  suspendedAt: 'suspendedAt',
+  suspendedReason: 'suspendedReason',
+  suspendedById: 'suspendedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

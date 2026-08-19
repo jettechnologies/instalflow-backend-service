@@ -2,12 +2,13 @@ import { Router } from "express";
 import { CompanyController } from "@/api/controllers/company.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
+import { requireActiveCompany } from "@/api/middlewares/company-status.guard";
 import { Role } from "@/infrastructure/prisma";
 
 const router = Router();
 
 // All routes require authentication and COMPANY role
-router.use(requireAuth, requireActiveSubscription);
+router.use(requireAuth, requireActiveSubscription, requireActiveCompany);
 router.use(requireRole([Role.COMPANY]));
 
 // Admin Management

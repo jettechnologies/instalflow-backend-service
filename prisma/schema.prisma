@@ -122,6 +122,11 @@ enum ApprovalStatus {
   REJECTED
 }
 
+enum CompanyStatus {
+  ACTIVE
+  SUSPENDED
+}
+
 enum KycApplicationStatus {
   PENDING
   APPROVAL_PROCESSING
@@ -249,14 +254,19 @@ model CompanyReminderSettings {
 }
 
 model Company {
-  id               BigInt   @id @default(autoincrement())
-  companyId        String   @unique @default(uuid())
+  id               BigInt        @id @default(autoincrement())
+  companyId        String        @unique @default(uuid())
   name             String
-  plan             String   @default("FREE")
+  plan             String        @default("FREE")
   logoUrl          String?
-  publicSignupCode String?  @unique
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  publicSignupCode String?       @unique
+  status           CompanyStatus @default(ACTIVE)
+  suspendedAt      DateTime?
+  suspendedReason  String?
+  suspendedById    String?
+  suspendedBy      User?         @relation("CompanySuspendedBy", fields: [suspendedById], references: [userId])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   users                    User[]
   products                 Product[]
@@ -319,6 +329,8 @@ model User {
 
   merchantSettlementRetryInitiator MerchantSettlementRequest[]    @relation("MerchantSettlementRetryInitiator")
   merchantSettlementAuditActions   MerchantSettlementAuditTrail[]
+
+  suspendedCompanies Company[] @relation("CompanySuspendedBy")
 
   @@index([companyId])
   @@index([referredByMarketerId])

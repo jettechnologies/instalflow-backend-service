@@ -41,6 +41,10 @@ export type CompanyMinAggregateOutputType = {
   plan: string | null
   logoUrl: string | null
   publicSignupCode: string | null
+  status: $Enums.CompanyStatus | null
+  suspendedAt: Date | null
+  suspendedReason: string | null
+  suspendedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +56,10 @@ export type CompanyMaxAggregateOutputType = {
   plan: string | null
   logoUrl: string | null
   publicSignupCode: string | null
+  status: $Enums.CompanyStatus | null
+  suspendedAt: Date | null
+  suspendedReason: string | null
+  suspendedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -63,6 +71,10 @@ export type CompanyCountAggregateOutputType = {
   plan: number
   logoUrl: number
   publicSignupCode: number
+  status: number
+  suspendedAt: number
+  suspendedReason: number
+  suspendedById: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -84,6 +96,10 @@ export type CompanyMinAggregateInputType = {
   plan?: true
   logoUrl?: true
   publicSignupCode?: true
+  status?: true
+  suspendedAt?: true
+  suspendedReason?: true
+  suspendedById?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -95,6 +111,10 @@ export type CompanyMaxAggregateInputType = {
   plan?: true
   logoUrl?: true
   publicSignupCode?: true
+  status?: true
+  suspendedAt?: true
+  suspendedReason?: true
+  suspendedById?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,6 +126,10 @@ export type CompanyCountAggregateInputType = {
   plan?: true
   logoUrl?: true
   publicSignupCode?: true
+  status?: true
+  suspendedAt?: true
+  suspendedReason?: true
+  suspendedById?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -204,6 +228,10 @@ export type CompanyGroupByOutputType = {
   plan: string
   logoUrl: string | null
   publicSignupCode: string | null
+  status: $Enums.CompanyStatus
+  suspendedAt: Date | null
+  suspendedReason: string | null
+  suspendedById: string | null
   createdAt: Date
   updatedAt: Date
   _count: CompanyCountAggregateOutputType | null
@@ -238,8 +266,13 @@ export type CompanyWhereInput = {
   plan?: Prisma.StringFilter<"Company"> | string
   logoUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   publicSignupCode?: Prisma.StringNullableFilter<"Company"> | string | null
+  status?: Prisma.EnumCompanyStatusFilter<"Company"> | $Enums.CompanyStatus
+  suspendedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  suspendedReason?: Prisma.StringNullableFilter<"Company"> | string | null
+  suspendedById?: Prisma.StringNullableFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
+  suspendedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   users?: Prisma.UserListRelationFilter
   products?: Prisma.ProductListRelationFilter
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
@@ -259,8 +292,13 @@ export type CompanyOrderByWithRelationInput = {
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   publicSignupCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  suspendedBy?: Prisma.UserOrderByWithRelationInput
   users?: Prisma.UserOrderByRelationAggregateInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   subscriptions?: Prisma.CompanySubscriptionOrderByRelationAggregateInput
@@ -283,8 +321,13 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Company"> | string
   plan?: Prisma.StringFilter<"Company"> | string
   logoUrl?: Prisma.StringNullableFilter<"Company"> | string | null
+  status?: Prisma.EnumCompanyStatusFilter<"Company"> | $Enums.CompanyStatus
+  suspendedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  suspendedReason?: Prisma.StringNullableFilter<"Company"> | string | null
+  suspendedById?: Prisma.StringNullableFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
+  suspendedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   users?: Prisma.UserListRelationFilter
   products?: Prisma.ProductListRelationFilter
   subscriptions?: Prisma.CompanySubscriptionListRelationFilter
@@ -304,6 +347,10 @@ export type CompanyOrderByWithAggregationInput = {
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   publicSignupCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompanyCountOrderByAggregateInput
@@ -323,6 +370,10 @@ export type CompanyScalarWhereWithAggregatesInput = {
   plan?: Prisma.StringWithAggregatesFilter<"Company"> | string
   logoUrl?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   publicSignupCode?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
+  status?: Prisma.EnumCompanyStatusWithAggregatesFilter<"Company"> | $Enums.CompanyStatus
+  suspendedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
+  suspendedReason?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
+  suspendedById?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
 }
@@ -334,8 +385,12 @@ export type CompanyCreateInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -355,6 +410,10 @@ export type CompanyUncheckedCreateInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -376,8 +435,12 @@ export type CompanyUpdateInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -397,6 +460,10 @@ export type CompanyUncheckedUpdateInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -418,6 +485,10 @@ export type CompanyCreateManyInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -429,6 +500,9 @@ export type CompanyUpdateManyMutationInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -440,6 +514,10 @@ export type CompanyUncheckedUpdateManyInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -456,6 +534,10 @@ export type CompanyCountOrderByAggregateInput = {
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
   publicSignupCode?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrder
+  suspendedReason?: Prisma.SortOrder
+  suspendedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -471,6 +553,10 @@ export type CompanyMaxOrderByAggregateInput = {
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
   publicSignupCode?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrder
+  suspendedReason?: Prisma.SortOrder
+  suspendedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -482,6 +568,10 @@ export type CompanyMinOrderByAggregateInput = {
   plan?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
   publicSignupCode?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrder
+  suspendedReason?: Prisma.SortOrder
+  suspendedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -493,6 +583,16 @@ export type CompanySumOrderByAggregateInput = {
 export type CompanyNullableScalarRelationFilter = {
   is?: Prisma.CompanyWhereInput | null
   isNot?: Prisma.CompanyWhereInput | null
+}
+
+export type CompanyListRelationFilter = {
+  every?: Prisma.CompanyWhereInput
+  some?: Prisma.CompanyWhereInput
+  none?: Prisma.CompanyWhereInput
+}
+
+export type CompanyOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type CompanyCreateNestedOneWithoutReminderSettingsInput = {
@@ -513,10 +613,32 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type EnumCompanyStatusFieldUpdateOperationsInput = {
+  set?: $Enums.CompanyStatus
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type CompanyCreateNestedOneWithoutUsersInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutUsersInput, Prisma.CompanyUncheckedCreateWithoutUsersInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutUsersInput
   connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyCreateNestedManyWithoutSuspendedByInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSuspendedByInput, Prisma.CompanyUncheckedCreateWithoutSuspendedByInput> | Prisma.CompanyCreateWithoutSuspendedByInput[] | Prisma.CompanyUncheckedCreateWithoutSuspendedByInput[]
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSuspendedByInput | Prisma.CompanyCreateOrConnectWithoutSuspendedByInput[]
+  createMany?: Prisma.CompanyCreateManySuspendedByInputEnvelope
+  connect?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+}
+
+export type CompanyUncheckedCreateNestedManyWithoutSuspendedByInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSuspendedByInput, Prisma.CompanyUncheckedCreateWithoutSuspendedByInput> | Prisma.CompanyCreateWithoutSuspendedByInput[] | Prisma.CompanyUncheckedCreateWithoutSuspendedByInput[]
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSuspendedByInput | Prisma.CompanyCreateOrConnectWithoutSuspendedByInput[]
+  createMany?: Prisma.CompanyCreateManySuspendedByInputEnvelope
+  connect?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
 }
 
 export type CompanyUpdateOneWithoutUsersNestedInput = {
@@ -527,6 +649,34 @@ export type CompanyUpdateOneWithoutUsersNestedInput = {
   delete?: Prisma.CompanyWhereInput | boolean
   connect?: Prisma.CompanyWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutUsersInput, Prisma.CompanyUpdateWithoutUsersInput>, Prisma.CompanyUncheckedUpdateWithoutUsersInput>
+}
+
+export type CompanyUpdateManyWithoutSuspendedByNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSuspendedByInput, Prisma.CompanyUncheckedCreateWithoutSuspendedByInput> | Prisma.CompanyCreateWithoutSuspendedByInput[] | Prisma.CompanyUncheckedCreateWithoutSuspendedByInput[]
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSuspendedByInput | Prisma.CompanyCreateOrConnectWithoutSuspendedByInput[]
+  upsert?: Prisma.CompanyUpsertWithWhereUniqueWithoutSuspendedByInput | Prisma.CompanyUpsertWithWhereUniqueWithoutSuspendedByInput[]
+  createMany?: Prisma.CompanyCreateManySuspendedByInputEnvelope
+  set?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  disconnect?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  delete?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  connect?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  update?: Prisma.CompanyUpdateWithWhereUniqueWithoutSuspendedByInput | Prisma.CompanyUpdateWithWhereUniqueWithoutSuspendedByInput[]
+  updateMany?: Prisma.CompanyUpdateManyWithWhereWithoutSuspendedByInput | Prisma.CompanyUpdateManyWithWhereWithoutSuspendedByInput[]
+  deleteMany?: Prisma.CompanyScalarWhereInput | Prisma.CompanyScalarWhereInput[]
+}
+
+export type CompanyUncheckedUpdateManyWithoutSuspendedByNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSuspendedByInput, Prisma.CompanyUncheckedCreateWithoutSuspendedByInput> | Prisma.CompanyCreateWithoutSuspendedByInput[] | Prisma.CompanyUncheckedCreateWithoutSuspendedByInput[]
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSuspendedByInput | Prisma.CompanyCreateOrConnectWithoutSuspendedByInput[]
+  upsert?: Prisma.CompanyUpsertWithWhereUniqueWithoutSuspendedByInput | Prisma.CompanyUpsertWithWhereUniqueWithoutSuspendedByInput[]
+  createMany?: Prisma.CompanyCreateManySuspendedByInputEnvelope
+  set?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  disconnect?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  delete?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  connect?: Prisma.CompanyWhereUniqueInput | Prisma.CompanyWhereUniqueInput[]
+  update?: Prisma.CompanyUpdateWithWhereUniqueWithoutSuspendedByInput | Prisma.CompanyUpdateWithWhereUniqueWithoutSuspendedByInput[]
+  updateMany?: Prisma.CompanyUpdateManyWithWhereWithoutSuspendedByInput | Prisma.CompanyUpdateManyWithWhereWithoutSuspendedByInput[]
+  deleteMany?: Prisma.CompanyScalarWhereInput | Prisma.CompanyScalarWhereInput[]
 }
 
 export type CompanyCreateNestedOneWithoutProductsInput = {
@@ -654,8 +804,12 @@ export type CompanyCreateWithoutReminderSettingsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -674,6 +828,10 @@ export type CompanyUncheckedCreateWithoutReminderSettingsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -710,8 +868,12 @@ export type CompanyUpdateWithoutReminderSettingsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -730,6 +892,10 @@ export type CompanyUncheckedUpdateWithoutReminderSettingsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -750,8 +916,12 @@ export type CompanyCreateWithoutUsersInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
@@ -770,6 +940,10 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
@@ -786,6 +960,64 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
 export type CompanyCreateOrConnectWithoutUsersInput = {
   where: Prisma.CompanyWhereUniqueInput
   create: Prisma.XOR<Prisma.CompanyCreateWithoutUsersInput, Prisma.CompanyUncheckedCreateWithoutUsersInput>
+}
+
+export type CompanyCreateWithoutSuspendedByInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsCreateNestedOneWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutSuspendedByInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutCompanyInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutCompanyInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedCreateNestedManyWithoutCompanyInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedCreateNestedManyWithoutCompanyInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedCreateNestedManyWithoutCompanyInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedCreateNestedOneWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutSuspendedByInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutSuspendedByInput, Prisma.CompanyUncheckedCreateWithoutSuspendedByInput>
+}
+
+export type CompanyCreateManySuspendedByInputEnvelope = {
+  data: Prisma.CompanyCreateManySuspendedByInput | Prisma.CompanyCreateManySuspendedByInput[]
+  skipDuplicates?: boolean
 }
 
 export type CompanyUpsertWithoutUsersInput = {
@@ -806,8 +1038,12 @@ export type CompanyUpdateWithoutUsersInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
@@ -826,6 +1062,10 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
@@ -839,6 +1079,40 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
 }
 
+export type CompanyUpsertWithWhereUniqueWithoutSuspendedByInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutSuspendedByInput, Prisma.CompanyUncheckedUpdateWithoutSuspendedByInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutSuspendedByInput, Prisma.CompanyUncheckedCreateWithoutSuspendedByInput>
+}
+
+export type CompanyUpdateWithWhereUniqueWithoutSuspendedByInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutSuspendedByInput, Prisma.CompanyUncheckedUpdateWithoutSuspendedByInput>
+}
+
+export type CompanyUpdateManyWithWhereWithoutSuspendedByInput = {
+  where: Prisma.CompanyScalarWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateManyMutationInput, Prisma.CompanyUncheckedUpdateManyWithoutSuspendedByInput>
+}
+
+export type CompanyScalarWhereInput = {
+  AND?: Prisma.CompanyScalarWhereInput | Prisma.CompanyScalarWhereInput[]
+  OR?: Prisma.CompanyScalarWhereInput[]
+  NOT?: Prisma.CompanyScalarWhereInput | Prisma.CompanyScalarWhereInput[]
+  id?: Prisma.BigIntFilter<"Company"> | bigint | number
+  companyId?: Prisma.StringFilter<"Company"> | string
+  name?: Prisma.StringFilter<"Company"> | string
+  plan?: Prisma.StringFilter<"Company"> | string
+  logoUrl?: Prisma.StringNullableFilter<"Company"> | string | null
+  publicSignupCode?: Prisma.StringNullableFilter<"Company"> | string | null
+  status?: Prisma.EnumCompanyStatusFilter<"Company"> | $Enums.CompanyStatus
+  suspendedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  suspendedReason?: Prisma.StringNullableFilter<"Company"> | string | null
+  suspendedById?: Prisma.StringNullableFilter<"Company"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
+}
+
 export type CompanyCreateWithoutProductsInput = {
   id?: bigint | number
   companyId?: string
@@ -846,8 +1120,12 @@ export type CompanyCreateWithoutProductsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
@@ -866,6 +1144,10 @@ export type CompanyUncheckedCreateWithoutProductsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -902,8 +1184,12 @@ export type CompanyUpdateWithoutProductsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
@@ -922,6 +1208,10 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -942,8 +1232,12 @@ export type CompanyCreateWithoutOnboardingSessionsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -962,6 +1256,10 @@ export type CompanyUncheckedCreateWithoutOnboardingSessionsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -998,8 +1296,12 @@ export type CompanyUpdateWithoutOnboardingSessionsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -1018,6 +1320,10 @@ export type CompanyUncheckedUpdateWithoutOnboardingSessionsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1038,8 +1344,12 @@ export type CompanyCreateWithoutCommissionPayoutRequestsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -1058,6 +1368,10 @@ export type CompanyUncheckedCreateWithoutCommissionPayoutRequestsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1094,8 +1408,12 @@ export type CompanyUpdateWithoutCommissionPayoutRequestsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -1114,6 +1432,10 @@ export type CompanyUncheckedUpdateWithoutCommissionPayoutRequestsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1134,8 +1456,12 @@ export type CompanyCreateWithoutBankAccountsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -1154,6 +1480,10 @@ export type CompanyUncheckedCreateWithoutBankAccountsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1190,8 +1520,12 @@ export type CompanyUpdateWithoutBankAccountsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -1210,6 +1544,10 @@ export type CompanyUncheckedUpdateWithoutBankAccountsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1230,8 +1568,12 @@ export type CompanyCreateWithoutSettlementRequestsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -1250,6 +1592,10 @@ export type CompanyUncheckedCreateWithoutSettlementRequestsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1286,8 +1632,12 @@ export type CompanyUpdateWithoutSettlementRequestsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -1306,6 +1656,10 @@ export type CompanyUncheckedUpdateWithoutSettlementRequestsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1326,8 +1680,12 @@ export type CompanyCreateWithoutSubscriptionsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutCompanyInput
@@ -1346,6 +1704,10 @@ export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1382,8 +1744,12 @@ export type CompanyUpdateWithoutSubscriptionsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
@@ -1402,6 +1768,10 @@ export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1422,8 +1792,12 @@ export type CompanyCreateWithoutLedgerAccountsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -1442,6 +1816,10 @@ export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1478,8 +1856,12 @@ export type CompanyUpdateWithoutLedgerAccountsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -1498,6 +1880,10 @@ export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1518,8 +1904,12 @@ export type CompanyCreateWithoutApprovalRequestsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  suspendedBy?: Prisma.UserCreateNestedOneWithoutSuspendedCompaniesInput
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   subscriptions?: Prisma.CompanySubscriptionCreateNestedManyWithoutCompanyInput
@@ -1538,6 +1928,10 @@ export type CompanyUncheckedCreateWithoutApprovalRequestsInput = {
   plan?: string
   logoUrl?: string | null
   publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  suspendedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -1574,8 +1968,12 @@ export type CompanyUpdateWithoutApprovalRequestsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suspendedBy?: Prisma.UserUpdateOneWithoutSuspendedCompaniesNestedInput
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
@@ -1594,6 +1992,10 @@ export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1605,6 +2007,82 @@ export type CompanyUncheckedUpdateWithoutApprovalRequestsInput = {
   bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
   settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
   reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+}
+
+export type CompanyCreateManySuspendedByInput = {
+  id?: bigint | number
+  companyId?: string
+  name: string
+  plan?: string
+  logoUrl?: string | null
+  publicSignupCode?: string | null
+  status?: $Enums.CompanyStatus
+  suspendedAt?: Date | string | null
+  suspendedReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CompanyUpdateWithoutSuspendedByInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUpdateOneWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutSuspendedByInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.CompanySubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  commissionPayoutRequests?: Prisma.CommissionPayoutRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  onboardingSessions?: Prisma.OnboardingSessionUncheckedUpdateManyWithoutCompanyNestedInput
+  bankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  settlementRequests?: Prisma.MerchantSettlementRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  reminderSettings?: Prisma.CompanyReminderSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateManyWithoutSuspendedByInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSignupCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1717,8 +2195,13 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   plan?: boolean
   logoUrl?: boolean
   publicSignupCode?: boolean
+  status?: boolean
+  suspendedAt?: boolean
+  suspendedReason?: boolean
+  suspendedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  suspendedBy?: boolean | Prisma.Company$suspendedByArgs<ExtArgs>
   users?: boolean | Prisma.Company$usersArgs<ExtArgs>
   products?: boolean | Prisma.Company$productsArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Company$subscriptionsArgs<ExtArgs>
@@ -1739,8 +2222,13 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   plan?: boolean
   logoUrl?: boolean
   publicSignupCode?: boolean
+  status?: boolean
+  suspendedAt?: boolean
+  suspendedReason?: boolean
+  suspendedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  suspendedBy?: boolean | Prisma.Company$suspendedByArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
 export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1750,8 +2238,13 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   plan?: boolean
   logoUrl?: boolean
   publicSignupCode?: boolean
+  status?: boolean
+  suspendedAt?: boolean
+  suspendedReason?: boolean
+  suspendedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  suspendedBy?: boolean | Prisma.Company$suspendedByArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
 export type CompanySelectScalar = {
@@ -1761,12 +2254,17 @@ export type CompanySelectScalar = {
   plan?: boolean
   logoUrl?: boolean
   publicSignupCode?: boolean
+  status?: boolean
+  suspendedAt?: boolean
+  suspendedReason?: boolean
+  suspendedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "plan" | "logoUrl" | "publicSignupCode" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "plan" | "logoUrl" | "publicSignupCode" | "status" | "suspendedAt" | "suspendedReason" | "suspendedById" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  suspendedBy?: boolean | Prisma.Company$suspendedByArgs<ExtArgs>
   users?: boolean | Prisma.Company$usersArgs<ExtArgs>
   products?: boolean | Prisma.Company$productsArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Company$subscriptionsArgs<ExtArgs>
@@ -1779,12 +2277,17 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   reminderSettings?: boolean | Prisma.Company$reminderSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  suspendedBy?: boolean | Prisma.Company$suspendedByArgs<ExtArgs>
+}
+export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  suspendedBy?: boolean | Prisma.Company$suspendedByArgs<ExtArgs>
+}
 
 export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Company"
   objects: {
+    suspendedBy: Prisma.$UserPayload<ExtArgs> | null
     users: Prisma.$UserPayload<ExtArgs>[]
     products: Prisma.$ProductPayload<ExtArgs>[]
     subscriptions: Prisma.$CompanySubscriptionPayload<ExtArgs>[]
@@ -1803,6 +2306,10 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     plan: string
     logoUrl: string | null
     publicSignupCode: string | null
+    status: $Enums.CompanyStatus
+    suspendedAt: Date | null
+    suspendedReason: string | null
+    suspendedById: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["company"]>
@@ -2199,6 +2706,7 @@ readonly fields: CompanyFieldRefs;
  */
 export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  suspendedBy<T extends Prisma.Company$suspendedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$suspendedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   users<T extends Prisma.Company$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   products<T extends Prisma.Company$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.Company$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanySubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2244,6 +2752,10 @@ export interface CompanyFieldRefs {
   readonly plan: Prisma.FieldRef<"Company", 'String'>
   readonly logoUrl: Prisma.FieldRef<"Company", 'String'>
   readonly publicSignupCode: Prisma.FieldRef<"Company", 'String'>
+  readonly status: Prisma.FieldRef<"Company", 'CompanyStatus'>
+  readonly suspendedAt: Prisma.FieldRef<"Company", 'DateTime'>
+  readonly suspendedReason: Prisma.FieldRef<"Company", 'String'>
+  readonly suspendedById: Prisma.FieldRef<"Company", 'String'>
   readonly createdAt: Prisma.FieldRef<"Company", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Company", 'DateTime'>
 }
@@ -2500,6 +3012,10 @@ export type CompanyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    */
   data: Prisma.CompanyCreateManyInput | Prisma.CompanyCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2570,6 +3086,10 @@ export type CompanyUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many Companies to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2636,6 +3156,25 @@ export type CompanyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Companies to delete.
    */
   limit?: number
+}
+
+/**
+ * Company.suspendedBy
+ */
+export type Company$suspendedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

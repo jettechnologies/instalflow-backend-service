@@ -172,6 +172,14 @@ export const ApprovalStatus = {
 export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
 
 
+export const CompanyStatus = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type CompanyStatus = (typeof CompanyStatus)[keyof typeof CompanyStatus]
+
+
 export const KycApplicationStatus = {
   PENDING: 'PENDING',
   APPROVAL_PROCESSING: 'APPROVAL_PROCESSING',

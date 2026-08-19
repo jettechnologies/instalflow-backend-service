@@ -2,11 +2,12 @@ import { Router } from "express";
 import { BankController } from "@/api/controllers/bank.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
+import { requireActiveCompany } from "@/api/middlewares/company-status.guard";
 import { COMMISSION_ELIGIBLE_ROLES } from "@/shared/utils/helpers/commission-eligibility";
 
 const router = Router();
 
-router.use(requireAuth, requireActiveSubscription);
+router.use(requireAuth, requireActiveSubscription, requireActiveCompany);
 
 router.post(
   "/create",

@@ -5,6 +5,7 @@ import { InstallmentPlanController } from "@/api/controllers/installment-plan.co
 
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 import { requireActiveSubscription } from "@/api/middlewares/subscription.guard";
+import { requireActiveCompany } from "@/api/middlewares/company-status.guard";
 import { Role } from "@/infrastructure/prisma";
 
 import { uploadMultiple } from "@/api/middlewares/multer.middlewares";
@@ -14,7 +15,7 @@ const router = Router();
 
 router.get("/slug/:slug", publicApiLimiter, ProductController.getProductBySlug);
 
-router.use(requireAuth, requireActiveSubscription);
+router.use(requireAuth, requireActiveSubscription, requireActiveCompany);
 
 router.get("/", ProductController.getProducts);
 

@@ -81,6 +81,50 @@ paths:
         '404':
           description: Tenant not found
 
+  /superadmin/tenants/{companyId}/status:
+    patch:
+      summary: Suspend or reactivate a tenant
+      description: >
+        Enforced by `requireActiveCompany`, wired onto every company-scoped
+        mutating route (product, category, variant, installment, commission,
+        financing, admin, customer-management, bank/company-bank, kyc,
+        company). Reads stay open while SUSPENDED; CUSTOMER is exempt so a
+        suspended merchant's customers can still pay off installments they
+        already owe. A reason is mandatory when suspending.
+      tags: [SuperAdmin, Tenants]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: companyId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [ACTIVE, SUSPENDED]
+                reason:
+                  type: string
+                  description: Required when status is SUSPENDED (min 10 characters)
+      responses:
+        '200':
+          description: Tenant status updated
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Missing reason when suspending
+        '404':
+          description: Tenant not found
+
   /superadmin/tenants/{companyId}/activity:
     get:
       summary: Unified tenant activity timeline
@@ -462,6 +506,62 @@ paths:
                     properties:
                       keysDeleted:
                         type: integer
+
+  /superadmin/ledger/corrections:
+    post:
+      summary: Post a manual ledger correction
+      description: >
+        The one sanctioned way to correct the ledger outside auto-reconciliation
+        (PROJECT_WORKFLOW.md: corrections are reversing entries, never
+        edits/deletes). Thin wrapper around the same `LedgerService.recordTransaction()`
+        every domain uses — entries must balance (sum of debits == sum of
+        credits) or the request is rejected with 400.
+      tags: [SuperAdmin, Ledger]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [description, reason, entries]
+              properties:
+                description:
+                  type: string
+                reason:
+                  type: string
+                  description: Mandatory, min 10 characters — this becomes part of a permanent audit record
+                companyId:
+                  type: string
+                  format: uuid
+                  description: Omit for a system-wide account (e.g. correcting PLATFORM_REVENUE at the platform level)
+                entries:
+                  type: array
+                  minItems: 2
+                  items:
+                    type: object
+                    required: [accountName, accountType]
+                    properties:
+                      accountName:
+                        type: string
+                        example: PAYSTACK_CLEARING
+                      accountType:
+                        type: string
+                        enum: [ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE]
+                      debit:
+                        type: number
+                      credit:
+                        type: number
+      responses:
+        '201':
+          description: Correction posted
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Unbalanced entries (debits != credits)
 
 components:
   securitySchemes:

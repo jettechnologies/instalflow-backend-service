@@ -1059,6 +1059,8 @@ export class KycService {
           "Unauthorized: This customer does not belong to your company.",
         );
       }
+    } else if (reviewer.role === "SUPER_ADMIN") {
+      // Platform-level: unrestricted, for compliance/dispute investigation.
     }
 
     const asset = application.kycDocumentAssets.find((a) => !a.isDeleted);
@@ -1394,6 +1396,8 @@ export class KycService {
           "Unauthorized: This customer does not belong to your company.",
         );
       }
+    } else if (reviewerRole === "SUPER_ADMIN") {
+      // Platform-level: unrestricted, for compliance/dispute investigation.
     }
 
     return application;

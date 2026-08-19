@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
-import { TenantManagementService } from "@/core/services/tenant-management.service";
+import { CompanyStatus } from "@/infrastructure/prisma";
+import {
+  TenantManagementService,
+  ActivityType,
+} from "@/core/services/tenant-management.service";
 import ApiResponse from "@/shared/utils/ApiResponse";
 
 const ListTenantsQuery = z.object({
@@ -9,12 +13,15 @@ const ListTenantsQuery = z.object({
   search: z.string().optional(),
 });
 
+const SetTenantStatusSchema = z.object({
+  status: z.enum(CompanyStatus),
+  reason: z.string().min(10).optional(),
+});
+
 const ActivityQuery = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(20),
-  type: z
-    .enum(["kyc", "settlement", "approval", "payout", "contract", "login"])
-    .optional(),
+  type: z.enum(ActivityType).optional(),
   from: z.coerce.date().optional(),
   to: z.coerce.date().optional(),
 });
@@ -39,6 +46,32 @@ export class TenantController {
       const { companyId } = z.object({ companyId: z.uuid() }).parse(req.params);
       const data = await TenantManagementService.getTenantProfile(companyId);
       return ApiResponse.success(res, 200, "Tenant profile retrieved successfully", data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async setTenantStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { companyId } = z.object({ companyId: z.uuid() }).parse(req.params);
+      const payload = SetTenantStatusSchema.parse(req.body);
+      const performedById = req.user!.userId;
+
+      const data = await TenantManagementService.setTenantStatus(companyId, {
+        ...payload,
+        performedById,
+      });
+
+      return ApiResponse.success(
+        res,
+        200,
+        `Tenant ${payload.status === CompanyStatus.SUSPENDED ? "suspended" : "reactivated"} successfully`,
+        data,
+      );
     } catch (error) {
       next(error);
     }

@@ -3,6 +3,7 @@ import { SuperAdminController } from "@/api/controllers/superadmin.controller";
 import { LedgerReconciliationController } from "@/api/controllers/ledger-reconciliation.controller";
 import { TenantController } from "@/api/controllers/tenant.controller";
 import { PlatformRevenueController } from "@/api/controllers/platform-revenue.controller";
+import { LedgerCorrectionController } from "@/api/controllers/ledger-correction.controller";
 import { requireAuth, requireRole } from "@/api/middlewares/auth.guard";
 
 const router = Router();
@@ -16,6 +17,7 @@ router.get("/overview", PlatformRevenueController.getOverview);
 // ─── Tenant management (directory, profile, activity) ────────────────────
 router.get("/tenants", TenantController.listTenants);
 router.get("/tenants/:companyId", TenantController.getTenantProfile);
+router.patch("/tenants/:companyId/status", TenantController.setTenantStatus);
 router.get("/tenants/:companyId/activity", TenantController.getTenantActivity);
 router.get(
   "/tenants/:companyId/revenue",
@@ -53,5 +55,8 @@ router.delete(
   "/ledger/reconciliation/cache",
   LedgerReconciliationController.invalidateCache,
 );
+
+// ─── Ledger manual corrections (writes, unlike reconciliation's reads above) ──
+router.post("/ledger/corrections", LedgerCorrectionController.postCorrection);
 
 export default router;
