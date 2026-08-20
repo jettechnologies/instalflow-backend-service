@@ -44,6 +44,9 @@ services:
       - key: CSRF_SECRET
         sync: false
 
+      - key: SESSION_SECRET
+        sync: false
+
       - key: BREVO_API_KEY
         sync: false
 
